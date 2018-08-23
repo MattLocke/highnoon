@@ -1,0 +1,20 @@
+/* Fonts */
+@font-face {
+  font-family: 'headerFont';
+  src: url('./assets/fonts/BigNoodleTooOblique.eot');
+  src: url('./assets/fonts/BigNoodleTooOblique.eot?#iefix') format('embedded-opentype'),
+    url('./assets/fonts/BigNoodleTooOblique.woff') format('woff'),
+    url('./assets/fonts/BigNoodleTooOblique.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'overFont';
+  src: url('./assets/fonts/Koverwatch.eot');
+  src: url('./assets/fonts/Koverwatch.eot?#iefix') format('embedded-opentype'),
+    url('./assets/fonts/Koverwatch.woff') format('woff'),
+    url('./assets/fonts/Koverwatch.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
