@@ -1,10 +1,10 @@
 <template lang="pug">
   .current-leagues.box
-    h2.overwatch-font.text-border Your Current Leagues 
+    h2.overwatch-font.text-border Your Current Leagues
       span.orange-text ({{ myLeagues.length }}/8)
     .myLeagues(v-if="loggedIn")
 
-      a.league-listing.overwatch-font(v-for="league in myLeagues" v-bind:href="leagueUrl(league.leagueId)") 
+      a.league-listing.overwatch-font(v-for="league in myLeagues" v-bind:href="leagueUrl(league.leagueId)")
         h4 {{ league.leagueName }}
         span.small.orange-text {{ getMode(league) }}
         span.small  - {{ league.points }} pts

@@ -36,76 +36,76 @@
 </template>
 
 <script>
-  import leaderboardTable from '@/components/league/leagueLeaderboardTable'
+import leaderboardTable from '@/components/league/leagueLeaderboardTable'
 
-  export default {
-    name: 'league-leaderboards',
-    props: [
-      'leagueUsers',
-      'leagueData'
-    ],
-    components: {
-      leaderboardTable
-    },
-    data () {
-      return {
-        paginate: ['leagueLeaderboardUsers'],
-        leaderTab: 0
+export default {
+  name: 'league-leaderboards',
+  props: [
+    'leagueUsers',
+    'leagueData'
+  ],
+  components: {
+    leaderboardTable
+  },
+  data () {
+    return {
+      paginate: ['leagueLeaderboardUsers'],
+      leaderTab: 0
+    }
+  },
+  computed: {
+    stage1Total: function () {
+      var total = 0
+      if (this.leagueUsers) {
+        this.leagueUsers.forEach(function (user) {
+          if (user.stage1Points) total += user.stage1Points
+        })
       }
+      return Number(total)
     },
-    computed: {
-      stage1Total: function () {
-        var total = 0
-        if (this.leagueUsers) {
-          this.leagueUsers.forEach(function (user) {
-            if (user.stage1Points) total += user.stage1Points
-          })
-        }
-        return Number(total)
-      },
-      stage2Total: function () {
-        var total = 0
-        if (this.leagueUsers) {
-          this.leagueUsers.forEach(function (user) {
-            if (user.stage2Points) total += user.stage2Points
-          })
-        }
-        return Number(total)
-      },
-      stage3Total: function () {
-        var total = 0
-        if (this.leagueUsers) {
-          this.leagueUsers.forEach(function (user) {
-            if (user.stage3Points) total += user.stage3Points
-          })
-        }
-        return Number(total)
-      },
-      stage4Total: function () {
-        var total = 0
-        if (this.leagueUsers) {
-          this.leagueUsers.forEach(function (user) {
-            if (user.stage4Points) total += user.stage4Points
-          })
-        }
-        return Number(total)
-      },
-      playoffsTotal: function () {
-        var total = 0
-        if (this.leagueUsers) {
-          this.leagueUsers.forEach(function (user) {
-            if (user.playoffPoints) total += user.playoffPoints
-          })
-        }
-        return Number(total)
+    stage2Total: function () {
+      var total = 0
+      if (this.leagueUsers) {
+        this.leagueUsers.forEach(function (user) {
+          if (user.stage2Points) total += user.stage2Points
+        })
       }
+      return Number(total)
     },
-    methods: {
-      showTab: function (num) {
-        this.leaderTab = num
+    stage3Total: function () {
+      var total = 0
+      if (this.leagueUsers) {
+        this.leagueUsers.forEach(function (user) {
+          if (user.stage3Points) total += user.stage3Points
+        })
       }
+      return Number(total)
+    },
+    stage4Total: function () {
+      var total = 0
+      if (this.leagueUsers) {
+        this.leagueUsers.forEach(function (user) {
+          if (user.stage4Points) total += user.stage4Points
+        })
+      }
+      return Number(total)
+    },
+    playoffsTotal: function () {
+      var total = 0
+      if (this.leagueUsers) {
+        this.leagueUsers.forEach(function (user) {
+          if (user.playoffPoints) total += user.playoffPoints
+        })
+      }
+      return Number(total)
+    }
+  },
+  methods: {
+    showTab: function (num) {
+      this.leaderTab = num
     }
   }
+}
 </script>
 
 <style lang="scss" scoped>

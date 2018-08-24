@@ -46,71 +46,71 @@
 </template>
 
 <script>
-  import fireComp from '@/services/competition'
-  import fireTeam from '@/services/team'
+import fireComp from '@/services/competition'
+import fireTeam from '@/services/team'
 
-  export default {
-    name: 'manage-roster',
-    data () {
-      return {
-        compId: '',
-        teamId: '',
-        competitions: [],
-        team: [],
-        teams: [],
-        roster: [],
-        newPlayer: {
-          player: '',
-          realName: '',
-          role: 'flex'
-        },
-        isLoading: false
-      }
-    },
-    methods: {
-      updateRoster: function () {
-        var _this = this
-        if (this.teamId && this.roster.length) {
-          this.isLoading = true
-          fireTeam.updateRoster(this.teamId, this.roster).then(function () {
-            _this.isLoading = false
-          })
-        }
+export default {
+  name: 'manage-roster',
+  data () {
+    return {
+      compId: '',
+      teamId: '',
+      competitions: [],
+      team: [],
+      teams: [],
+      roster: [],
+      newPlayer: {
+        player: '',
+        realName: '',
+        role: 'flex'
       },
-      getTeams: function () {
-        var _this = this
-        if (this.compId) {
-          this.isLoading = true
-          fireTeam.getTeams(this.compId).then(function (teams) {
-            _this.teams = teams
-            _this.isLoading = false
-          })
-        }
-      },
-      addPlayer: function () {
-        this.roster.push(this.newPlayer)
-        this.newPlayer = {
-          player: '',
-          realName: '',
-          role: 'flex'
-        }
-      },
-      deletePlayer: function (index) {
-        this.roster.splice(index, 1)
-      },
-      setTeamData: function () {
-        this.teamId = this.team.id
-        this.roster = this.team.roster
-      },
-      getCompetitions: function () {
-        var _this = this
-        fireComp.getCompetitions().then(function (comps) {
-          _this.competitions = comps
+      isLoading: false
+    }
+  },
+  methods: {
+    updateRoster: function () {
+      var _this = this
+      if (this.teamId && this.roster.length) {
+        this.isLoading = true
+        fireTeam.updateRoster(this.teamId, this.roster).then(function () {
+          _this.isLoading = false
         })
       }
     },
-    mounted: function () {
-      this.getCompetitions()
+    getTeams: function () {
+      var _this = this
+      if (this.compId) {
+        this.isLoading = true
+        fireTeam.getTeams(this.compId).then(function (teams) {
+          _this.teams = teams
+          _this.isLoading = false
+        })
+      }
+    },
+    addPlayer: function () {
+      this.roster.push(this.newPlayer)
+      this.newPlayer = {
+        player: '',
+        realName: '',
+        role: 'flex'
+      }
+    },
+    deletePlayer: function (index) {
+      this.roster.splice(index, 1)
+    },
+    setTeamData: function () {
+      this.teamId = this.team.id
+      this.roster = this.team.roster
+    },
+    getCompetitions: function () {
+      var _this = this
+      fireComp.getCompetitions().then(function (comps) {
+        _this.competitions = comps
+      })
     }
+  },
+  mounted: function () {
+    this.getCompetitions()
   }
+}
 </script>

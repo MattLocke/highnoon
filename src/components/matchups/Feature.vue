@@ -9,9 +9,9 @@
           img.matchup-logo(v-bind:src="homeTeamLogo")
           button.button.positive-button.full-width WINS
         .column.centered
-          img.vs-logo(src="/static/img/vs.png")
+          img.vs-logo(src="/assets/img/vs.png")
           hr
-          label.score Score: 
+          label.score Score:
           select.select.is-large
             option(v-for="matchoption in matchscore") {{ matchoption }}
         .column.centered
@@ -24,60 +24,60 @@
 </template>
 
 <script>
-  export default {
-    name: 'feature',
-    props: ['homeTeam', 'awayTeam', 'homeTeamLogo', 'awayTeamLogo'],
-    data () {
-      return {
-        startingNumber: 7,
-        homeShort: 'FLM',
-        awayShort: 'PHF'
-      }
-    },
-    computed: {
-      matchscore: function () {
-        var options = []
+export default {
+  name: 'feature',
+  props: ['homeTeam', 'awayTeam', 'homeTeamLogo', 'awayTeamLogo'],
+  data () {
+    return {
+      startingNumber: 7,
+      homeShort: 'FLM',
+      awayShort: 'PHF'
+    }
+  },
+  computed: {
+    matchscore: function () {
+      var options = []
 
-        // setting this to the 3 most common matchups, using static values for now.
-        options[3] = [
-          '2-0',
-          '2-1',
-          '3-2',
-          '2-3',
-          '1-2',
-          '0-2',
-          'Draw'
-        ]
+      // setting this to the 3 most common matchups, using static values for now.
+      options[3] = [
+        '2-0',
+        '2-1',
+        '3-2',
+        '2-3',
+        '1-2',
+        '0-2',
+        'Draw'
+      ]
 
-        options[5] = [
-          '3-0',
-          '3-1',
-          '3-2',
-          '4-3',
-          '3-4',
-          '2-3',
-          '1-3',
-          '0-3',
-          'Draw'
-        ]
+      options[5] = [
+        '3-0',
+        '3-1',
+        '3-2',
+        '4-3',
+        '3-4',
+        '2-3',
+        '1-3',
+        '0-3',
+        'Draw'
+      ]
 
-        options[7] = [
-          '4-0',
-          '4-1',
-          '4-2',
-          '4-3',
-          '5-4',
-          '4-5',
-          '3-4',
-          '2-4',
-          '1-4',
-          '0-4',
-          'Draw'
-        ]
-        return options[this.startingNumber]
-      }
+      options[7] = [
+        '4-0',
+        '4-1',
+        '4-2',
+        '4-3',
+        '5-4',
+        '4-5',
+        '3-4',
+        '2-4',
+        '1-4',
+        '0-4',
+        'Draw'
+      ]
+      return options[this.startingNumber]
     }
   }
+}
 </script>
 
 <style>

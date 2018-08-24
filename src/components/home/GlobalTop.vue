@@ -20,36 +20,36 @@
 </template>
 
 <script>
-  // import fireComp from '@/services/competition'
-  import fireLeaderboard from '@/services/leaderboard'
+// import fireComp from '@/services/competition'
+import fireLeaderboard from '@/services/leaderboard'
 
-  export default {
-    name: 'GlobalTop',
-    props: ['compId'],
-    data () {
-      return {
-        leagueUsers: [],
-        noRepeats: [],
-        teamData: []
-      }
-    },
-    computed: {
-      showLeagueNames: function () {
-        return window.screen.width > 768
-      }
-    },
-    methods: {
-      getUsers: function () {
-        var _this = this
-        fireLeaderboard.homeLeaderboardByCompId('ALI8o0eJ30V1D1Fb7rHV').then(function (users) {
-          _this.leagueUsers = users
-        })
-      }
-    },
-    mounted: function () {
-      this.getUsers()
+export default {
+  name: 'GlobalTop',
+  props: ['compId'],
+  data () {
+    return {
+      leagueUsers: [],
+      noRepeats: [],
+      teamData: []
     }
+  },
+  computed: {
+    showLeagueNames: function () {
+      return window.screen.width > 768
+    }
+  },
+  methods: {
+    getUsers: function () {
+      var _this = this
+      fireLeaderboard.homeLeaderboardByCompId('ALI8o0eJ30V1D1Fb7rHV').then(function (users) {
+        _this.leagueUsers = users
+      })
+    }
+  },
+  mounted: function () {
+    this.getUsers()
   }
+}
 </script>
 
 <style lang="scss" scoped>

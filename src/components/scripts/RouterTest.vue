@@ -5,18 +5,18 @@
 </template>
 
 <script>
-  export default {
-    name: 'router-test',
-    data () {
-      return {
-      }
-    },
-    methods: {
-      testRouter: function () {
-        this.$router.push({path: '/'})
-      }
-    },
-    mounted: function () {
+export default {
+  name: 'router-test',
+  data () {
+    return {
     }
+  },
+  methods: {
+    testRouter: function () {
+      this.$router.push({path: '/'})
+    }
+  },
+  mounted: function () {
   }
+}
 </script>

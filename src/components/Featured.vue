@@ -43,144 +43,144 @@
 </template>
 
 <script>
-  import PictureInput from 'vue-picture-input'
-  import firebase from 'firebase'
-  import fireFeature from '@/services/feature'
-  import fireImage from '@/services/image'
-  import fireLeague from '@/services/league'
-  import fireUser from '@/services/user'
-  import autocomplete from 'vuejs-auto-complete'
+import PictureInput from 'vue-picture-input'
+import firebase from 'firebase'
+import fireFeature from '@/services/feature'
+import fireImage from '@/services/image'
+import fireLeague from '@/services/league'
+import fireUser from '@/services/user'
+import autocomplete from 'vuejs-auto-complete'
 
-  export default {
-    name: 'featured',
-    components: {
-      PictureInput,
-      autocomplete
-    },
-    data () {
-      return {
-        newFeature: {
-          leagueName: '',
-          leagueId: '',
-          leagueOwnerId: '',
-          leagueOwnerName: '',
-          leagueType: '',
-          competitionId: '',
-          competitionName: '',
-          description: '',
-          icon: ''
-        },
-        showOfficial: false,
-        fileStuff: '',
-        featuredLeagues: [],
-        leagues: [],
-        createFeatureMode: false,
-        userData: {}
-      }
-    },
-    watch: {
-      createFeatureMode: function () {
-        var _this = this
-        if (this.createFeatureMode) {
-          fireLeague.getAllLeagues().then(function (leagues) {
-            _this.leagues = leagues
-          })
-        }
-      }
-    },
-    methods: {
-      showLeague: function (league) {
-        if (this.showOfficial && league.isOfficial) return true
-        else if (this.showOfficial && !league.isOfficial) return false
-        else return true
+export default {
+  name: 'featured',
+  components: {
+    PictureInput,
+    autocomplete
+  },
+  data () {
+    return {
+      newFeature: {
+        leagueName: '',
+        leagueId: '',
+        leagueOwnerId: '',
+        leagueOwnerName: '',
+        leagueType: '',
+        competitionId: '',
+        competitionName: '',
+        description: '',
+        icon: ''
       },
-      uploadPicture: function () {
-        console.log('New picture selected.')
-        if (this.$refs.pictureInput.file) {
-          console.log('Picture loaded.')
-        } else {
-          console.error('FileReader API not supported.  Boo.')
-        }
-      },
-      joinLeagueUrl: function (leagueId) {
-        return '/#/ViewLeague/' + leagueId
-      },
-      deleteFeature: function (featureId, index) {
-        var _this = this
-        fireFeature.deleteFeature(featureId).then(function (result) {
-          _this.featuredLeagues.splice(index, 1)
-        })
-      },
-      saveFeature: function () {
-        // save the picture
-        var imageName = this.newFeature.icon
-        var _this = this
-        fireImage.uploadImage('features', imageName, this.$refs.pictureInput.file).then(function (response) {
-          if (response) {
-            // save the rest
-            fireFeature.createFeature(_this.newFeature).then(function (response) {
-              if (response) {
-                // clear the feature, hide the option.
-                fireImage.getImage('features', imageName).then(function (ref) {
-                  if (ref) _this.newFeature.imageUrl = ref
-                  _this.featuredLeagues.unshift(_this.newFeature)
-                  _this.clearFeature()
-                  _this.createFeatureMode = false
-                })
-              }
-            })
-          }
-        })
-      },
-      clearFeature: function () {
-        this.newFeature = {
-          leagueName: '',
-          leagueId: '',
-          leagueOwnerId: '',
-          leagueOwnerName: '',
-          leagueType: '',
-          competitionId: '',
-          competitionName: '',
-          description: '',
-          icon: ''
-        }
-      },
-      setLeagueData: function (info) {
-        var league = info.selectedObject
-        this.newFeature.leagueName = league.name
-        this.newFeature.leagueId = league.docId
-        this.newFeature.leagueOwnerId = league.ownerId
-        this.newFeature.leagueOwnerName = league.ownerDisplayName
-        this.newFeature.leagueType = this.getLeagueMode(league.simpleMode)
-        this.newFeature.competitionId = league.competitionId
-        this.newFeature.competitionName = league.competitionName
-        this.newFeature.icon = league.docId + '.png'
-      },
-      getLeagueMode: function (trueFalse) {
-        if (trueFalse) return 'Simple Mode'
-        else return 'Standard Mode'
-      }
-    },
-    mounted: function () {
-      var _this = this
-      firebase.auth().onAuthStateChanged(function (user) {
-        if (user) {
-          fireUser.getProfile(user.uid).then(function (info) {
-            _this.userData = info
-          })
-        }
-        fireFeature.getFeatures().then(function (features) {
-          features.forEach(function (feature) {
-            feature.imageUrl = ''
-            fireImage.getImage('features', feature.icon).then(function (url) {
-              if (url) feature.imageUrl = url
-            })
-          })
-          _this.featuredLeagues = features
-        })
-      })
+      showOfficial: false,
+      fileStuff: '',
+      featuredLeagues: [],
+      leagues: [],
+      createFeatureMode: false,
+      userData: {}
     }
+  },
+  watch: {
+    createFeatureMode: function () {
+      var _this = this
+      if (this.createFeatureMode) {
+        fireLeague.getAllLeagues().then(function (leagues) {
+          _this.leagues = leagues
+        })
+      }
+    }
+  },
+  methods: {
+    showLeague: function (league) {
+      if (this.showOfficial && league.isOfficial) return true
+      else if (this.showOfficial && !league.isOfficial) return false
+      else return true
+    },
+    uploadPicture: function () {
+      console.log('New picture selected.')
+      if (this.$refs.pictureInput.file) {
+        console.log('Picture loaded.')
+      } else {
+        console.error('FileReader API not supported.  Boo.')
+      }
+    },
+    joinLeagueUrl: function (leagueId) {
+      return '/#/ViewLeague/' + leagueId
+    },
+    deleteFeature: function (featureId, index) {
+      var _this = this
+      fireFeature.deleteFeature(featureId).then(function (result) {
+        _this.featuredLeagues.splice(index, 1)
+      })
+    },
+    saveFeature: function () {
+      // save the picture
+      var imageName = this.newFeature.icon
+      var _this = this
+      fireImage.uploadImage('features', imageName, this.$refs.pictureInput.file).then(function (response) {
+        if (response) {
+          // save the rest
+          fireFeature.createFeature(_this.newFeature).then(function (response) {
+            if (response) {
+              // clear the feature, hide the option.
+              fireImage.getImage('features', imageName).then(function (ref) {
+                if (ref) _this.newFeature.imageUrl = ref
+                _this.featuredLeagues.unshift(_this.newFeature)
+                _this.clearFeature()
+                _this.createFeatureMode = false
+              })
+            }
+          })
+        }
+      })
+    },
+    clearFeature: function () {
+      this.newFeature = {
+        leagueName: '',
+        leagueId: '',
+        leagueOwnerId: '',
+        leagueOwnerName: '',
+        leagueType: '',
+        competitionId: '',
+        competitionName: '',
+        description: '',
+        icon: ''
+      }
+    },
+    setLeagueData: function (info) {
+      var league = info.selectedObject
+      this.newFeature.leagueName = league.name
+      this.newFeature.leagueId = league.docId
+      this.newFeature.leagueOwnerId = league.ownerId
+      this.newFeature.leagueOwnerName = league.ownerDisplayName
+      this.newFeature.leagueType = this.getLeagueMode(league.simpleMode)
+      this.newFeature.competitionId = league.competitionId
+      this.newFeature.competitionName = league.competitionName
+      this.newFeature.icon = league.docId + '.png'
+    },
+    getLeagueMode: function (trueFalse) {
+      if (trueFalse) return 'Simple Mode'
+      else return 'Standard Mode'
+    }
+  },
+  mounted: function () {
+    var _this = this
+    firebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+        fireUser.getProfile(user.uid).then(function (info) {
+          _this.userData = info
+        })
+      }
+      fireFeature.getFeatures().then(function (features) {
+        features.forEach(function (feature) {
+          feature.imageUrl = ''
+          fireImage.getImage('features', feature.icon).then(function (url) {
+            if (url) feature.imageUrl = url
+          })
+        })
+        _this.featuredLeagues = features
+      })
+    })
   }
+}
 </script>
 
 <style scoped>

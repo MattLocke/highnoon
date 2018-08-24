@@ -18,7 +18,7 @@ export default {
     })
   },
   getLocalTeamLogo (logo) {
-    return '/static/img/team-logos/' + logo
+    return '/assets/img/team-logos/' + logo
   },
   getCompetitionLogo (logo) {
     var storage = firebase.storage()

@@ -5,14 +5,14 @@
       .columns
         .column
           .match-option
-            label.label Winner: 
+            label.label Winner:
             select.select.is-large
               option {{ homeTeam }}
               option {{ awayTeam }}
               option Draw
         .column
           .match-option
-            label.label Round Score: 
+            label.label Round Score:
             select(v-if="mapType == 'Assault'").select.is-large
               option 2-0
               option 2-1
@@ -31,27 +31,27 @@
               option 3-2
         .column
           .match-option
-            label.label Extra Round?: 
+            label.label Extra Round?:
             select.select.is-large
               option No
               option Yes
         .column
           .match-option
-            label.label Play of the Game: 
+            label.label Play of the Game:
             select.select.is-large
               option {{ homeTeam }}
               option {{ awayTeam }}
 </template>
 
 <script>
-  export default {
-    name: 'map',
-    props: ['homeTeam', 'awayTeam', 'mapTypes'],
-    data () {
-      return {
-      }
+export default {
+  name: 'map',
+  props: ['homeTeam', 'awayTeam', 'mapTypes'],
+  data () {
+    return {
     }
   }
+}
 </script>
 
 <style lang="scss">

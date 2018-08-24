@@ -10,9 +10,9 @@ var db = firebase.firestore()
 export default {
   createMatch (data) {
     return db.collection('matches').add(data)
-    .then(function (matchRef) {
-      return true
-    })
+      .then(function (matchRef) {
+        return true
+      })
   },
   setWinner (matchData, matchId) {
     // completedMatches
@@ -41,19 +41,19 @@ export default {
     matchData.isComplete = true
 
     return db.collection('matches').doc(matchId)
-    .update(matchData)
-    .then(function () {
-      return db.collection('completedMatches').add({
-        'stageNumber': stageNum,
-        'matchId': matchId
-      }).then(ref => {
-        return true
+      .update(matchData)
+      .then(function () {
+        return db.collection('completedMatches').add({
+          'stageNumber': stageNum,
+          'matchId': matchId
+        }).then(ref => {
+          return true
+        })
       })
-    })
-    .catch(function (error) {
-      logger.errorIt(error)
-      return false
-    })
+      .catch(function (error) {
+        logger.errorIt(error)
+        return false
+      })
   },
   getActiveMatch () {
     var tmpReturn = []
@@ -86,75 +86,75 @@ export default {
     var tmpReturn = []
     var tmpSnap = {}
     return db.collection('matches')
-    .where('compId', '==', compId)
-    .where('isLocked', '==', false)
-    .limit(limit)
-    .get()
-    .then(function (querySnapshot) {
-      querySnapshot.forEach(function (doc) {
-        tmpSnap = doc.data()
-        tmpSnap.id = doc.id
-        tmpReturn.push(tmpSnap)
+      .where('compId', '==', compId)
+      .where('isLocked', '==', false)
+      .limit(limit)
+      .get()
+      .then(function (querySnapshot) {
+        querySnapshot.forEach(function (doc) {
+          tmpSnap = doc.data()
+          tmpSnap.id = doc.id
+          tmpReturn.push(tmpSnap)
+        })
+        return tmpReturn
+      }, function (error) {
+        logger.errorIt(error)
       })
-      return tmpReturn
-    }, function (error) {
-      logger.errorIt(error)
-    })
   },
   getLeagueMatches (compId) {
     logger.logIt('Getting matches for comp with id: ' + compId)
     var tmpReturn = []
     var tmpSnap = {}
     return db.collection('matches')
-    .where('compId', '==', compId)
-    .where('isLocked', '==', false)
-    .get()
-    .then(function (querySnapshot) {
-      querySnapshot.forEach(function (doc) {
-        tmpSnap = doc.data()
-        tmpSnap.id = doc.id
-        tmpReturn.push(tmpSnap)
+      .where('compId', '==', compId)
+      .where('isLocked', '==', false)
+      .get()
+      .then(function (querySnapshot) {
+        querySnapshot.forEach(function (doc) {
+          tmpSnap = doc.data()
+          tmpSnap.id = doc.id
+          tmpReturn.push(tmpSnap)
+        })
+        return tmpReturn
+      }, function (error) {
+        logger.errorIt(error)
       })
-      return tmpReturn
-    }, function (error) {
-      logger.errorIt(error)
-    })
   },
   getAllLeagueMatches (compId) {
     logger.logIt('Getting matches for comp with id: ' + compId)
     var tmpReturn = []
     var tmpSnap = {}
     return db.collection('matches')
-    .where('compId', '==', compId)
-    .get()
-    .then(function (querySnapshot) {
-      querySnapshot.forEach(function (doc) {
-        tmpSnap = doc.data()
-        tmpSnap.id = doc.id
-        tmpReturn.push(tmpSnap)
+      .where('compId', '==', compId)
+      .get()
+      .then(function (querySnapshot) {
+        querySnapshot.forEach(function (doc) {
+          tmpSnap = doc.data()
+          tmpSnap.id = doc.id
+          tmpReturn.push(tmpSnap)
+        })
+        return tmpReturn
+      }, function (error) {
+        logger.errorIt(error)
       })
-      return tmpReturn
-    }, function (error) {
-      logger.errorIt(error)
-    })
   },
   getOldLeagueMatches (compId) {
     logger.logIt('Getting expired matches for comp with id: ' + compId)
     var tmpReturn = []
     var tmpSnap = {}
     return db.collection('matches')
-    .where('compId', '==', compId)
-    .where('isLocked', '==', true)
-    .get()
-    .then(function (querySnapshot) {
-      querySnapshot.forEach(function (doc) {
-        tmpSnap = doc.data()
-        tmpSnap.id = doc.id
-        tmpReturn.push(tmpSnap)
+      .where('compId', '==', compId)
+      .where('isLocked', '==', true)
+      .get()
+      .then(function (querySnapshot) {
+        querySnapshot.forEach(function (doc) {
+          tmpSnap = doc.data()
+          tmpSnap.id = doc.id
+          tmpReturn.push(tmpSnap)
+        })
+        return tmpReturn
+      }, function (error) {
+        logger.errorIt(error)
       })
-      return tmpReturn
-    }, function (error) {
-      logger.errorIt(error)
-    })
   }
 }

@@ -8,33 +8,33 @@
 </template>
 
 <script>
-  import fireNotifications from '@/services/notification'
-  import vueMarkdown from 'vue-markdown'
+import fireNotifications from '@/services/notification'
+import vueMarkdown from 'vue-markdown'
 
-  export default {
-    name: 'notifications',
-    components: {
-      vueMarkdown
-    },
-    data () {
-      return {
-        notification: {
-          message: ''
-        }
+export default {
+  name: 'notifications',
+  components: {
+    vueMarkdown
+  },
+  data () {
+    return {
+      notification: {
+        message: ''
       }
-    },
-    methods: {
-      getNotifications: function () {
-        var _this = this
-        fireNotifications.getNotification('homePage').then(function (notification) {
-          _this.notification = notification
-        })
-      }
-    },
-    mounted: function () {
-      this.getNotifications()
     }
+  },
+  methods: {
+    getNotifications: function () {
+      var _this = this
+      fireNotifications.getNotification('homePage').then(function (notification) {
+        _this.notification = notification
+      })
+    }
+  },
+  mounted: function () {
+    this.getNotifications()
   }
+}
 </script>
 
 <style lang="scss" scoped>

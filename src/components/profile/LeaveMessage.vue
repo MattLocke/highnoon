@@ -16,54 +16,54 @@
 </template>
 
 <script>
-  import vueMarkdown from 'vue-markdown'
-  import fireMessage from '@/services/messages'
+import vueMarkdown from 'vue-markdown'
+import fireMessage from '@/services/messages'
 
-  export default {
-    name: 'leave-message',
-    components: {
-      vueMarkdown
-    },
-    props: [
-      'theirId'
-    ],
-    data () {
-      return {
-        visible: true,
-        newMessage: {
-          message: ''
-        }
-      }
-    },
-    computed: {
-      userData: function () {
-        return this.$store.getters.getUserData
-      },
-      currentTime: function () {
-        return new Date().getTime() / 1000
-      }
-    },
-    methods: {
-      saveMessage: function () {
-        let tmp = this.newMessage
-        let _this = this
-        tmp.messageDate = new Date().getTime()
-        tmp.senderId = this.userData.id
-        tmp.senderName = this.userData.displayName
-        fireMessage.createMessage(this.userData.id, this.theirId, tmp).then(function (id) {
-          if (id) _this.visible = false
-        })
-      }
-    },
-    mounted: function () {
-      let _this = this
-      if (this.userData.id && this.theirId) {
-        fireMessage.getMessages(this.userData.id, this.theirId).then(function (messages) {
-          if (messages.length) _this.visible = false
-        })
+export default {
+  name: 'leave-message',
+  components: {
+    vueMarkdown
+  },
+  props: [
+    'theirId'
+  ],
+  data () {
+    return {
+      visible: true,
+      newMessage: {
+        message: ''
       }
     }
+  },
+  computed: {
+    userData: function () {
+      return this.$store.getters.getUserData
+    },
+    currentTime: function () {
+      return new Date().getTime() / 1000
+    }
+  },
+  methods: {
+    saveMessage: function () {
+      let tmp = this.newMessage
+      let _this = this
+      tmp.messageDate = new Date().getTime()
+      tmp.senderId = this.userData.id
+      tmp.senderName = this.userData.displayName
+      fireMessage.createMessage(this.userData.id, this.theirId, tmp).then(function (id) {
+        if (id) _this.visible = false
+      })
+    }
+  },
+  mounted: function () {
+    let _this = this
+    if (this.userData.id && this.theirId) {
+      fireMessage.getMessages(this.userData.id, this.theirId).then(function (messages) {
+        if (messages.length) _this.visible = false
+      })
+    }
   }
+}
 </script>
 
 <style lang="scss">

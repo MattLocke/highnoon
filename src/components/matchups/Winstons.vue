@@ -4,7 +4,7 @@
       .media
         figure.media-left
           p.image.is-48x48
-            img(src="/static/img/winstons-lab.png")
+            img(src="/assets/img/winstons-lab.png")
         .media-content
           .content
             a(v-bind:href="winstonsMatchUrl" target="_blank")
@@ -13,19 +13,19 @@
 </template>
 
 <script>
-  import winston from '@/services/winston'
+import winston from '@/services/winston'
 
-  export default {
-    name: 'winstonslab',
-    props: ['matchId'],
-    data () {
-      return {
-      }
-    },
-    computed: {
-      winstonsMatchUrl: function () {
-        return winston.matchUrl(this.matchId)
-      }
+export default {
+  name: 'winstonslab',
+  props: ['matchId'],
+  data () {
+    return {
+    }
+  },
+  computed: {
+    winstonsMatchUrl: function () {
+      return winston.matchUrl(this.matchId)
     }
   }
+}
 </script>

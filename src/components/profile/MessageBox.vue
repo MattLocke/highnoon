@@ -3,7 +3,7 @@
     .columns
       .column.is-2
         ul.message-menu
-          li 
+          li
             a.overwatch-font(href='#') SouldrinK
               span.is-pulled-right.unread 4
           li
@@ -54,36 +54,36 @@
 </template>
 
 <script>
-  import vueMarkdown from 'vue-markdown'
-  import fireMessage from '@/services/messages'
+import vueMarkdown from 'vue-markdown'
+import fireMessage from '@/services/messages'
 
-  export default {
-    name: 'message-box',
-    components: {
-      vueMarkdown
-    },
-    props: [
-      'message',
-      'isOwner',
-      'userData'
-    ],
-    data () {
-      return {
-        visible: true,
-        newMessage: {
-          message: ''
-        }
-      }
-    },
-    methods: {
-      deleteMessage: function (messageId) {
-        // var _this = this
-        fireMessage.deleteMessage(messageId).then(function (result) {
-          // _this.visible = false
-        })
+export default {
+  name: 'message-box',
+  components: {
+    vueMarkdown
+  },
+  props: [
+    'message',
+    'isOwner',
+    'userData'
+  ],
+  data () {
+    return {
+      visible: true,
+      newMessage: {
+        message: ''
       }
     }
+  },
+  methods: {
+    deleteMessage: function (messageId) {
+      // var _this = this
+      fireMessage.deleteMessage(messageId).then(function (result) {
+        // _this.visible = false
+      })
+    }
   }
+}
 </script>
 
 <style lang="scss">

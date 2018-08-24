@@ -34,9 +34,9 @@ export default {
                 saveToken(userId, token).then(function (result) {
                   console.log(`Successfully saved the token.`)
                 })
-                .catch(function (error) {
-                  console.log(error)
-                })
+                  .catch(function (error) {
+                    console.log(error)
+                  })
               }
             })
           })
@@ -52,18 +52,18 @@ export default {
       // ...
       return messaging.getToken()
     })
-    .then(function (token) {
-      console.log('FCM Token: ', token)
-      saveToken(userId, token).then(function (result) {
-        console.log(`Requested permission with success.`)
+      .then(function (token) {
+        console.log('FCM Token: ', token)
+        saveToken(userId, token).then(function (result) {
+          console.log(`Requested permission with success.`)
+        })
+          .catch(function (error) {
+            console.log(error)
+          })
       })
-      .catch(function (error) {
-        console.log(error)
+      .catch(function (err) {
+        console.log('Unable to get permission to notify.', err)
       })
-    })
-    .catch(function (err) {
-      console.log('Unable to get permission to notify.', err)
-    })
   },
   getToken (userId) {
     messaging.getToken().then(function (currentToken) {
@@ -72,9 +72,9 @@ export default {
         saveToken(userId, currentToken).then(function (result) {
           console.log(`Able to grab token.`)
         })
-        .catch(function (error) {
-          console.log(error)
-        })
+          .catch(function (error) {
+            console.log(error)
+          })
         // updateUIForPushEnabled(currentToken)
       } else {
         // Show permission request.

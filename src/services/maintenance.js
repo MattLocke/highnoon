@@ -13,38 +13,38 @@ export default {
     var matchPicks = []
     var batch = db.batch()
     return db.collection('matchPicks')
-    .get()
-    .then(function (querySnapshot) {
-      var counter = 0
-      querySnapshot.forEach(function (doc) {
-        var tmp = doc.data()
-        var entryString = tmp.matchId + '.' + tmp.userId + '.' + tmp.leagueId
-        if (matchPicks.includes(entryString)) {
-          batch.delete(db.collection('matchPicks').doc(doc.id))
-          counter++
-        } else matchPicks.push(entryString)
+      .get()
+      .then(function (querySnapshot) {
+        var counter = 0
+        querySnapshot.forEach(function (doc) {
+          var tmp = doc.data()
+          var entryString = tmp.matchId + '.' + tmp.userId + '.' + tmp.leagueId
+          if (matchPicks.includes(entryString)) {
+            batch.delete(db.collection('matchPicks').doc(doc.id))
+            counter++
+          } else matchPicks.push(entryString)
+        })
+        console.log('Finished.  Found ', counter, ' duplicates.')
+        batch.commit().then(function () {
+          return matchPicks
+        })
+      }, function (error) {
+        logger.errorIt(error)
       })
-      console.log('Finished.  Found ', counter, ' duplicates.')
-      batch.commit().then(function () {
-        return matchPicks
-      })
-    }, function (error) {
-      logger.errorIt(error)
-    })
   },
   cleanPointsForComp (compId) {
     logger.logIt('Cleaning out points for all the leagues. based on compId:' + compId)
     var users = []
     return db.collection('leagueUsers')
     // .where('compId', '==', compId)
-    .get()
-    .then(function (userSnap) {
-      userSnap.forEach(function (user) {
-        users.push(user.id)
+      .get()
+      .then(function (userSnap) {
+        userSnap.forEach(function (user) {
+          users.push(user.id)
+        })
+        // now we have the giant users object.
+        return users
       })
-      // now we have the giant users object.
-      return users
-    })
   },
   applyClean (users) {
     console.log('found ' + users.length + ' users')
@@ -61,45 +61,45 @@ export default {
   updateLeagueUsers (compId) {
     logger.logIt('Updating league users with compId for leaderboard stuff...')
     return db.collection('leagues')
-    .where('data.competitionId', '==', compId)
-    .get()
-    .then(function (leagueSnapshot) {
-      leagueSnapshot.forEach(function (league) {
-        logger.logIt('We found the league: ' + league.id)
-        var leagueData = league.data().data
-        var simpleMode = leagueData.simpleMode || false
-        return db.collection('leagueUsers')
-        .where('leagueId', '==', league.id)
-        .get()
-        .then(function (luser) {
-          luser.forEach(function (user) {
-            logger.logIt('udpating: ' + user.id)
-            return db.collection('leagueUsers').doc(user.id).update({'compId': compId, 'simpleMode': simpleMode})
-          })
+      .where('data.competitionId', '==', compId)
+      .get()
+      .then(function (leagueSnapshot) {
+        leagueSnapshot.forEach(function (league) {
+          logger.logIt('We found the league: ' + league.id)
+          var leagueData = league.data().data
+          var simpleMode = leagueData.simpleMode || false
+          return db.collection('leagueUsers')
+            .where('leagueId', '==', league.id)
+            .get()
+            .then(function (luser) {
+              luser.forEach(function (user) {
+                logger.logIt('udpating: ' + user.id)
+                return db.collection('leagueUsers').doc(user.id).update({'compId': compId, 'simpleMode': simpleMode})
+              })
+            })
         })
       })
-    })
   },
   deactivateOldLeagues (compId) {
     logger.logIt('Deactivating all the old leagues...')
     return db.collection('leagues')
-    .where('data.competitionId', '==', compId)
-    .get()
-    .then(function (leagueSnapshot) {
-      leagueSnapshot.forEach(function (league) {
-        logger.logIt('We found the league: ' + league.id)
-        // var leagueData = league.data().data
-        return db.collection('leagueUsers')
-        .where('leagueId', '==', league.id)
-        .get()
-        .then(function (luser) {
-          luser.forEach(function (user) {
-            logger.logIt('udpating: ' + user.id)
-            return db.collection('leagueUsers').doc(user.id).update({'active': false})
-          })
+      .where('data.competitionId', '==', compId)
+      .get()
+      .then(function (leagueSnapshot) {
+        leagueSnapshot.forEach(function (league) {
+          logger.logIt('We found the league: ' + league.id)
+          // var leagueData = league.data().data
+          return db.collection('leagueUsers')
+            .where('leagueId', '==', league.id)
+            .get()
+            .then(function (luser) {
+              luser.forEach(function (user) {
+                logger.logIt('udpating: ' + user.id)
+                return db.collection('leagueUsers').doc(user.id).update({'active': false})
+              })
+            })
         })
       })
-    })
   },
   moveLeagues (oldId, newId, newName) {
     logger.logIt('Moving leagues from ' + oldId + ' to ' + newId)

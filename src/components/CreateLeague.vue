@@ -33,77 +33,77 @@
 </template>
 
 <script>
-  import firebase from 'firebase'
-  import fireLeague from '@/services/league'
-  import fireUser from '@/services/user'
-  import fireComp from '@/services/competition'
+import firebase from 'firebase'
+import fireLeague from '@/services/league'
+import fireUser from '@/services/user'
+import fireComp from '@/services/competition'
 
-  export default {
-    name: 'createleague',
-    data () {
-      return {
-        isLoading: false,
-        competitions: [],
-        leagueInfo: {
-          simpleMode: false,
-          competitionId: null,
-          competitionName: '',
-          name: '',
-          isPublic: false,
-          isLocked: false,
-          ownerId: null,
-          ownerDisplayName: '',
-          maxUsers: 25
-        }
+export default {
+  name: 'createleague',
+  data () {
+    return {
+      isLoading: false,
+      competitions: [],
+      leagueInfo: {
+        simpleMode: false,
+        competitionId: null,
+        competitionName: '',
+        name: '',
+        isPublic: false,
+        isLocked: false,
+        ownerId: null,
+        ownerDisplayName: '',
+        maxUsers: 25
       }
-    },
-    computed: {
-      formCompleted: function () {
-        if (this.leagueInfo.competitionId && this.leagueInfo.name && this.leagueInfo.ownerId) return true
-        else return false
-      },
-      sortedComps: function () {
-        return this.competitions.sort((a, b) => a.startDate < b.startDate)
-      }
-    },
-    methods: {
-      chooseComp: function (id, name) {
-        this.leagueInfo.competitionId = id
-        this.leagueInfo.competitionName = name
-      },
-      createLeague: function () {
-        this.isLoading = true
-        fireLeague.createLeague(this.leagueInfo, this.$router)
-      }
-    },
-    mounted: function () {
-      var _this = this // set this to maintain references inside firebase functions
-
-      // snag the competition info from the database (need to move to service)
-      fireComp.getCompetitions().then(function (competitions) {
-        _this.competitions = competitions
-      })
-
-      // get the user information and populate the owner for league info.
-      firebase.auth().onAuthStateChanged(function (user) {
-        if (user) {
-          // User is signed in.
-          if (!user.emailVerified) _this.$router.push({path: '/'})
-          _this.leagueInfo.ownerId = user.uid
-          fireLeague.getLeaguesByUser(user.uid).then(function (leagues) {
-            if (leagues.length > 8) _this.$router.push({path: '/Home'})
-          })
-          // Now get their name for the sake of my sanity
-          fireUser.getProfile(user.uid).then(function (userData) {
-            if (userData) _this.leagueInfo.ownerDisplayName = userData.displayName
-            else _this.leagueInfo.ownerDisplayName = 'None'
-          })
-        } else {
-          // No user is signed in!  WTF!  Redirect them to home.  :)
-        }
-      })
     }
+  },
+  computed: {
+    formCompleted: function () {
+      if (this.leagueInfo.competitionId && this.leagueInfo.name && this.leagueInfo.ownerId) return true
+      else return false
+    },
+    sortedComps: function () {
+      return this.competitions.sort((a, b) => a.startDate < b.startDate)
+    }
+  },
+  methods: {
+    chooseComp: function (id, name) {
+      this.leagueInfo.competitionId = id
+      this.leagueInfo.competitionName = name
+    },
+    createLeague: function () {
+      this.isLoading = true
+      fireLeague.createLeague(this.leagueInfo, this.$router)
+    }
+  },
+  mounted: function () {
+    var _this = this // set this to maintain references inside firebase functions
+
+    // snag the competition info from the database (need to move to service)
+    fireComp.getCompetitions().then(function (competitions) {
+      _this.competitions = competitions
+    })
+
+    // get the user information and populate the owner for league info.
+    firebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+        // User is signed in.
+        if (!user.emailVerified) _this.$router.push({path: '/'})
+        _this.leagueInfo.ownerId = user.uid
+        fireLeague.getLeaguesByUser(user.uid).then(function (leagues) {
+          if (leagues.length > 8) _this.$router.push({path: '/Home'})
+        })
+        // Now get their name for the sake of my sanity
+        fireUser.getProfile(user.uid).then(function (userData) {
+          if (userData) _this.leagueInfo.ownerDisplayName = userData.displayName
+          else _this.leagueInfo.ownerDisplayName = 'None'
+        })
+      } else {
+        // No user is signed in!  WTF!  Redirect them to home.  :)
+      }
+    })
   }
+}
 </script>
 
 <style lang="scss" scoped>

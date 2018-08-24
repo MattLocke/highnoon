@@ -69,274 +69,274 @@
 </template>
 
 <script>
-  // import fireComp from '@/services/competition'
-  import fireLeaderboard from '@/services/leaderboard'
+// import fireComp from '@/services/competition'
+import fireLeaderboard from '@/services/leaderboard'
 
-  export default {
-    name: 'leaderboard',
-    props: ['compId'],
-    data () {
-      return {
-        simpleUsers: [],
-        simpleUsersStage1: [],
-        simpleUsersStage2: [],
-        simpleUsersStage3: [],
-        simpleUsersStage4: [],
-        simpleUsersPlayoffs: [],
-        normalUsers: [],
-        normalUsersStage1: [],
-        normalUsersStage2: [],
-        normalUsersStage3: [],
-        normalUsersStage4: [],
-        normalUsersPlayoffs: [],
-        simpleActive: false,
-        normalActive: true,
-        simpleLoading: true,
-        normalLoading: true,
-        currentUserSimple: {},
-        currentUserSimpleStage1: {},
-        currentUserSimpleStage2: {},
-        currentUserSimpleStage3: {},
-        currentUserSimpleStage4: {},
-        currentUserSimplePlayoffs: {},
-        currentUserStandard: {},
-        currentUserStandardStage1: {},
-        currentUserStandardStage2: {},
-        currentUserStandardStage3: {},
-        currentUserStandardStage4: {},
-        currentUserStandardPlayoffs: {},
-        leaderStage: 'Combined',
-        userId: ''
-      }
+export default {
+  name: 'leaderboard',
+  props: ['compId'],
+  data () {
+    return {
+      simpleUsers: [],
+      simpleUsersStage1: [],
+      simpleUsersStage2: [],
+      simpleUsersStage3: [],
+      simpleUsersStage4: [],
+      simpleUsersPlayoffs: [],
+      normalUsers: [],
+      normalUsersStage1: [],
+      normalUsersStage2: [],
+      normalUsersStage3: [],
+      normalUsersStage4: [],
+      normalUsersPlayoffs: [],
+      simpleActive: false,
+      normalActive: true,
+      simpleLoading: true,
+      normalLoading: true,
+      currentUserSimple: {},
+      currentUserSimpleStage1: {},
+      currentUserSimpleStage2: {},
+      currentUserSimpleStage3: {},
+      currentUserSimpleStage4: {},
+      currentUserSimplePlayoffs: {},
+      currentUserStandard: {},
+      currentUserStandardStage1: {},
+      currentUserStandardStage2: {},
+      currentUserStandardStage3: {},
+      currentUserStandardStage4: {},
+      currentUserStandardPlayoffs: {},
+      leaderStage: 'Combined',
+      userId: ''
+    }
+  },
+  computed: {
+    showLeagueNames: function () {
+      return window.screen.width > 768
     },
-    computed: {
-      showLeagueNames: function () {
-        return window.screen.width > 768
-      },
-      userData: function () {
-        return this.$store.getters.getUserData
-      },
-      currentUserSimpleActive: function () {
-        var data = []
-        switch (this.leaderStage) {
-          case 'Combined':
-            data = this.currentUserSimple
-            break
-          case 'Stage 1':
-            data = this.currentUserSimpleStage1
-            break
-          case 'Stage 2':
-            data = this.currentUserSimpleStage2
-            break
-          case 'Stage 3':
-            data = this.currentUserSimpleStage3
-            break
-          case 'Stage 4':
-            data = this.currentUserSimpleStage4
-            break
-          case 'Playoffs':
-            data = this.currentUserSimplePlayoffs
-            break
-          default:
-            data = this.currentUserSimple
-            break
-        }
-        return data
-      },
-      currentUserStandardActive: function () {
-        var data = []
-        switch (this.leaderStage) {
-          case 'Combined':
-            data = this.currentUserStandard
-            break
-          case 'Stage 1':
-            data = this.currentUserStandardStage1
-            break
-          case 'Stage 2':
-            data = this.currentUserStandardStage2
-            break
-          case 'Stage 3':
-            data = this.currentUserStandardStage3
-            break
-          case 'Stage 4':
-            data = this.currentUserStandardStage4
-            break
-          case 'Playoffs':
-            data = this.currentUserStandardPlayoffs
-            break
-          default:
-            data = this.currentUserStandard
-            break
-        }
-        return data
-      },
-      normalActiveUsers: function () {
-        var data = []
-        switch (this.leaderStage) {
-          case 'Combined':
-            data = this.normalUsers
-            break
-          case 'Stage 1':
-            data = this.normalUsersStage1
-            break
-          case 'Stage 2':
-            data = this.normalUsersStage2
-            break
-          case 'Stage 3':
-            data = this.normalUsersStage3
-            break
-          case 'Stage 4':
-            data = this.normalUsersStage4
-            break
-          case 'Playoffs':
-            data = this.normalUsersPlayoffs
-            break
-          default:
-            data = this.normalUsers
-            break
-        }
-        return data
-      },
-      simpleActiveUsers: function () {
-        var data = []
-        switch (this.leaderStage) {
-          case 'Combined':
-            data = this.simpleUsers
-            break
-          case 'Stage 1':
-            data = this.simpleUsersStage1
-            break
-          case 'Stage 2':
-            data = this.simpleUsersStage2
-            break
-          case 'Stage 3':
-            data = this.simpleUsersStage3
-            break
-          case 'Stage 4':
-            data = this.simpleUsersStage4
-            break
-          case 'Playoffs':
-            data = this.simpleUsersPlayoffs
-            break
-          default:
-            data = this.simpleUsers
-            break
-        }
-        return data
-      }
+    userData: function () {
+      return this.$store.getters.getUserData
     },
-    methods: {
-      showSimple: function () {
-        if (this.simpleLoading) this.getSimpleUsers()
-        this.simpleActive = true
-        this.normalActive = false
-      },
-      showNormal: function () {
-        this.simpleActive = false
-        this.normalActive = true
-      },
-      getSimpleUsers: function () {
-        var _this = this
-        fireLeaderboard.leaderboardSimple().then(function (users) {
-          _this.simpleUsers = users
-          _this.simpleLoading = false
-        })
-        fireLeaderboard.getLeaderboard('leaderboardSimpleStage1', 100).then(function (users) {
-          _this.simpleUsersStage1 = users
-        })
-        fireLeaderboard.getLeaderboard('leaderboardSimpleStage2', 100).then(function (users) {
-          _this.simpleUsersStage2 = users
-        })
-        fireLeaderboard.getLeaderboard('leaderboardSimpleStage3', 100).then(function (users) {
-          _this.simpleUsersStage3 = users
-        })
-        fireLeaderboard.getLeaderboard('leaderboardSimpleStage4', 100).then(function (users) {
-          _this.simpleUsersStage4 = users
-        })
-        fireLeaderboard.getLeaderboard('leaderboardSimplePlayoffs', 100).then(function (users) {
-          _this.simpleUsersPlayoffs = users
-        })
-      },
-      getNormalUsers: function () {
-        var _this = this
-        fireLeaderboard.leaderboardStandard().then(function (users) {
-          _this.normalUsers = users
-          _this.normalLoading = false
-        })
-        fireLeaderboard.getLeaderboard('leaderboardStandardStage1', 100).then(function (users) {
-          _this.normalUsersStage1 = users
-        })
-        fireLeaderboard.getLeaderboard('leaderboardStandardStage2', 100).then(function (users) {
-          _this.normalUsersStage2 = users
-        })
-        fireLeaderboard.getLeaderboard('leaderboardStandardStage3', 100).then(function (users) {
-          _this.normalUsersStage3 = users
-        })
-        fireLeaderboard.getLeaderboard('leaderboardStandardStage4', 100).then(function (users) {
-          _this.normalUsersStage4 = users
-        })
-        fireLeaderboard.getLeaderboard('leaderboardStandardPlayoffs', 100).then(function (users) {
-          _this.normalUsersPlayoffs = users
-        })
-      },
-      getCurrentUser: function () {
-        var _this = this
-        var userId = this.$store.getters.getUserId
-        if (userId) {
-          fireLeaderboard.leaderboardByUser(userId, 'leaderboardStandard').then(function (user) {
-            if (user) _this.currentUserStandard = user
-          })
-          fireLeaderboard.leaderboardByUser(userId, 'leaderboardSimple').then(function (user) {
-            if (user) _this.currentUserSimple = user
-          })
-        }
+    currentUserSimpleActive: function () {
+      var data = []
+      switch (this.leaderStage) {
+        case 'Combined':
+          data = this.currentUserSimple
+          break
+        case 'Stage 1':
+          data = this.currentUserSimpleStage1
+          break
+        case 'Stage 2':
+          data = this.currentUserSimpleStage2
+          break
+        case 'Stage 3':
+          data = this.currentUserSimpleStage3
+          break
+        case 'Stage 4':
+          data = this.currentUserSimpleStage4
+          break
+        case 'Playoffs':
+          data = this.currentUserSimplePlayoffs
+          break
+        default:
+          data = this.currentUserSimple
+          break
       }
+      return data
     },
-    mounted: function () {
+    currentUserStandardActive: function () {
+      var data = []
+      switch (this.leaderStage) {
+        case 'Combined':
+          data = this.currentUserStandard
+          break
+        case 'Stage 1':
+          data = this.currentUserStandardStage1
+          break
+        case 'Stage 2':
+          data = this.currentUserStandardStage2
+          break
+        case 'Stage 3':
+          data = this.currentUserStandardStage3
+          break
+        case 'Stage 4':
+          data = this.currentUserStandardStage4
+          break
+        case 'Playoffs':
+          data = this.currentUserStandardPlayoffs
+          break
+        default:
+          data = this.currentUserStandard
+          break
+      }
+      return data
+    },
+    normalActiveUsers: function () {
+      var data = []
+      switch (this.leaderStage) {
+        case 'Combined':
+          data = this.normalUsers
+          break
+        case 'Stage 1':
+          data = this.normalUsersStage1
+          break
+        case 'Stage 2':
+          data = this.normalUsersStage2
+          break
+        case 'Stage 3':
+          data = this.normalUsersStage3
+          break
+        case 'Stage 4':
+          data = this.normalUsersStage4
+          break
+        case 'Playoffs':
+          data = this.normalUsersPlayoffs
+          break
+        default:
+          data = this.normalUsers
+          break
+      }
+      return data
+    },
+    simpleActiveUsers: function () {
+      var data = []
+      switch (this.leaderStage) {
+        case 'Combined':
+          data = this.simpleUsers
+          break
+        case 'Stage 1':
+          data = this.simpleUsersStage1
+          break
+        case 'Stage 2':
+          data = this.simpleUsersStage2
+          break
+        case 'Stage 3':
+          data = this.simpleUsersStage3
+          break
+        case 'Stage 4':
+          data = this.simpleUsersStage4
+          break
+        case 'Playoffs':
+          data = this.simpleUsersPlayoffs
+          break
+        default:
+          data = this.simpleUsers
+          break
+      }
+      return data
+    }
+  },
+  methods: {
+    showSimple: function () {
+      if (this.simpleLoading) this.getSimpleUsers()
+      this.simpleActive = true
+      this.normalActive = false
+    },
+    showNormal: function () {
+      this.simpleActive = false
+      this.normalActive = true
+    },
+    getSimpleUsers: function () {
       var _this = this
-      this.getNormalUsers()
-      var userId = this.$store.getters.getUserId || this.$localStorage.get('hnpId')
-      _this.userId = userId
+      fireLeaderboard.leaderboardSimple().then(function (users) {
+        _this.simpleUsers = users
+        _this.simpleLoading = false
+      })
+      fireLeaderboard.getLeaderboard('leaderboardSimpleStage1', 100).then(function (users) {
+        _this.simpleUsersStage1 = users
+      })
+      fireLeaderboard.getLeaderboard('leaderboardSimpleStage2', 100).then(function (users) {
+        _this.simpleUsersStage2 = users
+      })
+      fireLeaderboard.getLeaderboard('leaderboardSimpleStage3', 100).then(function (users) {
+        _this.simpleUsersStage3 = users
+      })
+      fireLeaderboard.getLeaderboard('leaderboardSimpleStage4', 100).then(function (users) {
+        _this.simpleUsersStage4 = users
+      })
+      fireLeaderboard.getLeaderboard('leaderboardSimplePlayoffs', 100).then(function (users) {
+        _this.simpleUsersPlayoffs = users
+      })
+    },
+    getNormalUsers: function () {
+      var _this = this
+      fireLeaderboard.leaderboardStandard().then(function (users) {
+        _this.normalUsers = users
+        _this.normalLoading = false
+      })
+      fireLeaderboard.getLeaderboard('leaderboardStandardStage1', 100).then(function (users) {
+        _this.normalUsersStage1 = users
+      })
+      fireLeaderboard.getLeaderboard('leaderboardStandardStage2', 100).then(function (users) {
+        _this.normalUsersStage2 = users
+      })
+      fireLeaderboard.getLeaderboard('leaderboardStandardStage3', 100).then(function (users) {
+        _this.normalUsersStage3 = users
+      })
+      fireLeaderboard.getLeaderboard('leaderboardStandardStage4', 100).then(function (users) {
+        _this.normalUsersStage4 = users
+      })
+      fireLeaderboard.getLeaderboard('leaderboardStandardPlayoffs', 100).then(function (users) {
+        _this.normalUsersPlayoffs = users
+      })
+    },
+    getCurrentUser: function () {
+      var _this = this
+      var userId = this.$store.getters.getUserId
       if (userId) {
         fireLeaderboard.leaderboardByUser(userId, 'leaderboardStandard').then(function (user) {
-          _this.currentUserStandard = user
-        })
-        fireLeaderboard.leaderboardByUser(userId, 'leaderboardStandardStage1').then(function (user) {
-          _this.currentUserStandardStage1 = user
-        })
-        fireLeaderboard.leaderboardByUser(userId, 'leaderboardStandardStage2').then(function (user) {
-          _this.currentUserStandardStage2 = user
-        })
-        fireLeaderboard.leaderboardByUser(userId, 'leaderboardStandardStage3').then(function (user) {
-          _this.currentUserStandardStage3 = user
-        })
-        fireLeaderboard.leaderboardByUser(userId, 'leaderboardStandardStage4').then(function (user) {
-          _this.currentUserStandardStage4 = user
-        })
-        fireLeaderboard.leaderboardByUser(userId, 'leaderboardStandardPlayoffs').then(function (user) {
-          _this.currentUserStandardPlayoffs = user
+          if (user) _this.currentUserStandard = user
         })
         fireLeaderboard.leaderboardByUser(userId, 'leaderboardSimple').then(function (user) {
-          _this.currentUserSimple = user
-        })
-        fireLeaderboard.leaderboardByUser(userId, 'leaderboardSimpleStage1').then(function (user) {
-          _this.currentUserSimpleStage1 = user
-        })
-        fireLeaderboard.leaderboardByUser(userId, 'leaderboardSimpleStage2').then(function (user) {
-          _this.currentUserSimpleStage2 = user
-        })
-        fireLeaderboard.leaderboardByUser(userId, 'leaderboardSimpleStage3').then(function (user) {
-          _this.currentUserSimpleStage3 = user
-        })
-        fireLeaderboard.leaderboardByUser(userId, 'leaderboardSimpleStage4').then(function (user) {
-          _this.currentUserSimpleStage4 = user
-        })
-        fireLeaderboard.leaderboardByUser(userId, 'leaderboardSimplePlayoffs').then(function (user) {
-          _this.currentUserSimplePlayoffs = user
+          if (user) _this.currentUserSimple = user
         })
       }
     }
+  },
+  mounted: function () {
+    var _this = this
+    this.getNormalUsers()
+    var userId = this.$store.getters.getUserId || this.$localStorage.get('hnpId')
+    _this.userId = userId
+    if (userId) {
+      fireLeaderboard.leaderboardByUser(userId, 'leaderboardStandard').then(function (user) {
+        _this.currentUserStandard = user
+      })
+      fireLeaderboard.leaderboardByUser(userId, 'leaderboardStandardStage1').then(function (user) {
+        _this.currentUserStandardStage1 = user
+      })
+      fireLeaderboard.leaderboardByUser(userId, 'leaderboardStandardStage2').then(function (user) {
+        _this.currentUserStandardStage2 = user
+      })
+      fireLeaderboard.leaderboardByUser(userId, 'leaderboardStandardStage3').then(function (user) {
+        _this.currentUserStandardStage3 = user
+      })
+      fireLeaderboard.leaderboardByUser(userId, 'leaderboardStandardStage4').then(function (user) {
+        _this.currentUserStandardStage4 = user
+      })
+      fireLeaderboard.leaderboardByUser(userId, 'leaderboardStandardPlayoffs').then(function (user) {
+        _this.currentUserStandardPlayoffs = user
+      })
+      fireLeaderboard.leaderboardByUser(userId, 'leaderboardSimple').then(function (user) {
+        _this.currentUserSimple = user
+      })
+      fireLeaderboard.leaderboardByUser(userId, 'leaderboardSimpleStage1').then(function (user) {
+        _this.currentUserSimpleStage1 = user
+      })
+      fireLeaderboard.leaderboardByUser(userId, 'leaderboardSimpleStage2').then(function (user) {
+        _this.currentUserSimpleStage2 = user
+      })
+      fireLeaderboard.leaderboardByUser(userId, 'leaderboardSimpleStage3').then(function (user) {
+        _this.currentUserSimpleStage3 = user
+      })
+      fireLeaderboard.leaderboardByUser(userId, 'leaderboardSimpleStage4').then(function (user) {
+        _this.currentUserSimpleStage4 = user
+      })
+      fireLeaderboard.leaderboardByUser(userId, 'leaderboardSimplePlayoffs').then(function (user) {
+        _this.currentUserSimplePlayoffs = user
+      })
+    }
   }
+}
 </script>
 
 <style lang="scss">

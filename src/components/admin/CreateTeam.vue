@@ -25,32 +25,32 @@
 </template>
 
 <script>
-  import fireTeam from '@/services/team'
+import fireTeam from '@/services/team'
 
-  export default {
-    name: 'create-team',
-    data () {
-      return {
-        showCreateTeam: false,
-        team: {
-          compId: 'ALI8o0eJ30V1D1Fb7rHV',
-          logo: '',
-          losses: 0,
-          mapWins: 0,
-          name: '',
-          shortName: '',
-          wins: 0
-        },
-        message: null
-      }
-    },
-    methods: {
-      createTeam: function () {
-        var _this = this
-        fireTeam.createTeam(this.team).then(function (id) {
-          _this.message = 'Created team with id: ' + id
-        })
-      }
+export default {
+  name: 'create-team',
+  data () {
+    return {
+      showCreateTeam: false,
+      team: {
+        compId: 'ALI8o0eJ30V1D1Fb7rHV',
+        logo: '',
+        losses: 0,
+        mapWins: 0,
+        name: '',
+        shortName: '',
+        wins: 0
+      },
+      message: null
+    }
+  },
+  methods: {
+    createTeam: function () {
+      var _this = this
+      fireTeam.createTeam(this.team).then(function (id) {
+        _this.message = 'Created team with id: ' + id
+      })
     }
   }
+}
 </script>

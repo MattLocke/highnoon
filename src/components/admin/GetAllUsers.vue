@@ -8,23 +8,23 @@
 </template>
 
 <script>
-  import fireUser from '@/services/user'
+import fireUser from '@/services/user'
 
-  export default {
-    name: 'get-users',
-    data () {
-      return {
-        isLoading: false,
-        users: []
-      }
-    },
-    methods: {
-      getUsers: function () {
-        var _this = this
-        fireUser.getAllUsers().then(function (users) {
-          _this.users = users
-        })
-      }
+export default {
+  name: 'get-users',
+  data () {
+    return {
+      isLoading: false,
+      users: []
+    }
+  },
+  methods: {
+    getUsers: function () {
+      var _this = this
+      fireUser.getAllUsers().then(function (users) {
+        _this.users = users
+      })
     }
   }
+}
 </script>

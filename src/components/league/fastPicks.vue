@@ -24,31 +24,31 @@
 </template>
 
 <script>
-  import fastPickListing from '@/components/league/fastPicksListing'
+import fastPickListing from '@/components/league/fastPicksListing'
 
-  export default {
-    name: 'fastPick',
-    components: {
-      fastPickListing
-    },
-    props: [
-      'matchups',
-      'verified',
-      'leagueId',
-      'leagueData',
-      'userId'
-    ],
-    data () {
-      return {
-        showPicks: false,
-        showPoints: false,
-        autoWinner: true,
-        seeAllPicks: false
-      }
-    },
-    mounted: function () {
+export default {
+  name: 'fastPick',
+  components: {
+    fastPickListing
+  },
+  props: [
+    'matchups',
+    'verified',
+    'leagueId',
+    'leagueData',
+    'userId'
+  ],
+  data () {
+    return {
+      showPicks: false,
+      showPoints: false,
+      autoWinner: true,
+      seeAllPicks: false
     }
+  },
+  mounted: function () {
   }
+}
 </script>
 
 <style lang="scss" scoped>

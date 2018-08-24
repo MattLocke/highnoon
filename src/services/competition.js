@@ -13,54 +13,54 @@ export default {
     logger.logIt('Getting competitions.')
     var tmpReturn = []
     return db.collection('competitions')
-    .where('isActive', '==', true)
-    .get()
-    .then(function (querySnapshot) {
-      querySnapshot.forEach(function (doc) {
-        var tmpObj = doc.data()
-        tmpObj.id = doc.id
-        return fireImage.getCompetitionLogo(tmpObj.image).then(function (url) {
-          tmpObj.fireImage = url
-          tmpReturn.push(tmpObj)
+      .where('isActive', '==', true)
+      .get()
+      .then(function (querySnapshot) {
+        querySnapshot.forEach(function (doc) {
+          var tmpObj = doc.data()
+          tmpObj.id = doc.id
+          return fireImage.getCompetitionLogo(tmpObj.image).then(function (url) {
+            tmpObj.fireImage = url
+            tmpReturn.push(tmpObj)
+          })
         })
+        return tmpReturn
+      }, function (error) {
+        logger.errorIt(error)
       })
-      return tmpReturn
-    }, function (error) {
-      logger.errorIt(error)
-    })
   },
   getOldCompetitions () {
     logger.logIt('Getting competitions.')
     var tmpReturn = []
     return db.collection('competitions')
-    .where('isActive', '==', false)
-    .get()
-    .then(function (querySnapshot) {
-      querySnapshot.forEach(function (doc) {
-        var tmpObj = doc.data()
-        tmpObj.id = doc.id
-        return fireImage.getCompetitionLogo(tmpObj.image).then(function (url) {
-          tmpObj.fireImage = url
-          tmpReturn.push(tmpObj)
+      .where('isActive', '==', false)
+      .get()
+      .then(function (querySnapshot) {
+        querySnapshot.forEach(function (doc) {
+          var tmpObj = doc.data()
+          tmpObj.id = doc.id
+          return fireImage.getCompetitionLogo(tmpObj.image).then(function (url) {
+            tmpObj.fireImage = url
+            tmpReturn.push(tmpObj)
+          })
         })
+        return tmpReturn
+      }, function (error) {
+        logger.errorIt(error)
       })
-      return tmpReturn
-    }, function (error) {
-      logger.errorIt(error)
-    })
   },
   getLeaderboards (compId) {
     logger.logIt('Getting leaderboards for: ' + compId)
     var tmpReturn = []
     return db.collection('compLeaderboard/' + compId)
-    .orderBy('points')
-    .limit(100)
-    .get()
-    .then(function (querySnapshot) {
-      querySnapshot.forEach(function (doc) {
-        var tmpObj = doc.data()
-        tmpReturn.push(tmpObj)
+      .orderBy('points')
+      .limit(100)
+      .get()
+      .then(function (querySnapshot) {
+        querySnapshot.forEach(function (doc) {
+          var tmpObj = doc.data()
+          tmpReturn.push(tmpObj)
+        })
       })
-    })
   }
 }

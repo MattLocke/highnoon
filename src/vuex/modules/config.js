@@ -13,7 +13,7 @@ export default {
   },
   actions: {
     saveConfig: (context, payload) => {
-      context.commit("SAVECONFIG", payload)
+      context.commit('SAVECONFIG', payload)
     }
   },
   getters: {

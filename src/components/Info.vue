@@ -11,22 +11,22 @@
 </template>
 
 <script>
-  import firebase from 'firebase'
+import firebase from 'firebase'
 
-  export default {
-    name: 'info',
-    data () {
-      return {
-        profile: {}
-      }
-    },
-    mounted: function () {
-      var _this = this
-      firebase.auth().onAuthStateChanged(function (user) {
-        if (user) {
-          _this.profile = user
-        }
-      })
+export default {
+  name: 'info',
+  data () {
+    return {
+      profile: {}
     }
+  },
+  mounted: function () {
+    var _this = this
+    firebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+        _this.profile = user
+      }
+    })
   }
+}
 </script>

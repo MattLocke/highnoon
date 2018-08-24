@@ -10,10 +10,10 @@ var db = firebase.firestore()
 export default {
   updateNotification (notification) {
     return db.collection('notification').doc(notification.id)
-    .update(notification)
-    .then(function (notificationRef) {
-      return true
-    })
+      .update(notification)
+      .then(function (notificationRef) {
+        return true
+      })
   },
   getNotification (noteId) {
     logger.logIt('Getting notification.')
@@ -35,11 +35,11 @@ export default {
   },
   addNotification (notification) {
     return db.collection('notification').add(notification)
-    .then(function (notificationRef) {
-      return notificationRef.id
-    }).catch(function (error) {
-      logger.errorIt(error)
-      return false
-    })
+      .then(function (notificationRef) {
+        return notificationRef.id
+      }).catch(function (error) {
+        logger.errorIt(error)
+        return false
+      })
   }
 }

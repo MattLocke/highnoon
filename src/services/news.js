@@ -10,10 +10,10 @@ var db = firebase.firestore()
 export default {
   updateNews (news) {
     return db.collection('news').doc(news.id)
-    .update(news)
-    .then(function (newsRef) {
-      return true
-    })
+      .update(news)
+      .then(function (newsRef) {
+        return true
+      })
   },
   getNews () {
     logger.logIt('Getting news.')
@@ -35,12 +35,12 @@ export default {
   },
   addNews (news) {
     return db.collection('news').add(news)
-    .then(function (newsRef) {
-      return newsRef.id
-    }).catch(function (error) {
-      logger.errorIt(error)
-      return false
-    })
+      .then(function (newsRef) {
+        return newsRef.id
+      }).catch(function (error) {
+        logger.errorIt(error)
+        return false
+      })
   },
   getArticle (articleId) {
     logger.logIt('Getting article with id of: ' + articleId)

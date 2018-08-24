@@ -6,9 +6,9 @@
         .team-pick-name.clickable(v-on:click="visible = !visible")
           p.match-date.is-pulled-right.is-hidden-mobile {{ pick.oldMatchup.startDate | formatDate }}
           h3.overwatch-font
-            span.orange-text.is-hidden-mobile {{ pick.oldMatchup.homeTeamName }} 
-            span.orange-text.is-hidden-desktop {{ pick.oldMatchup.homeTeamShortName }} 
-            | vs 
+            span.orange-text.is-hidden-mobile {{ pick.oldMatchup.homeTeamName }}
+            span.orange-text.is-hidden-desktop {{ pick.oldMatchup.homeTeamShortName }}
+            | vs
             span.orange-text.is-hidden-desktop {{ pick.oldMatchup.awayTeamShortName }}
             span.orange-text.is-hidden-mobile {{ pick.oldMatchup.awayTeamName }}
             |  - {{ pick.myPick.points || 0 }} pts
@@ -36,7 +36,7 @@
               td(v-else) 0
             tr
               td {{pick.oldMatchup.homeTeamShortName }}
-              td.score-pad 
+              td.score-pad
                 span {{ pick.myPick.homeScore }}
               td.score-pad.is-hidden-mobile
                 span {{ pick.oldMatchup.homeScore || 0 }}
@@ -44,7 +44,7 @@
               td(v-else) 0
             tr
               td {{pick.oldMatchup.awayTeamShortName }}
-              td.score-pad 
+              td.score-pad
                 span {{ pick.myPick.awayScore }}
               td.score-pad.is-hidden-mobile
                 span {{ pick.oldMatchup.awayScore || 0 }}
@@ -61,7 +61,7 @@
               td.is-hidden-mobile(v-else-if="pick.oldMatchup.maps[index].winner == pick.oldMatchup.awayTeamName")
                 img.small-logo(v-bind:src="pick.oldMatchup.awayLogoUrl")
               td.is-hidden-mobile(v-else-if="pick.oldMatchup.maps[index].winner == 'Draw'")
-                img.small-logo(src="/static/img/tie.svg" alt="Draw")
+                img.small-logo(src="/assets/img/tie.svg" alt="Draw")
               td.is-hidden-mobile(v-else) N/A
               td(v-if="map.winner == pick.oldMatchup.maps[index].winner") 100
               td(v-else) 0
@@ -72,13 +72,13 @@
               td(v-if="pick.myPick.tieWinner == pick.oldMatchup.awayTeamName")
                 img.small-logo(v-bind:src="pick.oldMatchup.awayLogoUrl")
               td(v-if="pick.myPick.tieWinner == 'none'")
-                img.small-logo(src="/static/img/tie.svg" alt="none")
+                img.small-logo(src="/assets/img/tie.svg" alt="none")
               td.is-hidden-mobile(v-if="pick.oldMatchup.tieWinner == pick.oldMatchup.homeTeamName")
                 img.small-logo(v-bind:src="pick.oldMatchup.homeLogoUrl")
               td.is-hidden-mobile(v-if="pick.oldMatchup.tieWinner == pick.oldMatchup.awayTeamName")
                 img.small-logo(v-bind:src="pick.oldMatchup.awayLogoUrl")
               td.is-hidden-mobile(v-if="pick.oldMatchup.tieWinner == 'none'")
-                img.small-logo(src="/static/img/tie.svg" alt="none")
+                img.small-logo(src="/assets/img/tie.svg" alt="none")
               td(v-if="pick.myPick.tieWinner == pick.oldMatchup.tieWinner") 100
               td(v-else) 0
       .wrap(v-else)
@@ -86,22 +86,22 @@
 </template>
 
 <script>
-  export default {
-    name: 'pick-stat-listing',
-    props: [
-      'pick', 'leagueData'
-    ],
-    data () {
-      return {
-        visible: false
-      }
-    },
-    computed: {
-      leaguePickUrl: function () {
-        return '/#/LeaguePicks/' + this.pick.myPick.leagueId + '/' + this.pick.myPick.matchId
-      }
+export default {
+  name: 'pick-stat-listing',
+  props: [
+    'pick', 'leagueData'
+  ],
+  data () {
+    return {
+      visible: false
+    }
+  },
+  computed: {
+    leaguePickUrl: function () {
+      return '/#/LeaguePicks/' + this.pick.myPick.leagueId + '/' + this.pick.myPick.matchId
     }
   }
+}
 </script>
 
 <style lang="scss" scoped>

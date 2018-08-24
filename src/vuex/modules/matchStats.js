@@ -9,7 +9,7 @@ export default {
   },
   actions: {
     saveStats: (context, payload) => {
-      context.commit("SAVESTATS", payload)
+      context.commit('SAVESTATS', payload)
     }
   },
   getters: {

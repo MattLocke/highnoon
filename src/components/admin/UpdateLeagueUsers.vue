@@ -13,35 +13,35 @@
 </template>
 
 <script>
-  import maintenance from '@/services/maintenance'
-  import fireComp from '@/services/competition'
+import maintenance from '@/services/maintenance'
+import fireComp from '@/services/competition'
 
-  export default {
-    name: 'update-league-users',
-    data () {
-      return {
-        isLoading: false,
-        isDone: false,
-        activeComp: '',
-        competitions: []
-      }
-    },
-    methods: {
-      updateLeagueUsers: function () {
-        var _this = this
-        _this.isLoading = true
-        // go through matchPicks, get matchId and userId
-        maintenance.updateLeagueUsers(_this.activeComp).then(function () {
-          _this.isDone = true
-          _this.isLoading = false
-        })
-      }
-    },
-    mounted: function () {
+export default {
+  name: 'update-league-users',
+  data () {
+    return {
+      isLoading: false,
+      isDone: false,
+      activeComp: '',
+      competitions: []
+    }
+  },
+  methods: {
+    updateLeagueUsers: function () {
       var _this = this
-      fireComp.getCompetitions().then(function (comps) {
-        _this.competitions = comps
+      _this.isLoading = true
+      // go through matchPicks, get matchId and userId
+      maintenance.updateLeagueUsers(_this.activeComp).then(function () {
+        _this.isDone = true
+        _this.isLoading = false
       })
     }
+  },
+  mounted: function () {
+    var _this = this
+    fireComp.getCompetitions().then(function (comps) {
+      _this.competitions = comps
+    })
   }
+}
 </script>

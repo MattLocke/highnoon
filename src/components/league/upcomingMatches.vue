@@ -15,7 +15,7 @@
               span.team-name
                 span.team-rank {{ match.homeRecord }}
                 img(v-bind:src="match.homeLogoUrl")
-                |  {{ match.homeTeamShortName }} 
+                |  {{ match.homeTeamShortName }}
                 span.vs vs
                 span.team-rank {{ match.awayRecord }}
                 |  {{ match.awayTeamShortName }}
@@ -30,31 +30,31 @@
 </template>
 
 <script>
-  export default {
-    name: 'upcoming-matches',
-    props: [
-      'matchups', 'verified', 'leagueId'
-    ],
-    data () {
-      return {
-        showMatches: true
-      }
+export default {
+  name: 'upcoming-matches',
+  props: [
+    'matchups', 'verified', 'leagueId'
+  ],
+  data () {
+    return {
+      showMatches: true
+    }
+  },
+  computed: {
+    sortedMatchups: function () {
+      var sorted = this.matchups.slice(0)
+      return sorted.sort(function (a, b) { return (a.startDate > b.startDate) ? 1 : ((b.startDate > a.startDate) ? -1 : 0) })
+    }
+  },
+  methods: {
+    upcomingMatchUrl: function (matchupId, numMaps) {
+      return '/#/Matchup/' + numMaps + '/' + this.leagueId + '/' + matchupId
     },
-    computed: {
-      sortedMatchups: function () {
-        var sorted = this.matchups.slice(0)
-        return sorted.sort(function (a, b) { return (a.startDate > b.startDate) ? 1 : ((b.startDate > a.startDate) ? -1 : 0) })
-      }
-    },
-    methods: {
-      upcomingMatchUrl: function (matchupId, numMaps) {
-        return '/#/Matchup/' + numMaps + '/' + this.leagueId + '/' + matchupId
-      },
-      editPickUrl: function (matchupId, numMaps, pickId) {
-        return '/#/Matchup/' + numMaps + '/' + this.leagueId + '/' + matchupId + '/' + pickId
-      }
+    editPickUrl: function (matchupId, numMaps, pickId) {
+      return '/#/Matchup/' + numMaps + '/' + this.leagueId + '/' + matchupId + '/' + pickId
     }
   }
+}
 </script>
 
 <style lang="scss" scoped>

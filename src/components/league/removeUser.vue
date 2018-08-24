@@ -13,41 +13,41 @@
 </template>
 
 <script>
-  import fireLeague from '@/services/league'
+import fireLeague from '@/services/league'
 
-  export default {
-    props: [
-      'leagueId', 'users', 'ownerId'
-    ],
-    components: {
-      'confirm': confirm
-    },
-    data () {
-      return {
-        isSure: false,
-        userId: ''
+export default {
+  props: [
+    'leagueId', 'users', 'ownerId'
+  ],
+  components: {
+    'confirm': confirm
+  },
+  data () {
+    return {
+      isSure: false,
+      userId: ''
+    }
+  },
+  computed: {
+    validUsers: function () {
+      var _this = this
+      var returnUsers = []
+      if (this.users) {
+        this.users.forEach(function (user) {
+          if (user.userId !== _this.ownerId) returnUsers.push(user)
+        })
       }
+      return returnUsers
+    }
+  },
+  methods: {
+    seeIfSure: function () {
+      this.isSure = true
     },
-    computed: {
-      validUsers: function () {
-        var _this = this
-        var returnUsers = []
-        if (this.users) {
-          this.users.forEach(function (user) {
-            if (user.userId !== _this.ownerId) returnUsers.push(user)
-          })
-        }
-        return returnUsers
-      }
-    },
-    methods: {
-      seeIfSure: function () {
-        this.isSure = true
-      },
-      removeUser: function () {
-        var isLeaver = false
-        fireLeague.leaveLeague(this.leagueId, this.userId, isLeaver)
-      }
+    removeUser: function () {
+      var isLeaver = false
+      fireLeague.leaveLeague(this.leagueId, this.userId, isLeaver)
     }
   }
+}
 </script>

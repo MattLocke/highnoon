@@ -24,16 +24,16 @@ export default {
       winstonsId: 91
     }
     return db.collection('competitions')
-    .doc(compId)
-    .set(compData)
-    .then(function (comp) {
-      logger.logIt('Created competition with id: ', comp.id)
-      return comp
-    })
-    .catch(function (error) {
-      logger.errorIt('Error creating comp: ', error)
-      return false
-    })
+      .doc(compId)
+      .set(compData)
+      .then(function (comp) {
+        logger.logIt('Created competition with id: ', comp.id)
+        return comp
+      })
+      .catch(function (error) {
+        logger.errorIt('Error creating comp: ', error)
+        return false
+      })
   },
   populateTeams (compId) {
     // Adds teams from OWL to a given competition

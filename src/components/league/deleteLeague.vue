@@ -7,27 +7,27 @@
 </template>
 
 <script>
-  import fireLeague from '@/services/league'
+import fireLeague from '@/services/league'
 
-  export default {
-    props: [
-      'leagueId'
-    ],
-    components: {
-      'confirm': confirm
+export default {
+  props: [
+    'leagueId'
+  ],
+  components: {
+    'confirm': confirm
+  },
+  data () {
+    return {
+      isSure: false
+    }
+  },
+  methods: {
+    seeIfSure: function () {
+      this.isSure = true
     },
-    data () {
-      return {
-        isSure: false
-      }
-    },
-    methods: {
-      seeIfSure: function () {
-        this.isSure = true
-      },
-      deleteLeague: function () {
-        fireLeague.deleteLeague(this.leagueId, this.$router)
-      }
+    deleteLeague: function () {
+      fireLeague.deleteLeague(this.leagueId, this.$router)
     }
   }
+}
 </script>

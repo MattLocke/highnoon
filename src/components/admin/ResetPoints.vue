@@ -12,45 +12,45 @@
 </template>
 
 <script>
-  import maintenance from '@/services/maintenance'
-  import fireComp from '@/services/competition'
+import maintenance from '@/services/maintenance'
+import fireComp from '@/services/competition'
 
-  export default {
-    name: 'reset-points',
-    data () {
-      return {
-        isLoading: false,
-        isDone: false,
-        activeComp: '',
-        competitions: []
-      }
-    },
-    methods: {
-      cleanPointsForComp: function () {
-        var _this = this
-        _this.isLoading = true
-        // go through matchPicks, get matchId and userId
-        maintenance.cleanPointsForComp(_this.activeComp).then(function (users) {
-          var i = 0
-          var tmp = []
-          users.forEach(function (user) {
-            i++
-            tmp.push(user)
-            if (i >= 400) {
-              maintenance.applyClean(tmp)
-              tmp = []
-              i = 0
-            }
-          })
-          maintenance.applyClean(tmp)
-        })
-      }
-    },
-    mounted: function () {
+export default {
+  name: 'reset-points',
+  data () {
+    return {
+      isLoading: false,
+      isDone: false,
+      activeComp: '',
+      competitions: []
+    }
+  },
+  methods: {
+    cleanPointsForComp: function () {
       var _this = this
-      fireComp.getCompetitions().then(function (comps) {
-        _this.competitions = comps
+      _this.isLoading = true
+      // go through matchPicks, get matchId and userId
+      maintenance.cleanPointsForComp(_this.activeComp).then(function (users) {
+        var i = 0
+        var tmp = []
+        users.forEach(function (user) {
+          i++
+          tmp.push(user)
+          if (i >= 400) {
+            maintenance.applyClean(tmp)
+            tmp = []
+            i = 0
+          }
+        })
+        maintenance.applyClean(tmp)
       })
     }
+  },
+  mounted: function () {
+    var _this = this
+    fireComp.getCompetitions().then(function (comps) {
+      _this.competitions = comps
+    })
   }
+}
 </script>

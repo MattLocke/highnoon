@@ -24,19 +24,19 @@ export default {
   },
   actions: {
     logIn: (context, payload) => {
-      context.commit("LOGIN", payload)
+      context.commit('LOGIN', payload)
     },
     saveFireData: (context, payload) => {
-      context.commit("FBLOGIN", payload)
+      context.commit('FBLOGIN', payload)
     },
     logOut: (context) => {
-      context.commit("LOGOUT")
+      context.commit('LOGOUT')
     }
   },
   getters: {
     isLoggedIn: state => state.loggedIn,
     getUserData: state => state.userData,
-    getFBUserData: state=> state.fireUserData,
+    getFBUserData: state => state.fireUserData,
     getUserId: state => state.fireUserData.uid
   }
 }

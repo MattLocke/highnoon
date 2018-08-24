@@ -2,8 +2,8 @@
   .navigation
     nav.navbar(role="navigation", aria-label="main navigation")
       .navbar-brand
-        a.navbar-brand(href="/") 
-          img.logo(src="/static/img/high_noon.svg" alt="High Noon Pick'em - Fantasy Overwatch")
+        a.navbar-brand(href="/")
+          img.logo(src="assets/img/high_noon.svg" alt="High Noon Pick'em - Fantasy Overwatch")
         button.button.navbar-burger(v-on:click="isBurgerActive = !isBurgerActive" v-bind:class="{ 'is-active': isBurgerActive }")
           span
           span
@@ -14,7 +14,7 @@
           router-link.navbar-item(to="/") Home
           router-link.navbar-item(to="/News") News
           router-link.navbar-item(to="/Featured") Featured
-          router-link.navbar-item(to="/Leaderboard") Leaderboard          
+          router-link.navbar-item(to="/Leaderboard") Leaderboard
           router-link.navbar-item(v-if="!loggedIn" to="/Login") Log In / Sign Up
           a.navbar-item(v-if="loggedIn" v-on:click="logOut()") Logout
           a.navbar-item(v-if="!userData.isAdmin" href='https://www.patreon.com/highnoonpickem') Patreon
@@ -27,63 +27,63 @@
 </template>
 
 <script>
-  import firebase from 'firebase'
-  // import fireUser from '@/services/user'
-  import notification from '@/components/navigation/notification'
+import firebase from 'firebase'
+// import fireUser from '@/services/user'
+import notification from '@/components/navigation/notification'
 
-  export default {
-    name: 'navigation',
-    props: ['userData', 'isVerified'],
-    components: {
-      notification
-    },
-    data () {
-      return {
-        currentPage: 'home',
-        isBurgerActive: false,
-        verificationSent: false,
-        sendingVerification: false,
-        loaded: false
-      }
-    },
-    computed: {
-      loggedIn: function () {
-        return this.$store.getters.isLoggedIn
-      }
-    },
-    methods: {
-      logOut: function () {
-        var _this = this
-        firebase.auth().signOut().then(function () {
-          _this.$store.dispatch('logOut')
-          _this.$router.push({path: '/Login'})
-        }).catch(function (error) {
-          // An error happened.
-          _this.errorMessage = error
-        })
-      },
-      isActive: function (title) {
-        return title === this.currentPage
-      },
-      setActive: function (title) {
-        this.currentPage = title
-      },
-      resendVerification: function () {
-        var _this = this
-        var user = firebase.auth().currentUser
-        this.sendingVerification = true
-
-        user.sendEmailVerification().then(function () {
-          _this.sendingVerification = false
-          _this.verificationSent = true
-        }).catch(function (error) {
-          console.error('Unable to send verification email.', error)
-        })
-      }
-    },
-    mounted: function () {
+export default {
+  name: 'navigation',
+  props: ['userData', 'isVerified'],
+  components: {
+    notification
+  },
+  data () {
+    return {
+      currentPage: 'home',
+      isBurgerActive: false,
+      verificationSent: false,
+      sendingVerification: false,
+      loaded: false
     }
+  },
+  computed: {
+    loggedIn: function () {
+      return this.$store.getters.isLoggedIn
+    }
+  },
+  methods: {
+    logOut: function () {
+      var _this = this
+      firebase.auth().signOut().then(function () {
+        _this.$store.dispatch('logOut')
+        _this.$router.push({path: '/Login'})
+      }).catch(function (error) {
+        // An error happened.
+        _this.errorMessage = error
+      })
+    },
+    isActive: function (title) {
+      return title === this.currentPage
+    },
+    setActive: function (title) {
+      this.currentPage = title
+    },
+    resendVerification: function () {
+      var _this = this
+      var user = firebase.auth().currentUser
+      this.sendingVerification = true
+
+      user.sendEmailVerification().then(function () {
+        _this.sendingVerification = false
+        _this.verificationSent = true
+      }).catch(function (error) {
+        console.error('Unable to send verification email.', error)
+      })
+    }
+  },
+  mounted: function () {
   }
+}
 </script>
 
 <style lang="scss" scoped>

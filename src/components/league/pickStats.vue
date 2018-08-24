@@ -6,61 +6,61 @@
 </template>
 
 <script>
-  import statListing from '@/components/league/pickStatListing'
+import statListing from '@/components/league/pickStatListing'
 
-  export default {
-    name: 'pick-stats',
-    props: [
-      'oldMatchups', 'matchups', 'leaguePicks', 'leagueData'
-    ],
-    components: {
-      statListing
-    },
-    data () {
-      return {
-        allPicks: [
+export default {
+  name: 'pick-stats',
+  props: [
+    'oldMatchups', 'matchups', 'leaguePicks', 'leagueData'
+  ],
+  components: {
+    statListing
+  },
+  data () {
+    return {
+      allPicks: [
 
-        ]
-      }
-    },
-    computed: {
-      computedPicks: function () {
-        // grab old matchups, grab picks - build out object to iterate through
-        var _this = this
-        var tmp = []
-        if (_this.leaguePicks) {
-          _this.oldMatchups.forEach(function (matchup) {
-            var pick = {}
-            _this.leaguePicks.forEach(function (lpick) {
-              if (lpick.matchId === matchup.id) {
-                pick.oldMatchup = matchup
-                pick.myPick = lpick
-                tmp.push(pick)
-              }
-            })
+      ]
+    }
+  },
+  computed: {
+    computedPicks: function () {
+      // grab old matchups, grab picks - build out object to iterate through
+      var _this = this
+      var tmp = []
+      if (_this.leaguePicks) {
+        _this.oldMatchups.forEach(function (matchup) {
+          var pick = {}
+          _this.leaguePicks.forEach(function (lpick) {
+            if (lpick.matchId === matchup.id) {
+              pick.oldMatchup = matchup
+              pick.myPick = lpick
+              tmp.push(pick)
+            }
           })
-          _this.matchups.forEach(function (matchup) {
-            var pick = {}
-            _this.leaguePicks.forEach(function (lpick) {
-              if (lpick.matchId === matchup.id) {
-                pick.oldMatchup = matchup
-                pick.myPick = lpick
-                tmp.push(pick)
-              }
-            })
+        })
+        _this.matchups.forEach(function (matchup) {
+          var pick = {}
+          _this.leaguePicks.forEach(function (lpick) {
+            if (lpick.matchId === matchup.id) {
+              pick.oldMatchup = matchup
+              pick.myPick = lpick
+              tmp.push(pick)
+            }
           })
-        }
-        return tmp
+        })
       }
-    },
-    methods: {
-      toggleVisible: function (pick) {
-        console.log('toggling...')
-        if (pick.visible) pick.visible = false
-        else pick.visible = true
-      }
+      return tmp
+    }
+  },
+  methods: {
+    toggleVisible: function (pick) {
+      console.log('toggling...')
+      if (pick.visible) pick.visible = false
+      else pick.visible = true
     }
   }
+}
 </script>
 
 <style lang="scss" scoped>

@@ -39,84 +39,84 @@
 </template>
 
 <script>
-  import vueMarkdown from 'vue-markdown'
-  import comment from '@/components/reusable/Comment'
-  import fireComment from '@/services/comment'
-  import fireImage from '@/services/image'
+import vueMarkdown from 'vue-markdown'
+import comment from '@/components/reusable/Comment'
+import fireComment from '@/services/comment'
+import fireImage from '@/services/image'
 
-  export default {
-    name: 'comments',
-    components: {
-      vueMarkdown,
-      comment
-    },
-    props: ['userData', 'articleId', 'isOwner', 'verified'],
-    data () {
-      return {
-        newCommentMode: false,
-        newComment: {
-          comment: ''
-        },
-        comments: []
-      }
-    },
-    watch: {
-      articleId: function (val) {
-        this.getTheComments(val)
+export default {
+  name: 'comments',
+  components: {
+    vueMarkdown,
+    comment
+  },
+  props: ['userData', 'articleId', 'isOwner', 'verified'],
+  data () {
+    return {
+      newCommentMode: false,
+      newComment: {
+        comment: ''
       },
-      userData: function (val) {
-        var _this = this
-        if (this.userData.avatar) {
-          fireImage.getImage('users', this.userData.avatar).then(function (url) {
-            _this.userData.avatarUrl = url
-          })
-        } else {
-          _this.userData.avatarUrl = 'https://highnoonpickem.com/static/img/default-avatar.jpg'
-        }
-        if (this.userData.teamLogo) {
-          fireImage.getTeamLogo(_this.userData.teamLogo).then(function (url) {
-            _this.userData.teamLogoUrl = url
-          })
-        }
-      }
-    },
-    methods: {
-      saveComment: function () {
-        var _this = this
-        _this.newComment.userDisplayName = _this.userData.displayName
-        _this.newComment.userAvatar = _this.userData.avatarUrl
-        _this.newComment.postDate = new Date().getTime()
-        _this.newComment.articleId = _this.articleId
-        _this.newComment.userId = _this.userData.id
-        _this.newComment.teamLogo = _this.userData.teamLogo || null
-        fireComment.createArticleComment(_this.newComment).then(function () {
-          _this.newComment.checkSure = false
-          if (_this.newComment.teamLogo) _this.newComment.teamLogoUrl = _this.userData.teamLogoUrl
-          _this.comments.unshift(_this.newComment)
-          _this.newComment = {comment: ''}
-          _this.newCommentMode = false
-        })
-      },
-      getTheComments: function (articleId) {
-        var _this = this
-        fireComment.getArticleComments(_this.articleId).then(function (comments) {
-          comments.forEach(function (comment) {
-            comment.teamLogoUrl = ''
-            comment.checkSure = false
-            if (comment.teamLogo) {
-              return fireImage.getTeamLogo(comment.teamLogo).then(function (url) {
-                comment.teamLogoUrl = url
-                return true
-              })
-            }
-          })
-          _this.comments = comments
-        })
-      }
-    },
-    mounted: function () {
+      comments: []
     }
+  },
+  watch: {
+    articleId: function (val) {
+      this.getTheComments(val)
+    },
+    userData: function (val) {
+      var _this = this
+      if (this.userData.avatar) {
+        fireImage.getImage('users', this.userData.avatar).then(function (url) {
+          _this.userData.avatarUrl = url
+        })
+      } else {
+        _this.userData.avatarUrl = 'https://highnoonpickem.com/static/img/default-avatar.jpg'
+      }
+      if (this.userData.teamLogo) {
+        fireImage.getTeamLogo(_this.userData.teamLogo).then(function (url) {
+          _this.userData.teamLogoUrl = url
+        })
+      }
+    }
+  },
+  methods: {
+    saveComment: function () {
+      var _this = this
+      _this.newComment.userDisplayName = _this.userData.displayName
+      _this.newComment.userAvatar = _this.userData.avatarUrl
+      _this.newComment.postDate = new Date().getTime()
+      _this.newComment.articleId = _this.articleId
+      _this.newComment.userId = _this.userData.id
+      _this.newComment.teamLogo = _this.userData.teamLogo || null
+      fireComment.createArticleComment(_this.newComment).then(function () {
+        _this.newComment.checkSure = false
+        if (_this.newComment.teamLogo) _this.newComment.teamLogoUrl = _this.userData.teamLogoUrl
+        _this.comments.unshift(_this.newComment)
+        _this.newComment = {comment: ''}
+        _this.newCommentMode = false
+      })
+    },
+    getTheComments: function (articleId) {
+      var _this = this
+      fireComment.getArticleComments(_this.articleId).then(function (comments) {
+        comments.forEach(function (comment) {
+          comment.teamLogoUrl = ''
+          comment.checkSure = false
+          if (comment.teamLogo) {
+            return fireImage.getTeamLogo(comment.teamLogo).then(function (url) {
+              comment.teamLogoUrl = url
+              return true
+            })
+          }
+        })
+        _this.comments = comments
+      })
+    }
+  },
+  mounted: function () {
   }
+}
 </script>
 
 <style lang="scss">

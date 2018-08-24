@@ -24,42 +24,42 @@
 </template>
 
 <script>
-  export default {
-    name: 'messages',
-    data () {
-      return {
-        messages: [
-          {
-            posted: 1517897347,
-            authorId: 'Vq1h1yfQKeeG8RbwLd8ATsK4wgE3',
-            authorName: 'SouldrinK',
-            message: 'Testing 123'
-          },
-          {
-            posted: 1517897365,
-            authorId: 'XTx4TyFQlZbKwmebU7rB0G1eaRk1',
-            authorName: 'aretha',
-            message: 'This is a test too.'
-          }
-        ],
-        newComment: {
-          comment: ''
+export default {
+  name: 'messages',
+  data () {
+    return {
+      messages: [
+        {
+          posted: 1517897347,
+          authorId: 'Vq1h1yfQKeeG8RbwLd8ATsK4wgE3',
+          authorName: 'SouldrinK',
+          message: 'Testing 123'
+        },
+        {
+          posted: 1517897365,
+          authorId: 'XTx4TyFQlZbKwmebU7rB0G1eaRk1',
+          authorName: 'aretha',
+          message: 'This is a test too.'
         }
+      ],
+      newComment: {
+        comment: ''
       }
-    },
-    computed: {
-      userData: function () {
-        return this.$store.getters.getUserData
-      }
-    },
-    methods: {
-      saveComment: function () {
-
-      }
-    },
-    mounted: function () {
     }
+  },
+  computed: {
+    userData: function () {
+      return this.$store.getters.getUserData
+    }
+  },
+  methods: {
+    saveComment: function () {
+
+    }
+  },
+  mounted: function () {
   }
+}
 </script>
 
 <style scoped>

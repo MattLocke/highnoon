@@ -16,41 +16,41 @@
 </template>
 
 <script>
-  import firePopulate from '@/services/populate'
-  import fireComp from '@/services/competition'
+import firePopulate from '@/services/populate'
+import fireComp from '@/services/competition'
 
-  export default {
-    name: 'populate-data',
-    data () {
-      return {
-        successComp: false,
-        successTeams: false,
-        compId: '',
-        competitions: []
-      }
-    },
-    methods: {
-      createComp: function () {
-        var _this = this
-        firePopulate.populateCompetition().then(function () {
-          _this.successComp = true
-        })
-      },
-      createTeams: function () {
-        if (this.compId) {
-          firePopulate.populateTeams(this.compId)
-          this.successTeams = true
-        }
-      },
-      setAllTeams: function () {
-        firePopulate.populateGenericTeams()
-      }
-    },
-    mounted: function () {
-      var _this = this
-      fireComp.getCompetitions().then(function (comps) {
-        _this.competitions = comps
-      })
+export default {
+  name: 'populate-data',
+  data () {
+    return {
+      successComp: false,
+      successTeams: false,
+      compId: '',
+      competitions: []
     }
+  },
+  methods: {
+    createComp: function () {
+      var _this = this
+      firePopulate.populateCompetition().then(function () {
+        _this.successComp = true
+      })
+    },
+    createTeams: function () {
+      if (this.compId) {
+        firePopulate.populateTeams(this.compId)
+        this.successTeams = true
+      }
+    },
+    setAllTeams: function () {
+      firePopulate.populateGenericTeams()
+    }
+  },
+  mounted: function () {
+    var _this = this
+    fireComp.getCompetitions().then(function (comps) {
+      _this.competitions = comps
+    })
   }
+}
 </script>

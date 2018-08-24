@@ -10,55 +10,55 @@
 </template>
 
 <script>
-  // import firePick from '@/services/pick'
-  import fireLeague from '@/services/league'
+// import firePick from '@/services/pick'
+import fireLeague from '@/services/league'
 
-  export default {
-    name: 'import-picks',
-    props: [
-      'leagueId', 'userId'
-    ],
-    data () {
-      return {
-        isSure: false,
-        referenceLeague: '',
-        currentLeagues: [],
-        isLoading: true
-      }
-    },
-    methods: {
-      seeIfSure: function () {
-        this.isSure = true
-      },
-      leagueMode (league) {
-        var theName = league.leagueName
-        return theName
-      },
-      importPicks: function () {
-        var _this = this
-        _this.isLoading = true
-        alert('This feature is temporarily disabled for now so I can make sure it does not mess with any picks.  Thank you for understanding while I test things!')
-        // firePick.deletePicks(this.leagueId, this.userId).then(function (response) {
-        //   firePick.getPicks(_this.userId, _this.referenceLeague).then(function (picks) {
-        //     picks.forEach(function (pick) {
-        //       pick.leagueId = _this.leagueId
-        //     })
-        //     firePick.createMultiplePicks(picks)
-        //   })
-        // })
-      },
-      getLeagues: function () {
-        var _this = this
-        fireLeague.getLeaguesByUser(this.userId).then(function (leagues) {
-          _this.currentLeagues = leagues
-          _this.isLoading = false
-        })
-      }
-    },
-    mounted: function () {
-      this.getLeagues()
+export default {
+  name: 'import-picks',
+  props: [
+    'leagueId', 'userId'
+  ],
+  data () {
+    return {
+      isSure: false,
+      referenceLeague: '',
+      currentLeagues: [],
+      isLoading: true
     }
+  },
+  methods: {
+    seeIfSure: function () {
+      this.isSure = true
+    },
+    leagueMode (league) {
+      var theName = league.leagueName
+      return theName
+    },
+    importPicks: function () {
+      var _this = this
+      _this.isLoading = true
+      alert('This feature is temporarily disabled for now so I can make sure it does not mess with any picks.  Thank you for understanding while I test things!')
+      // firePick.deletePicks(this.leagueId, this.userId).then(function (response) {
+      //   firePick.getPicks(_this.userId, _this.referenceLeague).then(function (picks) {
+      //     picks.forEach(function (pick) {
+      //       pick.leagueId = _this.leagueId
+      //     })
+      //     firePick.createMultiplePicks(picks)
+      //   })
+      // })
+    },
+    getLeagues: function () {
+      var _this = this
+      fireLeague.getLeaguesByUser(this.userId).then(function (leagues) {
+        _this.currentLeagues = leagues
+        _this.isLoading = false
+      })
+    }
+  },
+  mounted: function () {
+    this.getLeagues()
   }
+}
 </script>
 
 <style scoped>

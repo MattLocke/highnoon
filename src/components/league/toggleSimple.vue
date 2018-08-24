@@ -10,36 +10,36 @@
 </template>
 
 <script>
-  import fireLeague from '@/services/league'
-  export default {
-    name: 'toggleSimple',
-    props: [
-      'leagueData',
-      'leagueId'
-    ],
-    data () {
-      return {
-        simpleError: '',
-        simpleSuccess: '',
-        isLoading: false
-      }
-    },
-    methods: {
-      toggleSimple: function () {
-        var _this = this
-        _this.isLoading = true
-        fireLeague.toggleSimple(_this.leagueId, _this.leagueData.simpleMode).then(function () {
-          var simpleStatus = 'Default Mode'
-          if (_this.leagueData.simpleMode) simpleStatus = 'Simple Mode'
-          _this.simpleSuccess = 'Updated status to: ' + simpleStatus
-          _this.isLoading = false
-        }).catch(function (error) {
-          _this.simpleError = 'Unable to toggle simple mode: ' + error
-          _this.isLoading = false
-        })
-      }
+import fireLeague from '@/services/league'
+export default {
+  name: 'toggleSimple',
+  props: [
+    'leagueData',
+    'leagueId'
+  ],
+  data () {
+    return {
+      simpleError: '',
+      simpleSuccess: '',
+      isLoading: false
+    }
+  },
+  methods: {
+    toggleSimple: function () {
+      var _this = this
+      _this.isLoading = true
+      fireLeague.toggleSimple(_this.leagueId, _this.leagueData.simpleMode).then(function () {
+        var simpleStatus = 'Default Mode'
+        if (_this.leagueData.simpleMode) simpleStatus = 'Simple Mode'
+        _this.simpleSuccess = 'Updated status to: ' + simpleStatus
+        _this.isLoading = false
+      }).catch(function (error) {
+        _this.simpleError = 'Unable to toggle simple mode: ' + error
+        _this.isLoading = false
+      })
     }
   }
+}
 </script>
 
 <style scoped>

@@ -43,43 +43,43 @@
 </template>
 
 <script>
-  import firePick from '@/services/pick'
-  import fireLeague from '@/services/league'
+import firePick from '@/services/pick'
+import fireLeague from '@/services/league'
 
-  export default {
-    name: 'UserPicks',
-    data () {
-      return {
-        stage: 'Stage 3',
-        leagueId: 'stJt6rYFcqH8TcKzamcM',
-        userId: '2XFdbyHhxpRmu0Sqx7UyDCfKrXF3',
-        picks: [],
-        leagueUser: {}
-      }
-    },
-    computed: {
-      totalPoints: function () {
-        var total = 0
-        this.picks.forEach(function (pick) {
-          total += pick.points
-        })
-        return total
-      }
-    },
-    methods: {
-      getPick: function () {
-        var _this = this
-        // get all picks for this match where winner is winner
-        firePick.getPicks(this.userId, this.leagueId, this.stage).then(function (picks) {
-          _this.picks = picks
-        })
+export default {
+  name: 'UserPicks',
+  data () {
+    return {
+      stage: 'Stage 3',
+      leagueId: 'stJt6rYFcqH8TcKzamcM',
+      userId: '2XFdbyHhxpRmu0Sqx7UyDCfKrXF3',
+      picks: [],
+      leagueUser: {}
+    }
+  },
+  computed: {
+    totalPoints: function () {
+      var total = 0
+      this.picks.forEach(function (pick) {
+        total += pick.points
+      })
+      return total
+    }
+  },
+  methods: {
+    getPick: function () {
+      var _this = this
+      // get all picks for this match where winner is winner
+      firePick.getPicks(this.userId, this.leagueId, this.stage).then(function (picks) {
+        _this.picks = picks
+      })
 
-        fireLeague.getLeagueUser(this.leagueId, this.userId).then(function (user) {
-          _this.leagueUser = user[0] || {}
-        })
-      }
+      fireLeague.getLeagueUser(this.leagueId, this.userId).then(function (user) {
+        _this.leagueUser = user[0] || {}
+      })
     }
   }
+}
 </script>
 
 <style lang="scss">

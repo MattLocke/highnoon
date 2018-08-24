@@ -9,38 +9,38 @@
 </template>
 
 <script>
-  import maintenance from '@/services/maintenance'
-  import fireComp from '@/services/competition'
+import maintenance from '@/services/maintenance'
+import fireComp from '@/services/competition'
 
-  export default {
-    name: 'expire-leagues',
-    data () {
-      return {
-        isLoading: false,
-        isDone: false,
-        competitions: [],
-        activeCompetition: ''
-      }
-    },
-    methods: {
-      expireLeagues: function () {
-        var _this = this
-        _this.isLoading = true
-        // go through matchPicks, get matchId and userId
-        maintenance.deactivateOldLeagues(_this.activeCompetition).then(function () {
-          _this.isDone = true
-          _this.isLoading = false
-        })
-      },
-      getOldComps: function () {
-        var _this = this
-        fireComp.getOldCompetitions().then(function (competitions) {
-          if (competitions) _this.competitions = competitions
-        })
-      }
-    },
-    mounted: function () {
-      this.getOldComps()
+export default {
+  name: 'expire-leagues',
+  data () {
+    return {
+      isLoading: false,
+      isDone: false,
+      competitions: [],
+      activeCompetition: ''
     }
+  },
+  methods: {
+    expireLeagues: function () {
+      var _this = this
+      _this.isLoading = true
+      // go through matchPicks, get matchId and userId
+      maintenance.deactivateOldLeagues(_this.activeCompetition).then(function () {
+        _this.isDone = true
+        _this.isLoading = false
+      })
+    },
+    getOldComps: function () {
+      var _this = this
+      fireComp.getOldCompetitions().then(function (competitions) {
+        if (competitions) _this.competitions = competitions
+      })
+    }
+  },
+  mounted: function () {
+    this.getOldComps()
   }
+}
 </script>

@@ -17,45 +17,45 @@
 </template>
 
 <script>
-  import points from '@/services/points'
-  import fireComp from '@/services/competition'
-  import fireMatch from '@/services/match'
+import points from '@/services/points'
+import fireComp from '@/services/competition'
+import fireMatch from '@/services/match'
 
-  export default {
-    name: 'assign-points',
-    data () {
-      return {
-        isLoading: false,
-        isDone: false,
-        activeComp: '',
-        activeMatch: '',
-        competitions: [],
-        matches: []
-      }
-    },
-    methods: {
-      assignPoints: function () {
-        var _this = this
-        _this.isLoading = true
-        points.assignPoints(_this.activeMatch).then(function () {
-          console.log('loading, stay a while!')
-          _this.isDone = true
-          _this.isLoading = false
-        })
-      },
-      getMatches: function () {
-        console.log('Getting matches...')
-        var _this = this
-        fireMatch.getOldLeagueMatches(this.activeComp).then(function (matches) {
-          _this.matches = matches
-        })
-      }
-    },
-    mounted: function () {
+export default {
+  name: 'assign-points',
+  data () {
+    return {
+      isLoading: false,
+      isDone: false,
+      activeComp: '',
+      activeMatch: '',
+      competitions: [],
+      matches: []
+    }
+  },
+  methods: {
+    assignPoints: function () {
       var _this = this
-      fireComp.getCompetitions().then(function (comps) {
-        _this.competitions = comps
+      _this.isLoading = true
+      points.assignPoints(_this.activeMatch).then(function () {
+        console.log('loading, stay a while!')
+        _this.isDone = true
+        _this.isLoading = false
+      })
+    },
+    getMatches: function () {
+      console.log('Getting matches...')
+      var _this = this
+      fireMatch.getOldLeagueMatches(this.activeComp).then(function (matches) {
+        _this.matches = matches
       })
     }
+  },
+  mounted: function () {
+    var _this = this
+    fireComp.getCompetitions().then(function (comps) {
+      _this.competitions = comps
+    })
   }
+}
 </script>

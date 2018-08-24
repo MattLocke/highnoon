@@ -71,183 +71,183 @@
 </template>
 
 <script>
-  import fireMatch from '@/services/match'
-  import fireTeam from '@/services/team'
-  import fireComp from '@/services/competition'
+import fireMatch from '@/services/match'
+import fireTeam from '@/services/team'
+import fireComp from '@/services/competition'
 
-  export default {
-    name: 'enter-winner',
-    data () {
-      return {
-        teams: [],
-        competitions: [],
-        oldMatches: [],
-        activeMatch: '',
-        activeComp: '',
-        homeTeam: {},
-        awayTeam: {},
-        match: {
-          compId: 'ALI8o0eJ30V1D1Fb7rHV',
-          homeTeamId: '',
-          homeTeamName: '',
-          homeTeamShortName: '',
-          awayTeamId: '',
-          awayTeamName: '',
-          awayTeamShortName: '',
-          isLocked: false,
-          startDate: '',
-          matchScore: '',
-          matchWinner: '',
-          awayScore: 0,
-          homeScore: 0,
-          numMaps: 4,
-          maps: [
-            {
-              type: 'Control',
-              winner: '',
-              score: '',
-              potg: ''
-            },
-            {
-              type: 'Hybrid',
-              winner: '',
-              score: '',
-              potg: ''
-            },
-            {
-              type: 'Assault',
-              winner: '',
-              score: '',
-              potg: ''
-            },
-            {
-              type: 'Escort',
-              winner: '',
-              score: '',
-              potg: ''
-            }
-          ]
-        },
-        message: ''
-      }
-    },
-    computed: {
-      validMatches: function () {
-        var isValid = []
-        this.oldMatches.forEach(function (match) {
-          if (match.awayScore === '0' && match.homeScore === '0') {
-            isValid.push(match)
+export default {
+  name: 'enter-winner',
+  data () {
+    return {
+      teams: [],
+      competitions: [],
+      oldMatches: [],
+      activeMatch: '',
+      activeComp: '',
+      homeTeam: {},
+      awayTeam: {},
+      match: {
+        compId: 'ALI8o0eJ30V1D1Fb7rHV',
+        homeTeamId: '',
+        homeTeamName: '',
+        homeTeamShortName: '',
+        awayTeamId: '',
+        awayTeamName: '',
+        awayTeamShortName: '',
+        isLocked: false,
+        startDate: '',
+        matchScore: '',
+        matchWinner: '',
+        awayScore: 0,
+        homeScore: 0,
+        numMaps: 4,
+        maps: [
+          {
+            type: 'Control',
+            winner: '',
+            score: '',
+            potg: ''
+          },
+          {
+            type: 'Hybrid',
+            winner: '',
+            score: '',
+            potg: ''
+          },
+          {
+            type: 'Assault',
+            winner: '',
+            score: '',
+            potg: ''
+          },
+          {
+            type: 'Escort',
+            winner: '',
+            score: '',
+            potg: ''
           }
-        })
-        return isValid
-      }
-    },
-    methods: {
-      updateRecords: function () {
-        if (this.match.awayTeamId === this.match.matchWinner) {
-          this.awayTeam.wins++
-          this.homeTeam.losses++
-        } else {
-          this.awayTeam.losses++
-          this.homeTeam.wins++
-        }
-        fireTeam.updateWinLoss(this.match.awayTeamId, this.awayTeam.wins, this.awayTeam.losses).then(function (result) {
-          if (result) console.log('Successfully saved away teams win/loss record')
-        })
-        fireTeam.updateWinLoss(this.match.homeTeamId, this.homeTeam.wins, this.homeTeam.losses).then(function (result) {
-          if (result) console.log('Successfully saved home teams win/loss record')
-        })
-        this.resetForm(this.match.compId)
+        ]
       },
-      refreshTeams: function () {
-        var _this = this
-        if (this.activeComp) {
-          fireTeam.getTeams(this.activeComp).then(function (teams) {
-            _this.teams = teams
-          })
-        }
-      },
-      getMatch: function () {
-        var _this = this
-        if (this.activeMatch) {
-          fireMatch.getMatchById(this.activeMatch).then(function (theMatch) {
-            theMatch.matchScore = ''
-            _this.match = theMatch
-            fireTeam.getTeamById(theMatch.homeTeamId).then(function (teamData) {
-              _this.homeTeam = teamData
-            })
-            fireTeam.getTeamById(theMatch.awayTeamId).then(function (teamData) {
-              _this.awayTeam = teamData
-            })
-          })
-        }
-      },
-      getMatchups: function () {
-        var _this = this
-        if (this.activeComp) {
-          fireMatch.getOldLeagueMatches(this.activeComp).then(function (oldMatches) {
-            _this.oldMatches = oldMatches
-          })
-        }
-      },
-      getCompetitions: function () {
-        var _this = this
-        fireComp.getCompetitions().then(function (comps) {
-          _this.competitions = comps
-        })
-      },
-      setWinner: function () {
-        var _this = this
-        console.log('Setting winner of match...')
-        fireMatch.setWinner(_this.match, _this.activeMatch).then(function () {
-          _this.message = 'Successfully updated the winner!'
-          _this.updateRecords()
-        })
-      },
-      resetForm: function (compId) {
-        this.match = {
-          compId: compId,
-          homeTeamId: '',
-          homeTeamName: '',
-          homeTeamShortName: '',
-          awayTeamId: '',
-          awayTeamName: '',
-          awayTeamShortName: '',
-          isLocked: false,
-          startDate: '',
-          matchWinner: '',
-          numMaps: 4,
-          maps: [
-            {
-              type: 'Control',
-              winner: '',
-              score: '',
-              potg: ''
-            },
-            {
-              type: 'Hybrid',
-              winner: '',
-              score: '',
-              potg: ''
-            },
-            {
-              type: 'Assault',
-              winner: '',
-              score: '',
-              potg: ''
-            },
-            {
-              type: 'Escort',
-              winner: '',
-              score: '',
-              potg: ''
-            }
-          ]
-        }
-      }
-    },
-    mounted: function () {
-      this.getCompetitions()
+      message: ''
     }
+  },
+  computed: {
+    validMatches: function () {
+      var isValid = []
+      this.oldMatches.forEach(function (match) {
+        if (match.awayScore === '0' && match.homeScore === '0') {
+          isValid.push(match)
+        }
+      })
+      return isValid
+    }
+  },
+  methods: {
+    updateRecords: function () {
+      if (this.match.awayTeamId === this.match.matchWinner) {
+        this.awayTeam.wins++
+        this.homeTeam.losses++
+      } else {
+        this.awayTeam.losses++
+        this.homeTeam.wins++
+      }
+      fireTeam.updateWinLoss(this.match.awayTeamId, this.awayTeam.wins, this.awayTeam.losses).then(function (result) {
+        if (result) console.log('Successfully saved away teams win/loss record')
+      })
+      fireTeam.updateWinLoss(this.match.homeTeamId, this.homeTeam.wins, this.homeTeam.losses).then(function (result) {
+        if (result) console.log('Successfully saved home teams win/loss record')
+      })
+      this.resetForm(this.match.compId)
+    },
+    refreshTeams: function () {
+      var _this = this
+      if (this.activeComp) {
+        fireTeam.getTeams(this.activeComp).then(function (teams) {
+          _this.teams = teams
+        })
+      }
+    },
+    getMatch: function () {
+      var _this = this
+      if (this.activeMatch) {
+        fireMatch.getMatchById(this.activeMatch).then(function (theMatch) {
+          theMatch.matchScore = ''
+          _this.match = theMatch
+          fireTeam.getTeamById(theMatch.homeTeamId).then(function (teamData) {
+            _this.homeTeam = teamData
+          })
+          fireTeam.getTeamById(theMatch.awayTeamId).then(function (teamData) {
+            _this.awayTeam = teamData
+          })
+        })
+      }
+    },
+    getMatchups: function () {
+      var _this = this
+      if (this.activeComp) {
+        fireMatch.getOldLeagueMatches(this.activeComp).then(function (oldMatches) {
+          _this.oldMatches = oldMatches
+        })
+      }
+    },
+    getCompetitions: function () {
+      var _this = this
+      fireComp.getCompetitions().then(function (comps) {
+        _this.competitions = comps
+      })
+    },
+    setWinner: function () {
+      var _this = this
+      console.log('Setting winner of match...')
+      fireMatch.setWinner(_this.match, _this.activeMatch).then(function () {
+        _this.message = 'Successfully updated the winner!'
+        _this.updateRecords()
+      })
+    },
+    resetForm: function (compId) {
+      this.match = {
+        compId: compId,
+        homeTeamId: '',
+        homeTeamName: '',
+        homeTeamShortName: '',
+        awayTeamId: '',
+        awayTeamName: '',
+        awayTeamShortName: '',
+        isLocked: false,
+        startDate: '',
+        matchWinner: '',
+        numMaps: 4,
+        maps: [
+          {
+            type: 'Control',
+            winner: '',
+            score: '',
+            potg: ''
+          },
+          {
+            type: 'Hybrid',
+            winner: '',
+            score: '',
+            potg: ''
+          },
+          {
+            type: 'Assault',
+            winner: '',
+            score: '',
+            potg: ''
+          },
+          {
+            type: 'Escort',
+            winner: '',
+            score: '',
+            potg: ''
+          }
+        ]
+      }
+    }
+  },
+  mounted: function () {
+    this.getCompetitions()
   }
+}
 </script>

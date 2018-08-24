@@ -68,7 +68,7 @@
               option 29
               option 30
               option 31
-            |  
+            |
             select.select.is-large(v-model="time.hour")
               option 12
               option 13
@@ -118,157 +118,157 @@
 </template>
 
 <script>
-  import fireMatch from '@/services/match'
-  import fireTeam from '@/services/team'
-  import fireComp from '@/services/competition'
+import fireMatch from '@/services/match'
+import fireTeam from '@/services/team'
+import fireComp from '@/services/competition'
 
-  export default {
-    name: 'create-match',
-    data () {
-      return {
-        showCreateMatch: false,
-        competitions: [],
-        time: {
-          year: '2018',
-          month: '07',
-          day: '11',
-          hour: '18',
-          minute: '00'
-        },
-        mapsNames: [
-          'Hanamura',
-          'Horizon Lunar Colony',
-          'Temple of Anubis',
-          'Volskaya Industries',
-          'Dorado',
-          'Junkertown',
-          'Route 66',
-          'Watchpoint: Gibraltar',
-          'Eichenwalde',
-          'Hollywood',
-          'King\'s Row',
-          'Numbani',
-          'Blizzard World',
-          'Ilios',
-          'Lijiang Tower',
-          'Nepal',
-          'Oasis'
-        ],
-        teams: [],
-        match: {
-          compId: 'ALI8o0eJ30V1D1Fb7rHV',
-          homeTeamId: '',
-          homeTeamName: '',
-          homeTeamShortName: '',
-          awayScore: '0',
-          homeScore: '0',
-          awayTeamId: '',
-          awayTeamName: '',
-          awayTeamShortName: '',
-          isLocked: false,
-          startDate: '',
-          matchWinner: '',
-          numMaps: 4,
-          stage: '',
-          maps: [
-            {
-              type: 'Escort',
-              winner: '',
-              score: '',
-              name: 'Watchpoint: Gibraltar'
-            },
-            {
-              type: 'Control',
-              winner: '',
-              score: '',
-              name: 'Lijiang Tower'
-            },
-            {
-              type: 'Hybrid',
-              winner: '',
-              score: '',
-              name: 'Blizzard World'
-            },
-            {
-              type: 'Assault',
-              winner: '',
-              score: '',
-              name: 'Horizon Lunar Colony'
-            },
-            {
-              type: 'Escort',
-              winner: '',
-              score: '',
-              name: 'Watchpoint: Gibraltar'
-            }
-          ]
-        },
-        message: null,
-        errorMessage: null
-      }
-    },
-    computed: {
-      matchTime: function () {
-        // 2017-12-07 18:00:00
-        var dateString = this.time.year + '-' + this.time.month + '-' + this.time.day + ' ' + this.time.hour + ':' + this.time.minute + ':00'
-        // + 28800
-        return Math.round((parseInt(new Date(dateString).getTime()) + 28800) / 1000)
-      }
-    },
-    methods: {
-      getCompetitions: function () {
-        var _this = this
-        fireComp.getCompetitions().then(function (comps) {
-          _this.competitions = comps
-        })
+export default {
+  name: 'create-match',
+  data () {
+    return {
+      showCreateMatch: false,
+      competitions: [],
+      time: {
+        year: '2018',
+        month: '07',
+        day: '11',
+        hour: '18',
+        minute: '00'
       },
-      setHomeTeam: function () {
-        var _this = this
-        console.log('Setting home team...')
-        if (_this.match.homeTeamId) {
-          _this.teams.forEach(function (team) {
-            if (team.id === _this.match.homeTeamId) {
-              _this.match.homeTeamName = team.name
-              _this.match.homeTeamShortName = team.shortName
-              _this.match.homeTeamLogo = team.logo
-            }
-          })
-        }
+      mapsNames: [
+        'Hanamura',
+        'Horizon Lunar Colony',
+        'Temple of Anubis',
+        'Volskaya Industries',
+        'Dorado',
+        'Junkertown',
+        'Route 66',
+        'Watchpoint: Gibraltar',
+        'Eichenwalde',
+        'Hollywood',
+        'King\'s Row',
+        'Numbani',
+        'Blizzard World',
+        'Ilios',
+        'Lijiang Tower',
+        'Nepal',
+        'Oasis'
+      ],
+      teams: [],
+      match: {
+        compId: 'ALI8o0eJ30V1D1Fb7rHV',
+        homeTeamId: '',
+        homeTeamName: '',
+        homeTeamShortName: '',
+        awayScore: '0',
+        homeScore: '0',
+        awayTeamId: '',
+        awayTeamName: '',
+        awayTeamShortName: '',
+        isLocked: false,
+        startDate: '',
+        matchWinner: '',
+        numMaps: 4,
+        stage: '',
+        maps: [
+          {
+            type: 'Escort',
+            winner: '',
+            score: '',
+            name: 'Watchpoint: Gibraltar'
+          },
+          {
+            type: 'Control',
+            winner: '',
+            score: '',
+            name: 'Lijiang Tower'
+          },
+          {
+            type: 'Hybrid',
+            winner: '',
+            score: '',
+            name: 'Blizzard World'
+          },
+          {
+            type: 'Assault',
+            winner: '',
+            score: '',
+            name: 'Horizon Lunar Colony'
+          },
+          {
+            type: 'Escort',
+            winner: '',
+            score: '',
+            name: 'Watchpoint: Gibraltar'
+          }
+        ]
       },
-      setAwayTeam: function () {
-        var _this = this
-        console.log('Setting away team...')
-        if (_this.match.awayTeamId) {
-          _this.teams.forEach(function (team) {
-            if (team.id === _this.match.awayTeamId) {
-              _this.match.awayTeamName = team.name
-              _this.match.awayTeamShortName = team.shortName
-              _this.match.awayTeamLogo = team.logo
-            }
-          })
-        }
-      },
-      createMatch: function () {
-        var _this = this
-        _this.setHomeTeam()
-        _this.setAwayTeam()
-        _this.match.startDate = _this.matchTime
-        fireMatch.createMatch(_this.match).then(function (id) {
-          _this.message = 'Created ' + _this.match.homeTeamName + ' vs ' + _this.match.awayTeamName
-        })
-      },
-      refreshTeams: function () {
-        var _this = this
-        if (this.match.compId) {
-          fireTeam.getTeams(this.match.compId).then(function (teams) {
-            _this.teams = teams
-          })
-        }
-      }
-    },
-    mounted: function () {
-      this.refreshTeams()
-      this.getCompetitions()
+      message: null,
+      errorMessage: null
     }
+  },
+  computed: {
+    matchTime: function () {
+      // 2017-12-07 18:00:00
+      var dateString = this.time.year + '-' + this.time.month + '-' + this.time.day + ' ' + this.time.hour + ':' + this.time.minute + ':00'
+      // + 28800
+      return Math.round((parseInt(new Date(dateString).getTime()) + 28800) / 1000)
+    }
+  },
+  methods: {
+    getCompetitions: function () {
+      var _this = this
+      fireComp.getCompetitions().then(function (comps) {
+        _this.competitions = comps
+      })
+    },
+    setHomeTeam: function () {
+      var _this = this
+      console.log('Setting home team...')
+      if (_this.match.homeTeamId) {
+        _this.teams.forEach(function (team) {
+          if (team.id === _this.match.homeTeamId) {
+            _this.match.homeTeamName = team.name
+            _this.match.homeTeamShortName = team.shortName
+            _this.match.homeTeamLogo = team.logo
+          }
+        })
+      }
+    },
+    setAwayTeam: function () {
+      var _this = this
+      console.log('Setting away team...')
+      if (_this.match.awayTeamId) {
+        _this.teams.forEach(function (team) {
+          if (team.id === _this.match.awayTeamId) {
+            _this.match.awayTeamName = team.name
+            _this.match.awayTeamShortName = team.shortName
+            _this.match.awayTeamLogo = team.logo
+          }
+        })
+      }
+    },
+    createMatch: function () {
+      var _this = this
+      _this.setHomeTeam()
+      _this.setAwayTeam()
+      _this.match.startDate = _this.matchTime
+      fireMatch.createMatch(_this.match).then(function (id) {
+        _this.message = 'Created ' + _this.match.homeTeamName + ' vs ' + _this.match.awayTeamName
+      })
+    },
+    refreshTeams: function () {
+      var _this = this
+      if (this.match.compId) {
+        fireTeam.getTeams(this.match.compId).then(function (teams) {
+          _this.teams = teams
+        })
+      }
+    }
+  },
+  mounted: function () {
+    this.refreshTeams()
+    this.getCompetitions()
   }
+}
 </script>

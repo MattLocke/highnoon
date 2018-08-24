@@ -17,38 +17,38 @@
 </template>
 
 <script>
-  import vueMarkdown from 'vue-markdown'
-  import fireComment from '@/services/comment'
+import vueMarkdown from 'vue-markdown'
+import fireComment from '@/services/comment'
 
-  export default {
-    name: 'comment',
-    components: {
-      vueMarkdown
-    },
-    props: [
-      'comment',
-      'isOwner',
-      'userData',
-      'commentType'
-    ],
-    data () {
-      return {
-        visible: true
-      }
-    },
-    methods: {
-      deleteComment: function (commentId) {
-        var _this = this
-        if (this.commentType === 'article') {
-          fireComment.deleteArticleComment(commentId).then(function (result) {
-            _this.visible = false
-          })
-        } else {
-          fireComment.deleteComment(commentId).then(function (result) {
-            _this.visible = false
-          })
-        }
+export default {
+  name: 'comment',
+  components: {
+    vueMarkdown
+  },
+  props: [
+    'comment',
+    'isOwner',
+    'userData',
+    'commentType'
+  ],
+  data () {
+    return {
+      visible: true
+    }
+  },
+  methods: {
+    deleteComment: function (commentId) {
+      var _this = this
+      if (this.commentType === 'article') {
+        fireComment.deleteArticleComment(commentId).then(function (result) {
+          _this.visible = false
+        })
+      } else {
+        fireComment.deleteComment(commentId).then(function (result) {
+          _this.visible = false
+        })
       }
     }
   }
+}
 </script>

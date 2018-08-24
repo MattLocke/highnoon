@@ -29,17 +29,17 @@
 </template>
 
 <script>
-  export default {
-    name: 'FAQ',
-    data () {
-      return {
-      }
-    },
-    methods: {
-    },
-    mounted: function () {
+export default {
+  name: 'FAQ',
+  data () {
+    return {
     }
+  },
+  methods: {
+  },
+  mounted: function () {
   }
+}
 </script>
 
 <style scoped>

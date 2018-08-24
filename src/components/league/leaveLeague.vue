@@ -7,28 +7,28 @@
 </template>
 
 <script>
-  import fireLeague from '@/services/league'
+import fireLeague from '@/services/league'
 
-  export default {
-    props: [
-      'leagueId', 'userId'
-    ],
-    components: {
-      'confirm': confirm
+export default {
+  props: [
+    'leagueId', 'userId'
+  ],
+  components: {
+    'confirm': confirm
+  },
+  data () {
+    return {
+      isSure: false
+    }
+  },
+  methods: {
+    seeIfSure: function () {
+      this.isSure = true
     },
-    data () {
-      return {
-        isSure: false
-      }
-    },
-    methods: {
-      seeIfSure: function () {
-        this.isSure = true
-      },
-      leaveLeague: function () {
-        var isLeaver = true
-        fireLeague.leaveLeague(this.leagueId, this.userId, isLeaver, this.$router)
-      }
+    leaveLeague: function () {
+      var isLeaver = true
+      fireLeague.leaveLeague(this.leagueId, this.userId, isLeaver, this.$router)
     }
   }
+}
 </script>

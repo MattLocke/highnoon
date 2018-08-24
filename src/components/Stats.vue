@@ -68,69 +68,69 @@
 </template>
 
 <script>
-  import fireStats from '@/services/stats'
-  import fireImage from '@/services/image'
+import fireStats from '@/services/stats'
+import fireImage from '@/services/image'
 
-  export default {
-    name: 'stats',
-    data () {
-      return {
-        matches: [],
-        leagueData: {
-          competitionId: 'gleuqAnpFrtKZo2zpjmu'
-        },
-        activeWeek: '',
-        selectedStage: '',
-        greyOld: false,
-        showDetails: true
-      }
-    },
-    computed: {
-      stage: function () {
-        return this.$store.getters.currentStage
+export default {
+  name: 'stats',
+  data () {
+    return {
+      matches: [],
+      leagueData: {
+        competitionId: 'gleuqAnpFrtKZo2zpjmu'
       },
-      week: function () {
-        return this.$store.getters.currentWeek
-      },
-      isMobile: function () {
-        return window.screen.width < 768
-      },
-      currentStage: function () {
-        return this.$store.getters.currentStage
-      },
-      currentWeek: function () {
-        return this.$store.getters.currentWeek
-      }
-    },
-    methods: {
-      getPicks: function (stage) {
-        var _this = this
-        if (stage) {
-          fireStats.getMatchPickPercents(stage).then(function (matches) {
-            matches.forEach(function (match) {
-              match.homeTeamLogo = fireImage.getLocalTeamLogo(match.homeTeamLogoURL)
-              match.awayTeamLogo = fireImage.getLocalTeamLogo(match.awayTeamLogoURL)
-            })
-            _this.matches = matches
-          })
-        }
-      },
-      isOld: function (match) {
-        let today = Date.now() / 1000
-        if (match.startDate < today && this.greyOld) return true
-        else return false
-      }
-    },
-    watch: {
-      currentStage: function (val) {
-        if (val) this.getPicks(this.$store.getters.currentStage)
-      }
-    },
-    mounted: function () {
-      this.getPicks(this.$store.getters.currentStage)
-      this.activeWeek = this.week
+      activeWeek: '',
+      selectedStage: '',
+      greyOld: false,
+      showDetails: true
     }
+  },
+  computed: {
+    stage: function () {
+      return this.$store.getters.currentStage
+    },
+    week: function () {
+      return this.$store.getters.currentWeek
+    },
+    isMobile: function () {
+      return window.screen.width < 768
+    },
+    currentStage: function () {
+      return this.$store.getters.currentStage
+    },
+    currentWeek: function () {
+      return this.$store.getters.currentWeek
+    }
+  },
+  methods: {
+    getPicks: function (stage) {
+      var _this = this
+      if (stage) {
+        fireStats.getMatchPickPercents(stage).then(function (matches) {
+          matches.forEach(function (match) {
+            match.homeTeamLogo = fireImage.getLocalTeamLogo(match.homeTeamLogoURL)
+            match.awayTeamLogo = fireImage.getLocalTeamLogo(match.awayTeamLogoURL)
+          })
+          _this.matches = matches
+        })
+      }
+    },
+    isOld: function (match) {
+      let today = Date.now() / 1000
+      if (match.startDate < today && this.greyOld) return true
+      else return false
+    }
+  },
+  watch: {
+    currentStage: function (val) {
+      if (val) this.getPicks(this.$store.getters.currentStage)
+    }
+  },
+  mounted: function () {
+    this.getPicks(this.$store.getters.currentStage)
+    this.activeWeek = this.week
   }
+}
 </script>
 
 <style lang="scss" scoped>

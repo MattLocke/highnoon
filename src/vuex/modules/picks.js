@@ -13,10 +13,10 @@ export default {
   },
   actions: {
     savePicks: (context, payload) => {
-      context.commit("SAVEPICKS", payload)
+      context.commit('SAVEPICKS', payload)
     },
     savePickMatch: (context, payload) => {
-      context.commit("SAVEPICKMATCH", payload)
+      context.commit('SAVEPICKMATCH', payload)
     }
   },
   getters: {

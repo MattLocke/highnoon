@@ -1,9 +1,9 @@
 <template lang="pug">
   .currentLeague.box
     .wrap(v-if="myLeagues.length")
-      h2.overwatch-font.text-border Previous Leagues 
+      h2.overwatch-font.text-border Previous Leagues
       .myLeagues(v-if="loggedIn")
-        a.league-listing.overwatch-font(v-for="league in myLeagues" v-bind:href="leagueUrl(league.leagueId)") 
+        a.league-listing.overwatch-font(v-for="league in myLeagues" v-bind:href="leagueUrl(league.leagueId)")
           h4 {{ league.leagueName }}
       .signIn(v-else)
         p You are not logged in!

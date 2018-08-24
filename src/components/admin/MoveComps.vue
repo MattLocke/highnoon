@@ -16,38 +16,38 @@
 </template>
 
 <script>
-  import maintenance from '@/services/maintenance'
+import maintenance from '@/services/maintenance'
 
-  export default {
-    name: 'move-comps',
-    data () {
-      return {
-        isLoading: false,
-        isDone: false,
-        oldComp: '',
-        newComp: '',
-        newCompName: ''
-      }
+export default {
+  name: 'move-comps',
+  data () {
+    return {
+      isLoading: false,
+      isDone: false,
+      oldComp: '',
+      newComp: '',
+      newCompName: ''
+    }
+  },
+  methods: {
+    moveLeagues: function () {
+      var _this = this
+      this.isDone = false
+      this.isLoading = true
+      maintenance.moveLeagues(this.oldComp, this.newComp, this.newCompName).then(function (result) {
+        _this.isLoading = false
+        _this.isDone = true
+      })
     },
-    methods: {
-      moveLeagues: function () {
-        var _this = this
-        this.isDone = false
-        this.isLoading = true
-        maintenance.moveLeagues(this.oldComp, this.newComp, this.newCompName).then(function (result) {
-          _this.isLoading = false
-          _this.isDone = true
-        })
-      },
-      moveLeagueUsers: function () {
-        var _this = this
-        this.isDone = false
-        this.isLoading = true
-        maintenance.moveLeagueUsers(this.oldComp, this.newComp).then(function (result) {
-          _this.isLoading = false
-          _this.isDone = true
-        })
-      }
+    moveLeagueUsers: function () {
+      var _this = this
+      this.isDone = false
+      this.isLoading = true
+      maintenance.moveLeagueUsers(this.oldComp, this.newComp).then(function (result) {
+        _this.isLoading = false
+        _this.isDone = true
+      })
     }
   }
+}
 </script>

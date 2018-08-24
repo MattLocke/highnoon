@@ -22,34 +22,34 @@
 </template>
 
 <script>
-  import fireMatch from '@/services/match'
+import fireMatch from '@/services/match'
 
-  export default {
-    name: 'bob',
-    data () {
-      return {
-        matches: [],
-        // compId: 'zlMYK0WJUwz3N2TB7Q57'
-        compId: 'gleuqAnpFrtKZo2zpjmu'
-      }
-    },
-    computed: {
-      sortedMatches: function () {
-        return this.matches.sort(function (a, b) { return (a.startDate < b.startDate) ? 1 : ((b.startDate < a.startDate) ? -1 : 0) })
-      }
-    },
-    methods: {
-      getStatus: function (locked) {
-        return (locked ? 'Locked' : 'Active')
-      }
-    },
-    mounted: function () {
-      var _this = this
-      fireMatch.getAllLeagueMatches(_this.compId).then(function (matches) {
-        _this.matches = matches
-      })
+export default {
+  name: 'bob',
+  data () {
+    return {
+      matches: [],
+      // compId: 'zlMYK0WJUwz3N2TB7Q57'
+      compId: 'gleuqAnpFrtKZo2zpjmu'
     }
+  },
+  computed: {
+    sortedMatches: function () {
+      return this.matches.sort(function (a, b) { return (a.startDate < b.startDate) ? 1 : ((b.startDate < a.startDate) ? -1 : 0) })
+    }
+  },
+  methods: {
+    getStatus: function (locked) {
+      return (locked ? 'Locked' : 'Active')
+    }
+  },
+  mounted: function () {
+    var _this = this
+    fireMatch.getAllLeagueMatches(_this.compId).then(function (matches) {
+      _this.matches = matches
+    })
   }
+}
 </script>
 
 <style lang="scss">

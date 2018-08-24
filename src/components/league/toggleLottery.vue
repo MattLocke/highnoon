@@ -10,36 +10,36 @@
 </template>
 
 <script>
-  import fireLeague from '@/services/league'
-  export default {
-    name: 'toggleLottery',
-    props: [
-      'leagueData',
-      'leagueId'
-    ],
-    data () {
-      return {
-        lotteryError: '',
-        lotterySuccess: '',
-        isLoading: false
-      }
-    },
-    methods: {
-      toggleLottery: function () {
-        var _this = this
-        _this.isLoading = true
-        fireLeague.toggleLottery(_this.leagueId, _this.leagueData.lotteryMode).then(function () {
-          var lotteryStatus = 'Default Mode'
-          if (_this.leagueData.lotteryMode) lotteryStatus = 'Lottery Mode'
-          _this.lotterySuccess = 'Updated status to: ' + lotteryStatus
-          _this.isLoading = false
-        }).catch(function (error) {
-          _this.lotteryError = 'Unable to toggle lottery mode: ' + error
-          _this.isLoading = false
-        })
-      }
+import fireLeague from '@/services/league'
+export default {
+  name: 'toggleLottery',
+  props: [
+    'leagueData',
+    'leagueId'
+  ],
+  data () {
+    return {
+      lotteryError: '',
+      lotterySuccess: '',
+      isLoading: false
+    }
+  },
+  methods: {
+    toggleLottery: function () {
+      var _this = this
+      _this.isLoading = true
+      fireLeague.toggleLottery(_this.leagueId, _this.leagueData.lotteryMode).then(function () {
+        var lotteryStatus = 'Default Mode'
+        if (_this.leagueData.lotteryMode) lotteryStatus = 'Lottery Mode'
+        _this.lotterySuccess = 'Updated status to: ' + lotteryStatus
+        _this.isLoading = false
+      }).catch(function (error) {
+        _this.lotteryError = 'Unable to toggle lottery mode: ' + error
+        _this.isLoading = false
+      })
     }
   }
+}
 </script>
 
 <style scoped>
