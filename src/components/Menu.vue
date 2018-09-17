@@ -5,14 +5,38 @@
     .wrap(v-if="showMenu")
       .main-menu
         ul
-          li SOME COOL MENU ITEM
+          li
+            router-link(to="/home") News
+          li
+            router-link(to="/fantasy") Fantasy
+          li
+            router-link(to="/leagueFantasy") Fantasy League
+          li
+            router-link(to="/leaguePickem") Pickem Leagues
+          li
+            router-link(to="/picks") My Picks
+          li
+            router-link(to="/profile") My Profile
+          li
+            a(@click="logOut()") Log Out
 </template>
 
 <script>
+import firebase from 'firebase/app'
+import 'firebase/auth'
+
 export default {
   data () {
     return {
       showMenu: false
+    }
+  },
+  methods: {
+    logOut () {
+      firebase.auth().signOut()
+        .then(() => {
+          this.$router.push({ path: '/login' })
+        })
     }
   }
 }

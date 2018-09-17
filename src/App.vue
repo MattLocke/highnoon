@@ -50,11 +50,55 @@ $link-focus-border: $primary;
 // Import Bulma and Buefy styles
 @import "~bulma";
 @import "~buefy/src/scss/buefy";
+
+/* Fonts */
+@font-face {
+  font-family: 'headerFont';
+  src: url('./assets/fonts/BigNoodleTooOblique.eot');
+  src: url('./assets/fonts/BigNoodleTooOblique.eot?#iefix') format('embedded-opentype'),
+    url('./assets/fonts/BigNoodleTooOblique.woff') format('woff'),
+    url('./assets/fonts/BigNoodleTooOblique.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'overFont';
+  src: url('./assets/fonts/Koverwatch.eot');
+  src: url('./assets/fonts/Koverwatch.eot?#iefix') format('embedded-opentype'),
+    url('./assets/fonts/Koverwatch.woff') format('woff'),
+    url('./assets/fonts/Koverwatch.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 html {
   background-color: #090c1c;
 }
 
+.box {
+  background-color: transparent;
+}
+
 .wrap {
   color: $white;
+}
+
+h1 {
+  font-family: 'overFont';
+  font-size: 2rem;
+}
+
+p {
+  margin-top: 1rem;
+}
+
+strong {
+  color: #fff;
+}
+
+hr {
+  opacity: .5;
+  height: 1px;
 }
 </style>
