@@ -35,7 +35,7 @@ export default {
   data () {
     return {
       activeMatch: null,
-      weeksMatches: [],
+      weeksMatches: []
     }
   },
   mounted () {
@@ -55,28 +55,28 @@ export default {
     }
   },
   methods: {
-    setActive(match) {
+    setActive (match) {
       this.activeMatch = match
     },
-    getImage(name) {
+    getImage (name) {
       return `images/teams/${name}.svg`
     },
-    shortLocation(location) {
+    shortLocation (location) {
       if (location) {
         const tmp = location.split(',')
         return tmp[0]
       }
     },
-    teamName(name) {
+    teamName (name) {
       if (name) {
         return name.split(' ').pop()
       }
     },
-    getBackground(competitor) {
-      let color = competitor.primaryColor;
+    getBackground (competitor) {
+      let color = competitor.primaryColor
 
       if (competitor.primaryColor === '000000') {
-        color = competitor.secondaryColor;
+        color = competitor.secondaryColor
       }
       return { 'background-color': `#${color}` }
     }
