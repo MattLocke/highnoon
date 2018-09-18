@@ -45,6 +45,7 @@ export default {
 <style lang="scss">
   .main-menu {
     width: 25vw;
-    padding-top: 1rem;
+    padding: 1rem;
+    background-color: rgba(0,0,0,0.3);
   }
 </style>

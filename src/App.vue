@@ -78,6 +78,7 @@ html {
 
 .box {
   background-color: transparent;
+  color: #fff;
 }
 
 .wrap {
