@@ -49,10 +49,10 @@
                       th Most Played Hero
                   tbody
                     tr(v-for="player in homeTeamPlayers")
-                      td 
+                      td
                         router-link(:to="playerUrl(player.player)") {{ player.player.name }}
                       td {{ player.player.attributes.role }}
-                      td(v-if="player.player.attributes.heroes") {{ player.player.attributes.heroes[0] }}
+                      td.is-proper(v-if="player.player.attributes.heroes") {{ player.player.attributes.heroes[0] }}
                       td(v-else) N/A
               .column.is-half.is-team-stats
                 h2 Accounts
@@ -68,9 +68,10 @@
                       th Most Played Hero
                   tbody
                     tr(v-for="player in awayTeamPlayers")
-                      td {{ player.player.name }}
+                      td
+                        router-link(:to="playerUrl(player.player)") {{ player.player.name }}
                       td {{ player.player.attributes.role }}
-                      td(v-if="player.player.attributes.heroes") {{ player.player.attributes.heroes[0] }}
+                      td.is-proper(v-if="player.player.attributes.heroes") {{ player.player.attributes.heroes[0] }}
                       td(v-else) N/A
 </template>
 
@@ -168,7 +169,7 @@ export default {
   height: 2.1rem;
   width: auto;
   filter: drop-shadow(1px 1px 0 #fff);
-  margin: 0 .5rem;
+  margin: 0 .2rem;
 }
 .team-name {
   font-size: 1.4rem;
