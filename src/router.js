@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import firebase from 'firebase/app'
 
+import CreateLeague from './views/CreateLeague.vue'
 import Fantasy from './views/Fantasy.vue'
 import Home from './views/Home.vue'
 import LeagueFantasy from './views/LeagueFantasy.vue'
@@ -22,6 +23,14 @@ let router = new Router({
     {
       path: '/',
       redirect: 'login'
+    },
+    {
+      path: '/createLeague',
+      name: 'createLeague',
+      component: CreateLeague,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/login',
