@@ -1,10 +1,7 @@
 <template lang="pug">
   #app
-    .columns
-      .column
-        router-view
-      .column.is-narrow
-        main-menu
+    router-view#rv
+    main-menu
 </template>
 
 <script>
@@ -72,6 +69,10 @@ $link-focus-border: $primary;
   font-style: normal;
 }
 
+#rv {
+  margin-right: 2vw;
+}
+
 html {
   background-color: #090c1c;
 }
@@ -79,6 +80,10 @@ html {
 .box {
   background-color: transparent;
   color: #fff;
+}
+
+.main-menu ul li a.router-link-active {
+  color: $primary;
 }
 
 table.table {
@@ -93,6 +98,14 @@ table.table {
   }
 }
 
+a:hover {
+  color: light($primary, 20%);
+}
+
+.ow-font {
+  font-family: 'overFont';
+}
+
 .wrap {
   color: $white;
 }
@@ -101,9 +114,18 @@ table.table {
   color: $primary;
 }
 
+.is-proper {
+  text-transform: capitalize;
+}
+
 h1 {
   font-family: 'overFont';
   font-size: 2rem;
+}
+
+h2 {
+  font-family: 'overFont';
+  font-size: 1.6rem;
 }
 
 p {
