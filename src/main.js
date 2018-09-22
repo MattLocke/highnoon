@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Buefy from 'buefy'
 import firebase from 'firebase/app'
+import moment from 'moment-timezone'
 import 'firebase/auth'
 import { fireInit } from './fireLogin'
 import 'material-design-icons'
@@ -10,8 +11,10 @@ import router from './router'
 import store from './store'
 
 Vue.use(Buefy)
-
 Vue.config.productionTip = false
+Vue.filter('formatDate', function (value) {
+  if (value) return moment(value * 1000).format('MMM D, h:mm a')
+})
 
 fireInit()
 

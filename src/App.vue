@@ -81,8 +81,24 @@ html {
   color: #fff;
 }
 
+table.table {
+  background-color: rgba(0,0,0,0.4);
+  color: #fff;
+  td {
+    border-color: $primary;
+  }
+  thead th {
+    color: #fff;
+    border-width: 0 0 1px;
+  }
+}
+
 .wrap {
   color: $white;
+}
+
+.orange {
+  color: $primary;
 }
 
 h1 {

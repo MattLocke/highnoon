@@ -9,9 +9,9 @@ var db = firebase.firestore()
 db.settings({ timestampsInSnapshots: true })
 
 export default {
-  getAllPlayers () {
-    logger.logIt('Getting all players.')
-    return db.collection('players')
+  getAllTeams () {
+    logger.logIt('Getting all teams.')
+    return db.collection('teams')
       .orderBy('name', 'asc')
       .get()
       .then(function (snapshot) {
@@ -23,16 +23,6 @@ export default {
           }
         })
         return tmp
-      })
-  },
-  getPlayer (playerName) {
-    logger.logIt(`Getting player with name: ${playerName}`)
-    return db.collection('players')
-      .doc(playerName)
-      .get()
-      .then(function (doc) {
-        if (doc.exists) return doc.data()
-        return null
       })
   }
 }

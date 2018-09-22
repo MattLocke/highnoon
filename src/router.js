@@ -8,6 +8,7 @@ import LeagueFantasy from './views/LeagueFantasy.vue'
 import LeaguePickem from './views/LeaguePickem.vue'
 import Login from './views/Login.vue'
 import Picks from './views/Picks.vue'
+import PlayerProfile from './views/PlayerProfile.vue'
 import Profile from './views/Profile.vue'
 
 Vue.use(Router)
@@ -63,6 +64,14 @@ let router = new Router({
       path: '/picks',
       name: 'picks',
       component: Picks,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/player/:handle',
+      name: 'playerProfile',
+      component: PlayerProfile,
       meta: {
         requiresAuth: true
       }

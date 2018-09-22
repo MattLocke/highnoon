@@ -5,37 +5,86 @@
         .wrap
           .box
             h1 This weeks matches
-          .matchup-listing(v-for="match in weeksMatches" :key="match.id" @click="setActive(match)")
-            .columns.is-mobile
-              .column.team(:style="getBackground(match.competitors[0])")
-                .columns.is-mobile.is-gapless
-                  .column.is-narrow
-                    img.team-logo(:src="getImage(match.competitors[0].abbreviatedName)")
-                  .column
-                    span.location {{ shortLocation(match.competitors[0].homeLocation) }}
-                    span.team-name {{ teamName(match.competitors[0].name) }}
-              .column.team.has-text-right(:style="getBackground(match.competitors[1])")
-                .columns.is-mobile.is-gapless
-                  .column
-                    span.location {{ shortLocation(match.competitors[1].homeLocation) }}
-                    span.team-name {{ teamName(match.competitors[1].name) }}
-                  .column.is-narrow
-                    img.team-logo(:src="getImage(match.competitors[1].abbreviatedName)")
+            hr
+            .matchup-listing(v-for="(match, index) in weeksMatches" :key="match.id" @click="setActive(match)" v-if="index < 12")
+              .columns.is-mobile
+                .column.team(:style="getBackground(match.competitors[0])")
+                  .columns.is-mobile.is-gapless
+                    .column.is-narrow
+                      img.team-logo(:src="getImage(match.competitors[0].abbreviatedName)")
+                    .column
+                      span.location {{ shortLocation(match.competitors[0].homeLocation) }}
+                      span.team-name {{ teamName(match.competitors[0].name) }}
+                .column.team.has-text-right(:style="getBackground(match.competitors[1])")
+                  .columns.is-mobile.is-gapless
+                    .column
+                      span.location {{ shortLocation(match.competitors[1].homeLocation) }}
+                      span.team-name {{ teamName(match.competitors[1].name) }}
+                    .column.is-narrow
+                      img.team-logo(:src="getImage(match.competitors[1].abbreviatedName)")
+            hr
+
       .column
         .wrap
           .box(v-if="activeMatch")
-            h1 {{ homeTeamName }} vs {{ awayTeamName }}
+            .columns
+              .column
+                h1 {{ homeTeam.name }}
+              .column.is-narrow
+                span.orange.is-inline  vs
+              .column.has-text-right
+                h1 {{ awayTeam.name }}
+            .columns
+              .column.is-half.is-team-stats
+                h2 Accounts
+                ul
+                  li(v-for="account in homeTeam.accounts")
+                    a(:href="account.value") {{ account.accountType }}
+                h2 Players
+                table.table.is-fullwidth
+                  thead
+                    tr
+                      th Handle
+                      th Role
+                      th Most Played Hero
+                  tbody
+                    tr(v-for="player in homeTeamPlayers")
+                      td 
+                        router-link(:to="playerUrl(player.player)") {{ player.player.name }}
+                      td {{ player.player.attributes.role }}
+                      td(v-if="player.player.attributes.heroes") {{ player.player.attributes.heroes[0] }}
+                      td(v-else) N/A
+              .column.is-half.is-team-stats
+                h2 Accounts
+                  ul
+                    li(v-for="account in awayTeam.accounts")
+                      a(:href="account.value") {{ account.accountType }}
+                h2 Players
+                table.table.is-fullwidth
+                  thead
+                    tr
+                      th Handle
+                      th Role
+                      th Most Played Hero
+                  tbody
+                    tr(v-for="player in awayTeamPlayers")
+                      td {{ player.player.name }}
+                      td {{ player.player.attributes.role }}
+                      td(v-if="player.player.attributes.heroes") {{ player.player.attributes.heroes[0] }}
+                      td(v-else) N/A
 </template>
 
 <script>
 import matchService from '@/services/matches'
+import teamService from '@/services/teams'
 
 export default {
   name: 'picks',
   data () {
     return {
       activeMatch: null,
-      weeksMatches: []
+      weeksMatches: [],
+      teams: []
     }
   },
   mounted () {
@@ -43,18 +92,36 @@ export default {
       .then(matches => {
         this.weeksMatches = matches
       })
+    teamService.getAllTeams()
+      .then(teams => {
+        this.teams = teams.reduce((map, obj) => {
+          map[obj.abbreviatedName] = obj
+          return map
+        }, {})
+      })
   },
   computed: {
-    homeTeamName () {
-      if (this.activeMatch) return this.activeMatch.competitors[0].name
+    homeTeam () {
+      if (this.activeMatch) return this.teams[this.activeMatch.competitors[0].abbreviatedName]
       return null
     },
-    awayTeamName () {
-      if (this.activeMatch) return this.activeMatch.competitors[1].name
+    awayTeam () {
+      if (this.activeMatch) return this.teams[this.activeMatch.competitors[1].abbreviatedName]
+      return null
+    },
+    homeTeamPlayers () {
+      if (this.activeMatch && this.homeTeam) return this.teams[this.homeTeam.abbreviatedName].players
+      return null
+    },
+    awayTeamPlayers () {
+      if (this.activeMatch && this.awayTeam) return this.teams[this.awayTeam.abbreviatedName].players
       return null
     }
   },
   methods: {
+    playerUrl (player) {
+      return `/player/${player.name}`
+    },
     setActive (match) {
       this.activeMatch = match
     },
@@ -91,6 +158,9 @@ export default {
   font-family: 'overFont';
   display: block;
 }
+.is-inline {
+  line-height: 3em;
+}
 .team {
   padding: .4rem .4rem 0 .4rem;
 }
@@ -108,9 +178,10 @@ export default {
   text-align: right;
 }
 .matchup-listing {
-  margin-bottom: 1rem;
+  margin: 1rem;
   &:hover {
     border-right: 2px solid #fff;
+    cursor: pointer;
   }
 }
 </style>
