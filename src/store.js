@@ -10,3 +10,13 @@ export default new Vuex.Store({
     user
   }
 })
+
+/*
+TODO:
+  user
+  leagues
+  messages
+  teams
+  players
+  schedule
+*/
