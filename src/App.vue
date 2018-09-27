@@ -70,7 +70,7 @@ $link-focus-border: $primary;
 }
 
 #rv {
-  margin-right: 2vw;
+  margin-right: 3vw;
 }
 
 html {
@@ -112,6 +112,11 @@ a:hover {
 
 .orange {
   color: $primary;
+}
+
+.is-left-menu {
+  border-right: 1px solid rgba(255,255,255,0.3);
+  min-height: 100vh;
 }
 
 .is-proper {
