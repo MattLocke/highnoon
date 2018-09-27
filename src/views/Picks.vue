@@ -36,51 +36,22 @@
                 h1 {{ awayTeam.name }}
             .columns
               .column.is-half.is-team-stats
-                h2 Accounts
-                ul
-                  li(v-for="account in homeTeam.accounts")
-                    a(:href="account.value") {{ account.accountType }}
-                h2 Players
-                table.table.is-fullwidth
-                  thead
-                    tr
-                      th Handle
-                      th Role
-                      th Most Played Hero
-                  tbody
-                    tr(v-for="player in homeTeamPlayers")
-                      td
-                        router-link(:to="playerUrl(player.player)") {{ player.player.name }}
-                      td {{ player.player.attributes.role }}
-                      td.is-proper(v-if="player.player.attributes.heroes") {{ player.player.attributes.heroes[0] }}
-                      td(v-else) N/A
+                team-profile(:team="homeTeam" :players="homeTeamPlayers")
               .column.is-half.is-team-stats
-                h2 Accounts
-                  ul
-                    li(v-for="account in awayTeam.accounts")
-                      a(:href="account.value") {{ account.accountType }}
-                h2 Players
-                table.table.is-fullwidth
-                  thead
-                    tr
-                      th Handle
-                      th Role
-                      th Most Played Hero
-                  tbody
-                    tr(v-for="player in awayTeamPlayers")
-                      td
-                        router-link(:to="playerUrl(player.player)") {{ player.player.name }}
-                      td {{ player.player.attributes.role }}
-                      td.is-proper(v-if="player.player.attributes.heroes") {{ player.player.attributes.heroes[0] }}
-                      td(v-else) N/A
+                team-profile(:team="awayTeam" :players="awayTeamPlayers")
 </template>
 
 <script>
 import matchService from '@/services/matches'
 import teamService from '@/services/teams'
 
+import TeamProfile from '@/views/picks/TeamProfile'
+
 export default {
   name: 'picks',
+  components: {
+    TeamProfile
+  },
   data () {
     return {
       activeMatch: null,
