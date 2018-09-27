@@ -1,7 +1,7 @@
 <template lang="pug">
   .menu
     .wrap
-      a.is-pulled-right(@click="showMenu = !showMenu") Menu
+      burger.is-pulled-right(@button-state="toggleMenu($event)")
     .wrap(:class="{opened: showMenu, closed: !showMenu}")
       .main-menu
         ul
@@ -19,6 +19,10 @@
             router-link.ow-font(to="/profile") My Profile
           li(@click="showMenu = false")
             router-link.ow-font(to="/createLeague") Create League
+          li(@click="showMenu = false")
+            router-link.ow-font(to="/messages") Messages
+        hr
+        ul
           li(@click="showMenu = false")
             a.ow-font(@click="logOut()") Log Out
 </template>
@@ -39,6 +43,9 @@ export default {
         .then(() => {
           this.$router.push({ path: '/login' })
         })
+    },
+    toggleMenu (value) {
+      this.showMenu = value
     }
   }
 }
@@ -46,12 +53,13 @@ export default {
 
 <style lang="scss">
   .menu {
-    position: absolute;
+    position: fixed;
     z-index: 900;
     top: 0;
     right: 0;
     height: 100vh;
     background-color: rgba(0,0,0,0.8);
+    border-left: 1px solid rgba(255,255,255,0.3);
   }
   .main-menu {
     width: 25vw;
@@ -71,6 +79,9 @@ export default {
         }
       }
     }
+  }
+  .closed li, .closed hr {
+    display: none;
   }
   .opened, .openedParent {
     animation-name: opening;

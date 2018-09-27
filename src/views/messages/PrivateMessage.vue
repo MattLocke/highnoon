@@ -23,7 +23,7 @@ export default {
     }
   },
   computed: {
-    isUser() {
+    isUser () {
       return (this.message.from === this.userId)
     }
   },
