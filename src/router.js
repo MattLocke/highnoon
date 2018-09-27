@@ -2,15 +2,16 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import firebase from 'firebase/app'
 
-import CreateLeague from './views/CreateLeague.vue'
-import Fantasy from './views/Fantasy.vue'
-import Home from './views/Home.vue'
-import LeagueFantasy from './views/LeagueFantasy.vue'
-import LeaguePickem from './views/LeaguePickem.vue'
-import Login from './views/Login.vue'
-import Picks from './views/Picks.vue'
-import PlayerProfile from './views/PlayerProfile.vue'
-import Profile from './views/Profile.vue'
+import CreateLeague from './views/CreateLeague'
+import Fantasy from './views/Fantasy'
+import Home from './views/Home'
+import LeagueFantasy from './views/LeagueFantasy'
+import LeaguePickem from './views/LeaguePickem'
+import Login from './views/Login'
+import Messages from './views/Messages'
+import Picks from './views/Picks'
+import PlayerProfile from './views/PlayerProfile'
+import Profile from './views/Profile'
 
 Vue.use(Router)
 
@@ -65,6 +66,14 @@ let router = new Router({
       path: '/leaguePickem',
       name: 'leaguePickem',
       component: LeaguePickem,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/messages',
+      name: 'messages',
+      component: Messages,
       meta: {
         requiresAuth: true
       }
