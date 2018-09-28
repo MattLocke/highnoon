@@ -1,7 +1,7 @@
 <template lang="pug">
   .menu
     .wrap
-      burger.is-pulled-right(@button-state="toggleMenu($event)")
+      burger.is-pulled-right(v-model="showMenu")
     .wrap(:class="{opened: showMenu, closed: !showMenu}")
       .main-menu
         ul

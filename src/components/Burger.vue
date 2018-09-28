@@ -26,7 +26,7 @@ export default {
       required: false,
       default: false
     },
-    'is-open': {
+    'value': {
       type: Boolean,
       required: false,
       default: false
@@ -38,8 +38,8 @@ export default {
     }
   },
   watch: {
-    isOpen () {
-      if (this.isOpen) this.open = true
+    value () {
+      if (this.value) this.open = true
       else this.open = false
     }
   },
@@ -50,7 +50,7 @@ export default {
   methods: {
     toggle () {
       this.open = !this.open
-      this.$emit('button-state', this.open)
+      this.$emit('input', this.open)
     }
   }
 }
