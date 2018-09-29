@@ -5,17 +5,21 @@
         .wrap
           .box
             h1 Messages
+            hr
+            message-list
       .column
         .pm(v-for="message in messages")
           private-message(:message="message")
 </template>
 
 <script>
+import MessageList from '@/views/messages/MessageList'
 import PrivateMessage from '@/views/messages/PrivateMessage'
 
 export default {
   components: {
-    PrivateMessage
+    PrivateMessage,
+    MessageList
   },
   data () {
     return {
