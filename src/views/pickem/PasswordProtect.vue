@@ -1,5 +1,5 @@
 <template lang="pug">
   .password-protect
-    .box
+    .mockup
       h1 Password Protect
 </template>

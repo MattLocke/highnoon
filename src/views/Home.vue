@@ -4,6 +4,7 @@
       .column.is-one-quarter
         .wrap
           p News
+          news-item
       .column
         .wrap
           .box.article
@@ -15,10 +16,13 @@
 import vueMarkdown from 'vue-markdown'
 import newsService from '@/services/news'
 
+import newsItem from '@/views/news/NewsItem'
+
 export default {
   name: 'home',
   components: {
-    vueMarkdown
+    vueMarkdown,
+    newsItem
   },
   data () {
     return {

@@ -1,13 +1,18 @@
 <template lang="pug">
   .league-pickem
-    h1 League View for Pick'em
-    delete-league
-    invite-link
-    league-image
-    ledger
-    lock-league
-    password-protect
-    remove-user
+    .columns
+      .column.is-one-quarter
+        h1 League View for Pick'em
+        delete-league
+        invite-link
+        league-image
+        ledger
+        lock-league
+        password-protect
+        remove-user
+      .column
+        .box
+          p Something
 </template>
 
 <script>
@@ -31,4 +36,3 @@ export default {
   }
 }
 </script>
-

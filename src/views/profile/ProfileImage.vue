@@ -1,5 +1,5 @@
 <template lang="pug">
-  .remove-user
+  .profile-image
     .mockup
-      h1 Remove User
+      h2 Profile Image
 </template>

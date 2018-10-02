@@ -1,5 +1,5 @@
 <template lang="pug">
   .invite-link
-    .box
+    .mockup
       h1 Invite Link
 </template>

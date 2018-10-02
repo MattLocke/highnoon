@@ -1,5 +1,5 @@
 <template lang="pug">
   .ledger
-    .box
+    .mockup
       h1 Ledger
 </template>

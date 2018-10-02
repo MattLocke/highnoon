@@ -1,5 +1,5 @@
 <template lang="pug">
-  .remove-user
+  .news-item
     .mockup
-      h1 Remove User
+      h1 News Item
 </template>

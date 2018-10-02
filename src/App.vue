@@ -82,6 +82,14 @@ html {
   color: #fff;
 }
 
+.mockup {
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 4px;
+  margin: 4px;
+  padding: 4px;
+}
+
 .main-menu ul li a.router-link-active {
   color: $primary;
 }

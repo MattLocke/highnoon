@@ -1,5 +1,5 @@
 <template lang="pug">
   .delete-league
-    .box
+    .mockup
       h1 Delete League
 </template>

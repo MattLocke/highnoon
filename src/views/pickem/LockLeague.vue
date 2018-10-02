@@ -1,5 +1,5 @@
 <template lang="pug">
   .lock-league
-    .box
+    .mockup
       h1 Lock League
 </template>
