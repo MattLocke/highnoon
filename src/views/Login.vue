@@ -64,3 +64,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.login .box label.label {
+  color: #fff;
+}
+</style>

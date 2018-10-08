@@ -1,5 +1,5 @@
 <template lang="pug">
-  .menu
+  .menu(v-if="currentUser")
     .wrap
       burger.is-pulled-right(v-model="showMenu")
     .wrap(:class="{opened: showMenu, closed: !showMenu}")
@@ -35,6 +35,11 @@ export default {
   data () {
     return {
       showMenu: false
+    }
+  },
+  computed: {
+    currentUser () {
+      return firebase.auth().currentUser
     }
   },
   methods: {

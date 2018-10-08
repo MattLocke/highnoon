@@ -5,6 +5,19 @@
         .box
           h1 Profile View
       .column
-        .box
-          p Something
+        achievements
+        settings
 </template>
+
+<script>
+import Achievements from '@/views/profile/Achievements'
+import Settings from '@/views/profile/Settings'
+
+export default {
+  components: {
+    Achievements,
+    Settings
+  }
+}
+</script>
+

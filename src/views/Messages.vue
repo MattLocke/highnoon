@@ -10,14 +10,17 @@
       .column
         .pm(v-for="message in messages")
           private-message(:message="message")
+        compose-message
 </template>
 
 <script>
+import ComposeMessage from '@/views/messages/ComposeMessage'
 import MessageList from '@/views/messages/MessageList'
 import PrivateMessage from '@/views/messages/PrivateMessage'
 
 export default {
   components: {
+    ComposeMessage,
     PrivateMessage,
     MessageList
   },

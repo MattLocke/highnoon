@@ -77,6 +77,10 @@ html {
   background-color: #090c1c;
 }
 
+label.label {
+  color: #fff;
+}
+
 .box {
   background-color: transparent;
   color: #fff;
