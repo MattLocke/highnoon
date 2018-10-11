@@ -11,6 +11,8 @@
                 .column.team(:style="getBackground(match.competitors[0])")
                   .columns.is-mobile.is-gapless
                     .column.is-narrow
+                      input(type="checkbox")
+                    .column.is-narrow
                       img.team-logo(:src="getImage(match.competitors[0].abbreviatedName)")
                     .column
                       span.location {{ shortLocation(match.competitors[0].homeLocation) }}
@@ -22,6 +24,8 @@
                       span.team-name {{ teamName(match.competitors[1].name) }}
                     .column.is-narrow
                       img.team-logo(:src="getImage(match.competitors[1].abbreviatedName)")
+                    .column.is-narrow
+                      input(type="checkbox")
             hr
 
       .column
