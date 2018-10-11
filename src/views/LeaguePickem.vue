@@ -12,7 +12,7 @@
         remove-user
       .column
         .box
-          p Something
+          h1 League overview for Pick'em
 </template>
 
 <script>
