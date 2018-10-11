@@ -12,7 +12,7 @@
         remove-user
       .column
         .box
-          h1 League overview for Pick'em
+          h1 League overview for Pick'em - Yep.
 </template>
 
 <script>
