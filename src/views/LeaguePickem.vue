@@ -33,6 +33,23 @@ export default {
     LockLeague,
     PasswordProtect,
     RemoveUser
+  },
+  data () {
+    return {
+      league: {
+        name: 'SouldrinK\'s League',
+        isLocked: false,
+        id: 'LKSJGSWDH8787SDLKFJS',
+        creatorId: 'LJSGHSHDFHSK879SDKD',
+        managers: [],
+        maxUsers: 0,
+        message: '',
+        leagueImage: '',
+        competitionId: 'GGFFSJDKJSLJ8907SKJ'
+      },
+      leagueUsers: [],
+      ledger: []
+    }
   }
 }
 </script>
