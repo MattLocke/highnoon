@@ -7,16 +7,19 @@
       .column
         achievements
         settings
+        social
 </template>
 
 <script>
 import Achievements from '@/views/profile/Achievements'
 import Settings from '@/views/profile/Settings'
+import Social from '@/views/profile/Social'
 
 export default {
   components: {
     Achievements,
-    Settings
+    Settings,
+    Social
   }
 }
 </script>
