@@ -12,6 +12,7 @@ import Messages from './views/Messages'
 import Picks from './views/Picks'
 import PlayerProfile from './views/PlayerProfile'
 import Profile from './views/Profile'
+import Staff from './views/Staff'
 
 Vue.use(Router)
 
@@ -98,6 +99,14 @@ let router = new Router({
       path: '/profile',
       name: 'profile',
       component: Profile,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/staff',
+      name: 'staff',
+      component: Staff,
       meta: {
         requiresAuth: true
       }

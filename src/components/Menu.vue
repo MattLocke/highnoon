@@ -21,6 +21,8 @@
             router-link.ow-font(to="/createLeague") Create League
           li(@click="showMenu = false")
             router-link.ow-font(to="/messages") Messages
+          li(@click="showMenu = false")
+            router-link.ow-font(to="/staff") Staff
         hr
         ul
           li(@click="showMenu = false")
