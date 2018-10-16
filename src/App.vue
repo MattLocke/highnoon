@@ -22,6 +22,7 @@ export default {
 // Set your colors
 $primary: #f99e1a;
 $primary-invert: findColorInvert($primary);
+$secondary: #0000f3;
 $twitter: #4099FF;
 $twitter-invert: findColorInvert($twitter);
 
@@ -89,6 +90,15 @@ label.label {
 
 .box {
   background-color: transparent;
+  color: #fff;
+}
+
+.button.is-primary {
+  background-color: $primary;
+}
+
+.button.is-secondary {
+  background-color: $secondary;
   color: #fff;
 }
 
