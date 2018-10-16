@@ -1,7 +1,7 @@
 <template lang="pug">
   .league-pickem
     .columns
-      .column.is-one-quarter
+      left-bar
         h1 League View for Pick'em
         delete-league
         invite-link
@@ -20,6 +20,7 @@ import DeleteLeague from '@/views/pickem/DeleteLeague'
 import InviteLink from '@/views/pickem/InviteLink'
 import LeagueImage from '@/views/pickem/LeagueImage'
 import Ledger from '@/views/pickem/Ledger'
+import LeftBar from '@/components/LeftBar'
 import LockLeague from '@/views/pickem/LockLeague'
 import PasswordProtect from '@/views/pickem/PasswordProtect'
 import RemoveUser from '@/views/pickem/RemoveUser'
@@ -30,6 +31,7 @@ export default {
     InviteLink,
     LeagueImage,
     Ledger,
+    LeftBar,
     LockLeague,
     PasswordProtect,
     RemoveUser
