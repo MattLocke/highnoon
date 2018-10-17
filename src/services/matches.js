@@ -14,15 +14,6 @@ export default {
     return db.collection('matches')
       .orderBy('id', 'asc')
       .get()
-      .then(function (snapshot) {
-        var tmp = []
-        snapshot.forEach(function (doc) {
-          if (doc.exists) {
-            var item = doc.data()
-            tmp.push(item)
-          }
-        })
-        return tmp
-      })
+      .then(matches => matches.docs.map(match => match.data()))
   }
 }

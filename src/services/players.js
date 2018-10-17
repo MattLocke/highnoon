@@ -14,25 +14,13 @@ export default {
     return db.collection('players')
       .orderBy('name', 'asc')
       .get()
-      .then(function (snapshot) {
-        var tmp = []
-        snapshot.forEach(function (doc) {
-          if (doc.exists) {
-            var item = doc.data()
-            tmp.push(item)
-          }
-        })
-        return tmp
-      })
+      .then(players => players.docs.map(player => player.data()))
   },
   getPlayer (playerName) {
     logger.logIt(`Getting player with name: ${playerName}`)
     return db.collection('players')
       .doc(playerName)
       .get()
-      .then(function (doc) {
-        if (doc.exists) return doc.data()
-        return null
-      })
+      .then(player => player.exists ? player.data() : null)
   }
 }
