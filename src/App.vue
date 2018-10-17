@@ -2,6 +2,7 @@
   #app
     router-view#rv
     main-menu
+    b-loading(:is-full-page="true" :active.sync="isLoading" :can-cancel="false")
 </template>
 
 <script>
@@ -11,6 +12,11 @@ export default {
   name: 'HighNoon',
   components: {
     mainMenu
+  },
+  computed: {
+    isLoading () {
+      return this.$store.getters.loading
+    }
   }
 }
 </script>

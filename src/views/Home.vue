@@ -30,14 +30,17 @@ export default {
     }
   },
   mounted () {
+    this.$store.dispatch('setLoading', true)
     newsService.getHomeNews()
       .then(news => {
         this.featuredArticle = news
       })
-    newsService.getNews()
-      .then(articles => {
-        this.latestArticles = articles
-      })
+      .then(newsService.getNews()
+        .then(articles => {
+          this.latestArticles = articles
+          this.$store.dispatch('setLoading', false)
+        })
+      )
   }
 }
 </script>
