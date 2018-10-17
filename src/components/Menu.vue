@@ -1,31 +1,31 @@
 <template lang="pug">
-  .menu(v-if="currentUser")
+  .menu(v-if="currentUser" @click="toggle")
     .wrap
       burger.is-pulled-right(v-model="showMenu")
     .wrap(:class="{opened: showMenu, closed: !showMenu}")
       .main-menu
         ul
-          li(@click="showMenu = false")
+          li
             router-link.ow-font(to="/home") News
-          li(@click="showMenu = false")
+          li
             router-link.ow-font(to="/fantasy") Fantasy
-          li(@click="showMenu = false")
+          li
             router-link.ow-font(to="/leagueFantasy") Fantasy League
-          li(@click="showMenu = false")
+          li
             router-link.ow-font(to="/leaguePickem") Pickem Leagues
-          li(@click="showMenu = false")
+          li
             router-link.ow-font(to="/picks") My Picks
-          li(@click="showMenu = false")
+          li
             router-link.ow-font(to="/profile") My Profile
-          li(@click="showMenu = false")
+          li
             router-link.ow-font(to="/createLeague") Create League
-          li(@click="showMenu = false")
+          li
             router-link.ow-font(to="/messages") Messages
-          li(@click="showMenu = false")
+          li
             router-link.ow-font(to="/staff") Staff
         hr
         ul
-          li(@click="showMenu = false")
+          li
             a.ow-font(@click="logOut()") Log Out
 </template>
 
@@ -53,6 +53,9 @@ export default {
     },
     toggleMenu (value) {
       this.showMenu = value
+    },
+    toggle () {
+      this.showMenu ? this.showMenu = false : this.showMenu = true
     }
   }
 }
