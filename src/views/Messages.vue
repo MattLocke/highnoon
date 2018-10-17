@@ -1,7 +1,7 @@
 <template lang="pug">
   .messages
     .columns
-      .column.is-one-quarter.is-left-menu
+      left-bar
         .wrap
           .box
             h1 Messages

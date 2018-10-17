@@ -11,6 +11,7 @@ import router from './router'
 import store from './store'
 
 import burger from './components/Burger'
+import leftBar from './components/LeftBar'
 
 Vue.use(Buefy)
 Vue.config.productionTip = false
@@ -18,6 +19,7 @@ Vue.filter('formatDate', function (value) {
   if (value) return moment(value * 1000).format('MMM D, h:mm a')
 })
 Vue.component('burger', burger)
+Vue.component('leftBar', leftBar)
 
 fireInit()
 

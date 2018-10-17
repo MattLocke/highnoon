@@ -1,10 +1,9 @@
 <template lang="pug">
   .home
     .columns
-      .column.is-one-quarter
-        .wrap
-          p News
-          news-item
+      left-bar
+        p News
+        news-item(v-for="article in latestArticles" :key="article.id" :article="article")
       .column
         .wrap
           .box.article
@@ -26,13 +25,18 @@ export default {
   },
   data () {
     return {
-      featuredArticle: {}
+      featuredArticle: {},
+      latestArticles: []
     }
   },
   mounted () {
     newsService.getHomeNews()
       .then(news => {
         this.featuredArticle = news
+      })
+    newsService.getNews()
+      .then(articles => {
+        this.latestArticles = articles
       })
   }
 }

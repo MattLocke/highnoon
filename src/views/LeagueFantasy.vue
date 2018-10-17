@@ -1,7 +1,7 @@
 <template lang="pug">
   .league-fantasy
     .columns
-      .column.is-one-quarter
+      left-bar
         h1 League View for Fantasy
         delete-league
         invite-link

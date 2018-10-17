@@ -1,7 +1,7 @@
 <template lang="pug">
   .profile
     .columns
-      .column.is-one-quarter
+      left-bar
         .box
           h1 Profile View
       .column

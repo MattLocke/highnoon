@@ -1,7 +1,7 @@
 <template lang="pug">
   .picks
     .columns
-      .column.is-one-quarter
+      left-bar
         .wrap
           .box
             h1 This weeks matches
