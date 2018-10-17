@@ -12,9 +12,7 @@ export default {
   updateNews (news) {
     return db.collection('news').doc(news.id)
       .update(news)
-      .then(function (newsRef) {
-        return true
-      })
+      .then(() => true)
   },
   getNews () {
     logger.logIt('Getting news.')
@@ -22,23 +20,12 @@ export default {
       .orderBy('postDate', 'desc')
       .limit(10)
       .get()
-      .then(function (snapshot) {
-        var tmp = []
-        snapshot.forEach(function (doc) {
-          if (doc.exists) {
-            var item = doc.data()
-            item.id = doc.id
-            tmp.push(item)
-          }
-        })
-        return tmp
-      })
+      .then(articles => articles.docs.map(article => article.data()))
   },
   addNews (news) {
     return db.collection('news').add(news)
-      .then(function (newsRef) {
-        return newsRef.id
-      }).catch(function (error) {
+      .then(newsRef => newsRef.id)
+      .catch((error) => {
         logger.errorIt(error)
         return false
       })
@@ -48,10 +35,7 @@ export default {
     return db.collection('news')
       .doc(articleId)
       .get()
-      .then(function (article) {
-        if (article.exists) return article.data()
-        else return false
-      })
+      .then(article => article.exists ? article.data() : false)
   },
   getHomeNews () {
     logger.logIt('Getting home page news.')
@@ -61,16 +45,6 @@ export default {
       .orderBy('postDate', 'desc')
       .limit(1)
       .get()
-      .then(function (snapshot) {
-        var tmp = []
-        snapshot.forEach(function (doc) {
-          if (doc.exists) {
-            var item = doc.data()
-            item.id = doc.id
-            tmp.push(item)
-          }
-        })
-        return tmp[0]
-      })
+      .then(article => article.docs.map(a => ({...a.id, ...a.data()}))[0])
   }
 }

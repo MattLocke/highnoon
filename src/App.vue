@@ -6,6 +6,10 @@
 </template>
 
 <script>
+import firebase from 'firebase/app'
+
+import userService from '@/services/user'
+
 import mainMenu from '@/components/Menu'
 
 export default {
@@ -17,6 +21,15 @@ export default {
     isLoading () {
       return this.$store.getters.loading
     }
+  },
+  mounted () {
+    this.$store.dispatch('saveFireData', firebase.auth().currentUser)
+    this.$store.dispatch('setLoading', true)
+    userService.getProfile(firebase.auth().currentUser.uid)
+      .then(userData => {
+        this.$store.dispatch('logIn', userData)
+        this.$store.dispatch('setLoading', false)
+      })
   }
 }
 </script>
