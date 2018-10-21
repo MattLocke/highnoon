@@ -114,6 +114,8 @@ label.label {
 
 .button.is-primary {
   background-color: $primary;
+  text-shadow: 1px 1px rgba(0,0,0,0.5);
+  font-weight: 500;
 }
 
 .button.is-secondary {
