@@ -1,28 +1,10 @@
 <template lang="pug">
   .menu(v-if="currentUser" @click="toggle")
-    .wrap
-      burger.is-pulled-right(v-model="showMenu")
-    .wrap(:class="{opened: showMenu, closed: !showMenu}")
+    .wrap.is-hidden-mobile(:class="{opened: showMenu, closed: !showMenu}")
       .main-menu
         ul
-          li
-            router-link.ow-font(to="/home") News
-          li
-            router-link.ow-font(to="/fantasy") Fantasy
-          li
-            router-link.ow-font(to="/leagueFantasy") Fantasy League
-          li
-            router-link.ow-font(to="/leaguePickem") Pickem Leagues
-          li
-            router-link.ow-font(to="/picks") My Picks
-          li
-            router-link.ow-font(to="/profile") My Profile
-          li
-            router-link.ow-font(to="/createLeague") Create League
-          li
-            router-link.ow-font(to="/messages") Messages
-          li
-            router-link.ow-font(to="/staff") Staff
+          li(v-for="menuItem in menuItems")
+            router-link.ow-font(:to="menuItem.where") {{ menuItem.name }}
         hr
         ul
           li
@@ -36,7 +18,18 @@ import 'firebase/auth'
 export default {
   data () {
     return {
-      showMenu: false
+      showMenu: false,
+      menuItems: [
+        { name: 'News', where: '/home' },
+        { name: 'Fantasy', where: '/fantasy' },
+        { name: 'Fantasy League', where: '/leagueFantasy' },
+        { name: 'Pickem Leagues', where: '/leaguePickem' },
+        { name: 'My Picks', where: '/picks' },
+        { name: 'My Profile', where: '/profile' },
+        { name: 'Create League', where: '/createLeague' },
+        { name: 'Messages', where: '/messages' },
+        { name: 'Staff', where: '/staff' },
+      ]
     }
   },
   computed: {
