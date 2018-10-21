@@ -2,18 +2,24 @@
   .pickem
     .mockup
       h1 Pick'em Mode
-    section
-      h2 League Name
-      b-input(placeholder="league name" v-model="leagueName")
-    section
-      h2 Password Options
-      p Would you like to password protect this league?
-      b-switch(v-model="passwordProtected")
-      b-input(placeholder="password" v-if="passwordProtected" v-model="password")
-    section
-      h2 League Image
-      p Please select the image to use.  Image should be jpg/png and 256x256.  (This can be changed/selected later)
-      picture-input(ref="pictureInput", width="250", height="250", accept="image/jpeg,image/png", buttonClass="button is-primary is-small", @change="uploadPicture")
+    hr
+    .columns
+      .column.is-one-quarter
+        section
+          h2 League Image
+          p Please select the image to use.  Image should be jpg/png and 256x256.  (This can be changed/selected later)
+          hr
+          picture-input(ref="pictureInput", width="250", height="250", accept="image/jpeg,image/png", buttonClass="button is-primary is-small", @change="uploadPicture")
+      .column.is-three-quarters
+        section
+          h2 League Name
+          b-input(placeholder="league name" v-model="leagueName")
+        section
+          h2 Password Protect League
+          b-switch(v-model="passwordProtected")
+          .wrap(v-if="passwordProtected")
+            hr
+            b-input(placeholder="password" v-if="passwordProtected" v-model="password")
     section
       button.button.is-primary Create League
 </template>
