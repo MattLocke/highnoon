@@ -37,6 +37,6 @@ export default {
     isLoggedIn: state => state.loggedIn,
     getUserData: state => state.userData,
     getFBUserData: state => state.fireUserData,
-    getUserId: state => state.fireUserData.uid
+    getUserId: state => state.fireUserData ? state.fireUserData.uid : 0
   }
 }
