@@ -1,5 +1,5 @@
 <template lang="pug">
-  .menu(v-if="currentUser" @click="toggle")
+  .menu(@click="toggle")
     .wrap.is-hidden-mobile(:class="{opened: showMenu, closed: !showMenu}")
       .main-menu
         ul
@@ -28,20 +28,16 @@ export default {
         { name: 'My Profile', where: '/profile' },
         { name: 'Create League', where: '/createLeague' },
         { name: 'Messages', where: '/messages' },
-        { name: 'Staff', where: '/staff' },
+        { name: 'Staff', where: '/staff' }
       ]
-    }
-  },
-  computed: {
-    currentUser () {
-      return firebase.auth().currentUser
     }
   },
   methods: {
     logOut () {
       firebase.auth().signOut()
         .then(() => {
-          this.$router.push({ path: '/login' })
+          // this.$router.push({ path: '/login' })
+          location.reload()
         })
     },
     toggleMenu (value) {

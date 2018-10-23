@@ -1,7 +1,7 @@
 <template lang="pug">
   #app
     router-view#rv
-    main-menu
+    main-menu(v-if="currentUser")
     b-loading(:is-full-page="true" :active.sync="isLoading" :can-cancel="false")
 </template>
 
@@ -20,16 +20,21 @@ export default {
   computed: {
     isLoading () {
       return this.$store.getters.loading
+    },
+    currentUser () {
+      return this.$store.getters.isLoggedIn
     }
   },
   mounted () {
     this.$store.dispatch('saveFireData', firebase.auth().currentUser)
     this.$store.dispatch('setLoading', true)
-    userService.getProfile(firebase.auth().currentUser.uid)
-      .then(userData => {
-        this.$store.dispatch('logIn', userData)
-        this.$store.dispatch('setLoading', false)
-      })
+    if (firebase.auth().currentUser) {
+      userService.getProfile(firebase.auth().currentUser.uid)
+        .then(userData => {
+          this.$store.dispatch('logIn', userData)
+          this.$store.dispatch('setLoading', false)
+        })
+    } else this.$store.dispatch('setLoading', false)
   }
 }
 </script>
@@ -70,6 +75,16 @@ $link-focus-border: $primary;
 
 /* Fonts */
 @font-face {
+  font-family: 'titleFont';
+  src: url('./assets/fonts/Acre.eot');
+  src: url('./assets/fonts/Acre.eot?#iefix') format('embedded-opentype'),
+    url('./assets/fonts/Acre.woff') format('woff'),
+    url('./assets/fonts/Acre.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
   font-family: 'headerFont';
   src: url('./assets/fonts/BigNoodleTooOblique.eot');
   src: url('./assets/fonts/BigNoodleTooOblique.eot?#iefix') format('embedded-opentype'),
@@ -89,12 +104,17 @@ $link-focus-border: $primary;
   font-style: normal;
 }
 
+.loading-overlay .loading-background {
+  background-color: rgba(0,0,0,0.8);
+}
+
 #rv {
   margin-right: 3vw;
 }
 
 html {
   background-color: #090c1c;
+  min-height: 99vh;
 }
 
 section {
@@ -153,6 +173,12 @@ a:hover {
 
 .ow-font {
   font-family: 'overFont';
+}
+
+.title-font {
+  font-family: 'titleFont';
+  color: #fff;
+  text-transform: uppercase;
 }
 
 .wrap {
