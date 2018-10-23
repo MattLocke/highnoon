@@ -64,9 +64,11 @@ export default {
     }
   },
   mounted () {
+    this.$store.dispatch('isLoading', true)
     matchService.getAllMatches()
       .then(matches => {
         this.weeksMatches = matches
+        this.$store.dispatch('isLoading', false)
       })
     teamService.getAllTeams()
       .then(teams => {

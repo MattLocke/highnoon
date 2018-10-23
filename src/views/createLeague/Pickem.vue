@@ -37,7 +37,7 @@ export default {
       leagueName: null,
       ownerId: this.$store.state.user.fireUserData.uid,
       passwordProtected: false,
-      leagueImage: null,  
+      leagueImage: null,
       password: null
     }
   },
@@ -45,12 +45,12 @@ export default {
     uploadPicture () {
       console.log('New picture selected.')
       if (this.$refs.pictureInput.file) {
-        this.fileExtension = `.${this.$refs.pictureInput.fileType.substr(this.$refs.pictureInput.fileType.indexOf("/") + 1)}`
+        this.fileExtension = `.${this.$refs.pictureInput.fileType.substr(this.$refs.pictureInput.fileType.indexOf('/') + 1)}`
         console.table(this.$refs.pictureInput)
       } else {
         console.error('FileReader API not supported.  Boo.')
       }
-    },
+    }
   }
 }
 </script>
