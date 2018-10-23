@@ -64,11 +64,11 @@ export default {
     }
   },
   mounted () {
-    this.$store.dispatch('isLoading', true)
+    this.$store.dispatch('setLoading', true)
     matchService.getAllMatches()
       .then(matches => {
         this.weeksMatches = matches
-        this.$store.dispatch('isLoading', false)
+        this.$store.dispatch('setLoading', false)
       })
     teamService.getAllTeams()
       .then(teams => {
