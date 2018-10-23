@@ -45,6 +45,6 @@ export default {
       .orderBy('postDate', 'desc')
       .limit(1)
       .get()
-      .then(article => article.docs.map(a => ({...a.id, ...a.data()}))[0])
+      .then(article => article.docs.map(a => ({ ...a.id, ...a.data() }))[0])
   }
 }
