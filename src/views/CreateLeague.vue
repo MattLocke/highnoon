@@ -12,12 +12,12 @@
           .columns
             .column.is-half-desktop
               .box
-                h3.ow-font Pick'Em
+                h3 Pick'Em
                 p You and an UNLIMITED number of friends/peers pick who will win each week, and prizes may be awarded by tickets or points.
               button.button.is-primary(@click="choosePickem()") Choose Pick'Em
             .column.is-half-desktop
               .box
-                h3.ow-font Traditional Fantasy
+                h3 Traditional Fantasy
                 p You and up to 11 other buddies will form teams in a draft-like fashion, and will duke it out each week.  Points and record will be available for leaderboards.
               button.button.is-primary(@click="chooseFantasy()") Choose Fantasy
         pickem(v-if="showPickem" @complete="createLeague()")
