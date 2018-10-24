@@ -127,6 +127,13 @@ label.label {
   color: #fff;
 }
 
+input.input {
+  opacity: .6;
+  &:hover, &:focus, &:active {
+    opacity: 1;
+  }
+}
+
 .box {
   background-color: transparent;
   color: #fff;
@@ -206,6 +213,11 @@ h1 {
 h2 {
   font-family: 'overFont';
   font-size: 1.6rem;
+}
+
+h3 {
+  font-family: 'overFont';
+  font-size: 1.4rem;
 }
 
 p {
