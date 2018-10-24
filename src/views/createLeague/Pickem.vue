@@ -21,11 +21,14 @@
             hr
             b-input(placeholder="password" v-if="passwordProtected" v-model="password")
     section
-      button.button.is-primary Create League
+      button.button.is-primary(@click="createLeague" v-if="canCreateLeague") Create League
+      button.button.is-primary(disabled v-else) Create League
 </template>
 
 <script>
 import PictureInput from 'vue-picture-input'
+
+import LeagueService from '@/services/league'
 
 export default {
   components: {
@@ -35,10 +38,17 @@ export default {
     return {
       fileExtension: null,
       leagueName: null,
-      ownerId: this.$store.state.user.fireUserData.uid,
       passwordProtected: false,
       leagueImage: null,
       password: null
+    }
+  },
+  computed: {
+    ownerId () {
+      return this.$store.getters.getUserId
+    },
+    canCreateLeague () {
+      return (this.leagueName && this.leagueImage)
     }
   },
   methods: {
@@ -46,10 +56,30 @@ export default {
       console.log('New picture selected.')
       if (this.$refs.pictureInput.file) {
         this.fileExtension = `.${this.$refs.pictureInput.fileType.substr(this.$refs.pictureInput.fileType.indexOf('/') + 1)}`
-        console.table(this.$refs.pictureInput)
       } else {
         console.error('FileReader API not supported.  Boo.')
       }
+    },
+    createLeague () {
+      // build the league data
+      const leagueData = {
+        leagueName: this.leagueName,
+        ownerId: this.ownerId,
+        passwordProtected: this.passwordProtected,
+        password: this.password
+      }
+
+      this.$store.dispatch('setLoading', true)
+      LeagueService.createLeague(leagueData, 'pickem')
+        .then((leagueId) => {
+          this.$store.dispatch('setLoading', false)
+          if (leagueId) this.$router.push({ path: `/ViewLeague/${this.leagueId}` })
+          // show an error or something if it no workie.
+        })
+        .catch(() => {
+          this.$store.dispatch('setLoading', false)
+          // some kind of error message here as well.
+        })
     }
   }
 }
