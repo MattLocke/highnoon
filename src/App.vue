@@ -175,7 +175,8 @@ table.table {
 }
 
 a:hover {
-  color: light($primary, 20%);
+  color: $primary;
+  border-bottom: 1px dotted $primary;
 }
 
 .ow-font {

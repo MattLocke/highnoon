@@ -3,6 +3,7 @@
     .columns
       left-bar
         p News
+        router-link(to="/CreateNews" v-if="isEditor") Create News
         news-item(v-for="article in latestArticles" :key="article.id" :article="article")
       .column
         .wrap
@@ -13,6 +14,8 @@
 
 <script>
 import vueMarkdown from 'vue-markdown'
+import { has } from 'lodash'
+
 import newsService from '@/services/news'
 
 import newsItem from '@/views/news/NewsItem'
@@ -27,6 +30,11 @@ export default {
     return {
       featuredArticle: {},
       latestArticles: []
+    }
+  },
+  computed: {
+    isEditor () {
+      return has(this.$store.state.user.userData, 'isEditor')
     }
   },
   mounted () {
