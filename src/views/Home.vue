@@ -2,9 +2,10 @@
   .home
     .columns
       left-bar
-        p News
-        router-link(to="/CreateNews" v-if="isEditor") Create News
-        news-item(v-for="article in latestArticles" :key="article.id" :article="article")
+        hr
+        section(v-if="isEditor")
+          router-link(to="/CreateNews") Create News
+        news-item(v-for="article in latestArticles" :key="article.id" :article="article" v-on:set-article="setArticle")
       .column
         .wrap
           .box.article
@@ -15,7 +16,7 @@
 
 <script>
 import vueMarkdown from 'vue-markdown'
-import { has } from 'lodash'
+import { has, isEmpty } from 'lodash'
 
 import newsService from '@/services/news'
 
@@ -29,8 +30,8 @@ export default {
   },
   data () {
     return {
-      featuredArticle: {},
-      latestArticles: []
+      latestArticles: [],
+      featuredArticle: {}
     }
   },
   computed: {
@@ -38,18 +39,19 @@ export default {
       return has(this.$store.state.user.userData, 'isEditor')
     }
   },
+  methods: {
+    setArticle (article) {
+      this.featuredArticle = article
+    }
+  },
   mounted () {
     this.$store.dispatch('setLoading', true)
-    newsService.getHomeNews()
-      .then(news => {
-        this.featuredArticle = news
+    newsService.getNews()
+      .then(articles => {
+        this.latestArticles = articles
+        this.featuredArticle = articles[0]
+        this.$store.dispatch('setLoading', false)
       })
-      .then(newsService.getNews()
-        .then(articles => {
-          this.latestArticles = articles
-          this.$store.dispatch('setLoading', false)
-        })
-      )
   }
 }
 </script>
