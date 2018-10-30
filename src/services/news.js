@@ -1,6 +1,7 @@
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 import { fireInit } from '@/fireLogin'
+import moment from 'moment-timezone'
 import logger from '@/services/logger'
 
 fireInit()
@@ -16,7 +17,19 @@ export default {
   },
   getNews () {
     logger.logIt('Getting news.')
+    const now = Number(moment().format('X'))
     return db.collection('news')
+      .where('approved', '==', true)
+      .where('postDate', '<', now)
+      .orderBy('postDate', 'desc')
+      .limit(10)
+      .get()
+      .then(articles => articles.docs.map(article => article.data()))
+  },
+  getPendingNews () {
+    logger.logIt('Getting pending news.')
+    return db.collection('news')
+      .where('approved', '==', false)
       .orderBy('postDate', 'desc')
       .limit(10)
       .get()
