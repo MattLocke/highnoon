@@ -202,6 +202,10 @@ a:hover {
   min-height: 100vh;
 }
 
+.is-mice {
+  font-size: .7rem;
+}
+
 .is-proper {
   text-transform: capitalize;
 }
