@@ -8,8 +8,9 @@
       .column
         .wrap
           .box.article
-            h1 {{ featuredArticle.headline }}
-            vue-markdown(:source="featuredArticle.message")
+            section.news-section
+              h1 {{ featuredArticle.headline }}
+              vue-markdown(:source="featuredArticle.message")
 </template>
 
 <script>
