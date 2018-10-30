@@ -41,6 +41,7 @@
 </template>
 
 <script>
+import moment from 'moment-timezone'
 import vueMarkdown from 'vue-markdown'
 
 export default {
@@ -63,14 +64,14 @@ export default {
       return `# ${this.newsItem.title}`
     },
     slug () {
-      return this.newsItem.title
+      return `${moment().format('MMDYY')}-${this.newsItem.title
         .toString()
         .toLowerCase()
         .replace(/\s+/g, '-')
         .replace(/[^\w-]+/g, '')
         .replace(/--+/g, '-')
         .replace(/^-+/, '')
-        .replace(/-+$/, '')
+        .replace(/-+$/, '')}`
     },
     user () {
       return this.$store.getters.getUserData
