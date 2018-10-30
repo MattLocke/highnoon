@@ -11,9 +11,12 @@
           b-input(v-model="user" placeholder="Email")
         b-field(label="Password")
           b-input(type="password" v-model="pass" placeholder="Password" password-reveal)
-        .sign-in-or-up
+        .sign-in
           a.button.is-primary(@click="signIn" v-if="canSignIn") Sign In
           a.button(disabled v-else) Sign In
+        .sign-up
+          p.is-mice.is-pulled-right
+            a(href="#") Or Sign Up
         b-loading(:is-full-page="true" :active.sync="isLoading" :can-cancel="false")
         b-notification(:active.sync="showError") {{ errorMessage }}
       .column
