@@ -1,5 +1,5 @@
 <template lang="pug">
-  section.news-item
+  section.news-item(@click="setActive")
     h3 {{ article.headline }}
     span {{ article.postDate | formatDate }}
 </template>
@@ -10,6 +10,11 @@ export default {
     article: {
       type: Object,
       required: true
+    }
+  },
+  methods: {
+    setActive () {
+      this.$emit('set-article', this.article)
     }
   }
 }
