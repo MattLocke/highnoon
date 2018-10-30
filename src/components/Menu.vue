@@ -5,6 +5,9 @@
         ul
           li(v-for="menuItem in menuItems")
             router-link.ow-font(:to="menuItem.where") {{ menuItem.name }}
+        .box
+          p This site is currently in development for version 2.0  If you have any questions or issues, please
+          a(href="https://discord.gg/H5bNcYD")  find us on discord.
         hr
         ul
           li
@@ -84,7 +87,7 @@ export default {
   }
   .opened, .openedParent {
     animation-name: opening;
-    width: 15vw;
+    width: 25vw;
     animation-duration: .5s;
   }
   .closed, .closedParent {
@@ -94,7 +97,7 @@ export default {
   }
   @keyframes opening {
     from { width: 2vw; }
-    to { width: 15vw; }
+    to { width: 25vw; }
   }
   @keyframes closing {
     from { width: 15vw; }
