@@ -1,7 +1,7 @@
 <template lang="pug">
   section.news-item(@click="setActive")
     h3 {{ article.headline }}
-    span {{ article.postDate | formatDate }}
+    span {{ article.postDate | formatNewsDate }}
 </template>
 
 <script>
