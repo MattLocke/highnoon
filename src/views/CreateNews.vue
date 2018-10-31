@@ -34,8 +34,12 @@
           .field
             b-checkbox(v-model="newsItem.frontPage") Worthy of Home Page
           hr
-          button.button.is-primary(@click="saveNews" v-if="canSave") Save News
-          button.button.is-primary(disabled v-else) Save News
+          .columns
+            .column.is-narrow
+              button.button.is-primary(@click="saveNews" v-if="canSave") Save News
+              button.button.is-primary(disabled v-else) Save News
+            .column
+              button.button(@click="cancelCreate") Cancel
       .column.is-two-thirds
         .box
           section.news-section
@@ -108,6 +112,9 @@ export default {
         .catch((error) => {
           console.error(error)
         })
+    },
+    cancelCreate () {
+      this.$router.push({ path: '/home' })
     }
   }
 }
