@@ -13,7 +13,7 @@
           b-input(type="password" v-model="pass" placeholder="Password" password-reveal)
         .sign-in(v-if="signInMode")
           p.is-mice
-            a(href="#") Forget your password?
+            a(@click="resetPassword") Forget your password?
           hr
           a.button.is-primary(@click="signIn" v-if="canSignIn") Sign In
           a.button(disabled v-else) Sign In
@@ -109,17 +109,29 @@ export default {
           this.showError = true
         })
     },
-    forgotPassword () {
+    resetPassword () {
       if (this.user) {
         firebase.auth().sendPasswordResetEmail(this.user)
           .then(() => {
-            // Email sent.
-            this.forgotSent = true
+            this.$toast.open({
+              message: 'Your email is on the way!',
+              type: 'is-success',
+              position: 'is-bottom'
+            })
           })
           .catch((error) => {
-            // An error happened.
-            console.error(error)
+            this.$toast.open({
+              message: `There was an error requesting your password reset: ${error.message}`,
+              type: 'is-danger',
+              position: 'is-bottom'
+            })
           })
+      } else {
+        this.$toast.open({
+          message: 'Please make sure to have a valid email in the username field.',
+          type: 'is-warning',
+          position: 'is-bottom'
+        })
       }
     }
   },
