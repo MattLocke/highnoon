@@ -18,6 +18,9 @@ Vue.config.productionTip = false
 Vue.filter('formatDate', function (value) {
   if (value) return moment(value * 1000).format('MMM D, h:mm a')
 })
+Vue.filter('formatNewsDate', function (value) {
+  if (value) return moment(value * 1000).format('MMM D, YYYY')
+})
 Vue.component('burger', burger)
 Vue.component('leftBar', leftBar)
 

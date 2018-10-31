@@ -11,6 +11,7 @@
           .box.article
             section.news-section
               h1 {{ featuredArticle.headline }}
+              span.category Posted under {{ featuredArticle.category }} on {{ featuredArticle.postDate | formatNewsDate }}
               vue-markdown(:source="featuredArticle.message")
               hr
               span {{ featuredArticle.author }}
