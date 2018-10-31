@@ -11,12 +11,20 @@
           b-input(v-model="user" placeholder="Email")
         b-field(label="Password")
           b-input(type="password" v-model="pass" placeholder="Password" password-reveal)
-        .sign-in
+        .sign-in(v-if="signInMode")
+          p.is-mice
+            a(href="#") Forget your password?
+          hr
           a.button.is-primary(@click="signIn" v-if="canSignIn") Sign In
           a.button(disabled v-else) Sign In
-        .sign-up
-          p.is-mice.is-pulled-right
-            a(href="#") Or Sign Up
+          p.is-mice
+            a.is-pulled-right(@click="signInMode = false") Or Sign Up
+        .sign-up(v-else)
+          hr
+          a.button.is-primary(@click="register" v-if="canSignIn") Register
+          a.button(disabled v-else) Register
+          p.is-mice
+            a.is-pulled-right(@click="signInMode = true") Or Sign In
         b-loading(:is-full-page="true" :active.sync="isLoading" :can-cancel="false")
         b-notification(:active.sync="showError") {{ errorMessage }}
       .column
@@ -41,7 +49,8 @@ export default {
       showError: false,
       showVerification: false,
       user: null,
-      verificationSent: false
+      verificationSent: false,
+      signInMode: false
     }
   },
   computed: {
@@ -52,31 +61,66 @@ export default {
   methods: {
     signIn () {
       this.$store.dispatch('setLoading', true)
-      const _this = this
-      firebase.auth().signInWithEmailAndPassword(_this.user, _this.pass)
-        .then(function (user) {
+      firebase.auth().signInWithEmailAndPassword(this.user, this.pass)
+        .then((user) => {
           userService.getProfile(user.user.uid)
             .then(userData => {
-              _this.$store.dispatch('logIn', userData)
-              _this.$store.dispatch('setLoading', false)
-              if (_this.leagueId) _this.$router.push({ path: '/ViewLeague/' + _this.leagueId })
-              else _this.$router.push({ path: '/home' })
+              this.$store.dispatch('logIn', userData)
+              this.$store.dispatch('setLoading', false)
+              if (this.leagueId) this.$router.push({ path: '/ViewLeague/' + this.leagueId })
+              else this.$router.push({ path: '/home' })
             })
-            .catch(function (error) {
-              _this.$store.dispatch('setLoading', false)
-              _this.errorMessage = error
-              _this.showError = true
+            .catch((error) => {
+              this.$store.dispatch('setLoading', false)
+              this.errorMessage = error.message
+              this.showError = true
             })
         })
-        .catch(function (error) {
-          _this.$store.dispatch('setLoading', false)
-          _this.errorMessage = error
-          _this.showError = true
+        .catch((error) => {
+          this.$store.dispatch('setLoading', false)
+          this.errorMessage = error.message
+          this.showError = true
         })
     },
-    signUp () {
+    register () {
+      this.$store.dispatch('setLoading', true)
+      firebase.auth().createUserWithEmailAndPassword(this.user, this.pass)
+        .then((user) => {
+          const userData = {
+            id: user.uid,
+            email: this.user,
+            displayName: this.displayName,
+            lifetimePoints: 0
+          }
+          userService.createProfile(userData)
+            .then((data) => {
+              // all is good in the hood, time to redirect.
+              user.sendEmailVerification()
+                .then(() => {
+                  // send them an email verification.  They'll need that to do anything.
+                  this.$store.dispatch('setLoading', false)
+                  if (this.leagueId) this.$router.push({ path: '/ViewLeague/' + this.leagueId })
+                })
+            })
+        })
+        .catch((error) => {
+          this.$store.dispatch('setLoading', false)
+          this.errorMsg = error.message
+          this.showError = true
+        })
     },
     forgotPassword () {
+      if (this.user) {
+        firebase.auth().sendPasswordResetEmail(this.user)
+          .then(() => {
+            // Email sent.
+            this.forgotSent = true
+          })
+          .catch((error) => {
+            // An error happened.
+            console.error(error)
+          })
+      }
     }
   },
   mounted () {
@@ -100,6 +144,8 @@ export default {
     margin-top: 20vh;
     width: 10vw;
     height: 10vw;
+    min-width: 100px;
+    min-height: 100px;
   }
 }
 .login .box label.label {
