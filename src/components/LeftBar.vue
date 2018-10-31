@@ -1,6 +1,6 @@
 <template lang="pug">
-  .left-bar.column(v-bind:class="getClass()")
-    .columns
+  .left-bar.column.is-hidden-mobile(:class="getClass")
+    .columns.is-mobile
       .column
       .column.is-narrow
         burger(v-model="isCollapsed" :starts-open="true")
@@ -14,7 +14,7 @@ export default {
       isCollapsed: false
     }
   },
-  methods: {
+  computed: {
     getClass () {
       return this.isCollapsed ? { 'is-narrow': true } : { 'is-one-quarter': true }
     }

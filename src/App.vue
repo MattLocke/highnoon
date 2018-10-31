@@ -2,6 +2,7 @@
   #app
     router-view#rv
     main-menu(v-if="currentUser")
+    menu-mobile(v-if="currentUser")
     b-loading(:is-full-page="true" :active.sync="isLoading" :can-cancel="false")
 </template>
 
@@ -11,11 +12,13 @@ import firebase from 'firebase/app'
 import userService from '@/services/user'
 
 import mainMenu from '@/components/Menu'
+import menuMobile from '@/components/MenuMobile'
 
 export default {
   name: 'HighNoon',
   components: {
-    mainMenu
+    mainMenu,
+    menuMobile
   },
   computed: {
     isLoading () {
@@ -112,6 +115,11 @@ $link-focus-border: $primary;
   margin-right: 3vw;
 }
 
+@media only screen and (max-width: 769px) {
+  #rv {
+    margin-right: 0;
+  }
+}
 #rv.login {
   margin-right: 0;
   padding: 2rem;

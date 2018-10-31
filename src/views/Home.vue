@@ -1,8 +1,12 @@
 <template lang="pug">
   .home
-    .columns
+    .columns.is-marginless
       left-bar
         hr
+        section(v-if="isEditor")
+          router-link(to="/CreateNews") Create News
+        news-item(v-for="article in latestArticles" :key="article.id" :article="article" v-on:set-article="setArticle")
+      top-bar
         section(v-if="isEditor")
           router-link(to="/CreateNews") Create News
         news-item(v-for="article in latestArticles" :key="article.id" :article="article" v-on:set-article="setArticle")

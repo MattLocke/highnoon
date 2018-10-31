@@ -1,7 +1,7 @@
 <template lang="pug">
-  .menu.is-hidden-mobile(@click="toggle")
-    .wrap.is-hidden-mobile(:class="{opened: showMenu, closed: !showMenu}")
-      .main-menu
+  .mobile-menu(@click="toggle")
+    .wrap(:class="{opened: showMenu, closed: !showMenu}")
+      .main-mobile-menu
         ul
           li(v-for="menuItem in menuItems")
             router-link.ow-font(:to="menuItem.where") {{ menuItem.name }}
@@ -21,6 +21,7 @@ import 'firebase/auth'
 import menuService from '@/services/menu'
 
 export default {
+  name: 'MobileMenu',
   data () {
     return {
       showMenu: false
@@ -50,53 +51,34 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .menu {
-    position: fixed;
-    z-index: 900;
-    top: 0;
-    right: 0;
-    height: 100vh;
-    background-color: rgba(0,0,0,0.8);
-    border-left: 1px solid rgba(255,255,255,0.3);
-  }
-  .main-menu {
-    width: 25vw;
-    padding: 1rem 1rem 1rem 2vw;
-    background-color: rgba(0,0,0,0.3);
-    margin-top: 2rem;
-    ul {
-      li {
-        a {
-          display: block;
-          padding: .25rem .5rem;
-          color: #fff;
-          font-size: 1.4rem;
-          &:hover {
-            background-color: rgba(255,255,255,0.3);
-          }
+.mobile-menu {
+  position: absolute;
+  bottom: 0;
+  width: 100vw;
+  background-color: rgba(0,0,0,0.8);
+  ul {
+    li {
+      a {
+        display: block;
+        text-align: center;
+        padding: .5rem 0;
+        background-color: rgba(255,255,255,0.1);
+        &:hover {
+          background-color: rgba(255,255,255,0.2);
+          border-bottom: none;
         }
       }
     }
   }
-  .closed li, .closed hr {
-    display: none;
+  .wrap {
+    width: 100vw;
   }
-  .opened, .openedParent {
-    animation-name: opening;
-    width: 25vw;
-    animation-duration: .5s;
+  .opened {
+    height: 40vh;
   }
-  .closed, .closedParent {
-    animation-name: closing;
-    animation-duration: .5s;
-    width: 2vw;
+  .closed {
+    height: 2vh;
+    border-top: 1px solid rgba(255,255,255,0.5);
   }
-  @keyframes opening {
-    from { width: 2vw; }
-    to { width: 25vw; }
-  }
-  @keyframes closing {
-    from { width: 15vw; }
-    to { width: 2vw; }
-  }
+}
 </style>
