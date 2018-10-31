@@ -112,6 +112,11 @@ $link-focus-border: $primary;
   margin-right: 3vw;
 }
 
+#rv.login {
+  margin-right: 0;
+  padding: 2rem;
+}
+
 html {
   background-color: #090c1c;
   min-height: 99vh;
