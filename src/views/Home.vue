@@ -15,6 +15,7 @@
               vue-markdown(:source="featuredArticle.message")
               hr
               span {{ featuredArticle.author }}
+              button.button.is-small.is-pulled-right.is-primary(@click="copyLink") Copy Share Link
 </template>
 
 <script>
@@ -40,11 +41,17 @@ export default {
   computed: {
     isEditor () {
       return has(this.$store.state.user.userData, 'isEditor')
+    },
+    articleUrl () {
+      return `https://highnoon.gg/#/article/${this.featuredArticle.id}`
     }
   },
   methods: {
     setArticle (article) {
       this.featuredArticle = article
+    },
+    copyLink () {
+      this.$copyText(this.articleUrl)
     }
   },
   mounted () {

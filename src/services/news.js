@@ -24,7 +24,7 @@ export default {
       .orderBy('postDate', 'desc')
       .limit(10)
       .get()
-      .then(articles => articles.docs.map(article => article.data()))
+      .then(articles => articles.docs.map(article => ({ id: article.id, ...article.data() })))
   },
   getPendingNews () {
     logger.logIt('Getting pending news.')
@@ -33,7 +33,7 @@ export default {
       .orderBy('postDate', 'desc')
       .limit(10)
       .get()
-      .then(articles => articles.docs.map(article => article.data()))
+      .then(articles => articles.docs.map(article => ({ id:article.id, ...article.data() })))
   },
   addNews (news) {
     return db.collection('news').add(news)
@@ -49,15 +49,5 @@ export default {
       .doc(articleId)
       .get()
       .then(article => article.exists ? article.data() : false)
-  },
-  getHomeNews () {
-    logger.logIt('Getting home page news.')
-    return db.collection('news')
-      .where('frontPage', '==', true)
-      .where('approved', '==', true)
-      .orderBy('postDate', 'desc')
-      .limit(1)
-      .get()
-      .then(article => article.docs.map(a => ({ ...a.id, ...a.data() }))[0])
   }
 }
