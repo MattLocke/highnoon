@@ -16,7 +16,7 @@
 
 <script>
 import vueMarkdown from 'vue-markdown'
-import { has, isEmpty } from 'lodash'
+import { has } from 'lodash'
 
 import newsService from '@/services/news'
 
