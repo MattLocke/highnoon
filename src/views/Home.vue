@@ -12,6 +12,8 @@
             section.news-section
               h1 {{ featuredArticle.headline }}
               vue-markdown(:source="featuredArticle.message")
+              hr
+              span {{ featuredArticle.author }}
 </template>
 
 <script>

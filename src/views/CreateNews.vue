@@ -99,6 +99,7 @@ export default {
         postDate: Number(moment(this.postDate).format('X')),
         postDateInt: Number(this.numberPostDate),
         headline: this.headline,
+        author: this.user.signature || this.user.displayName,
         slug: this.slug,
         ...this.newsItem
       }
