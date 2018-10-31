@@ -52,6 +52,13 @@ export default {
     },
     copyLink () {
       this.$copyText(this.articleUrl)
+        .then(() => {
+          this.$toast.open({
+            message: 'Successfully copied the link!',
+            type: 'is-success',
+            position: 'is-bottom'
+          })
+        })
     }
   },
   mounted () {

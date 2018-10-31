@@ -26,7 +26,6 @@
           p.is-mice
             a.is-pulled-right(@click="signInMode = true") Or Sign In
         b-loading(:is-full-page="true" :active.sync="isLoading" :can-cancel="false")
-        b-notification(:active.sync="showError") {{ errorMessage }}
       .column
 </template>
 
