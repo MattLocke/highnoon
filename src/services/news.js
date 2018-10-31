@@ -33,7 +33,7 @@ export default {
       .orderBy('postDate', 'desc')
       .limit(10)
       .get()
-      .then(articles => articles.docs.map(article => ({ id:article.id, ...article.data() })))
+      .then(articles => articles.docs.map(article => ({ id: article.id, ...article.data() })))
   },
   addNews (news) {
     return db.collection('news').add(news)
