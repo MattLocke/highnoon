@@ -1,3 +1,5 @@
+import { get } from 'lodash'
+
 export default {
   state: {
     loggedIn: false,
@@ -5,7 +7,8 @@ export default {
       username: 'MrNotLoggedIn'
     },
     fireUserData: {
-      uid: 0
+      uid: 0,
+      user: {}
     }
   },
   mutations: {
@@ -35,6 +38,7 @@ export default {
   },
   getters: {
     isLoggedIn: state => state.loggedIn,
+    isVerified: state => get(state.fireUserData, 'emailVerified', false),
     getUserData: state => state.userData,
     getFBUserData: state => state.fireUserData,
     getUserId: state => state.fireUserData ? state.fireUserData.uid : 0

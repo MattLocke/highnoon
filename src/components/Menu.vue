@@ -12,6 +12,7 @@
         ul
           li
             a.ow-font(@click="logOut()") Log Out
+        b-notification(v-if="!isVerified" type="is-warning") You have not verified your email address.  Please check your email and verify before having access to the rest of the site! 
 </template>
 
 <script>
@@ -29,6 +30,9 @@ export default {
   computed: {
     menuItems () {
       return menuService.getMainMenuItems()
+    },
+    isVerified () {
+      return this.$store.getters.isVerified
     }
   },
   methods: {

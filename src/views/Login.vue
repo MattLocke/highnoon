@@ -62,6 +62,7 @@ export default {
       this.$store.dispatch('setLoading', true)
       firebase.auth().signInWithEmailAndPassword(this.user, this.pass)
         .then((user) => {
+          this.$store.dispatch('saveFireData', user)
           userService.getProfile(user.user.uid)
             .then(userData => {
               this.$store.dispatch('logIn', userData)
