@@ -1,5 +1,5 @@
 <template lang="pug">
-  button.burger(v-bind:class="{ 'open': !open }" v-on:click="toggle()")
+  button.burger(v-bind:class="{ 'open': open }" v-on:click="toggle()")
 </template>
 
 <script>

@@ -3,20 +3,20 @@
     .columns.is-mobile
       .column
       .column.is-narrow
-        burger(v-model="isCollapsed" :starts-open="true")
-    slot(v-if="!isCollapsed")
+        burger(v-model="isOpen" :starts-open="true")
+    slot(v-if="isOpen")
 </template>
 
 <script>
 export default {
   data () {
     return {
-      isCollapsed: false
+      isOpen: true
     }
   },
   computed: {
     getClass () {
-      return this.isCollapsed ? { 'is-narrow': true } : { 'is-one-quarter': true }
+      return this.isOpen ? { 'is-one-quarter': true } : { 'is-narrow': true }
     }
   }
 }
