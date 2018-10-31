@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import firebase from 'firebase/app'
 
+import Article from './views/Article'
 import CreateLeague from './views/CreateLeague'
 import CreateNews from './views/CreateNews'
 import Fantasy from './views/Fantasy'
@@ -31,6 +32,14 @@ let router = new Router({
       path: '/createLeague',
       name: 'createLeague',
       component: CreateLeague,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/article/:articleId',
+      name: 'article',
+      component: Article,
       meta: {
         requiresAuth: true
       }

@@ -12,14 +12,7 @@
         news-item(v-for="article in latestArticles" :key="article.id" :article="article" v-on:set-article="setArticle")
       .column
         .wrap
-          .box.article
-            section.news-section
-              h1 {{ featuredArticle.headline }}
-              span.category Posted under {{ featuredArticle.category }} on {{ featuredArticle.postDate | formatNewsDate }}
-              vue-markdown(:source="featuredArticle.message")
-              hr
-              span {{ featuredArticle.author }}
-              button.button.is-small.is-pulled-right.is-primary(@click="copyLink") Copy Share Link
+          article-viewer(:featuredArticle="featuredArticle")
 </template>
 
 <script>
@@ -29,12 +22,14 @@ import { has } from 'lodash'
 import newsService from '@/services/news'
 
 import newsItem from '@/views/news/NewsItem'
+import articleViewer from '@/views/news/ArticleViewer'
 
 export default {
   name: 'home',
   components: {
     vueMarkdown,
-    newsItem
+    newsItem,
+    articleViewer
   },
   data () {
     return {
@@ -53,16 +48,6 @@ export default {
   methods: {
     setArticle (article) {
       this.featuredArticle = article
-    },
-    copyLink () {
-      this.$copyText(this.articleUrl)
-        .then(() => {
-          this.$toast.open({
-            message: 'Successfully copied the link!',
-            type: 'is-success',
-            position: 'is-bottom'
-          })
-        })
     }
   },
   mounted () {
