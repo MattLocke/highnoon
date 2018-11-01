@@ -1,5 +1,5 @@
 <template lang="pug">
-  .mobile-menu.is-hidden-desktop
+  .mobile-menu.is-hidden-tablet
     .wrap(:class="{opened: showMenu, closed: !showMenu}" @click="toggle")
       .main-mobile-menu(v-if="showMenu")
         ul

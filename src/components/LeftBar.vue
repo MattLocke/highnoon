@@ -2,8 +2,8 @@
   .left-bar.column.is-hidden-mobile(:class="getClass")
     .columns.is-mobile
       .column
-      .column.is-narrow
-        burger(v-model="isOpen" :starts-open="true")
+      .column.is-narrow(@click="isOpen = !isOpen")
+        burger(v-model="isOpen")
     slot(v-if="isOpen")
 </template>
 

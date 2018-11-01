@@ -2,7 +2,7 @@
   .box.article
     section.news-section
       h1 {{ featuredArticle.headline }}
-        button.button.is-pulled-right.is-primary.is-small(@click="editArticle") Edit
+        button.button.is-pulled-right.is-primary.is-small(@click="editArticle" v-if="isEditor") Edit
       span.category Posted under {{ featuredArticle.category }} on {{ featuredArticle.postDate | formatNewsDate }}
       vue-markdown(:source="featuredArticle.message")
       hr
@@ -12,6 +12,7 @@
 
 <script>
 import vueMarkdown from 'vue-markdown'
+import { has } from 'lodash'
 
 export default {
   name: 'ArticleViewer',
@@ -24,6 +25,9 @@ export default {
   computed: {
     articleUrl () {
       return `https://highnoon.gg/#/article/${this.featuredArticle.id}`
+    },
+    isEditor () {
+      return has(this.$store.state.user.userData, 'isEditor') || has(this.$store.state.user.userData, 'isEditor')
     }
   },
   components: {

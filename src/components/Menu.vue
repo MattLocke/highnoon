@@ -1,6 +1,8 @@
 <template lang="pug">
   .menu.is-hidden-mobile(@click="toggle")
     .wrap.is-hidden-mobile(:class="{opened: showMenu, closed: !showMenu}")
+      .burger-wrap
+        burger(v-model="showMenu" :starts-open="false")
       .main-menu
         ul
           li(v-for="menuItem in menuItems")
@@ -65,6 +67,9 @@ export default {
     height: 100vh;
     background-color: rgba(0,0,0,0.8);
     border-left: 1px solid rgba(255,255,255,0.3);
+  }
+  .burger-wrap {
+    padding-left: .5rem;
   }
   .main-menu {
     width: 25vw;

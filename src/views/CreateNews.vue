@@ -55,6 +55,7 @@
 <script>
 import moment from 'moment-timezone'
 import vueMarkdown from 'vue-markdown'
+import { has } from 'lodash'
 
 import NewsService from '@/services/news'
 
@@ -79,7 +80,7 @@ export default {
   },
   computed: {
     canSave () {
-      return this.newsItem.title && this.newsItem.blurb && this.newsItem.message && this.postDate && this.newsItem.category
+      return this.newsItem.title && this.newsItem.blurb && this.newsItem.message && this.postDate && this.newsItem.category && this.isEditor
     },
     cleanPostDate () {
       return Number(moment(this.postDate).format('X'))
@@ -89,6 +90,9 @@ export default {
     },
     headline () {
       return this.newsItem.title
+    },
+    isEditor () {
+      return has(this.$store.state.user.userData, 'isEditor')
     },
     editId () {
       return this.$route.params.articleId || null

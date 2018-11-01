@@ -1,5 +1,5 @@
 <template lang="pug">
-  .top-bar.is-hidden-desktop(:class="getClass" @click="toggleMenu")
+  .top-bar.is-hidden-tablet(:class="getClass" @click="toggleMenu")
     slot(v-if="!isCollapsed")
     .close-bar
       .close-text(v-if="isCollapsed")

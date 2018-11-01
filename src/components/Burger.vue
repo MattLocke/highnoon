@@ -1,16 +1,11 @@
 <template lang="pug">
-  button.burger(v-bind:class="{ 'open': open }" v-on:click="toggle()")
+  button.burger(v-bind:class="{ 'open': open }")
 </template>
 
 <script>
 export default {
   name: 'Hamburger',
   props: {
-    'starts-open': {
-      type: Boolean,
-      required: false,
-      default: false
-    },
     value: {
       type: Boolean,
       required: false,
@@ -23,12 +18,12 @@ export default {
     }
   },
   watch: {
-    value () {
-      if (this.value) this.open = this.value
+    value: {
+      immediate: true,
+      handler () {
+        this.open = this.value
+      }
     }
-  },
-  mounted () {
-    if (this.startsOpen) this.open = true
   },
   methods: {
     toggle () {

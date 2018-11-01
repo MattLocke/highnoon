@@ -1,0 +1,320 @@
+{
+  "indexes": [
+    {
+      "collectionId": "leagueUsers",
+      "state": "READY",
+      "fields": [
+        {
+          "fieldPath": "leagueId",
+          "mode": "ASCENDING"
+        },
+        {
+          "fieldPath": "points",
+          "mode": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionId": "leaderboardStandard",
+      "state": "READY",
+      "fields": [
+        {
+          "fieldPath": "rank",
+          "mode": "ASCENDING"
+        },
+        {
+          "fieldPath": "points",
+          "mode": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionId": "news",
+      "state": "READY",
+      "fields": [
+        {
+          "fieldPath": "approved",
+          "mode": "ASCENDING"
+        },
+        {
+          "fieldPath": "postDate",
+          "mode": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionId": "leagueUsers",
+      "state": "READY",
+      "fields": [
+        {
+          "fieldPath": "simpleMode",
+          "mode": "ASCENDING"
+        },
+        {
+          "fieldPath": "points",
+          "mode": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionId": "matchPicks",
+      "state": "READY",
+      "fields": [
+        {
+          "fieldPath": "compId",
+          "mode": "ASCENDING"
+        },
+        {
+          "fieldPath": "startDate",
+          "mode": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionId": "matchPicks",
+      "state": "READY",
+      "fields": [
+        {
+          "fieldPath": "leagueId",
+          "mode": "ASCENDING"
+        },
+        {
+          "fieldPath": "userId",
+          "mode": "ASCENDING"
+        },
+        {
+          "fieldPath": "startDate",
+          "mode": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionId": "leaderboardStandardStage1",
+      "state": "READY",
+      "fields": [
+        {
+          "fieldPath": "rank",
+          "mode": "ASCENDING"
+        },
+        {
+          "fieldPath": "points",
+          "mode": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionId": "leaderboardSimple",
+      "state": "READY",
+      "fields": [
+        {
+          "fieldPath": "points",
+          "mode": "DESCENDING"
+        },
+        {
+          "fieldPath": "userId",
+          "mode": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionId": "comments",
+      "state": "READY",
+      "fields": [
+        {
+          "fieldPath": "leagueId",
+          "mode": "ASCENDING"
+        },
+        {
+          "fieldPath": "postDate",
+          "mode": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionId": "articleComments",
+      "state": "READY",
+      "fields": [
+        {
+          "fieldPath": "articleId",
+          "mode": "ASCENDING"
+        },
+        {
+          "fieldPath": "postDate",
+          "mode": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionId": "matchPicks",
+      "state": "READY",
+      "fields": [
+        {
+          "fieldPath": "stage",
+          "mode": "ASCENDING"
+        },
+        {
+          "fieldPath": "startDate",
+          "mode": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionId": "leaderboardSimpleStage1",
+      "state": "READY",
+      "fields": [
+        {
+          "fieldPath": "rank",
+          "mode": "ASCENDING"
+        },
+        {
+          "fieldPath": "points",
+          "mode": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionId": "leagueUsers",
+      "state": "READY",
+      "fields": [
+        {
+          "fieldPath": "leagueId",
+          "mode": "ASCENDING"
+        },
+        {
+          "fieldPath": "points",
+          "mode": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionId": "matchPicks",
+      "state": "READY",
+      "fields": [
+        {
+          "fieldPath": "leagueId",
+          "mode": "ASCENDING"
+        },
+        {
+          "fieldPath": "userId",
+          "mode": "ASCENDING"
+        },
+        {
+          "fieldPath": "startDate",
+          "mode": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionId": "matches",
+      "state": "READY",
+      "fields": [
+        {
+          "fieldPath": "stage",
+          "mode": "ASCENDING"
+        },
+        {
+          "fieldPath": "startDate",
+          "mode": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionId": "leagueUsers",
+      "state": "READY",
+      "fields": [
+        {
+          "fieldPath": "leagueId",
+          "mode": "ASCENDING"
+        },
+        {
+          "fieldPath": "score",
+          "mode": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionId": "pickStats",
+      "state": "READY",
+      "fields": [
+        {
+          "fieldPath": "stage",
+          "mode": "ASCENDING"
+        },
+        {
+          "fieldPath": "startDate",
+          "mode": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionId": "matches",
+      "state": "READY",
+      "fields": [
+        {
+          "fieldPath": "compId",
+          "mode": "ASCENDING"
+        },
+        {
+          "fieldPath": "startDate",
+          "mode": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionId": "leagueUsers",
+      "state": "READY",
+      "fields": [
+        {
+          "fieldPath": "compId",
+          "mode": "ASCENDING"
+        },
+        {
+          "fieldPath": "points",
+          "mode": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionId": "leaderboardStandard",
+      "state": "READY",
+      "fields": [
+        {
+          "fieldPath": "points",
+          "mode": "DESCENDING"
+        },
+        {
+          "fieldPath": "userId",
+          "mode": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionId": "news",
+      "state": "READY",
+      "fields": [
+        {
+          "fieldPath": "frontPage",
+          "mode": "ASCENDING"
+        },
+        {
+          "fieldPath": "postDate",
+          "mode": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionId": "leaderboardSimple",
+      "state": "READY",
+      "fields": [
+        {
+          "fieldPath": "rank",
+          "mode": "ASCENDING"
+        },
+        {
+          "fieldPath": "points",
+          "mode": "DESCENDING"
+        }
+      ]
+    }
+  ]
+}

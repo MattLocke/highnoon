@@ -1,0 +1,96 @@
+service cloud.firestore {
+  match /databases/{database}/documents {
+  
+    match /{document=**} {
+      allow read;
+    }
+    
+    match /articleComments/{articleId} {
+    	allow write: if request.auth != null;
+    }
+    
+    match /allTeams/{allTeamsId} {
+      allow read, write;
+    }
+    
+    match /comments/{commentId} {
+      allow read, write;
+    }
+
+    match /competitions/{competitionsId} {
+      allow write: if request.auth != null;
+    }
+
+    match /completedMatches/{completedMatchesId} {
+      allow read, write;
+    }
+
+    match /cron/{cronId} {
+      allow read, write;
+    }
+
+    match /features/{featuresId} {
+      allow read, write;
+    }
+
+    match /leaguePassword/{leaguePasswordId} {
+      allow read, write;
+    }
+
+    match /leagueUsers/{leagueUsersId} {
+      allow write: if request.auth != null;
+    }
+
+    match /leagues/{leagueId} {
+      allow write: if request.auth != null;
+    }
+
+    match /matchPicks/{matchPickId} {
+      allow write: if request.auth != null;
+    }
+
+    match /matches/{matchId} {
+      allow write: if request.auth != null;
+    }
+    
+    match /messages/{document=**} {
+      allow write: if request.auth != null;
+    }
+
+    match /news/{newsId} {
+      allow write: if request.auth != null;
+    }
+    
+    match /pushTokens/{tokenId} {
+    	allow write: if request.auth != null;
+    }
+
+    match /users/{userId} {
+      allow write: if request.auth.uid == userId;
+    }
+
+    match /teams/{teamId} {
+      allow write: if request.auth != null;
+    }
+    
+    match /pickStats/{pickId} {
+    	allow write: if request.auth != null;
+    }
+    
+    match /notification/{notificationId} {
+    	allow write: if request.auth != null;
+    }
+    
+    match /leaderboardStandard/{userId} {
+    	allow write: if request.auth != null;
+    }
+    
+    match /leaderboardSimple/{userId} {
+    	allow write: if request.auth != null;
+    }
+    
+    match /leaderboardLeague/{leagueId} {
+    	allow write: if request.auth != null;
+    }
+  }
+}
