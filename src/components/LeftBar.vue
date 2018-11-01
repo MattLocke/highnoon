@@ -29,11 +29,11 @@ export default {
   .is-one-quarter, .openedParent {
     animation-name: opening;
     width: 25vw;
-    animation-duration: .5s;
+    animation-duration: .2s;
   }
   .is-narrow, .closedParent {
     animation-name: closing;
-    animation-duration: .5s;
+    animation-duration: .2s;
     width: 2vw;
   }
   @keyframes opening {
