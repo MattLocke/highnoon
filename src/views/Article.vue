@@ -31,8 +31,8 @@ export default {
   mounted () {
     // get the article based on the route param
     NewsService.getArticle(this.articleId)
-      .then(article => this.featuredArticle = article)
-      .catch((error) => {
+      .then(article => { this.featuredArticle = article })
+      .catch(() => {
         this.$toast.open({
           message: 'We were unable to find that article!',
           type: 'is-danger',
