@@ -2,7 +2,6 @@
   .home
     .columns.is-marginless
       left-bar
-        hr
         section(v-if="isEditor")
           router-link(to="/CreateNews") Create News
         news-item(v-for="article in latestArticles" :key="article.id" :article="article" v-on:set-article="setArticle")
@@ -40,9 +39,6 @@ export default {
   computed: {
     isEditor () {
       return has(this.$store.state.user.userData, 'isEditor')
-    },
-    articleUrl () {
-      return `https://highnoon.gg/#/article/${this.featuredArticle.id}`
     }
   },
   methods: {
