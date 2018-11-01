@@ -1,7 +1,7 @@
 <template lang="pug">
   .mobile-menu.is-hidden-desktop
     .wrap(:class="{opened: showMenu, closed: !showMenu}" @click="toggle")
-      .main-mobile-menu
+      .main-mobile-menu(v-if="showMenu")
         ul
           li(v-for="menuItem in menuItems")
             h2
@@ -59,7 +59,7 @@ export default {
 
 <style lang="scss" scoped>
   .mobile-menu {
-    position: absolute;
+    position: fixed;
     bottom: 0;
     width: 100vw;
     background-color: rgba(0,0,0,0.95);
