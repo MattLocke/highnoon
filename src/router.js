@@ -45,7 +45,7 @@ let router = new Router({
       }
     },
     {
-      path: '/createNews',
+      path: '/createNews/:articleId?',
       name: 'createNews',
       component: CreateNews,
       meta: {

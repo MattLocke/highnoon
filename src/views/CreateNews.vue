@@ -35,7 +35,10 @@
             b-checkbox(v-model="newsItem.frontPage") Worthy of Home Page
           hr
           .columns
-            .column.is-narrow
+            .column.is-narrow(v-if="editId")
+              button.button.is-primary(@click="updateNews" v-if="canSave") Update News
+              button.button.is-primary(disabled v-else) Save News
+            .column.is-narrow(v-else)
               button.button.is-primary(@click="saveNews" v-if="canSave") Save News
               button.button.is-primary(disabled v-else) Save News
             .column
@@ -70,6 +73,7 @@ export default {
         approved: false,
         frontPage: true
       },
+      editItem: {},
       postDate: null
     }
   },
@@ -86,15 +90,23 @@ export default {
     headline () {
       return this.newsItem.title
     },
-    slug () {
-      return `${moment().format('MMDYY')}-${this.newsItem.title
-        .toString()
-        .toLowerCase()
-        .replace(/\s+/g, '-')
-        .replace(/[^\w-]+/g, '')
-        .replace(/--+/g, '-')
-        .replace(/^-+/, '')
-        .replace(/-+$/, '')}`
+    editId () {
+      return this.$route.params.articleId || null
+    },
+    slug: {
+      get () {
+        return `${moment().format('MMDYY')}-${this.newsItem.title
+          .toString()
+          .toLowerCase()
+          .replace(/\s+/g, '-')
+          .replace(/[^\w-]+/g, '')
+          .replace(/--+/g, '-')
+          .replace(/^-+/, '')
+          .replace(/-+$/, '')}`
+      },
+      set () {
+        // shut up.
+      }
     },
     user () {
       return this.$store.getters.getUserData
@@ -113,12 +125,48 @@ export default {
       }
       NewsService.addNews(news)
         .then(this.$router.push({ path: '/home' }))
-        .catch((error) => {
+        .catch(error => {
+          console.error(error)
+        })
+    },
+    updateNews () {
+      this.$store.dispatch('setLoading', true)
+      const news = { ...this.editItem, ...this.newsItem }
+
+      news.id = this.editId
+      news.postDate = Number(moment(this.postDate).format('X'))
+      news.postDateInt = Number(this.numberPostDate)
+      news.headline = this.headline
+      news.slug = this.slug
+
+      NewsService.updateNews(news)
+        .then(() => {
+          this.$store.dispatch('setLoading', false)
+          this.$router.push({ path: `/article/${this.editId}` })
+        })
+        .catch(error => {
           console.error(error)
         })
     },
     cancelCreate () {
       this.$router.push({ path: '/home' })
+    }
+  },
+  mounted () {
+    // check to see if we're editing here
+    if (this.editId) {
+      NewsService.getArticle(this.editId)
+        .then(article => {
+          this.editItem = article
+          // set the newsItem fields so we can edit
+          this.newsItem.title = article.headline
+          this.newsItem.message = article.message
+          this.newsItem.blurb = article.blurb
+          this.newsItem.category = article.category
+          this.newsItem.approved = article.approved
+          this.newsItem.frontPage = article.frontPage
+          this.postDate = new Date(article.postDate * 1000)
+        })
     }
   }
 }
