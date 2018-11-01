@@ -1,6 +1,6 @@
 <template lang="pug">
-  .mobile-menu.is-hidden-desktop(@click="toggle")
-    .wrap(:class="{opened: showMenu, closed: !showMenu}")
+  .mobile-menu.is-hidden-desktop
+    .wrap(:class="{opened: showMenu, closed: !showMenu}" @click="toggle")
       .main-mobile-menu
         ul
           li(v-for="menuItem in menuItems")
@@ -51,34 +51,48 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.mobile-menu {
-  position: absolute;
-  bottom: 0;
-  width: 100vw;
-  background-color: rgba(0,0,0,0.8);
-  ul {
-    li {
-      a {
-        display: block;
-        text-align: center;
-        padding: .5rem 0;
-        background-color: rgba(255,255,255,0.1);
-        &:hover {
-          background-color: rgba(255,255,255,0.2);
-          border-bottom: none;
+  .mobile-menu {
+    position: absolute;
+    bottom: 0;
+    width: 100vw;
+    background-color: rgba(0,0,0,0.95);
+    ul {
+      margin-top: 2vh;
+      li {
+        a {
+          display: block;
+          text-align: center;
+          padding: .5rem 0;
+          background-color: rgba(255,255,255,0.1);
+          &:hover {
+            background-color: rgba(255,255,255,0.2);
+            border-bottom: none;
+          }
         }
       }
     }
+    .wrap {
+      width: 100vw;
+      height: 98vh;
+    }
+    .opened {
+      height: 98vh;
+      animation-name: opening;
+      animation-duration: .2s;
+    }
+    .closed {
+      height: 2vh;
+      animation-name: closing;
+      animation-duration: .2s;
+      border-top: 1px solid rgba(255,255,255,0.5);
+    }
   }
-  .wrap {
-    width: 100vw;
+  @keyframes opening {
+    from { height: 2vh; }
+    to { height: 98vh; }
   }
-  .opened {
-    height: 40vh;
+  @keyframes closing {
+    from { height: 98vh; }
+    to { height: 2vh; }
   }
-  .closed {
-    height: 2vh;
-    border-top: 1px solid rgba(255,255,255,0.5);
-  }
-}
 </style>
