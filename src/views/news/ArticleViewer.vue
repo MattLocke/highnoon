@@ -20,6 +20,11 @@ export default {
       type: Object
     }
   },
+  computed: {
+    articleUrl () {
+      return `https://highnoon.gg/#/article/${this.featuredArticle.id}`
+    }
+  },
   components: {
     vueMarkdown
   },
