@@ -2,11 +2,19 @@
   .top-bar.is-hidden-desktop(:class="getClass" @click="toggleMenu")
     slot(v-if="!isCollapsed")
     .close-bar
+      .close-text(v-if="isCollapsed")
+        span {{ toggleText }}
 </template>
 
 <script>
 export default {
   name: 'TopBar',
+  props: {
+    toggleText: {
+      type: String,
+      required: true
+    }
+  },
   data () {
     return {
       isCollapsed: true
@@ -32,6 +40,17 @@ export default {
     cursor: pointer;
     margin-bottom: .5rem;
     border-bottom: 1px solid rgba(255,255,255,0.5);
+    .close-text {
+      text-align: center;
+      span {
+        border-radius: 4px;
+        background-color: #000;
+        padding: 0 .25rem;
+        color: #fff;
+        background-color: #f99e1a;
+        font-size: .7rem;
+      }
+    }
   }
   .top-bar {
     margin-top: 1.5rem;
