@@ -2,6 +2,7 @@
   .box.article
     section.news-section
       h1 {{ featuredArticle.headline }}
+        button.button.is-pulled-right.is-primary.is-small(@click="editArticle") Edit
       span.category Posted under {{ featuredArticle.category }} on {{ featuredArticle.postDate | formatNewsDate }}
       vue-markdown(:source="featuredArticle.message")
       hr
@@ -38,6 +39,9 @@ export default {
             position: 'is-bottom'
           })
         })
+    },
+    editArticle () {
+      this.$router.push({ path: `/CreateNews/${this.featuredArticle.id}` })
     }
   }
 }
