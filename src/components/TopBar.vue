@@ -1,7 +1,7 @@
 <template lang="pug">
-  .top-bar.is-hidden-desktop(:class="getClass")
+  .top-bar.is-hidden-desktop(:class="getClass" @click="toggleMenu")
     slot(v-if="!isCollapsed")
-    .close-bar(@click="toggleMenu")
+    .close-bar
 </template>
 
 <script>
@@ -20,7 +20,6 @@ export default {
   methods: {
     toggleMenu () {
       this.isCollapsed = !this.isCollapsed
-      console.log(`Should be: ${this.isCollapsed}`)
     }
   }
 }
@@ -42,9 +41,9 @@ export default {
   }
   .is-open {
     animation-name: opening;
-    height: 100vh;
+    height: 98vh;
     width: 100vw;
-    animation-duration: .5s;
+    animation-duration: .2s;
     position: absolute;
     z-index: 999;
     background-color: rgba(0,0,0,0.95);
@@ -56,15 +55,15 @@ export default {
   }
   .is-closed {
     animation-name: closing;
-    animation-duration: .5s;
+    animation-duration: .2s;
     height: 2vh;
   }
   @keyframes opening {
     from { height: 2vh; }
-    to { height: 100vh; }
+    to { height: 98vh; }
   }
   @keyframes closing {
-    from { height: 100vh; }
+    from { height: 98vh; }
     to { height: 2vh; }
   }
 </style>
