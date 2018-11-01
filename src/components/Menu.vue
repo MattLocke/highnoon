@@ -5,9 +5,7 @@
         ul
           li(v-for="menuItem in menuItems")
             router-link.ow-font(:to="menuItem.where") {{ menuItem.name }}
-        .box
-          p This site is currently in development for version 2.0  If you have any questions or issues, please
-          a(href="https://discord.gg/H5bNcYD")  find us on discord.
+        support-message
         hr
         ul
           li
@@ -21,7 +19,12 @@ import 'firebase/auth'
 
 import menuService from '@/services/menu'
 
+import supportMessage from '@/components/SupportMessage'
+
 export default {
+  components: {
+    supportMessage
+  },
   data () {
     return {
       showMenu: false
