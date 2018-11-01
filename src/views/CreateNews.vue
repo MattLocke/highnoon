@@ -44,6 +44,7 @@
         .box
           section.news-section
             h1 {{ headline }}
+            p Posted under {{ newsItem.category }} on {{ cleanPostDate | formatNewsDate }}
             vue-markdown(:source="newsItem.message")
             span By: {{ user.signature }}
 </template>
@@ -75,6 +76,9 @@ export default {
   computed: {
     canSave () {
       return this.newsItem.title && this.newsItem.blurb && this.newsItem.message && this.postDate && this.newsItem.category
+    },
+    cleanPostDate () {
+      return Number(moment(this.postDate).format('X'))
     },
     numberPostDate () {
       return moment(this.postDate).format('YYYYMMDD')
