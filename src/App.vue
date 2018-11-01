@@ -127,6 +127,7 @@ $link-focus-border: $primary;
 
 html {
   background-color: #090c1c;
+  background-image: radial-gradient(#263277, #090c1c);
   min-height: 99vh;
 }
 
