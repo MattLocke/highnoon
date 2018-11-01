@@ -3,12 +3,29 @@
     .columns.is-marginless
       left-bar
         section(v-if="isEditor")
-          router-link(to="/CreateNews") Create News
-        news-item(v-for="article in latestArticles" :key="article.id" :article="article" v-on:set-article="setArticle")
-      top-bar
+          .columns
+            .column
+              router-link(to="/CreateNews") Create News
+            .column
+              a(@click="viewPending = !viewPending" v-if="viewPending") View Current
+              a(@click="viewPending = !viewPending" v-else) View Pending
+        .wrap(v-if="viewPending")
+          news-item(v-for="article in pendingArticles" :key="article.id" :article="article" v-on:set-article="setArticle")
+        .wrap(v-else)
+          news-item(v-for="article in latestArticles" :key="article.id" :article="article" v-on:set-article="setArticle")
+
+      top-bar(toggle-text="View More News")
         section(v-if="isEditor")
-          router-link(to="/CreateNews") Create News
-        news-item(v-for="article in latestArticles" :key="article.id" :article="article" v-on:set-article="setArticle")
+          .columns
+            .column
+              router-link(to="/CreateNews") Create News
+            .column
+              a(@click="viewPending = !viewPending" v-if="viewPending") View Current
+              a(@click="viewPending = !viewPending" v-else) View Pending
+        .wrap(v-if="viewPending")
+          news-item(v-for="article in pendingArticles" :key="article.id" :article="article" v-on:set-article="setArticle")
+        .wrap(v-else)
+          news-item(v-for="article in latestArticles" :key="article.id" :article="article" v-on:set-article="setArticle")
       .column
         .wrap
           article-viewer(:featuredArticle="featuredArticle")
@@ -33,7 +50,9 @@ export default {
   data () {
     return {
       latestArticles: [],
-      featuredArticle: {}
+      pendingArticles: [],
+      featuredArticle: {},
+      viewPending: false
     }
   },
   computed: {
@@ -54,6 +73,12 @@ export default {
         this.featuredArticle = articles[0]
         this.$store.dispatch('setLoading', false)
       })
+    if (this.isEditor) {
+      newsService.getPendingNews()
+        .then(articles => {
+          this.pendingArticles = articles
+        })
+    }
   }
 }
 </script>
