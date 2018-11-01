@@ -1,7 +1,8 @@
 <template lang="pug">
   section.news-item(@click="setActive")
-    h3 {{ article.headline }}
-    span {{ article.postDate | formatNewsDate }}
+    h2 {{ article.headline }}
+    span {{ article.blurb }}
+    span.article-date Posted under {{ article.category }} on {{ article.postDate | formatNewsDate }}
 </template>
 
 <script>
@@ -26,6 +27,10 @@ export default {
   cursor: pointer;
   &:hover {
     opacity: 0.8;
+  }
+  .article-date {
+    display: block;
+    font-size: .7rem;
   }
 }
 </style>
