@@ -153,7 +153,7 @@ export default {
     font-weight: 400;
   }
   .logo {
-    margin-top: 20vh;
+    margin-top: 10vh;
     width: 10vw;
     height: 10vw;
     min-width: 100px;
