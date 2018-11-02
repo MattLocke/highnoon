@@ -2,6 +2,10 @@
   .left-bar.column.is-hidden-mobile(:class="getClass")
     .columns.is-mobile
       .column
+        h2
+          img.logo(src="images/high_noon_white.svg")
+          |  HIGHNOON
+          span.orange .GG
       .column.is-narrow(@click="isOpen = !isOpen")
         burger(v-model="isOpen")
     slot(v-if="isOpen")
@@ -25,6 +29,13 @@ export default {
 <style lang="scss" scoped>
   .left-bar {
     padding-top: 1.5rem;
+    .logo {
+      height: 20px;
+      width: auto;
+    }
+    h2 {
+      color: #fff;
+    }
   }
   .is-one-quarter, .openedParent {
     animation-name: opening;
