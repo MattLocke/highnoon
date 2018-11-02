@@ -146,7 +146,7 @@ export default {
       NewsService.updateNews(news)
         .then(() => {
           this.$store.dispatch('setLoading', false)
-          this.$router.push({ path: `/article/${this.editId}` })
+          this.$router.push({ path: '/home' })
         })
         .catch(error => {
           console.error(error)
