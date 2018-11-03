@@ -2,7 +2,7 @@
   .left-bar.column.is-hidden-mobile(:class="getClass")
     .columns.is-mobile
       .column
-        h2
+        h2(v-if="isOpen")
           img.logo(src="images/high_noon_white.svg")
           |  HIGHNOON
           span.orange .GG
