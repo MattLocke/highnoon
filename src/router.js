@@ -39,10 +39,7 @@ let router = new Router({
     {
       path: '/article/:articleId',
       name: 'article',
-      component: Article,
-      meta: {
-        requiresAuth: true
-      }
+      component: Article
     },
     {
       path: '/createNews/:articleId?',
@@ -60,10 +57,7 @@ let router = new Router({
     {
       path: '/home',
       name: 'home',
-      component: Home,
-      meta: {
-        requiresAuth: true
-      }
+      component: Home
     },
     {
       path: '/fantasy',
@@ -137,7 +131,6 @@ router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
 
   if (requiresAuth && !currentUser) next('login')
-  else if (!requiresAuth && currentUser) next('home')
   else next()
 })
 
