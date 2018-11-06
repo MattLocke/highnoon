@@ -1,8 +1,8 @@
 <template lang="pug">
   #app
     router-view#rv
-    main-menu(v-if="currentUser")
-    menu-mobile(v-if="currentUser")
+    main-menu
+    menu-mobile
     b-loading(:is-full-page="true" :active.sync="isLoading" :can-cancel="false")
 </template>
 
@@ -23,9 +23,6 @@ export default {
   computed: {
     isLoading () {
       return this.$store.getters.loading
-    },
-    currentUser () {
-      return this.$store.getters.isLoggedIn
     }
   },
   mounted () {
