@@ -13,8 +13,8 @@ export default {
   },
   mutations: {
     LOGIN: (state, payload) => {
-      state.loggedIn = true
       state.userData = payload
+      state.loggedIn = true
     },
     LOGOUT: (state) => {
       state.loggedIn = false
