@@ -5,12 +5,14 @@
         ul
           li(v-for="menuItem in menuItems")
             h2
-              router-link.ow-font(:to="menuItem.where") {{ menuItem.name }}
+              router-link.ow-font(:to="menuItem.where" v-if="canSee(menuItem)") {{ menuItem.name }}
         support-message
         hr
         ul
-          li
+          li(v-if="currentUser")
             a.ow-font(@click="logOut()") Log Out
+          li(v-else)
+            router-link(to="/login") Log In
 </template>
 
 <script>
@@ -37,9 +39,16 @@ export default {
     },
     menuMessage () {
       return menuService.getMenuMessage()
+    },
+    currentUser () {
+      return this.$store.getters.isLoggedIn
     }
   },
   methods: {
+    canSee (menuItem) {
+      if (menuItem.requiresAuth && !this.currentUser) return false
+      return true
+    },
     logOut () {
       firebase.auth().signOut()
         .then(() => {
