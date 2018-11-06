@@ -72,14 +72,20 @@ export default {
             })
             .catch((error) => {
               this.$store.dispatch('setLoading', false)
-              this.errorMessage = error.message
-              this.showError = true
+              this.$toast.open({
+                message: `Error signing in: ${error.message}`,
+                type: 'is-danger',
+                position: 'is-bottom'
+              })
             })
         })
         .catch((error) => {
           this.$store.dispatch('setLoading', false)
-          this.errorMessage = error.message
-          this.showError = true
+          this.$toast.open({
+            message: `Error signing in: ${error.message}`,
+            type: 'is-danger',
+            position: 'is-bottom'
+          })
         })
     },
     register () {
@@ -101,12 +107,29 @@ export default {
                   this.$store.dispatch('setLoading', false)
                   if (this.leagueId) this.$router.push({ path: '/ViewLeague/' + this.leagueId })
                 })
+                .catch((error) => {
+                  this.$toast.open({
+                    message: `Error registering: ${error.message}`,
+                    type: 'is-danger',
+                    position: 'is-bottom'
+                  })
+                })
+            })
+            .catch((error) => {
+              this.$toast.open({
+                message: `Error registering: ${error.message}`,
+                type: 'is-danger',
+                position: 'is-bottom'
+              })
             })
         })
         .catch((error) => {
           this.$store.dispatch('setLoading', false)
-          this.errorMsg = error.message
-          this.showError = true
+          this.$toast.open({
+            message: `Error registering: ${error.message}`,
+            type: 'is-danger',
+            position: 'is-bottom'
+          })
         })
     },
     resetPassword () {
