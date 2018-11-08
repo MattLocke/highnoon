@@ -1,5 +1,6 @@
 import firebase from 'firebase/app'
 import 'firebase/firestore'
+import 'firebase/storage'
 import { fireInit } from '@/fireLogin'
 import logger from '@/services/logger'
 
