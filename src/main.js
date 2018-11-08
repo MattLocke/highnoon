@@ -6,6 +6,7 @@ import moment from 'moment-timezone'
 import 'firebase/auth'
 import { fireInit } from './fireLogin'
 import 'material-design-icons'
+import AsyncComputed from 'vue-async-computed'
 
 import App from './App.vue'
 import router from './router'
@@ -17,6 +18,7 @@ import topBar from './components/TopBar'
 
 Vue.use(Buefy)
 Vue.use(VueClipboard)
+Vue.use(AsyncComputed)
 
 Vue.config.productionTip = false
 
