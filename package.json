@@ -17,6 +17,7 @@
     "moment-timezone": "^0.5.23",
     "vue": "^2.5.17",
     "vue-apexcharts": "^1.2.2",
+    "vue-async-computed": "^3.5.0",
     "vue-clipboard2": "^0.2.1",
     "vue-markdown": "^2.2.4",
     "vue-picture-input": "^2.1.6",
