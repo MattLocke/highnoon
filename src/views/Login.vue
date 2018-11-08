@@ -7,6 +7,8 @@
       .column
       .column.is-narrow
         hr
+        b-field(label="Display Name" v-if="!signInMode")
+          b-input(v-model="displayName" placeholder="Display Name")
         b-field(label="Email")
           b-input(v-model="user" placeholder="Email")
         b-field(label="Password")
@@ -49,7 +51,8 @@ export default {
       showVerification: false,
       user: null,
       verificationSent: false,
-      signInMode: false
+      signInMode: false,
+      displayName: ''
     }
   },
   computed: {
@@ -92,8 +95,9 @@ export default {
       this.$store.dispatch('setLoading', true)
       firebase.auth().createUserWithEmailAndPassword(this.user, this.pass)
         .then((user) => {
+          console.table(user)
           const userData = {
-            id: user.uid,
+            id: user.user.uid,
             email: this.user,
             displayName: this.displayName,
             lifetimePoints: 0
@@ -101,17 +105,23 @@ export default {
           userService.createProfile(userData)
             .then((data) => {
               // all is good in the hood, time to redirect.
-              user.sendEmailVerification()
+              user.user.sendEmailVerification()
                 .then(() => {
                   // send them an email verification.  They'll need that to do anything.
                   this.$store.dispatch('setLoading', false)
                   if (this.leagueId) this.$router.push({ path: '/ViewLeague/' + this.leagueId })
+                  else {
+                    this.$store.dispatch('logIn', userData)
+                    this.$router.push({ path: '/home' })
+                  }
                 })
                 .catch((error) => {
+                  this.$store.dispatch('setLoading', false)
                   this.$toast.open({
                     message: `Error registering: ${error.message}`,
                     type: 'is-danger',
-                    position: 'is-bottom'
+                    position: 'is-bottom',
+                    duration: '10000'
                   })
                 })
             })
@@ -119,7 +129,8 @@ export default {
               this.$toast.open({
                 message: `Error registering: ${error.message}`,
                 type: 'is-danger',
-                position: 'is-bottom'
+                position: 'is-bottom',
+                duration: '10000'
               })
             })
         })
@@ -128,7 +139,8 @@ export default {
           this.$toast.open({
             message: `Error registering: ${error.message}`,
             type: 'is-danger',
-            position: 'is-bottom'
+            position: 'is-bottom',
+            duration: '10000'
           })
         })
     },
