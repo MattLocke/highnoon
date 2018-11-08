@@ -1,5 +1,12 @@
 <template lang="pug">
-  .settings
-    .mockup
-      h1 User Settings
+  section.settings
+    h2 Your Settings
+    .columns
+      .column.is-narrow
+        b-field(label="Primary Overwatch Role")
+          b-select(placeholder="Select Role" v-model="primaryRole")
+            option Defense
+            option Flex
+            option Offense
+            option Support
 </template>
