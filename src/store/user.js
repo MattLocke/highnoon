@@ -23,6 +23,9 @@ export default {
     },
     FBLOGIN: (state, payload) => {
       state.fireUserData = payload
+    },
+    SAVE_AVATAR: (state, payload) => {
+      state.userData.profileImageUrl = payload
     }
   },
   actions: {
@@ -34,6 +37,9 @@ export default {
     },
     logOut: (context) => {
       context.commit('LOGOUT')
+    },
+    saveProfileAvatar: (context, payload) => {
+      context.commit('SAVE_AVATAR', payload)
     }
   },
   getters: {
