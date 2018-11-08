@@ -224,6 +224,7 @@ a:hover {
 h1 {
   font-family: 'overFont';
   font-size: 2rem;
+  color: #fff;
 }
 
 h2 {
