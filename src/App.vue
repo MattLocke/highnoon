@@ -230,11 +230,13 @@ h1 {
 h2 {
   font-family: 'overFont';
   font-size: 1.6rem;
+  color: #fff;
 }
 
 h3 {
   font-family: 'overFont';
   font-size: 1.4rem;
+  color: #fff;
 }
 
 p {
