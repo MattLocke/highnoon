@@ -58,6 +58,17 @@ export default {
   computed: {
     canSignIn () {
       return this.pass && this.user
+    },
+    loggedIn () {
+      return this.$store.getters.isLoggedIn
+    }
+  },
+  watch: {
+    loggedIn: {
+      immediate: true,
+      handler () {
+        if (this.loggedIn) this.$router.push({ path: '/home' })
+      }
     }
   },
   methods: {
