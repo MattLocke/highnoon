@@ -128,6 +128,10 @@ html {
   min-height: 99vh;
 }
 
+body {
+  color: #fff;
+}
+
 section {
   background-color: rgba(255,255,255,0.1);
   margin-bottom: 1rem;
@@ -136,6 +140,10 @@ section {
 
 label.label {
   color: #fff;
+}
+
+label.b-checkbox {
+  line-height: 36px;
 }
 
 input.input {
@@ -147,6 +155,10 @@ input.input {
 
 .box {
   background-color: transparent;
+  color: #fff;
+}
+
+.checkbox:hover {
   color: #fff;
 }
 
