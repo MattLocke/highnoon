@@ -7,26 +7,27 @@
       .column
       .column.is-narrow
         hr
-        b-field(label="Display Name" v-if="!signInMode")
-          b-input(v-model="displayName" placeholder="Display Name")
-        b-field(label="Email")
-          b-input(v-model="user" placeholder="Email")
-        b-field(label="Password")
-          b-input(type="password" v-model="pass" placeholder="Password" password-reveal)
-        .sign-in(v-if="signInMode")
-          p.is-mice
-            a(@click="resetPassword") Forget your password?
-          hr
-          a.button.is-primary(@click="signIn" v-if="canSignIn") Sign In
-          a.button(disabled v-else) Sign In
-          p.is-mice
-            a.is-pulled-right(@click="signInMode = false") Or Sign Up
-        .sign-up(v-else)
-          hr
-          a.button.is-primary(@click="register" v-if="canSignIn") Register
-          a.button(disabled v-else) Register
-          p.is-mice
-            a.is-pulled-right(@click="signInMode = true") Or Sign In
+        form(@submit.prevent="handleSubmit")
+          b-field(label="Display Name" v-if="!signInMode")
+            b-input(v-model="displayName" placeholder="Display Name")
+          b-field(label="Email")
+            b-input(v-model="user" placeholder="Email")
+          b-field(label="Password")
+            b-input(type="password" v-model="pass" placeholder="Password" password-reveal)
+          .sign-in(v-if="signInMode")
+            p.is-mice
+              a(@click="resetPassword") Forget your password?
+            hr
+            button.button.is-primary(type="submit" v-if="canSignIn") Sign In
+            a.button(disabled v-else) Sign In
+            p.is-mice
+              a.is-pulled-right(@click="signInMode = false") Or Sign Up
+          .sign-up(v-else)
+            hr
+            button.button.is-primary(type="submit" v-if="canSignIn") Register
+            a.button(disabled v-else) Register
+            p.is-mice
+              a.is-pulled-right(@click="signInMode = true") Or Sign In
         b-loading(:is-full-page="true" :active.sync="isLoading" :can-cancel="false")
       .column
 </template>
@@ -72,6 +73,10 @@ export default {
     }
   },
   methods: {
+    handleSubmit () {
+      if (this.canSignIn && this.signInMode) this.signIn()
+      else this.register()
+    },
     signIn () {
       this.$store.dispatch('setLoading', true)
       firebase.auth().signInWithEmailAndPassword(this.user, this.pass)
