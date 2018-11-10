@@ -1,6 +1,8 @@
 <template lang="pug">
   .mobile-menu.is-hidden-tablet
     .wrap(:class="{opened: showMenu, closed: !showMenu}" @click="toggle")
+      .open-icon(v-if="!showMenu")
+        img.logo(src="images/high_noon_white.svg")
       .main-mobile-menu(v-if="showMenu")
         ul
           li(v-for="menuItem in menuItems")
@@ -72,6 +74,15 @@ export default {
     bottom: 0;
     width: 100vw;
     background-color: rgba(0,0,0,0.95);
+    .open-icon {
+      .logo {
+        height: 4vh;
+        width: 4vh;
+        margin: -2.2vh auto 0 -2vh;
+        position: relative;
+        left: 50%;
+      }
+    }
     ul {
       margin-top: 2vh;
       li {
