@@ -1,7 +1,8 @@
 <template lang="pug">
   .article
-    article-viewer(:featuredArticle="featuredArticle" v-if="isValidArticle")
-    p(v-else) Sorry, this doesn't appear to be a valid article!
+    .container
+      article-viewer(:featuredArticle="featuredArticle" v-if="isValidArticle")
+      p(v-else) Sorry, this doesn't appear to be a valid article!
 </template>
 
 <script>
