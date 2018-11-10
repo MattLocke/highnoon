@@ -2,8 +2,10 @@
   .profile
     .columns
       left-bar
-        .box
+        section.has-text-centered
           img(:src="profileImage")
+          hr
+          button.button.is-primary Change Profile Picture
       .column
         .container
           h1 Profile for {{ profile.displayName }}
@@ -11,6 +13,8 @@
           //- achievements
           settings
           social
+          section
+            button.button.is-primary Save Profile
 </template>
 
 <script>
