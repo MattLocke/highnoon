@@ -60,7 +60,7 @@ export default {
   }
   .is-open {
     animation-name: opening;
-    height: 98vh;
+    min-height: 98vh;
     width: 100vw;
     animation-duration: .2s;
     position: absolute;
