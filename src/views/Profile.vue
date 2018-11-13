@@ -2,38 +2,72 @@
   .profile
     .columns
       left-bar
-        section.has-text-centered
+        section.has-text-centered(v-if="!updatingAvatar")
           img(:src="profileImage")
           hr
-          button.button.is-primary Change Profile Picture
+          button.button.is-primary(@click="updatingAvatar = true") Change Profile Picture
+        section.has-text-centered(v-else)
+          picture-input(ref="pictureInput", width="250", height="250", accept="image/jpeg", size=".1", buttonClass="button is-primary", @change="uploadPicture")
+          hr
+          button.button.is-secondary(@click="updatingAvatar = false") Cancel
       .column
         .container
-          h1 Profile for {{ profile.displayName }}
+          h1 Profile for {{ localProfile.displayName }}
           hr
           //- achievements
-          settings
-          social
+          section.settings
+            h2 Your Settings
+            .columns
+              .column.is-narrow
+                b-field(label="Overwatch Role")
+                  b-select(placeholder="Select Role" v-model="localProfile.primaryRole")
+                    option Defense
+                    option Flex
+                    option Offense
+                    option Support
+              .column.is-narrow
+                b-field(label="Receive Emails")
+                  b-checkbox(v-model="localProfile.getEmails") Yes I'd like emails.
+
+          section.social
+            h2 Social Settings
+            .columns
+              .column.is-narrow
+                b-field(label="Battle.net")
+                  b-input(v-model="localProfile.battleNet")
+              .column.is-narrow
+                b-field(label="Discord")
+                  b-input(v-model="localProfile.discord")
+              .column.is-narrow
+                b-field(label="Reddit")
+                  b-input(v-model="localProfile.reddit")
           section
-            button.button.is-primary Save Profile
+            button.button.is-primary(@click="saveProfile") Save Profile
 </template>
 
 <script>
+import PictureInput from 'vue-picture-input'
+
 import ImageService from '@/services/image'
+import UserService from '@/services/user'
 
 import Achievements from '@/views/profile/Achievements'
-import Settings from '@/views/profile/Settings'
-import Social from '@/views/profile/Social'
 
 export default {
   name: 'Profile',
   components: {
     Achievements,
-    Settings,
-    Social
+    PictureInput
   },
   data () {
     return {
-      profileImage: ''
+      profileImage: '',
+      localProfile: {
+        primaryRole: '',
+        getEmails: true,
+        reddit: ''
+      },
+      updatingAvatar: false
     }
   },
   computed: {
@@ -44,15 +78,57 @@ export default {
   watch: {
     profile: {
       immediate: true,
-      deep: true,
       handler () {
-        if (!this.profile.profileImageUrl) {
+        if (!this.profile.profileImageUrl && this.profile.id) {
           ImageService.getImage('users', `${this.profile.id}.jpg`).then((image) => {
             this.profileImage = image
             // we should set this on the profile as well.
             this.$store.dispatch('saveProfileAvatar', image)
           })
         } else this.profileImage = this.profile.profileImageUrl
+        this.localProfile = { ...this.localProfile, ...this.profile }
+      }
+    }
+  },
+  methods: {
+    uploadPicture () {
+      // nada
+    },
+    saveProfile () {
+      this.$store.dispatch('setLoading', true)
+      if (this.updatingAvatar) {
+        ImageService.uploadImage('users', `${this.profile.id}.jpg`, this.$refs.pictureInput.file)
+          .then((response) => {
+            if (response) {
+              this.localProfile.avatar = `${this.profile.id}.jpg`
+              UserService.updateProfile(this.localProfile, this.localProfile.id)
+                .then(() => {
+                  this.$store.dispatch('setLoading', false)
+                  this.$toast.open({
+                    message: 'Profile successfully updated!',
+                    type: 'is-success',
+                    position: 'is-bottom'
+                  })
+                })
+            } else {
+              this.$store.dispatch('setLoading', false)
+              this.$toast.open({
+                message: 'Unable to save your profile.  Image upload failed.  Please try again!',
+                type: 'is-danger',
+                position: 'is-bottom'
+              })
+            }
+          })
+      } else {
+        UserService.updateProfile(this.localProfile, this.localProfile.id)
+          .then(() => {
+            this.$store.dispatch('setLoading', false)
+            this.$toast.open({
+              message: 'Profile successfully updated!',
+              type: 'is-success',
+              position: 'is-bottom'
+            })
+          })
       }
     }
   }

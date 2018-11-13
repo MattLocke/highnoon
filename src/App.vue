@@ -46,7 +46,7 @@ export default {
 // Set your colors
 $primary: #f99e1a;
 $primary-invert: findColorInvert($primary);
-$secondary: #0000f3;
+$secondary: #0a0d1e;
 $twitter: #4099FF;
 $twitter-invert: findColorInvert($twitter);
 
@@ -170,7 +170,9 @@ input.input {
 
 .button.is-secondary {
   background-color: $secondary;
+  font-weight: 500;
   color: #fff;
+  border: none;
 }
 
 .mockup {

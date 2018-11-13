@@ -4,6 +4,11 @@ export default {
       {
         name: 'News',
         where: '/home'
+      },
+      {
+        name: 'My Profile',
+        where: '/profile',
+        requiresAuth: true
       }
     ]
     const devMenu = [
