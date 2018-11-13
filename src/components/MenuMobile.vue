@@ -15,6 +15,9 @@
             a.ow-font(@click="logOut()") Log Out
           li(v-else)
             router-link(to="/login") Log In
+          li
+            h2
+              a(href="https://discord.gg/H5bNcYD") High Noon Discord
 </template>
 
 <script>

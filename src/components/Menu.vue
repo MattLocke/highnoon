@@ -10,6 +10,9 @@
         support-message
         hr
         ul
+          li
+            h2
+              a(href="https://discord.gg/H5bNcYD") High Noon Discord
           li(v-if="currentUser")
             a.ow-font(@click="logOut()") Log Out
           li(v-else)
