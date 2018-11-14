@@ -6,6 +6,11 @@ export default {
         where: '/home'
       },
       {
+        name: 'Players',
+        where: '/fantasy',
+        requiresAuth: true
+      },
+      {
         name: 'My Profile',
         where: '/profile',
         requiresAuth: true
@@ -17,7 +22,7 @@ export default {
         where: '/home'
       },
       {
-        name: 'Fantasy',
+        name: 'Players',
         where: '/fantasy',
         requiresAuth: true
       },

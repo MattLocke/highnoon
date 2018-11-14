@@ -138,6 +138,14 @@ section {
   padding: 1rem;
 }
 
+.mdi-chevron-right:before {
+  content: ">";
+}
+
+.mdi-chevron-left:before {
+  content: "<";
+}
+
 label.label {
   color: #fff;
 }
@@ -185,6 +193,15 @@ input.input {
 
 .main-menu ul li a.router-link-active {
   color: $primary;
+}
+
+.pagination-link {
+  background-color: #fff;
+}
+
+.pagination-next, .pagination-previous {
+  background-color: $secondary;
+  color: #fff;
 }
 
 table.table {
