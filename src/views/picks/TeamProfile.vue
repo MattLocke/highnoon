@@ -6,13 +6,8 @@
         a(:href="account.value") {{ account.accountType }}
     h2 Players
     .columns.is-multiline
-      .column.is-one-quarter(v-for="playerObj in players")
-        .player-card
-          span.player-name
-            router-link(:to="playerUrl(playerObj.player)") {{ playerObj.player.name }}
-          span.player-role {{ playerObj.player.attributes.role }}
-          span.is-proper(v-if="playerObj.player.attributes.heroes") {{ playerObj.player.attributes.heroes[0] }}
-          span(v-else) N/A
+      .column.is-one-third(v-for="player in players")
+        player-card(:player="player.player" :showRemove="false")
     //- table.table.is-fullwidth
       thead
         tr
@@ -29,7 +24,12 @@
 </template>
 
 <script>
+import PlayerCard from '@/components/PlayerCard'
+
 export default {
+  components: {
+    PlayerCard
+  },
   props: {
     team: {
       required: true
