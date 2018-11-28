@@ -25,7 +25,7 @@
                 v-for="(player, index) in filteredPlayers"
                 :key="player.name"
                 v-if="index < 5"
-                @click="setPlayer(index)") 
+                @click="setPlayer(index)")
                 .columns.is-mobile
                   .column.is-one-third
                     span {{ player.name }}
@@ -72,7 +72,7 @@ export default {
     return {
       players: [],
       currentPage: 1,
-      filterText: '', 
+      filterText: '',
       selectedPlayer: null,
       selectedPlayers: [],
       isLoaded: false,
@@ -96,15 +96,15 @@ export default {
       })
   },
   methods: {
-    setPlayer(index) {
+    setPlayer (index) {
       const exists = this.selectedPlayers.findIndex(x => x.name === this.filteredPlayers[index].name)
 
       if (exists === -1 && this.selectedPlayers.length < this.maxPlayers) {
-        this.selectedPlayers.push(this.filteredPlayers[index]);
-        this.filterText = '';
+        this.selectedPlayers.push(this.filteredPlayers[index])
+        this.filterText = ''
       }
     },
-    removePlayer(index) {
+    removePlayer (index) {
       this.selectedPlayers.splice(index, 1)
     }
   }
