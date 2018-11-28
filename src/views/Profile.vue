@@ -21,7 +21,7 @@
               .column.is-narrow
                 b-field(label="Overwatch Role")
                   b-select(placeholder="Select Role" v-model="localProfile.primaryRole")
-                    option Defense
+                    option Tank
                     option Flex
                     option Offense
                     option Support
