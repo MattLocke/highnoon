@@ -161,6 +161,11 @@ input.input {
   }
 }
 
+.article ul li {
+  list-style-type: circle;
+  margin-left: 2rem;
+}
+
 .box {
   background-color: transparent;
   color: #fff;
