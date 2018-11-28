@@ -10,6 +10,17 @@
           add-staff-member(v-if="addMemberMode" @cancel="addMemberMode = false")
           section.section(v-else)
             h1 Staff Listing
+            p I'm thinking here I'll just pull from the DB, and mark all staff with a bool.
+          section
+            .staff-detail
+              .columns
+                .column.is-narrow
+                  img.img(:src="user.profileImageUrl")
+                .column
+                  h2 {{ user.displayName }}
+                  span.staff-title Site Owner
+                  hr
+                  p Here is a summary we'll have to have all of the staff fill out so we have it when rendering this part of the object.
 </template>
 
 <script>
@@ -44,3 +55,11 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.staff-title {
+  font-size: .8rem;
+  margin-top: -.6rem;
+  display: block;
+}
+</style>
