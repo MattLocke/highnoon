@@ -23,6 +23,11 @@
                 sortable
               ) {{ props.row.name }}
               b-table-column(
+                field="attributes.preferred_slot"
+                label="Slot"
+                sortable
+              ) {{ props.row.attributes.preferred_slot }}
+              b-table-column(
                 field="attributes.player_number"
                 label="Number"
                 sortable
