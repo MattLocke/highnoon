@@ -8,6 +8,8 @@
       hr
       span {{ featuredArticle.author }}
       button.button.is-small.is-pulled-right.is-primary(@click="copyLink") Copy Share Link
+      hr
+      a.twitter-share-button(:href="tweetUrl" :data-url="articleUrl") Tweet
 </template>
 
 <script>
@@ -28,6 +30,11 @@ export default {
     },
     isEditor () {
       return has(this.$store.state.user.userData, 'isEditor') || has(this.$store.state.user.userData, 'isEditor')
+    },
+    tweetUrl () {
+      const baseUrl = 'https://twitter.com/intent/tweet?text='
+      const headline = encodeURI(`${this.featuredArticle.headline} - ${this.featuredArticle.blurb}`)
+      return `${baseUrl}${headline}`
     }
   },
   components: {
