@@ -1,8 +1,8 @@
 <template lang="pug">
   .pickem
-    .mockup
-      h1 Pick'em Mode
-    hr
+    section
+      button.is-pulled-right.button.is-primary(@click="$emit('cancel')") Cancel
+      h1 Create Pick'em League
     .columns
       .column.is-one-quarter
         section
@@ -13,13 +13,30 @@
       .column.is-three-quarters
         section
           h2 League Name
-          b-input(placeholder="league name" v-model="leagueName")
+          b-input(placeholder="league name" v-model="league.leagueName")
         section
           h2 Password Protect League
-          b-switch(v-model="passwordProtected")
-          .wrap(v-if="passwordProtected")
-            hr
-            b-input(placeholder="password" v-if="passwordProtected" v-model="password")
+          .columns
+            .column.is-narrow
+              b-switch(v-model="passwordProtected")
+            .column
+              b-input(placeholder="password" v-if="passwordProtected" v-model="league.password")
+        section
+          h2 Social Links
+          p Do you or your organization have social media accounts?  Enter them below!
+          .columns.is-multiline
+            .column.is-narrow
+              b-field(label="Discord")
+                b-input(v-model="league.discord")
+            .column.is-narrow
+              b-field(label="Instagram")
+                b-input(v-model="league.instagram")
+            .column.is-narrow
+              b-field(label="Reddit")
+                b-input(v-model="league.reddit")
+            .column.is-narrow
+              b-field(label="Twitter")
+                b-input(v-model="league.twitter")
     section
       button.button.is-primary(@click="createLeague" v-if="canCreateLeague") Create League
       button.button.is-primary(disabled v-else) Create League
@@ -37,10 +54,17 @@ export default {
   data () {
     return {
       fileExtension: null,
-      leagueName: null,
+      league: {
+        leagueName: null,
+        leagueImageUrl: null,
+        password: null,
+        discord: null,
+        instagram: null,
+        reddit: null,
+        twitter: null
+      },
       passwordProtected: false,
-      leagueImage: null,
-      password: null
+      leagueImage: null
     }
   },
   computed: {
