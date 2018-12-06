@@ -8,8 +8,8 @@
       hr
       span {{ featuredArticle.author }}
       button.button.is-small.is-pulled-right.is-primary(@click="copyLink") Copy Share Link
-      hr
-      a.twitter-share-button(:href="tweetUrl" :data-url="articleUrl") Tweet
+      //- hr
+      //- a.twitter-share-button(:href="tweetUrl" :data-url="articleUrl") Tweet
 </template>
 
 <script>
@@ -32,8 +32,9 @@ export default {
       return has(this.$store.state.user.userData, 'isEditor') || has(this.$store.state.user.userData, 'isEditor')
     },
     tweetUrl () {
+      // TODO: Make the tweet url work.
       const baseUrl = 'https://twitter.com/intent/tweet?text='
-      const headline = encodeURI(`${this.featuredArticle.headline} - ${this.featuredArticle.blurb}`)
+      const headline = encodeURI(`${this.featuredArticle.headline} - ${this.featuredArticle.blurb} ${this.articleUrl}`)
       return `${baseUrl}${headline}`
     }
   },
