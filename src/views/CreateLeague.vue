@@ -65,7 +65,7 @@ export default {
         instagram: null,
         reddit: null,
         twitter: null
-      },
+      }
     }
   },
   computed: {
