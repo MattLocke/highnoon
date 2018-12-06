@@ -1,6 +1,6 @@
 <template lang="pug">
   .staff
-    .columns
+    .columns.is-marginless
       left-bar
         h1 Staff
         button.button.is-primary(v-if="isAdmin" @click="addMemberMode = true") Add Staff Member

@@ -1,23 +1,29 @@
 <template lang="pug">
-  .menu.is-hidden-mobile(@click="toggle")
-    .wrap.is-hidden-mobile(:class="{opened: showMenu, closed: !showMenu}")
-      .burger-wrap
-        burger(v-model="showMenu" :starts-open="false")
-      .main-menu
-        ul
-          li(v-for="menuItem in menuItems")
-            router-link.ow-font(:to="menuItem.where" v-if="canSee(menuItem)") {{ menuItem.name }}
-        support-message
-        hr
-        ul
-          li
-            h2
-              a(href="https://discord.gg/H5bNcYD") High Noon Discord
-          li(v-if="currentUser")
-            a.ow-font(@click="logOut()") Log Out
-          li(v-else)
-            router-link(to="/login") Log In
-        //- b-notification(v-if="!isVerified" type="is-warning") You have not verified your email address.  Please check your email and verify before having access to the rest of the site!
+  .navbar.is-fixed-top(role="navigation")
+    .navbar-brand
+      router-link.navbar-item.ow-font(to="/home")
+        img.logo(src="images/high_noon_white.svg" width="36" height="36")
+        |  HIGHNOON
+        span.orange .GG
+      a.navbar-burger.burger(role="button" :class="{'is-active': isActive}" @click="isActive=!isActive")
+        span
+        span
+        span
+    #primaryNav.navbar-menu(:class="{'is-active': isActive}" @click="isActive=!isActive")
+      .navbar-end
+        router-link.navbar-item(
+          v-for="(menuItem, index) in menuItems"
+          :key="index"
+          :to="menuItem.where"
+          v-if="canSee(menuItem)") {{ menuItem.name }}
+        router-link.navbar-item(
+          v-if="currentUser"
+          to="/profile") {{ profile.displayName }}
+        router-link.navbar-item(
+          v-else to="/login") Log In
+        a.navbar-item(
+          href="https://discord.gg/wTR5AEu"
+        ) Discord
 </template>
 
 <script>
@@ -35,7 +41,7 @@ export default {
   },
   data () {
     return {
-      showMenu: false
+      isActive: false
     }
   },
   computed: {
@@ -47,6 +53,9 @@ export default {
     },
     currentUser () {
       return this.$store.getters.isLoggedIn
+    },
+    profile () {
+      return this.$store.getters.getUserData
     }
   },
   methods: {
@@ -60,68 +69,31 @@ export default {
           // this.$router.push({ path: '/login' })
           location.reload()
         })
-    },
-    toggleMenu (value) {
-      this.showMenu = value
-    },
-    toggle () {
-      this.showMenu ? this.showMenu = false : this.showMenu = true
     }
   }
 }
 </script>
 
-<style lang="scss" scoped>
-  .menu {
-    position: fixed;
-    z-index: 900;
-    top: 0;
-    right: 0;
-    height: 100vh;
-    background-color: rgba(0,0,0,0.8);
-    border-left: 1px solid rgba(255,255,255,0.3);
+<style lang="scss">
+#app .navbar {
+  background-color: #090c1c;
+  #primaryNav {
+    background-color: #090c1c;
   }
-  .burger-wrap {
-    padding-left: .5rem;
-  }
-  .main-menu {
-    width: 25vw;
-    padding: 1rem 1rem 1rem 2vw;
-    background-color: rgba(0,0,0,0.3);
-    margin-top: 2rem;
-    ul {
-      li {
-        a {
-          display: block;
-          padding: .25rem .5rem;
-          color: #fff;
-          font-size: 1.4rem;
-          &:hover {
-            background-color: rgba(255,255,255,0.3);
-          }
-        }
-      }
+  .navbar-item {
+    color: #fff;
+    &:hover {
+      color: #fff;
+      background-color: #10152f;
+      border-bottom: 1px solid #f99e1a;
     }
   }
-  .closed li, .closed hr {
-    display: none;
+  .router-link-active {
+    border-bottom: 1px solid #f99e1a;
   }
-  .opened, .openedParent {
-    animation-name: opening;
-    width: 25vw;
-    animation-duration: .5s;
+  .navbar-brand .navbar-item {
+    font-size: 24px;
+    border-bottom: none;
   }
-  .closed, .closedParent {
-    animation-name: closing;
-    animation-duration: .5s;
-    width: 2vw;
-  }
-  @keyframes opening {
-    from { width: 2vw; }
-    to { width: 25vw; }
-  }
-  @keyframes closing {
-    from { width: 15vw; }
-    to { width: 2vw; }
-  }
+}
 </style>

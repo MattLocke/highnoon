@@ -35,19 +35,20 @@ export default {
 
 <style lang="scss" scoped>
   .close-bar {
-    height: 2vh;
+    height: 4vh;
     background-color: #000;
     cursor: pointer;
-    margin-bottom: .5rem;
-    border-bottom: 1px solid rgba(255,255,255,0.5);
+    border-top: 1px solid rgba(255,255,255,0.5);
+    position: fixed;
+    bottom: 0;
+    z-index: 900;
+    width: 100vw;
     .close-text {
       text-align: center;
       span {
-        border-radius: 4px;
         background-color: #000;
         padding: 0 .25rem;
-        color: #fff;
-        background-color: #f99e1a;
+        color: #f99e1a;
         font-size: .7rem;
       }
     }

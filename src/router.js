@@ -9,6 +9,7 @@ import Fantasy from './views/Fantasy'
 import Home from './views/Home'
 import LeagueFantasy from './views/LeagueFantasy'
 import LeaguePickem from './views/LeaguePickem'
+import Leagues from './views/Leagues'
 import Login from './views/Login'
 import Messages from './views/Messages'
 import Picks from './views/Picks'
@@ -79,6 +80,14 @@ let router = new Router({
       path: '/leaguePickem',
       name: 'leaguePickem',
       component: LeaguePickem,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/leagues',
+      name: 'leagues',
+      component: Leagues,
       meta: {
         requiresAuth: true
       }

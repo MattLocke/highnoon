@@ -9,11 +9,6 @@ export default {
         name: 'Players',
         where: '/fantasy',
         requiresAuth: true
-      },
-      {
-        name: 'My Profile',
-        where: '/profile',
-        requiresAuth: true
       }
     ]
     const devMenu = [
@@ -22,44 +17,48 @@ export default {
         where: '/home'
       },
       {
-        name: 'Players',
-        where: '/fantasy',
-        requiresAuth: true
-      },
-      {
-        name: 'Fantasy League',
-        where: '/leagueFantasy',
-        requiresAuth: true
-      },
-      {
-        name: 'Pickem Leagues',
-        where: '/leaguePickem',
-        requiresAuth: true
-      },
-      {
-        name: 'My Picks',
-        where: '/picks',
-        requiresAuth: true
-      },
-      {
-        name: 'My Profile',
-        where: '/profile',
-        requiresAuth: true
-      },
-      {
-        name: 'Create League',
-        where: '/createLeague',
-        requiresAuth: true
-      },
-      {
-        name: 'Messages',
-        where: '/messages',
-        requiresAuth: true
+        name: 'Leagues',
+        where: '/leagues'
       },
       {
         name: 'Staff',
         where: '/staff'
       }
+      // {
+      //   name: 'Players',
+      //   where: '/fantasy',
+      //   requiresAuth: true
+      // },
+      // {
+      //   name: 'Fantasy League',
+      //   where: '/leagueFantasy',
+      //   requiresAuth: true
+      // },
+      // {
+      //   name: 'Pickem Leagues',
+      //   where: '/leaguePickem',
+      //   requiresAuth: true
+      // },
+      // {
+      //   name: 'My Picks',
+      //   where: '/picks',
+      //   requiresAuth: true
+      // },
+      // {
+      //   name: 'My Profile',
+      //   where: '/profile',
+      //   requiresAuth: true
+      // },
+      // {
+      //   name: 'Create League',
+      //   where: '/createLeague',
+      //   requiresAuth: true
+      // },
+      // {
+      //   name: 'Messages',
+      //   where: '/messages',
+      //   requiresAuth: true
+      // },
     ]
     return process.env.VUE_APP_LOADPROD ? prodMenu : devMenu
   }

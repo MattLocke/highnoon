@@ -1,7 +1,6 @@
 <template lang="pug">
   #app
     main-menu
-    menu-mobile
     b-loading(:is-full-page="true" :active.sync="isLoading" :can-cancel="false")
     router-view#rv
 </template>
@@ -12,13 +11,11 @@ import firebase from 'firebase/app'
 import userService from '@/services/user'
 
 import mainMenu from '@/components/Menu'
-import menuMobile from '@/components/MenuMobile'
 
 export default {
   name: 'HighNoon',
   components: {
-    mainMenu,
-    menuMobile
+    mainMenu
   },
   computed: {
     isLoading () {
@@ -48,6 +45,7 @@ $primary: #f99e1a;
 $primary-invert: findColorInvert($primary);
 $secondary: #0a0d1e;
 $twitter: #4099FF;
+$dark-blue: #090c1c;
 $twitter-invert: findColorInvert($twitter);
 
 // Setup $colors to use as bulma classes (e.g. 'is-twitter')
@@ -123,8 +121,8 @@ $link-focus-border: $primary;
 }
 
 html {
-  background-color: #090c1c;
-  background-image: radial-gradient(#263277, #090c1c);
+  background-color: $dark-blue;
+  background-image: radial-gradient(#263277, $dark-blue);
   min-height: 99vh;
 }
 

@@ -1,6 +1,6 @@
 <template lang="pug">
   .profile
-    .columns
+    .columns.is-marginless
       left-bar
         section.has-text-centered(v-if="!updatingAvatar")
           img(:src="profileImage")
@@ -43,9 +43,13 @@
                   b-input(v-model="localProfile.reddit")
           section
             button.button.is-primary(@click="saveProfile") Save Profile
+            hr
+            a(@click="logOut()") Log Out
 </template>
 
 <script>
+import firebase from 'firebase/app'
+import 'firebase/auth'
 import PictureInput from 'vue-picture-input'
 
 import ImageService from '@/services/image'
@@ -93,6 +97,13 @@ export default {
   methods: {
     uploadPicture () {
       // nada
+    },
+    logOut () {
+      firebase.auth().signOut()
+        .then(() => {
+          // this.$router.push({ path: '/login' })
+          location.reload()
+        })
     },
     saveProfile () {
       this.$store.dispatch('setLoading', true)
