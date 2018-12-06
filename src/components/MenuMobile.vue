@@ -1,14 +1,14 @@
 <template lang="pug">
   .mobile-menu.is-hidden-tablet
+    .open-icon(v-if="!showMenu")
+        img.logo(src="images/high_noon_white.svg" @click="toggle")
     .wrap(:class="{opened: showMenu, closed: !showMenu}" @click="toggle")
-      .open-icon(v-if="!showMenu")
-        img.logo(src="images/high_noon_white.svg")
       .main-mobile-menu(v-if="showMenu")
         ul
           li(v-for="menuItem in menuItems")
             h2
               router-link.ow-font(:to="menuItem.where" v-if="canSee(menuItem)") {{ menuItem.name }}
-        support-message
+        //- support-message
         hr
         ul
           li(v-if="currentUser")
@@ -76,14 +76,16 @@ export default {
     position: fixed;
     bottom: 0;
     width: 100vw;
+    z-index: 900;
     background-color: rgba(0,0,0,0.95);
     .open-icon {
       .logo {
-        height: 4vh;
-        width: 4vh;
-        margin: -2.2vh auto 0 -2vh;
-        position: relative;
-        left: 50%;
+        height: 6vh;
+        width: 6vh;
+        margin: -1vh auto 0 -2vh;
+        position: fixed;
+        right: 4vw;
+        top: 92vh;
       }
     }
     ul {
@@ -111,7 +113,7 @@ export default {
       animation-duration: .2s;
     }
     .closed {
-      height: 2vh;
+      height: 0;
       animation-name: closing;
       animation-duration: .2s;
       border-top: 1px solid rgba(255,255,255,0.5);
