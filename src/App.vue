@@ -1,9 +1,9 @@
 <template lang="pug">
   #app
-    router-view#rv
     main-menu
     menu-mobile
     b-loading(:is-full-page="true" :active.sync="isLoading" :can-cancel="false")
+    router-view#rv
 </template>
 
 <script>
