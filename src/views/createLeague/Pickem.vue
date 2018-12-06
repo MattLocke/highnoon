@@ -4,13 +4,13 @@
       button.is-pulled-right.button.is-primary(@click="$emit('cancel')") Cancel
       h1 Create Pick'em League
     .columns
-      .column.is-one-quarter
+      //- .column.is-one-quarter
         section
           h2 League Image
           p Please select the image to use.  Image should be jpg/png and 256x256.  (This can be changed/selected later)
           hr
           picture-input(ref="pictureInput", width="250", height="250", accept="image/jpeg,image/png", buttonClass="button is-primary is-small", @change="uploadPicture")
-      .column.is-three-quarters
+      .column
         section
           h2 League Name
           b-input(placeholder="league name" v-model="league.leagueName")
@@ -23,7 +23,7 @@
               b-input(placeholder="password" v-if="passwordProtected" v-model="league.password")
         section
           h2 Social Links
-          p Do you or your organization have social media accounts?  Enter them below!
+          p Do you or your organization have social media accounts?  Enter their links below!
           .columns.is-multiline
             .column.is-narrow
               b-field(label="Discord")
@@ -58,6 +58,7 @@ export default {
         leagueName: null,
         leagueImageUrl: null,
         password: null,
+        passwordProtected: false,
         discord: null,
         instagram: null,
         reddit: null,
@@ -72,25 +73,23 @@ export default {
       return this.$store.getters.getUserId
     },
     canCreateLeague () {
-      return (this.leagueName && this.leagueImage)
+      return this.league.leagueName
     }
   },
   methods: {
-    uploadPicture () {
-      console.log('New picture selected.')
-      if (this.$refs.pictureInput.file) {
-        this.fileExtension = `.${this.$refs.pictureInput.fileType.substr(this.$refs.pictureInput.fileType.indexOf('/') + 1)}`
-      } else {
-        console.error('FileReader API not supported.  Boo.')
-      }
-    },
+    // uploadPicture () {
+    //   console.log('New picture selected.')
+    //   if (this.$refs.pictureInput.file) {
+    //     this.fileExtension = `.${this.$refs.pictureInput.fileType.substr(this.$refs.pictureInput.fileType.indexOf('/') + 1)}`
+    //   } else {
+    //     console.error('FileReader API not supported.  Boo.')
+    //   }
+    // },
     createLeague () {
       // build the league data
       const leagueData = {
-        leagueName: this.leagueName,
-        ownerId: this.ownerId,
-        passwordProtected: this.passwordProtected,
-        password: this.password
+        ...this.league,
+        passwordProtected: this.passwordProtected
       }
 
       this.$store.dispatch('setLoading', true)

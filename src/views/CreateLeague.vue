@@ -1,24 +1,45 @@
 <template lang="pug">
   .create-league
     .container(v-if="numLeagues < 4")
-      section(v-if="!typeChosen")
-        h1 Create League
-        p Choose a league type below to get started.
-      .columns(v-if="!typeChosen")
-        .column.is-half-desktop
-          section
-            h2 Pick'Em
-            p You and an UNLIMITED number of friends/peers pick who will win each week, and prizes may be awarded by tickets or points.
-            hr
-            button.button.is-primary(@click="choosePickem()") Choose Pick'Em
-        .column.is-half-desktop
-          section
-            h2 Traditional Fantasy
-            p You and up to 11 other buddies will form teams in a draft-like fashion, and will duke it out each week.  Points and record will be available for leaderboards.
-            hr
-            button.button.is-primary(@click="chooseFantasy()") Choose Fantasy
-      pickem(v-if="showPickem" @complete="createLeague()" @cancel="resetChoice")
-      fantasy(v-if="showFantasy" @complete="createLeague()" @cancel="resetChoice")
+      section
+        .columns
+          .column
+            h2 League Name
+            b-input(placeholder="league name" v-model="league.leagueName")
+          .column.is-narrow
+            h2 League Type
+            b-select(placeholder="Select a Category" v-model="league.leagueType")
+              option player
+              option pickem
+          .column.is-one-fifth
+            p(v-if="league.leagueType == 'player'") Player-base fantasy league.  This is more like traditional fantasy sports.
+            p(v-else) Pick'em is where all you do is choose the team you think will win each matchup.
+      section
+        h2 Password Protect League
+        .columns
+          .column.is-narrow
+            b-switch(v-model="league.passwordProtected")
+          .column
+            b-input(placeholder="password" v-if="league.passwordProtected" v-model="league.password")
+      section
+        h2 Social Links
+        p Do you or your organization have social media accounts?  Enter their links below!
+        .columns.is-multiline
+          .column.is-narrow
+            b-field(label="Discord")
+              b-input(v-model="league.discord")
+          .column.is-narrow
+            b-field(label="Instagram")
+              b-input(v-model="league.instagram")
+          .column.is-narrow
+            b-field(label="Reddit")
+              b-input(v-model="league.reddit")
+          .column.is-narrow
+            b-field(label="Twitter")
+              b-input(v-model="league.twitter")
+      section
+        button.button.is-primary(@click="createLeague" v-if="canCreateLeague") Create League
+        button.button.is-primary(disabled v-else) Create League
     .box(v-else)
       .container
         section
@@ -28,44 +49,54 @@
 </template>
 
 <script>
-import Pickem from '@/views/createLeague/Pickem'
-import Fantasy from '@/views/createLeague/Fantasy'
+import LeagueService from '@/services/league'
 
 export default {
-  components: {
-    Pickem,
-    Fantasy
-  },
+  name: 'CreateLeague',
   data () {
     return {
-      showPickem: false,
-      showFantasy: false,
-      leagueData: {}
+      league: {
+        leagueName: null,
+        leagueImageUrl: null,
+        leagueType: 'player',
+        password: null,
+        passwordProtected: false,
+        discord: null,
+        instagram: null,
+        reddit: null,
+        twitter: null
+      },
     }
   },
   computed: {
     numLeagues () {
       return 0
     },
-    typeChosen () {
-      return this.showPickem || this.showFantasy
+    ownerId () {
+      return this.$store.getters.getUserId
+    },
+    canCreateLeague () {
+      return this.league.leagueName
     }
   },
   methods: {
-    choosePickem () {
-      this.showPickem = true
-      this.showFantasy = false
-    },
-    chooseFantasy () {
-      this.showPickem = false
-      this.showFantasy = true
-    },
     createLeague () {
-      // Create the league based on showPickem value
-    },
-    resetChoice () {
-      this.showPickem = false
-      this.showFantasy = false
+      const leagueData = {
+        ...this.league,
+        ownerId: this.ownerId
+      }
+
+      this.$store.dispatch('setLoading', true)
+      LeagueService.createLeague(leagueData)
+        .then((leagueId) => {
+          this.$store.dispatch('setLoading', false)
+          if (leagueId) this.$router.push({ path: `/ViewLeague/${this.leagueId}` })
+          // show an error or something if it no workie.
+        })
+        .catch(() => {
+          this.$store.dispatch('setLoading', false)
+          // some kind of error message here as well.
+        })
     }
   }
 }
