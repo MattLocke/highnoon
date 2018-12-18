@@ -6,30 +6,24 @@
           .box
             h1 This weeks matches
             hr
-            .matchup-listing(v-for="(match, index) in weeksMatches" :key="match.id" @click="setActive(match)" v-if="index < 12")
+            .matchup-listing(v-for="(match, index) in stageMatches" :key="match.id" @click="setActive(match)" v-if="index < 36")
               .columns.is-mobile
                 .column.team(:style="getBackground(match.competitors[0])")
                   .columns.is-mobile.is-gapless
                     .column.is-narrow
-                      input(type="checkbox")
-                    .column.is-narrow
                       img.team-logo(:src="getImage(match.competitors[0].abbreviatedName)")
                     .column
-                      span.location {{ shortLocation(match.competitors[0].homeLocation) }}
                       span.team-name {{ teamName(match.competitors[0].name) }}
                 .column.team.has-text-right(:style="getBackground(match.competitors[1])")
                   .columns.is-mobile.is-gapless
                     .column
-                      span.location {{ shortLocation(match.competitors[1].homeLocation) }}
                       span.team-name {{ teamName(match.competitors[1].name) }}
                     .column.is-narrow
                       img.team-logo(:src="getImage(match.competitors[1].abbreviatedName)")
-                    .column.is-narrow
-                      input(type="checkbox")
             hr
 
       .column
-        .wrap
+        .container
           .box(v-if="activeMatch")
             .columns
               .column
@@ -94,6 +88,9 @@ export default {
     awayTeamPlayers () {
       if (this.activeMatch && this.awayTeam) return this.teams[this.awayTeam.abbreviatedName].players
       return null
+    },
+    stageMatches () {
+      return this.weeksMatches.filter(match => match.stage === 'stage1').sort((a, b) => a.endDateTS - b.endDateTS)
     }
   },
   methods: {
@@ -151,6 +148,7 @@ export default {
 .team-name {
   font-size: 1.4rem;
   font-family: 'overFont';
+  filter: drop-shadow(1px 1px 0 #000);
 }
 .has-text-right {
   text-align: right;
