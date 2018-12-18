@@ -1,8 +1,14 @@
 <template lang="pug">
-  .player-card
-    h3.ow-font.is-hidden-mobile(@click="seeStats = !seeStats") {{ player.name }}
-    p.ow-font.is-hidden-desktop(@click="seeStats = !seeStats") {{ player.name }}
-    img.img(:src="player.headshot" v-if="!seeStats")
+  .player-card(:style="{'background-color': `#${primaryColor}`}")
+    .columns.player-title.is-marginless.is-gapless.is-mobile
+      .column
+        h3.ow-font(@click="seeStats = !seeStats") {{ player.name }}
+        //- p.ow-font.is-hidden-desktop(@click="seeStats = !seeStats") {{ player.name }}
+      .column.is-narrow
+        img.role-image(:src="`images/roles/${player.attributes.role}-white.svg`")
+    div(v-if="!seeStats")
+      img.img(:src="player.headshot")
+      span.fantasy-points.has-text-centered {{ Math.round(Math.random() * (1500 - 700) + 700) }}
     .stats(v-else)
       span.is-proper Role: {{ player.attributes.role }}
       .heroes(v-if="hasHeroes(player)")
@@ -31,6 +37,10 @@ export default {
     showRemove: {
       type: Boolean,
       default: true
+    },
+    primaryColor: {
+      type: String,
+      default: '000'
     }
   },
   data () {
@@ -58,12 +68,27 @@ export default {
 <style lang="scss">
   .player-card {
     border: 1px solid #fff;
-    background-color: rgba(255,255,255,0.3);
-    text-align: center;
     border-radius: 4px;
     padding-bottom: .25rem;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    .player-title, .fantasy-points {
+      background-color: #333;
+      padding-top: .25rem;
+      padding-left: .25rem;
+    }
+    .fantasy-points {
+      width: 100%;
+      display: block;
+      margin-top: -.5rem;
+      position: relative;
+      z-index: 3;
+      height: 2rem;
+    }
     h3 {
       font-size: 2rem;
+      line-height: 2rem;
     }
     .stats {
       background-color: #30375f;
@@ -76,6 +101,14 @@ export default {
     }
     h3.ow-font, p.ow-font {
       cursor: pointer;
+    }
+    .role-image {
+      height: 2rem;
+      width: 2rem;
+    }
+    .img {
+      z-index: 2;
+      position: relative;
     }
   }
 </style>
