@@ -9,8 +9,9 @@
           .column.is-narrow
             h2 League Type
             b-select(placeholder="Select a Category" v-model="league.leagueType")
-              option player
-              option pickem
+              option(value="player") Fantasy
+              option(value="pickem") Pick'em
+              option(value="unlimited") Unlimited
           .column.is-one-fifth
             p(v-if="league.leagueType == 'player'") Player-base fantasy league.  This is more like traditional fantasy sports.
             p(v-else) Pick'em is where all you do is choose the team you think will win each matchup.
