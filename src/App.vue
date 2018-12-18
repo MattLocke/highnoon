@@ -106,10 +106,6 @@ $link-focus-border: $primary;
   background-color: rgba(0,0,0,0.8);
 }
 
-#rv {
-  margin-right: 3vw;
-}
-
 @media only screen and (max-width: 769px) {
   #rv {
     margin-right: 0;
