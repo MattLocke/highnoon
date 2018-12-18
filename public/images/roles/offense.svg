@@ -1,8 +1,14 @@
-<svg id="role_offense" viewBox="0 0 64 64" width="100%" height="100%">
-  <rect class="cls-1" x="12" y="49.3" width="10.2" height="5.61"></rect>
-  <path class="cls-1" d="M22.2,19.1a10.2,10.2,0,0,0,0-1c-.8-6.9-5.1-9-5.1-9s-4.3,2.1-5.1,9c0,.3,0,1,0,1V45.4H22.2Z"></path>
-  <rect class="cls-1" x="26.9" y="49.3" width="10.2" height="5.61"></rect>
-  <path class="cls-1" d="M37.1,19.1a10.2,10.2,0,0,0,0-1C36.3,11.2,32,9,32,9s-4.3,2.1-5.1,9c0,.3,0,1,0,1V45.4H37.1Z"></path>
-  <rect class="cls-1" x="41.8" y="49.3" width="10.2" height="5.61"></rect>
-  <path class="cls-1" d="M52,19.1s0-.8,0-1c-.8-6.9-5.1-9-5.1-9s-4.3,2.1-5.1,9c0,.3,0,1,0,1V45.4H52Z"></path>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 21.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="role_offense" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+	 y="0px" viewBox="0 0 1440 1440" style="enable-background:new 0 0 1440 1440;" xml:space="preserve">
+<rect x="270" y="1109.3" width="229.5" height="126.2"/>
+<path d="M499.5,429.8c0.4-7.5,0.4-15,0-22.5c-18-155.2-114.8-202.5-114.8-202.5S288,252,270,407.3c0,6.8,0,22.5,0,22.5v591.8h229.5
+	V429.8z"/>
+<rect x="605.3" y="1109.3" width="229.5" height="126.2"/>
+<path d="M834.7,429.8c0.4-7.5,0.4-15,0-22.5C816.8,252,720,202.5,720,202.5S623.3,249.8,605.3,405c0,6.7,0,22.5,0,22.5v594h229.5
+	V429.8z"/>
+<rect x="940.5" y="1109.3" width="229.5" height="126.2"/>
+<path d="M1170,429.8c0,0,0-18,0-22.5c-18-155.2-114.8-202.5-114.8-202.5S958.5,252,940.5,407.3c0,6.8,0,22.5,0,22.5v591.8H1170
+	V429.8z"/>
 </svg>
