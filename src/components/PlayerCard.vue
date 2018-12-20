@@ -1,15 +1,21 @@
 <template lang="pug">
   .player-card(:style="{'background-color': `#${primaryColor}`}")
-    .columns.player-title.is-marginless.is-gapless.is-mobile
+    .columns.player-title.is-marginless.is-gapless.is-mobile(v-if="!player")
+      .column
+        h3.ow-font N/A
+    div(v-if="!player")
+      img.img(src="https://bnetcmsus-a.akamaihd.net/cms/page_media/S02042JXNHF81515718127993.png")
+      span.fantasy-points.has-text-centered 0
+    .columns.player-title.is-marginless.is-gapless.is-mobile(v-else)
       .column
         h3.ow-font(@click="seeStats = !seeStats") {{ player.name }}
         //- p.ow-font.is-hidden-desktop(@click="seeStats = !seeStats") {{ player.name }}
       .column.is-narrow
         img.role-image(:src="`images/roles/${player.attributes.role}-white.svg`")
-    div(v-if="!seeStats")
+    div(v-if="!seeStats && player")
       img.img(:src="player.headshot")
       span.fantasy-points.has-text-centered {{ Math.round(Math.random() * (1500 - 700) + 700) }}
-    .stats(v-else)
+    .stats(v-if="seeStats && player")
       span.is-proper Role: {{ player.attributes.role }}
       .heroes(v-if="hasHeroes(player)")
         span Heroes:
@@ -26,9 +32,13 @@ import { isEmpty } from 'lodash'
 export default {
   name: 'PlayerCard',
   props: {
+    placeholder: {
+      type: Boolean,
+      required: false
+    },
     player: {
       type: Object,
-      required: true
+      default: null
     },
     showStats: {
       type: Boolean,
@@ -40,7 +50,7 @@ export default {
     },
     primaryColor: {
       type: String,
-      default: '000'
+      default: '222'
     }
   },
   data () {
@@ -82,13 +92,14 @@ export default {
       width: 100%;
       display: block;
       margin-top: -.5rem;
+      margin-bottom: -.25rem;
       position: relative;
       z-index: 3;
       height: 2rem;
     }
     h3 {
-      font-size: 2rem;
-      line-height: 2rem;
+      font-size: 1.4rem;
+      line-height: 1.6rem;
     }
     .stats {
       background-color: #30375f;
@@ -103,8 +114,9 @@ export default {
       cursor: pointer;
     }
     .role-image {
-      height: 2rem;
-      width: 2rem;
+      height: 1.6rem;
+      width: 1.6rem;
+      line-height: 1.6rem;
     }
     .img {
       z-index: 2;
