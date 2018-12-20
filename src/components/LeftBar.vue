@@ -1,6 +1,6 @@
 <template lang="pug">
   .left-bar.column.is-hidden-mobile(:class="getClass")
-    .columns.is-mobile
+    .columns.is-mobile(v-if="showClose")
       .column
       .column.is-narrow(@click="isOpen = !isOpen")
         burger(v-model="isOpen")
@@ -14,8 +14,15 @@ export default {
       isOpen: true
     }
   },
+  props: {
+    showClose: {
+      type: Boolean,
+      default: true
+    }
+  },
   computed: {
     getClass () {
+      if (!this.showClose) return { 'is-one-quarter': true, 'is-always-open': true }
       return this.isOpen ? { 'is-one-quarter': true } : { 'is-narrow': true }
     }
   }
@@ -32,6 +39,17 @@ export default {
     h2 {
       color: #fff;
     }
+    .left-bar-item {
+      background-color: rgba(255,255,255,0.1);
+      margin-bottom: .25rem;
+      padding: .5rem 1rem;
+    }
+    .left-bar-item.active-item {
+      background-color: #f99e1a;
+    }
+  }
+  .left-bar.is-always-open {
+    padding-top: .75rem;
   }
   .is-one-quarter, .openedParent {
     animation-name: opening;
