@@ -12,8 +12,15 @@
           h2 Create A League
         section
           router-link.button.is-primary(to="/createLeague") Create League
+        section
+          router-link.button.is-primary(to="/draft") Test Draft
       .column
         .container
           section
             h1 Leagues
 </template>
+
+<script>
+export default {
+}
+</script>
