@@ -5,6 +5,7 @@ import firebase from 'firebase/app'
 import Article from './views/Article'
 import CreateLeague from './views/CreateLeague'
 import CreateNews from './views/CreateNews'
+import Draft from './views/Draft'
 import Fantasy from './views/Fantasy'
 import Home from './views/Home'
 import LeagueFantasy from './views/LeagueFantasy'
@@ -33,6 +34,14 @@ let router = new Router({
       path: '/createLeague',
       name: 'createLeague',
       component: CreateLeague,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/draft',
+      name: 'draft',
+      component: Draft,
       meta: {
         requiresAuth: true
       }
