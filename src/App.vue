@@ -24,7 +24,9 @@ export default {
   },
   mounted () {
     this.$store.dispatch('saveFireData', firebase.auth().currentUser)
+    this.$store.dispatch('loadConfig')
     this.$store.dispatch('setLoading', true)
+
     if (firebase.auth().currentUser) {
       userService.getProfile(firebase.auth().currentUser.uid)
         .then(userData => {
@@ -130,6 +132,10 @@ section {
   background-color: rgba(255,255,255,0.1);
   margin-bottom: 1rem;
   padding: 1rem;
+}
+
+.has-pointer {
+  cursor: pointer;
 }
 
 .mdi-chevron-right:before {
