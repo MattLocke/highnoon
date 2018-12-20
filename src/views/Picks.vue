@@ -90,7 +90,7 @@ export default {
       return null
     },
     stageMatches () {
-      return this.weeksMatches.filter(match => match.stage === 'stage1').sort((a, b) => a.endDateTS - b.endDateTS)
+      return this.weeksMatches.filter(match => match.stage === 'stage1').sort((a, b) => a.startDateTS - b.startDateTS)
     }
   },
   methods: {
