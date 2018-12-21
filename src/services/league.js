@@ -18,17 +18,20 @@ export default {
 
     // get the leagueId as it's the glue for all of the batch stuff
     const leagueId = leagueRef.id
+    const ownerId = leagueData.ownerId
 
     // create data for other entry
     const leagueMeta = {
-      lastViewed: null,
-      leagueId,
-      leagueName: leagueData.leagueName,
-      leagueType: leagueData.leagueType
+      [leagueId]: {
+        lastViewed: null,
+        leagueId,
+        leagueName: leagueData.leagueName,
+        leagueType: leagueData.leagueType
+      }
     }
 
     // get the userLeague ref
-    const userRef = db.collection(`userLeagues/${leagueData.ownerId}/${leagueId}`).doc()
+    const userRef = db.collection('userLeagues').doc(ownerId)
 
     // set up the batch
     const batch = db.batch()
@@ -40,12 +43,12 @@ export default {
     batch.set(leagueRef, leagueData)
 
     // create the userLeague entry
-    batch.set(userRef, leagueMeta)
+    batch.set(userRef, leagueMeta, { merge: true })
 
     logger.logIt(`Writing league in batch with id of: ${leagueId}`)
 
     return batch.commit()
       .then(() => leagueId)
-      .catch(() => false)
+      .catch((error) => Promise.reject(error))
   }
 }
