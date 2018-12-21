@@ -2,7 +2,7 @@
   .create-league
     .container(v-if="numLeagues < 4")
       h1 Create A New League
-      section(v-if="!league.leagueType")
+      section(v-show="!league.leagueType")
         .columns
           .column
             h2 Standard
@@ -22,7 +22,7 @@
             p Each week choose which team will win each of the matchups.  This is more simple than we offered in Season 1 due to the overhead running full-fledged fantasy leagues brings to the table!
             .has-text-centered
               button.button.is-primary(@click="league.leagueType = 'pickem'") Choose Pick'Em
-      section(v-else)
+      section(v-show="league.leagueType")
         .columns
           .column
             h2 {{ league.leagueType }} League
