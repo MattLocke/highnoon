@@ -1,44 +1,70 @@
 <template lang="pug">
   .create-league
     .container(v-if="numLeagues < 4")
-      section
+      h1 Create A New League
+      section(v-if="!league.leagueType")
         .columns
           .column
-            h2 League Name
-            b-input(placeholder="league name" v-model="league.leagueName")
-          .column.is-narrow
-            h2 League Type
-            b-select(placeholder="Select a Category" v-model="league.leagueType")
-              option(value="player") Fantasy
-              option(value="pickem") Pick'em
-              option(value="unlimited") Unlimited
-          .column.is-one-fifth
-            p(v-if="league.leagueType == 'player'") Player-base fantasy league.  This is more like traditional fantasy sports.
-            p(v-else) Pick'em is where all you do is choose the team you think will win each matchup.
-      section
-        h2 Password Protect League
-        .columns
-          .column.is-narrow
-            b-switch(v-model="league.passwordProtected")
+            h2 Standard
+            img.img(src="/images/league-standard.jpg" alt="standard league icon")
+            p You and up to 11 other buddies can get together and draft teams to compete against one another!  Each week you'll be matched against a new opponent and best record at the end wins!
+            .has-text-centered
+              button.button.is-primary(@click="league.leagueType = 'standard'") Choose Standard
           .column
-            b-input(placeholder="password" v-if="league.passwordProtected" v-model="league.password")
-      section
-        h2 Social Links
-        p Do you or your organization have social media accounts?  Enter their links below!
-        .columns.is-multiline
+            h2 Unlimited
+            img.img(src="/images/league-unlimited.jpg" alt="unlimited league icon")
+            p Unlimited league sizes.  No roster restrictions.  Build your perfect team and see how well you score.  No head to head matchup, instead the points each week will be used for leaderboards.
+            .has-text-centered
+              button.button.is-primary(@click="league.leagueType = 'unlimited'") Choose Unlimited
+          .column
+            h2 Pick 'em
+            img.img(src="/images/league-pickem.jpg" alt="pickem league icon")
+            p Each week choose which team will win each of the matchups.  This is more simple than we offered in Season 1 due to the overhead running full-fledged fantasy leagues brings to the table!
+            .has-text-centered
+              button.button.is-primary(@click="league.leagueType = 'pickem'") Choose Pick'Em
+      section(v-else)
+        .columns
+          .column
+            h2 {{ league.leagueType }} League
           .column.is-narrow
-            b-field(label="Discord")
-              b-input(v-model="league.discord")
-          .column.is-narrow
-            b-field(label="Instagram")
-              b-input(v-model="league.instagram")
-          .column.is-narrow
-            b-field(label="Reddit")
-              b-input(v-model="league.reddit")
-          .column.is-narrow
-            b-field(label="Twitter")
-              b-input(v-model="league.twitter")
-      section
+            button.button.is-primary.is-small(@click="league.leagueType = ''") Change League Type
+      section(v-if="league.leagueType")
+        .columns
+          .column.is-three-quarters-desktop
+            b-field(label="League Name")
+              b-input(placeholder="league name" v-model="league.leagueName")
+          .column
+            b-field(label="Password (optional)")
+              b-input(placeholder="password" v-model="league.password")
+      section(v-if="league.leagueType == 'standard'")
+        .columns
+          .column
+            b-field(label="Role Requirements")
+              b-select(v-model="requiredRoles")
+                option(value=2) 2/2/2/x
+                option(value=1) 1/1/1/x
+                option(value=0) x/x/x/x
+          .column
+            .has-text-centered
+              label.label Offense
+              span.big-number {{ league.requiredOffense }}
+              span.micro minimum
+          .column
+            .has-text-centered
+              label.label Support
+              span.big-number {{ league.requiredSupport }}
+              span.micro minimum
+          .column
+            .has-text-centered
+              label.label Tank
+              span.big-number {{ league.requiredTank }}
+              span.micro minimum
+          .column
+            .has-text-centered
+              label.label Flex
+              span.big-number {{ league.requiredFlex }}
+              span.micro minimum
+      section(v-if="league.leagueType")
         button.button.is-primary(@click="createLeague" v-if="canCreateLeague") Create League
         button.button.is-primary(disabled v-else) Create League
     .box(v-else)
@@ -59,14 +85,19 @@ export default {
       league: {
         leagueName: null,
         leagueImageUrl: null,
-        leagueType: 'player',
+        leagueType: null,
         password: null,
         passwordProtected: false,
         discord: null,
         instagram: null,
         reddit: null,
-        twitter: null
-      }
+        twitter: null,
+        requiredOffense: 2,
+        requiredSupport: 2,
+        requiredTank: 2,
+        requiredFlex: 0
+      },
+      requiredRoles: 2
     }
   },
   computed: {
@@ -80,6 +111,36 @@ export default {
       return this.league.leagueName
     }
   },
+  watch: {
+    requiredRoles: {
+      immediate: true,
+      handler (val) {
+        switch (Number(val)) {
+          case 2:
+            this.league.requiredOffense = 2
+            this.league.requiredSupport = 2
+            this.league.requiredTank = 2
+            break
+          case 1:
+            this.league.requiredOffense = 1
+            this.league.requiredSupport = 1
+            this.league.requiredTank = 1
+            break
+          case 0:
+          default:
+            this.league.requiredOffense = 0
+            this.league.requiredSupport = 0
+            this.league.requiredTank = 0
+        }
+      }
+    },
+    'league.password': {
+      handler (val) {
+        if (val.length > 0) this.league.passwordProtected = true
+        else this.league.passwordProtected = false
+      }
+    }
+  },
   methods: {
     createLeague () {
       const leagueData = {
@@ -91,8 +152,7 @@ export default {
       LeagueService.createLeague(leagueData)
         .then((leagueId) => {
           this.$store.dispatch('setLoading', false)
-          if (leagueId) this.$router.push({ path: `/ViewLeague/${this.leagueId}` })
-          // show an error or something if it no workie.
+          if (leagueId) this.$router.push({ path: `/leagues/${leagueId}` })
         })
         .catch(() => {
           this.$store.dispatch('setLoading', false)
@@ -102,3 +162,19 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.create-league {
+  .is-max-height {
+    height: 100%;
+  }
+  .big-number {
+    font-size: 3rem;
+    line-height: 1.5rem;
+  }
+  .micro {
+    font-size: .6rem;
+    display: block;
+  }
+}
+</style>

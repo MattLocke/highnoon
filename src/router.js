@@ -94,7 +94,7 @@ let router = new Router({
       }
     },
     {
-      path: '/leagues',
+      path: '/leagues/:leagueId?',
       name: 'leagues',
       component: Leagues,
       meta: {
