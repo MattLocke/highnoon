@@ -1,6 +1,6 @@
 <template lang="pug">
   .player-line
-    .columns.is-gapless
+    .columns.is-gapless.is-mobile
       .column.is-narrow
         img(:src="getLogo(player)")
       .column
