@@ -165,12 +165,11 @@ export default {
 
 <style lang="scss">
 .create-league {
+  p {
+    margin-bottom: 1rem;
+  }
   .is-max-height {
     height: 100%;
-  }
-  .big-number {
-    font-size: 3rem;
-    line-height: 1.5rem;
   }
   .micro {
     font-size: .6rem;
