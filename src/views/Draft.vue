@@ -7,24 +7,28 @@
           .roster-section
             .columns.is-multiline
               .column.is-one-third(v-for="player in roster")
-                player-card(:player="player" :showRemove="false" :primaryColor="getColor(player)")
+                player-card(:player="player" :showRemove="false" :primaryColor="getColor(player)" :score="player.stats.fantasyScore || 0")
               .column.is-one-third(v-for="placeholder in placeholders")
                 player-card(:showRemove="false")
         section
-          h3 Requirements
+          h3 Remaining Requirements
           .columns
-            .column
-              span Offense:
-              .remaining {{ remainingOffense || 'met' }}
-            .column
-              span Support:
-              .remaining {{ remainingSupport || 'met' }}
-            .column
-              span Tank:
-              .remaining {{ remainingTank || 'met' }}
-            .column
-              span Flex:
-              .remaining {{ remainingFlex || 'met' }}
+            .column.has-text-centered
+              .big-number
+                img(src="images/roles/offense-white.svg" alt="offense")
+                | {{ remainingOffense }}
+            .column.has-text-centered
+              .big-number
+                img(src="images/roles/support-white.svg" alt="support")
+                | {{ remainingSupport }}
+            .column.has-text-centered
+              .big-number
+                img(src="images/roles/tank-white.svg" alt="tank")
+                | {{ remainingTank }}
+            .column.has-text-centered
+              .big-number
+                img(src="images/roles/flex-white.svg" alt="flex")
+                | {{ remainingFlex }}
         h3 Draft Order
         .left-bar-item(v-for="(user, index) in users" :class="{'active-item': user.isActive}")
           .columns
@@ -57,7 +61,7 @@
                 b-field(label="Filter Players")
                   b-input(type="text" v-model="filterText")
               section
-                player-line(:player="player" :key="`${Math.random()}${player.id}`" v-for="player in filteredPlayers" @add-player="addToRoster($event)" :canSelect="canSelect(player)")
+                player-line(:player="player" :key="`${Math.random()}${player.id}`" v-for="player in filteredPlayers" @add-player="addToRoster($event)" :canSelect="canSelect(player)" :roster="roster")
             .column(v-else)
               section
                 p Congrats!  Your team is complete!
@@ -132,6 +136,9 @@ export default {
     players () {
       return this.$store.getters.getPlayers
     },
+    stats () {
+      return this.$store.getters.getStats
+    },
     teams () {
       return this.$store.getters.getTeams
     },
@@ -149,8 +156,8 @@ export default {
       if (this.filterText) fPlayers = fPlayers.filter(player => player.name.toLowerCase().includes(this.filterText.toLowerCase()))
       if (this.filterRole) fPlayers = fPlayers.filter(player => player.attributes.role === this.filterRole)
       if (this.filterTeam) fPlayers = fPlayers.filter(player => player.team === this.filterTeam)
-
-      return fPlayers.slice(0, 20)
+      fPlayers = fPlayers.sort(function (a, b) { return (a.stats.fantasyScore < b.stats.fantasyScore) ? 1 : ((b.stats.fantasyScore < a.stats.fantasyScore) ? -1 : 0) })
+      return fPlayers
     },
     flexPlayers () {
       return this.roster.filter(player => player.attributes.role === 'flex')
@@ -206,6 +213,10 @@ export default {
       const team = this.teams.filter(team => team.abbreviatedName === player.team)[0]
       if (team) return team.primaryColor === '000000' ? team.secondaryColor : team.primaryColor
       return '222'
+    },
+    getScore (player) {
+      const match = this.stats.filter(stat => stat.playerId === player.id)
+      return match[0] ? match[0].fantasyScore : 0
     },
     canSelect (player) {
       // if they met all the requirements, they can pick whoever!
