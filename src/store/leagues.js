@@ -18,10 +18,10 @@ export default {
   },
   actions: {
     getLeagues: (context, payload) => {
-      db.collection(`userLeagues/${payload.userId}`)
+      db.collection('userLeagues').doc(payload)
         .get()
         .then((leagues) => {
-          const theLeagues = leagues.docs.map(league => ({ id: league.id, ...league.data() }))
+          const theLeagues = leagues.data()
           context.commit('SET_LEAGUES', theLeagues)
         })
     }
