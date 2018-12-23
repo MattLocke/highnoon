@@ -2,13 +2,15 @@
   .player-line
     .columns.is-gapless.is-mobile
       .column.is-narrow
+        img(:src="`images/roles/${player.attributes.role || 'flex'}-white.svg`")
+      .column.is-narrow
         img(:src="getLogo(player)")
       .column
         span.has-pointer(@click="showDetails = !showDetails") {{ player.name }}
       .column.is-narrow
-        span.is-proper {{ player.attributes.role }}
+        span.is-proper {{ player.stats.fantasyScore || 'N/A' }}
       .column.is-narrow
-        button.button.is-primary.is-small(@click="$emit('add-player', player)" v-if="canSelect") Select
+        button.button.is-primary.is-small(@click="$emit('add-player', player)" v-if="canSelect && !existsInRoster") Select
         button.button.is-primary.is-small(disabled v-else) Select
     .columns.player-line-details(v-if="showDetails")
       .column
@@ -34,11 +36,20 @@ export default {
     canSelect: {
       type: Boolean,
       default: false
+    },
+    roster: {
+      type: Array,
+      default: () => ([])
     }
   },
   data () {
     return {
       showDetails: false
+    }
+  },
+  computed: {
+    existsInRoster () {
+      return this.roster.find(player => player.id === this.player.id)
     }
   },
   methods: {
