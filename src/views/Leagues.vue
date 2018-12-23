@@ -17,7 +17,7 @@
           .column.is-narrow
             | [LEAGUE_IMAGE]
           .column
-            h1 Set to the first league
+            h1 {{ league.leagueName }}
             .social-icons
               span [TWITTER] [INSTAGRAM] [DISCORD]
         section
@@ -49,8 +49,18 @@
 </template>
 
 <script>
+import LeagueService from '@/services/league'
+
 export default {
   name: 'Leagues',
+  data () {
+    return {
+      league: {
+        leagueMessage: '',
+        leagueImage: ''
+      }
+    }
+  },
   computed: {
     userId () {
       return this.$store.getters.getUserId
@@ -63,6 +73,9 @@ export default {
     },
     fantasyLeagues () {
       return this.leaguesClean.filter(league => league.leagueType === 'standard')
+    },
+    leagueId () {
+      return this.$route.params.leagueId
     }
   },
   watch: {
@@ -71,11 +84,33 @@ export default {
       handler (val) {
         if (val && val.length) this.$store.dispatch('getLeagues', val)
       }
+    },
+    leagueId: {
+      immediate: true,
+      handler (val) {
+        if (val) this.getLeague(val)
+      }
     }
   },
   methods: {
     setLeague (leagueId) {
       this.$router.push({ path: `/leagues/${leagueId}` })
+    },
+    getLeague (leagueId) {
+      this.$store.dispatch('setLoading', true)
+      LeagueService.getLeague(leagueId)
+        .then((league) => {
+          this.league = { ...this.league, ...league }
+          this.$store.dispatch('setLoading', false)
+        })
+        .catch(() => {
+          this.$store.dispatch('setLoading', false)
+          this.$toast.open({
+            message: 'Failure to find that link',
+            type: 'is-danger',
+            position: 'is-bottom'
+          })
+        })
     }
   }
 }

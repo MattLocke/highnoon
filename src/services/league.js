@@ -50,5 +50,11 @@ export default {
     return batch.commit()
       .then(() => leagueId)
       .catch((error) => Promise.reject(error))
+  },
+  getLeague (leagueId) {
+    logger.logIt(`Getting league with id: ${leagueId}`)
+    return db.collection('fantasyLeagues').doc(leagueId)
+      .get()
+      .then(league => league.data())
   }
 }
