@@ -11,10 +11,10 @@
         h3.ow-font(@click="seeStats = !seeStats") {{ player.name }}
         //- p.ow-font.is-hidden-desktop(@click="seeStats = !seeStats") {{ player.name }}
       .column.is-narrow
-        img.role-image(:src="`images/roles/${player.attributes.role}-white.svg`")
+        img.role-image(:src="`images/roles/${player.attributes.role || 'flex'}-white.svg`")
     div(v-if="!seeStats && player")
       img.img(:src="player.headshot")
-      span.fantasy-points.has-text-centered {{ Math.round(Math.random() * (1500 - 700) + 700) }}
+      span.fantasy-points.has-text-centered {{ score }}
     .stats(v-if="seeStats && player")
       span.is-proper Role: {{ player.attributes.role }}
       .heroes(v-if="hasHeroes(player)")
@@ -51,6 +51,10 @@ export default {
     primaryColor: {
       type: String,
       default: '222'
+    },
+    score: {
+      type: Number,
+      default: 0
     }
   },
   data () {
