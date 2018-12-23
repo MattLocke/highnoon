@@ -2,7 +2,7 @@
   #app
     main-menu
     b-loading(:is-full-page="true" :active.sync="isLoading" :can-cancel="false")
-    router-view#rv
+    router-view#rv(:key="$route.fullPath")
 </template>
 
 <script>
@@ -136,6 +136,11 @@ section {
 
 .has-pointer {
   cursor: pointer;
+}
+
+.big-number {
+  font-size: 3rem;
+  line-height: 1.5rem;
 }
 
 .mdi-chevron-right:before {
