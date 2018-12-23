@@ -47,6 +47,9 @@ export default {
     .left-bar-item.active-item {
       background-color: #f99e1a;
     }
+    .left-bar-item.has-pointer:hover {
+      border-right: 2px solid #f99e1a;
+    }
   }
   .left-bar.is-always-open {
     padding-top: .75rem;
