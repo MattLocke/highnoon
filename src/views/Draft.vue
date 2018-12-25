@@ -195,7 +195,10 @@ export default {
     players: {
       immediate: true,
       handler (val) {
-        if (val && val.length === 0) this.$store.dispatch('getPlayers')
+        if (val && val.length === 0) {
+          this.$store.dispatch('setLoading', true)
+          this.$store.dispatch('getPlayers')
+        } else this.$store.dispatch('setLoading', false)
       }
     },
     teams: {
