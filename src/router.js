@@ -6,6 +6,7 @@ import Article from './views/Article'
 import CreateLeague from './views/CreateLeague'
 import CreateNews from './views/CreateNews'
 import Draft from './views/Draft'
+import DraftPreference from './views/DraftPreference'
 import Fantasy from './views/Fantasy'
 import Home from './views/Home'
 import LeagueFantasy from './views/LeagueFantasy'
@@ -42,6 +43,14 @@ let router = new Router({
       path: '/draft',
       name: 'draft',
       component: Draft,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/draftPreference/:leagueId?',
+      name: 'draftPreference',
+      component: DraftPreference,
       meta: {
         requiresAuth: true
       }
