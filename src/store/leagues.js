@@ -21,7 +21,7 @@ export default {
       db.collection('userLeagues').doc(payload)
         .get()
         .then((leagues) => {
-          const theLeagues = leagues.data()
+          const theLeagues = Object.values(leagues.data())
           context.commit('SET_LEAGUES', theLeagues)
         })
     }

@@ -109,6 +109,9 @@ export default {
     },
     canCreateLeague () {
       return this.league.leagueName
+    },
+    userData () {
+      return this.$store.getters.getUserData
     }
   },
   watch: {
@@ -149,7 +152,7 @@ export default {
       }
 
       this.$store.dispatch('setLoading', true)
-      LeagueService.createLeague(leagueData)
+      LeagueService.createLeague(this.userData, leagueData)
         .then((leagueId) => {
           this.$store.dispatch('setLoading', false)
           if (leagueId) this.$router.push({ path: `/leagues/${leagueId}` })
