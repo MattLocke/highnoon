@@ -11,55 +11,56 @@
         section
           router-link.button.is-primary(to="/draft") Test Draft
       .column(v-if="league.leagueName")
-        .columns
-          .column.is-narrow
-            | [LEAGUE_IMAGE]
-          .column
-            h1 {{ league.leagueName }}
-              button.button.is-primary.is-pulled-right.is-small(@click="draftPreference") Draft Preference List
-            .social-icons
-              span [TWITTER] [INSTAGRAM] [DISCORD]
-        section
-          h2 League Message
-            button.button.is-primary.is-small.is-pulled-right(@click="editingMessage = !editingMessage" v-if="isOwner") {{ editingMessage ? 'cancel' : 'edit' }}
-          hr
-          .wrap(v-if="editingMessage")
-            b-field(label="League Message")
-              b-input(type="textarea" v-model="league.message" rows="10")
-            button.button.is-primary(@click="updateLeague") Save Message
-            hr
-          vue-markdown(:source="league.message")
-        //- section
+        .container
           .columns
-            .column.has-text-right
-              h2 TEAM AWESOME
-              span.team-owner SouldrinK
-              .roster
-                .ow-font AIMGOD
-                .ow-font LINKZR
-                .ow-font ARK
-                .ow-font MARO
-                .ow-font BIGGOOSE
-                .ow-font MICKIE
             .column.is-narrow
-              span vs
+              | [LEAGUE_IMAGE]
             .column
-              h2 TEAM OLD MAN DRINK
-              span.team-owner Moosetube
-              .roster
-                .ow-font FLOW3R
-                .ow-font STRIKER
-                .ow-font COOLMATT
-                .ow-font NEKO
-                .ow-font JJONAK
-                .ow-font BOOMBOX
-        section(v-if="canJoinLeague")
-          button.button.is-primary(@click="joinLeague()") Join League
-        section(v-if="isInLeague && !isOwner")
-          confirm-button(buttonText="Leave League" confirmText="Are You Sure?" @confirm-it="leaveLeague()")
-        section
-          h2 League Users
-          p(v-for="user in leagueUsers") {{ user.displayName }}
+              h1 {{ league.leagueName }}
+                button.button.is-primary.is-pulled-right.is-small(@click="draftPreference") Draft Preference List
+              .social-icons
+                span [TWITTER] [INSTAGRAM] [DISCORD]
+          section
+            h2 League Message
+              button.button.is-primary.is-small.is-pulled-right(@click="editingMessage = !editingMessage" v-if="isOwner") {{ editingMessage ? 'cancel' : 'edit' }}
+            hr
+            .wrap(v-if="editingMessage")
+              b-field(label="League Message")
+                b-input(type="textarea" v-model="league.message" rows="10")
+              button.button.is-primary(@click="updateLeague") Save Message
+              hr
+            vue-markdown(:source="league.message")
+          //- section
+            .columns
+              .column.has-text-right
+                h2 TEAM AWESOME
+                span.team-owner SouldrinK
+                .roster
+                  .ow-font AIMGOD
+                  .ow-font LINKZR
+                  .ow-font ARK
+                  .ow-font MARO
+                  .ow-font BIGGOOSE
+                  .ow-font MICKIE
+              .column.is-narrow
+                span vs
+              .column
+                h2 TEAM OLD MAN DRINK
+                span.team-owner Moosetube
+                .roster
+                  .ow-font FLOW3R
+                  .ow-font STRIKER
+                  .ow-font COOLMATT
+                  .ow-font NEKO
+                  .ow-font JJONAK
+                  .ow-font BOOMBOX
+          section(v-if="canJoinLeague")
+            button.button.is-primary(@click="joinLeague()") Join League
+          section(v-if="isInLeague && !isOwner")
+            confirm-button(buttonText="Leave League" confirmText="Are You Sure?" @confirm-it="leaveLeague()")
+          section
+            h2 League Users
+            p(v-for="user in leagueUsers") {{ user.displayName }}
       .column(v-else)
         h1 Please select a league from the left menu.
 </template>
