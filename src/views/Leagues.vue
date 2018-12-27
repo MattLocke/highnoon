@@ -131,6 +131,9 @@ export default {
     }
   },
   methods: {
+    addToRoster (player) {
+      this.roster.push(player)
+    },
     draftPreference () {
       this.$router.push({ path: `/draftPreference/${this.leagueId}` })
     },

@@ -49,7 +49,7 @@ export default {
   },
   computed: {
     existsInRoster () {
-      return this.roster.find(player => player.id === this.player.id)
+      return this.roster ? this.roster.find(player => player.id === this.player.id) : false
     }
   },
   methods: {
