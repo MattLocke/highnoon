@@ -40,7 +40,7 @@ let router = new Router({
       }
     },
     {
-      path: '/draft',
+      path: '/draft/:leagueId',
       name: 'draft',
       component: Draft,
       meta: {

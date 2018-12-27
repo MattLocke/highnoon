@@ -66,6 +66,10 @@
 </template>
 
 <script>
+import firebase from 'firebase/app'
+import 'firebase/database'
+import { fireInit } from '@/fireLogin'
+
 import vueMarkdown from 'vue-markdown'
 
 import LeagueService from '@/services/league'
@@ -82,7 +86,8 @@ export default {
         image: ''
       },
       leagueUsers: [],
-      editingMessage: false
+      editingMessage: false,
+      draftStatus: ''
     }
   },
   computed: {
@@ -128,7 +133,17 @@ export default {
       handler (val) {
         if (val) this.getLeague(val)
       }
+    },
+    draftStatus: {
+      handler (val) {
+        if (val === 'active') {
+          this.$router.push({ path: `/draft/${this.leagueId}` })
+        }
+      }
     }
+  },
+  mounted () {
+    fireInit()
   },
   methods: {
     addToRoster (player) {
@@ -147,6 +162,12 @@ export default {
     },
     leaveLeague () {
       // have to make sure we delete all the nodes.
+    },
+    listenForDraft () {
+      const db = firebase.database()
+      db.ref(`/draftStatus/${this.leagueId}`).on('value', (snapshot) => {
+        this.draftStatus = snapshot.val()
+      })
     },
     setLeague (leagueId) {
       this.$router.push({ path: `/leagues/${leagueId}` })
@@ -172,6 +193,7 @@ export default {
       LeagueService.getLeagueUsers(leagueId)
         .then((users) => {
           this.leagueUsers = Object.values(users)
+          this.listenForDraft()
           this.$store.dispatch('setLoading', false)
         })
     },

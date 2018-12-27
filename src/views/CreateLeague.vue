@@ -76,6 +76,10 @@
 </template>
 
 <script>
+import firebase from 'firebase/app'
+import 'firebase/database'
+import { fireInit } from '@/fireLogin'
+
 import LeagueService from '@/services/league'
 
 export default {
@@ -95,7 +99,8 @@ export default {
         requiredOffense: 2,
         requiredSupport: 2,
         requiredTank: 2,
-        requiredFlex: 0
+        requiredFlex: 0,
+        status: 'unDrafted'
       },
       requiredRoles: 2
     }
@@ -144,6 +149,9 @@ export default {
       }
     }
   },
+  mounted () {
+    fireInit()
+  },
   methods: {
     createLeague () {
       const leagueData = {
@@ -151,9 +159,12 @@ export default {
         ownerId: this.ownerId
       }
 
+      const db = firebase.database()
+
       this.$store.dispatch('setLoading', true)
       LeagueService.createLeague(this.userData, leagueData)
         .then((leagueId) => {
+          db.ref(`/draftStatus/${leagueId}`).set('unDrafted')
           this.$store.dispatch('setLoading', false)
           if (leagueId) this.$router.push({ path: `/leagues/${leagueId}` })
         })
