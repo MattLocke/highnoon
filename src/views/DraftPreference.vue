@@ -143,7 +143,7 @@ export default {
           const db = firebase.database()
           db.ref(`/draftPreference/${this.leagueId}/${this.userId}`).on('value', (snapshot) => {
             console.log('heard back from db...')
-            this.roster = snapshot.val()
+            this.roster = snapshot.val() || []
           })
         }
       }

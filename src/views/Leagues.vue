@@ -21,6 +21,9 @@
               .social-icons
                 span [TWITTER] [INSTAGRAM] [DISCORD]
           section
+            confirm-button(v-if="isOwner && unDrafted" :customClasses="{'is-primary': true,'is-small': true,'is-pulled-right':true}" buttonText="Start Draft" confirmText="Are You Sure?" @confirm-it="startDraft") Start Draft
+            h2 Start Draft
+          section
             h2 League Message
               button.button.is-primary.is-small.is-pulled-right(@click="editingMessage = !editingMessage" v-if="isOwner") {{ editingMessage ? 'cancel' : 'edit' }}
             hr
@@ -69,6 +72,7 @@
 import firebase from 'firebase/app'
 import 'firebase/database'
 import { fireInit } from '@/fireLogin'
+import { shuffle } from 'lodash'
 
 import vueMarkdown from 'vue-markdown'
 
@@ -119,6 +123,9 @@ export default {
     },
     leagueId () {
       return this.$route.params.leagueId
+    },
+    unDrafted () {
+      return this.draftStatus === 'unDrafted'
     }
   },
   watch: {
@@ -195,6 +202,16 @@ export default {
           this.leagueUsers = Object.values(users)
           this.listenForDraft()
           this.$store.dispatch('setLoading', false)
+        })
+    },
+    startDraft () {
+      // we'll need to build out the random order and save that to draftOrder
+      const shuffledUsers = shuffle([...this.leagueUsers])
+      const db = firebase.database()
+      db.ref(`/draftOrder/${this.leagueId}`)
+        .set(shuffledUsers)
+        .then(() => {
+          db.ref(`/draftStatus/${this.leagueId}`).set('active')
         })
     },
     updateLeague () {
