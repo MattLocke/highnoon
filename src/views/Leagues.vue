@@ -11,59 +11,34 @@
         section
           router-link.button.is-primary(to="/draft") Test Draft
       .column(v-if="league.leagueName")
-        .container
-          .columns
-            .column.is-narrow
-              | [LEAGUE_IMAGE]
-            .column
-              h1 {{ league.leagueName }}
-                button.button.is-primary.is-pulled-right.is-small(@click="draftPreference") Draft Preference List
-              .social-icons
-                span [TWITTER] [INSTAGRAM] [DISCORD]
-          section
-            confirm-button(v-if="isOwner && unDrafted" :customClasses="{'is-primary': true,'is-small': true,'is-pulled-right':true}" buttonText="Start Draft" confirmText="Are You Sure?" @confirm-it="startDraft") Start Draft
-            h2 Start Draft
-          section
-            h2 League Message
-              button.button.is-primary.is-small.is-pulled-right(@click="editingMessage = !editingMessage" v-if="isOwner") {{ editingMessage ? 'cancel' : 'edit' }}
+        .columns
+          .column.is-narrow
+            | [LEAGUE_IMAGE]
+          .column
+            h1 {{ league.leagueName }}
+              button.button.is-primary.is-pulled-right.is-small(@click="draftPreference") Draft Preference List
+            .social-icons
+              span [TWITTER] [INSTAGRAM] [DISCORD]
+        section
+          confirm-button(v-if="isOwner && unDrafted" :customClasses="{'is-primary': true,'is-small': true,'is-pulled-right':true}" buttonText="Start Draft" confirmText="Are You Sure?" @confirm-it="startDraft") Start Draft
+          h2 Start Draft
+        section
+          h2 League Message
+            button.button.is-primary.is-small.is-pulled-right(@click="editingMessage = !editingMessage" v-if="isOwner") {{ editingMessage ? 'cancel' : 'edit' }}
+          hr
+          .wrap(v-if="editingMessage")
+            b-field(label="League Message")
+              b-input(type="textarea" v-model="league.message" rows="10")
+            button.button.is-primary(@click="updateLeague") Save Message
             hr
-            .wrap(v-if="editingMessage")
-              b-field(label="League Message")
-                b-input(type="textarea" v-model="league.message" rows="10")
-              button.button.is-primary(@click="updateLeague") Save Message
-              hr
-            vue-markdown(:source="league.message")
-          //- section
-            .columns
-              .column.has-text-right
-                h2 TEAM AWESOME
-                span.team-owner SouldrinK
-                .roster
-                  .ow-font AIMGOD
-                  .ow-font LINKZR
-                  .ow-font ARK
-                  .ow-font MARO
-                  .ow-font BIGGOOSE
-                  .ow-font MICKIE
-              .column.is-narrow
-                span vs
-              .column
-                h2 TEAM OLD MAN DRINK
-                span.team-owner Moosetube
-                .roster
-                  .ow-font FLOW3R
-                  .ow-font STRIKER
-                  .ow-font COOLMATT
-                  .ow-font NEKO
-                  .ow-font JJONAK
-                  .ow-font BOOMBOX
-          section(v-if="canJoinLeague")
-            button.button.is-primary(@click="joinLeague()") Join League
-          section(v-if="isInLeague && !isOwner")
-            confirm-button(buttonText="Leave League" confirmText="Are You Sure?" @confirm-it="leaveLeague()")
-          section
-            h2 League Users
-            p(v-for="user in leagueUsers") {{ user.displayName }}
+          vue-markdown(:source="league.message")
+        section(v-if="canJoinLeague")
+          button.button.is-primary(@click="joinLeague()") Join League
+        section(v-if="isInLeague && !isOwner")
+          confirm-button(buttonText="Leave League" confirmText="Are You Sure?" @confirm-it="leaveLeague()")
+        section
+          h2 League Users
+          p(v-for="user in leagueUsers") {{ user.displayName }}
       .column(v-else)
         h1 Please select a league from the left menu.
 </template>
@@ -126,9 +101,21 @@ export default {
     },
     unDrafted () {
       return this.draftStatus === 'unDrafted'
-    }
+    },
+    players () {
+      return this.$store.getters.getPlayers
+    },
   },
   watch: {
+    players: {
+      immediate: true,
+      handler (val) {
+        if (val && val.length === 0) {
+          this.$store.dispatch('setLoading', true)
+          this.$store.dispatch('getPlayers')
+        } else this.$store.dispatch('setLoading', false)
+      }
+    },
     userId: {
       immediate: true,
       handler (val) {
@@ -173,7 +160,7 @@ export default {
     listenForDraft () {
       const db = firebase.database()
       db.ref(`/draftStatus/${this.leagueId}`).on('value', (snapshot) => {
-        this.draftStatus = snapshot.val()
+        this.draftStatus = snapshot.val() || 'unDrafted'
       })
     },
     setLeague (leagueId) {
@@ -208,8 +195,17 @@ export default {
       // we'll need to build out the random order and save that to draftOrder
       const shuffledUsers = shuffle([...this.leagueUsers])
       const db = firebase.database()
+      const draft = {
+        selectedPlayers: [],
+        players: this.players,
+        activeDrafter: 0
+      }
+      this.$store.dispatch('setLoading', true)
       db.ref(`/draftOrder/${this.leagueId}`)
         .set(shuffledUsers)
+        .then(() => {
+          db.ref(`/draft/${this.leagueId}`).set(draft)
+        })
         .then(() => {
           db.ref(`/draftStatus/${this.leagueId}`).set('active')
         })

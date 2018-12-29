@@ -77,6 +77,10 @@
 </template>
 
 <script>
+import firebase from 'firebase/app'
+import 'firebase/database'
+import { fireInit } from '@/fireLogin'
+
 import PlayerCard from '@/components/PlayerCard'
 import PlayerLine from '@/views/draft/PlayerLine'
 import TrashTalk from '@/views/draft/TrashTalk'
@@ -196,6 +200,12 @@ export default {
     },
     totalRemaining () {
       return this.remainingFlex + this.remainingOffense + this.remainingSupport + this.remainingTank
+    },
+    userId () {
+      return this.$store.getters.getUserId
+    },
+    leagueId () {
+      return this.$route.params.leagueId
     }
   },
   watch: {
@@ -208,6 +218,12 @@ export default {
         } else this.$store.dispatch('setLoading', false)
       }
     },
+    userId: {
+      immediate: true,
+      handler (val) {
+        if (val) this.getRoster()
+      }
+    },
     teams: {
       immediate: true,
       handler (val) {
@@ -217,7 +233,18 @@ export default {
   },
   methods: {
     addToRoster (player) {
-      this.roster.push(player)
+      const db = firebase.database()
+      const tmp = [...this.roster]
+      tmp.push(player)
+
+      db.ref(`/draftPicks/${this.leagueId}/${this.userId}`)
+        .set(tmp)
+    },
+    getRoster () {
+      const db = firebase.database()
+      db.ref(`/draftPicks/${this.leagueId}/${this.userId}`).on('value', (snapshot) => {
+        this.roster = snapshot.val() || []
+      })
     },
     getColor (player) {
       const team = this.teams.filter(team => team.abbreviatedName === player.team)[0]
