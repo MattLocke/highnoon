@@ -66,6 +66,13 @@
               section
                 p Congrats!  Your team is complete!
             .column
+              .columns.is-multiline
+                .column.is-one-fifth.draft-user(v-for="(user, index) in users" :class="{'active-item': user.isActive}")
+                  .columns
+                    .column.is-narrow
+                      span {{ index + 1 }}
+                    .column
+                      span {{ user.userDisplayName }}
               trash-talk
 </template>
 
@@ -247,3 +254,10 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.draft-user {
+  background-color: rgba(255,255,255,0.1);
+  margin: .25rem;
+}
+</style>

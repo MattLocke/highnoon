@@ -1,0 +1,29 @@
+// See which roles are filled
+(roster.forEach -> count up each role)
+offenseFilled = 
+tankFilled =
+supportFilled = 
+flexFilled = 
+
+// If one is not filled, (>0) then go the preference list
+console.table(_.differenceWith(players, selected, _.isEqual))
+go through preference list and do a diff between it and selected - so the preference list is good to go?
+go through players and do a diff between it and selected
+
+if we need a role, iterate through preference list.  If there's nothing there, go through players
+first hit becomes the player.  
+
+Save the player to that players draftPicks
+update the active player.
+
+
+=============================
+SNAKE Feature (listens on "draftPicks" for an update)
+=======================
+direction: forward
+index = direction = 'forward' ? index += 1 : index -= 1
+if (index === -1) index = 0 && direction = forward
+else (index === users.length) index-- && direction = backward
+// Check to see if all the rosters are full
+// if they are, end the draft
+// otherwise, continue
