@@ -19,8 +19,8 @@
               button.button.is-primary.is-pulled-right.is-small(@click="draftPreference") Draft Preference List
             .social-icons
               span [TWITTER] [INSTAGRAM] [DISCORD]
-        section
-          confirm-button(v-if="isOwner && unDrafted" :customClasses="{'is-primary': true,'is-small': true,'is-pulled-right':true}" buttonText="Start Draft" confirmText="Are You Sure?" @confirm-it="startDraft") Start Draft
+        section(v-if="isOwner && unDrafted")
+          confirm-button(:customClasses="{'is-primary': true,'is-small': true,'is-pulled-right':true}" buttonText="Start Draft" confirmText="Are You Sure?" @confirm-it="startDraft") Start Draft
           h2 Start Draft
         section
           h2 League Message
@@ -104,7 +104,7 @@ export default {
     },
     players () {
       return this.$store.getters.getPlayers
-    },
+    }
   },
   watch: {
     players: {
@@ -151,7 +151,7 @@ export default {
       LeagueService.joinLeague(this.userData, this.league)
         .then(() => {
           this.$store.dispatch('setLoading', false)
-          this.$store.dispatch('getLeagues', this.leagueId)
+          location.reload()
         })
     },
     leaveLeague () {
@@ -159,8 +159,9 @@ export default {
     },
     listenForDraft () {
       const db = firebase.database()
-      db.ref(`/draftStatus/${this.leagueId}`).on('value', (snapshot) => {
-        this.draftStatus = snapshot.val() || 'unDrafted'
+      db.ref(`/draft/${this.leagueId}`).on('value', (snapshot) => {
+        const draft = snapshot.val()
+        this.draftStatus = draft ? draft.status || 'unDrafted' : 'unDrafted'
       })
     },
     setLeague (leagueId) {
@@ -198,16 +199,16 @@ export default {
       const draft = {
         selectedPlayers: [],
         players: this.players,
-        activeDrafter: 0
+        activeDrafter: 0,
+        direction: 'forward',
+        status: 'active',
+        doneProcessing: true
       }
       this.$store.dispatch('setLoading', true)
       db.ref(`/draftOrder/${this.leagueId}`)
         .set(shuffledUsers)
         .then(() => {
           db.ref(`/draft/${this.leagueId}`).set(draft)
-        })
-        .then(() => {
-          db.ref(`/draftStatus/${this.leagueId}`).set('active')
         })
     },
     updateLeague () {
