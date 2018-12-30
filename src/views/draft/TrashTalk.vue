@@ -14,31 +14,50 @@
 </template>
 
 <script>
+import firebase from 'firebase/app'
+import 'firebase/database'
+
 export default {
   data () {
     return {
-      messages: [
-        {
-          userDisplayName: 'SouldrinK',
-          message: 'Welcome to the trash talk!'
-        }
-      ],
+      messages: [],
       newMessage: ''
     }
   },
   computed: {
     user () {
       return this.$store.getters.getUserData
+    },
+    leagueId () {
+      return this.$route.params.leagueId
+    }
+  },
+  watch: {
+    leagueId: {
+      immediate: true,
+      handler (val) {
+        if (val) this.getMessages()
+      }
     }
   },
   methods: {
     addMessage () {
+      const db = firebase.database()
       const messageObject = {
         userDisplayName: this.user.displayName,
-        message: this.newMessage
+        message: this.newMessage,
+        when: new Date().getTime()
       }
-      this.messages.unshift(messageObject)
-      this.newMessage = ''
+      db.ref(`/draftMessages/${this.leagueId}`).push(messageObject)
+        .then(() => {
+          this.newMessage = ''
+        })
+    },
+    getMessages () {
+      const db = firebase.database()
+      db.ref(`/draftMessages/${this.leagueId}`).on('child_added', (snapshot) => {
+        this.messages.unshift(snapshot.val())
+      })
     }
   }
 }
