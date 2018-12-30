@@ -1,5 +1,5 @@
 <template lang="pug">
-  .left-bar.column.is-hidden-mobile(:class="getClass")
+  .left-bar.column(:class="getClass")
     .columns.is-mobile(v-if="showClose")
       .column
       .column.is-narrow(@click="isOpen = !isOpen")
@@ -22,7 +22,7 @@ export default {
   },
   computed: {
     getClass () {
-      if (!this.showClose) return { 'is-one-quarter': true, 'is-always-open': true }
+      if (!this.showClose) return { 'is-one-quarter-desktop': true, 'is-always-open': true }
       return this.isOpen ? { 'is-one-quarter': true } : { 'is-narrow': true }
     }
   }
