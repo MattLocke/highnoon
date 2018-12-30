@@ -91,7 +91,7 @@ export default {
     height: 100%;
     position: relative;
     overflow: hidden;
-    min-width: 120px;
+    min-width: 80px;
     .player-title, .fantasy-points {
       background-color: #333;
       padding-top: .25rem;
@@ -104,10 +104,11 @@ export default {
       margin-bottom: -.25rem;
       position: relative;
       z-index: 3;
-      height: 2rem;
+      height: 1.2rem;
+      line-height: .6rem;
     }
     h3 {
-      font-size: 1.4rem;
+      font-size: 1.2rem;
       line-height: 1.6rem;
     }
     .stats {
@@ -123,9 +124,10 @@ export default {
       cursor: pointer;
     }
     .role-image {
-      height: 1.6rem;
-      width: 1.6rem;
-      line-height: 1.6rem;
+      height: 1.2rem;
+      width: 1.2rem;
+      line-height: 1.2rem;
+      margin-bottom: -3px;
     }
     .img {
       z-index: 2;

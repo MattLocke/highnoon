@@ -37,50 +37,49 @@
             .column
               span {{ user.displayName }}
       .column
-        .container
-          h2 Draft For Some Awesome League
-          //- Choose your player
-          .columns.is-desktop(v-if="myTurn")
-            .column(v-if="roster.length < 9")
-              section
-                h3 Choose Your Player
-              section
-                .columns
-                  .column.is-narrow
-                    b-field(label="Filter Team")
-                      b-select(placeholder="Filter By Team" v-model="filterTeam")
-                        option(value="") All
-                        option(v-for="team in teams" :value="team.abbreviatedName") {{ team.name }}
-                  .column.is-narrow
-                    b-field(label="Filter Role")
-                      b-select(placeholder="Filter By Role" v-model="filterRole")
-                        option(value="") All
-                        option(value="flex") Flex
-                        option(value="offense") Offense
-                        option(value="support") Support
-                        option(value="tank") Tank
-                b-field(label="Filter Players")
-                  b-input(type="text" v-model="filterText")
-              section
-                player-line(:player="player" :key="`${Math.random()}${player.id}`" v-for="player in filteredPlayers" @add-player="addToRoster($event)" :canSelect="canSelect(player)" :roster="selectedPlayers")
-            .column(v-else)
-              section
-                p Congrats!  Your team is complete!
-            .column
-              .columns.is-multiline
-                .column.is-narrow.draft-user(v-for="(user, index) in users" :class="{'active-item': index === draft.activeDrafter}")
-                  span {{ index + 1 }}. {{ user.displayName }}
-              trash-talk
-          .column(v-else)
-            //- See how the draft is going
+        h2 Draft For Some Awesome League
+        //- Choose your player
+        .columns.is-desktop(v-if="myTurn")
+          .column(v-if="roster.length < 9")
             section
-              h3 Currently Drafting:
-                span.orange  {{ users[draft.activeDrafter].displayName }}
-            .columns.is-multiline.is-mobile
-              .column.is-one-fifth-desktop.is-half-mobile(v-for="(userPicks, index) in picks")
-                h3(:class="{'orange': index == users[draft.activeDrafter].userId}") {{ getUserName(index) }}
-                ul
-                  player-card(v-for="pick in userPicks" :key="pick.id" :player="pick" :showRemove="false" :primaryColor="getColor(pick)" :score="pick.stats.fantasyScore || 0" :hidePhoto="true") {{ pick.name }}
+              h3 Choose Your Player
+            section
+              .columns
+                .column.is-narrow
+                  b-field(label="Filter Team")
+                    b-select(placeholder="Filter By Team" v-model="filterTeam")
+                      option(value="") All
+                      option(v-for="team in teams" :value="team.abbreviatedName") {{ team.name }}
+                .column.is-narrow
+                  b-field(label="Filter Role")
+                    b-select(placeholder="Filter By Role" v-model="filterRole")
+                      option(value="") All
+                      option(value="flex") Flex
+                      option(value="offense") Offense
+                      option(value="support") Support
+                      option(value="tank") Tank
+              b-field(label="Filter Players")
+                b-input(type="text" v-model="filterText")
+            section
+              player-line(:player="player" :key="`${Math.random()}${player.id}`" v-for="player in filteredPlayers" @add-player="addToRoster($event)" :canSelect="canSelect(player)" :roster="selectedPlayers")
+          .column(v-else)
+            section
+              p Congrats!  Your team is complete!
+          .column.is-hidden-touch
+            .columns.is-multiline
+              .column.is-narrow.draft-user(v-for="(user, index) in users" :class="{'active-item': index === draft.activeDrafter}")
+                span {{ index + 1 }}. {{ user.displayName }}
+            trash-talk
+        .column(v-else)
+          //- See how the draft is going
+          section
+            h3 Currently Drafting:
+              span.orange  {{ users[draft.activeDrafter].displayName }}
+          .columns.is-multiline.is-mobile
+            .column.is-one-fifth-desktop.is-half-mobile(v-for="(userPicks, index) in picks")
+              h3(:class="{'orange': index == users[draft.activeDrafter].userId}") {{ getUserName(index) }}
+              ul
+                player-card(v-for="pick in userPicks" :key="pick.id" :player="pick" :showRemove="false" :primaryColor="getColor(pick)" :score="pick.stats.fantasyScore || 0" :hidePhoto="true") {{ pick.name }}
       draft-drawer(:roster="roster")
 </template>
 

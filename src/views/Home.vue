@@ -27,7 +27,7 @@
         .wrap(v-else)
           news-item(v-for="article in latestArticles" :key="article.id" :article="article" v-on:set-article="setArticle")
       .column
-        .wrap.container
+        .wrap
           article-viewer(:featuredArticle="featuredArticle")
 </template>
 
