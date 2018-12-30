@@ -1,85 +1,151 @@
-const functions = require('firebase-functions');
+const functions = require('firebase-functions')
+const admin = require('firebase-admin')
+admin.initializeApp()
 
-exports.facilitateDraftPick = functions.database.ref('/draft/{leagueId}/activeDrafter')
-  .onUpdate((snapshot, context) => {
+exports.matchlock = null
+
+exports.facilitateDraftPick = functions.database.ref('/draftPicks/{leagueId}')
+  .onUpdate((change, context) => {
     // get the draft users, and set the correct one to active
     const leagueId = context.params.leagueId
-    let activeDrafter = snapshot.val()
-    let userId = ''
-    let preferenceList = []
-    let theDraft = {}
+    const picks = change.after.val()
+    let draftOrder = []
+    let draft = {}
+    // get the draft
+    return admin.database().ref(`/draft/${leagueId}`).once('value')
+      .then((snapshot) => {
+        console.log(`Setting the draft for league: ${leagueId}`)
+        draft = snapshot.val()
+        return null
+      })
+      // get the draftOrder
+      .then(() => {
+        return admin.database().ref(`/draftOrder/${leagueId}`).once('value')
+          .then((snapshot) => {
+            console.log(`Getting the draft order for league: ${leagueId}`)
+            draftOrder = snapshot.val()
+            return null
+          })
+          .catch((error) => {
+            console.log(`Error getting the draft order: ${error}`)
+          })
+      })
+      .then(() => {
+        let draftPosition = draft.activeDrafter
+        let totalPicks = 0
+        const localDraft = draft
+        localDraft.doneProcessing = true
 
-    return functions.database.ref(`/draftOrder/${leagueId}`)
-      .once('value').then((order) => {
-        const theOrder = order.val()
-        // we get the ID from the indexed draftOrder
-        if (activeDrafter > (theOrder.length - 1)) activeDrafter = 0
-        userId = theOrder[activeDrafter].userId
-        // we then get draft from the params above, and pass them into the choosePreference method
-        // if we have a match, cool.  We'll go ahead an place their pick, if we don't
-        // we'll take the top one available inside the draft method.  
-        // we'll have to splice the players to make sure everything is solid
-      })
-      .then(() => {
-        // get the draft object
-        return functions.database.ref(`/draft/${leagueId}`).once('value')
-          .then((snapshot) => {
-            theDraft = snapshot.val()
-          })
-      })
-      .then(() => {
-        // get the preference list
-        return functions.database.ref(`/draftPreference/${leagueId}/${userId}`).once('value')
-          .then((snapshot) => {
-            preferenceList = snapshot.val()
-          })
-      })
-      .then(() => {
-        // see if they have a preference list, if they do - make a pick
-        if (preferenceList.length) {
-          const foundPlayer = choosePreference(theDraft.availablePlayers, preferenceList)
-          if (foundPlayer) {
-            // we have a player, time to go through the motions.
-            theDraft.selectedPlayers.push(foundPlayer)
-            return functions.database.ref(`/draft/${leagueId}`).set(theDraft)
-          }
-          // no player found, but they have a preference list - so proceed!
-          // find the top player
+        console.log(`Draft position is currently: ${draftPosition}`)
+
+        if (localDraft.direction === 'forward') {
+          draftPosition = draftPosition + 1
+          console.log('Moving draft forward')
+        } else {
+          draftPosition = draftPosition - 1
+          console.log('Moving draft backward')
         }
-        return Promise.resolve(null)
+
+        if (draftPosition === -1) {
+          draftPosition = 0
+          localDraft.direction = 'forward'
+        }
+
+        if (draftPosition === draftOrder.length) {
+          draftPosition = draftOrder.length - 1
+          localDraft.direction = 'reverse'
+        }
+
+        console.log(`Draft position is now: ${draftPosition}`)
+
+        localDraft.activeDrafter = draftPosition
+
+        Object.keys(picks).forEach((userPicks) => {
+          totalPicks += picks[userPicks].length
+        })
+
+        // If we're maxed on picks, just end the draft
+        if (totalPicks >= (draftOrder.length * 9)) {
+          console.log(`Ending the draft for league: ${leagueId} because total picks (${totalPicks}) was greater than or equal to the max of: ${draftOrder.length * 9}.`)
+          return admin.database().ref(`/draft/${leagueId}/status`).set('completed')
+        }
+        console.log(`Setting the draft position to ${draftPosition} for league: ${leagueId} with a doneProcessing value of: ${localDraft.doneProcessing}`)
+        return admin.database().ref(`/draft/${leagueId}`).set(localDraft)
       })
-    // if the active user has a preference list, then snag the available players and choose the best one
-    // advance the active user
+      .catch((error) => {
+        console.log(`There was an error! ${error}`)
+      })
   })
 
-  exports.handleDraftStatus = functions.database.ref('/draftStatus/{leagueId}')
-  .onUpdate((snapshot, context) => {
+  exports.facilitateDraftPickCreate = functions.database.ref('/draftPicks/{leagueId}')
+  .onCreate((snapshot, context) => {
     // get the draft users, and set the correct one to active
     const leagueId = context.params.leagueId
-    const status = snapshot.val()
+    const picks = snapshot.val()
+    let draftOrder = []
+    let draft = {}
+    // get the draft
+    return admin.database().ref(`/draft/${leagueId}`).once('value')
+      .then((snapshot) => {
+        console.log(`Setting the draft for league: ${leagueId}`)
+        draft = snapshot.val()
+        return null
+      })
+      // get the draftOrder
+      .then(() => {
+        return admin.database().ref(`/draftOrder/${leagueId}`).once('value')
+          .then((snapshot) => {
+            console.log(`Getting the draft order for league: ${leagueId}`)
+            draftOrder = snapshot.val()
+            return null
+          })
+          .catch((error) => {
+            console.log(`Error getting the draft order: ${error}`)
+          })
+      })
+      .then(() => {
+        let draftPosition = draft.activeDrafter
+        let totalPicks = 0
+        const localDraft = draft
+        localDraft.doneProcessing = true
 
-    if (status === 'active') {
-      // we have a new draft starting.  Time to set the active drafter.
-      return functions.database.ref(`/draft/${leagueId}`).once('value')
-        .then((draft) => {
-          const theDraft = draft.val()
-          theDraft.activeDrafter = 0
-          return functions.database.ref(`/draft/${leagueId}`).set(theDraft)
+        console.log(`Draft position is currently: ${draftPosition}`)
+
+        if (localDraft.direction === 'forward') {
+          draftPosition = draftPosition + 1
+          console.log('Moving draft forward')
+        } else {
+          draftPosition = draftPosition - 1
+          console.log('Moving draft backward')
+        }
+
+        if (draftPosition === -1) {
+          draftPosition = 0
+          localDraft.direction = 'forward'
+        }
+
+        if (draftPosition === draftOrder.length) {
+          draftPosition = draftOrder.length - 1
+          localDraft.direction = 'reverse'
+        }
+
+        console.log(`Draft position is now: ${draftPosition}`)
+
+        localDraft.activeDrafter = draftPosition
+
+        Object.keys(picks).forEach((userPicks) => {
+          totalPicks += picks[userPicks].length
         })
-    }
-    if (status === 'completed') {
-      // we need to move shit over, and delete a bunch of nodes
-      return Promise.resolve(null)
-    }
-    return Promise.resolve(null)
-    // if the active user has a preference list, then snag the available players and choose the best one
-    // advance the active user
-  })
 
-function choosePreference (players, preference) {
-  let found = null
-  preference.forEach((choice) => {
-    if (!found) found = players.find(player => player.name === choice.name)
+        // If we're maxed on picks, just end the draft
+        if (totalPicks >= (draftOrder.length * 9)) {
+          console.log(`Ending the draft for league: ${leagueId} because total picks (${totalPicks}) was greater than or equal to the max of: ${draftOrder.length * 9}.`)
+          return admin.database().ref(`/draft/${leagueId}/status`).set('completed')
+        }
+        console.log(`Setting the draft position to ${draftPosition} for league: ${leagueId} with a doneProcessing value of: ${localDraft.doneProcessing}`)
+        return admin.database().ref(`/draft/${leagueId}`).set(localDraft)
+      })
+      .catch((error) => {
+        console.log(`There was an error! ${error}`)
+      })
   })
-  return found
-}
