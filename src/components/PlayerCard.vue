@@ -3,7 +3,7 @@
     .columns.player-title.is-marginless.is-gapless.is-mobile(v-if="!player")
       .column
         h3.ow-font N/A
-    div(v-if="!player")
+    div.is-hidden-mobile(v-if="!player && !hidePhoto")
       img.img(src="https://bnetcmsus-a.akamaihd.net/cms/page_media/S02042JXNHF81515718127993.png")
       span.fantasy-points.has-text-centered 0
     .columns.player-title.is-marginless.is-gapless.is-mobile(v-else)
@@ -12,7 +12,7 @@
         //- p.ow-font.is-hidden-desktop(@click="seeStats = !seeStats") {{ player.name }}
       .column.is-narrow
         img.role-image(:src="`images/roles/${player.attributes.role || 'flex'}-white.svg`")
-    div(v-if="!seeStats && player")
+    div.is-hidden-mobile(v-if="!seeStats && player && !hidePhoto")
       img.img(:src="player.headshot")
       span.fantasy-points.has-text-centered {{ score }}
     .stats(v-if="seeStats && player")
@@ -34,11 +34,15 @@ export default {
   props: {
     placeholder: {
       type: Boolean,
-      required: false
+      default: false
     },
     player: {
       type: Object,
       default: null
+    },
+    hidePhoto: {
+      type: Boolean,
+      default: false
     },
     showStats: {
       type: Boolean,
@@ -87,6 +91,7 @@ export default {
     height: 100%;
     position: relative;
     overflow: hidden;
+    min-width: 120px;
     .player-title, .fantasy-points {
       background-color: #333;
       padding-top: .25rem;
