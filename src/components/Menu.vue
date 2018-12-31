@@ -60,7 +60,9 @@ export default {
   },
   methods: {
     canSee (menuItem) {
+      if (this.profile.isAdmin) return true
       if (menuItem.requiresAuth && !this.currentUser) return false
+      if (menuItem.requiresAlpha && !this.profile.isAlpha) return false
       return true
     },
     logOut () {
