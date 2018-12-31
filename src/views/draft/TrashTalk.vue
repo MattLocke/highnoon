@@ -1,6 +1,6 @@
 <template lang="pug">
   section.trashtalk
-    h3 Trash Talk
+    h2 Trash Talk
     b-field
       b-input(maxlength="200" type="textarea" v-model="newMessage")
     b-field
