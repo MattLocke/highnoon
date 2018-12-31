@@ -30,6 +30,8 @@
           button.button.is-primary(@click="joinLeague") Join League
         section(v-if="isInLeague && !isOwner")
           confirm-button(buttonText="Leave League" confirmText="Are You Sure?" @confirm-it="leaveLeague")
+        section(v-if="draftComplete")
+          //- Show the "matchups"
         section
           h2 League Users
           p(v-for="user in leagueUsers") {{ user.displayName }}
