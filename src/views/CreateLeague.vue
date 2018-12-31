@@ -15,13 +15,15 @@
             img.img(src="/images/league-unlimited.jpg" alt="unlimited league icon")
             p Unlimited league sizes.  No roster restrictions.  Build your perfect team and see how well you score.  No head to head matchup, instead the points each week will be used for leaderboards.
             .has-text-centered
-              button.button.is-primary(@click="league.leagueType = 'unlimited'") Choose Unlimited
+              //- button.button.is-primary(@click="league.leagueType = 'unlimited'") Choose Unlimited
+              button.button.is-primary(disabled) Choose Unlimited
           .column
             h2 Pick 'em
             img.img(src="/images/league-pickem.jpg" alt="pickem league icon")
             p Each week choose which team will win each of the matchups.  This is more simple than we offered in Season 1 due to the overhead running full-fledged fantasy leagues brings to the table!
             .has-text-centered
-              button.button.is-primary(@click="league.leagueType = 'pickem'") Choose Pick'Em
+              //- button.button.is-primary(@click="league.leagueType = 'pickem'") Choose Pick'Em
+              button.button.is-primary(disabled) Choose Pick'Em
       section(v-show="league.leagueType")
         .columns
           .column
