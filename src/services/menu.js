@@ -9,7 +9,13 @@ export default {
         name: 'Players',
         where: '/fantasy',
         requiresAuth: true
-      }
+      },
+      {
+        name: 'Leagues',
+        where: '/leagues',
+        requiresAuth: true,
+        requiresAlpha: true
+      },
     ]
     const devMenu = [
       {
