@@ -9,6 +9,8 @@
         section(v-if="userData.isAdmin || userData.isAlpha")
           router-link.button.is-primary(to="/createLeague") Create League
       .column(v-if="league.leagueName")
+        section
+          p.orange This is alpha-only.  This page will continue to evolve as I work on it.  For now you can invite other alpha members to join your league, do a mock draft, and upon completion of that draft you'll be taken back here.  I'll be adding ways to reset the draft, see the schedule/etc over the next few days.  Stay tuned!  Deadlines are a loomin'!
         h1 {{ league.leagueName }}
           button.button.is-primary.is-pulled-right.is-small(@click="draftPreference") Draft Preference List
         .social-icons
