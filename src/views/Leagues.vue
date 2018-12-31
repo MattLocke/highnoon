@@ -6,19 +6,13 @@
           h2 Fantasy Leagues
           .left-bar-item(v-if="!fantasyLeagues.length") You currently have no Fantasy leagues.
           .left-bar-item.has-pointer(:class="{'active-item': $route.params.leagueId == league.leagueId}" v-for="league in fantasyLeagues" :key="league.leagueId" @click="setLeague(league.leagueId)") {{ league.leagueName }}
-        section
+        section(v-if="userData.isAdmin || userData.isAlpha")
           router-link.button.is-primary(to="/createLeague") Create League
-        section
-          router-link.button.is-primary(to="/draft") Test Draft
       .column(v-if="league.leagueName")
-        .columns
-          .column.is-narrow
-            | [LEAGUE_IMAGE]
-          .column
-            h1 {{ league.leagueName }}
-              button.button.is-primary.is-pulled-right.is-small(@click="draftPreference") Draft Preference List
-            .social-icons
-              span [TWITTER] [INSTAGRAM] [DISCORD]
+        h1 {{ league.leagueName }}
+          button.button.is-primary.is-pulled-right.is-small(@click="draftPreference") Draft Preference List
+        .social-icons
+          span [TWITTER] [INSTAGRAM] [DISCORD]
         section(v-if="isOwner && unDrafted")
           confirm-button(:customClasses="{'is-primary': true,'is-small': true,'is-pulled-right':true}" buttonText="Start Draft" confirmText="Are You Sure?" @confirm-it="startDraft") Start Draft
           h2 Start Draft
@@ -32,10 +26,10 @@
             button.button.is-primary(@click="updateLeague") Save Message
             hr
           vue-markdown(:source="league.message")
-        section(v-if="canJoinLeague")
-          button.button.is-primary(@click="joinLeague()") Join League
+        section(v-if="canJoinLeague && (userData.isAdmin || userData.isAlpha)")
+          button.button.is-primary(@click="joinLeague") Join League
         section(v-if="isInLeague && !isOwner")
-          confirm-button(buttonText="Leave League" confirmText="Are You Sure?" @confirm-it="leaveLeague()")
+          confirm-button(buttonText="Leave League" confirmText="Are You Sure?" @confirm-it="leaveLeague")
         section
           h2 League Users
           p(v-for="user in leagueUsers") {{ user.displayName }}
@@ -194,21 +188,27 @@ export default {
     },
     startDraft () {
       // we'll need to build out the random order and save that to draftOrder
-      const shuffledUsers = shuffle([...this.leagueUsers])
-      const db = firebase.database()
-      const draft = {
-        selectedPlayers: [],
-        players: this.players,
-        activeDrafter: 0,
-        direction: 'forward',
-        status: 'active',
-        doneProcessing: true
-      }
       this.$store.dispatch('setLoading', true)
-      db.ref(`/draftOrder/${this.leagueId}`)
-        .set(shuffledUsers)
-        .then(() => {
-          db.ref(`/draft/${this.leagueId}`).set(draft)
+      let tmpUsers = []
+      LeagueService.getLeagueUsers(this.leagueId)
+        .then((users) => {
+          tmpUsers = Object.values(users)
+          const shuffledUsers = shuffle([...tmpUsers])
+          const db = firebase.database()
+          const draft = {
+            selectedPlayers: [],
+            players: this.players,
+            activeDrafter: 0,
+            direction: 'forward',
+            status: 'active',
+            doneProcessing: true
+          }
+          this.$store.dispatch('setLoading', true)
+          db.ref(`/draftOrder/${this.leagueId}`)
+            .set(shuffledUsers)
+            .then(() => {
+              db.ref(`/draft/${this.leagueId}`).set(draft)
+            })
         })
     },
     updateLeague () {
