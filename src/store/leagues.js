@@ -18,12 +18,19 @@ export default {
   },
   actions: {
     getLeagues: (context, payload) => {
-      db.collection('userLeagues').doc(payload)
-        .get()
-        .then((leagues) => {
-          const theLeagues = Object.values(leagues.data())
-          context.commit('SET_LEAGUES', theLeagues)
-        })
+      if (payload) {
+        db.collection('userLeagues').doc(payload)
+          .get()
+          .then((leagues) => {
+            let theLeagues = []
+            if (leagues.exists) {
+              theLeagues = Object.values(leagues.data())
+            }
+            context.commit('SET_LEAGUES', theLeagues)
+          })
+      } else {
+        context.commit('SET_LEAGUES', [])
+      }
     }
   },
   getters: {
