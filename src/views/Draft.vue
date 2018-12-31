@@ -2,9 +2,10 @@
   .draft
     .columns.is-marginless
       left-bar(:showClose="false")
-        h2 Your Roster - {{ roster.length }} of 9
         section
-          .roster-section
+          h2 Your Roster - {{ roster.length }} of 9
+            arrow(:isLeft="true" v-model="showRoster")
+          .roster-section(v-show="showRoster")
             .columns.is-multiline.is-mobile
               .column.is-one-third-desktop.is-half-mobile(v-for="player in roster")
                 player-card(:player="player" :showRemove="false" :primaryColor="getColor(player)" :score="player.stats.fantasyScore || 0")
@@ -12,7 +13,8 @@
                 player-card(:showRemove="false")
         section
           h3 Remaining Requirements
-          .columns.is-mobile
+            arrow(:isLeft="true" v-model="showRequirements")
+          .columns.is-mobile(v-show="showRequirements")
             .column.has-text-centered
               .big-number
                 img(src="images/roles/offense-white.svg" alt="offense")
@@ -29,19 +31,23 @@
               .big-number
                 img(src="images/roles/flex-white.svg" alt="flex")
                 | {{ remaining.flex }}
-        h3 Draft Order
-        .left-bar-item(v-for="(user, index) in users" :class="{'active-item': index === draft.activeDrafter}")
-          .columns.is-mobile
-            .column.is-narrow
-              span {{ index + 1 }}
-            .column
-              span {{ user.displayName }}
+        section
+          h3 Draft Order
+            arrow(:isLeft="true" v-model="showDraftOrder")
+          .wrap(v-show="showDraftOrder")
+            .left-bar-item(v-for="(user, index) in users" :class="{'active-item': index === draft.activeDrafter}")
+              .columns.is-mobile
+                .column.is-narrow
+                  span {{ index + 1 }}
+                .column
+                  span {{ user.displayName }}
       .column
-        h2 Draft For Some Awesome League
         //- Choose your player
         .columns.is-desktop(v-if="myTurn")
           .column(v-if="roster.length < 9")
             section
+              h2 Draft For Some Awesome League
+              hr
               h3 Choose Your Player
             section
               .columns
@@ -65,21 +71,25 @@
           .column(v-else)
             section
               p Congrats!  Your team is complete!
-          .column.is-hidden-touch
-            .columns.is-multiline
-              .column.is-narrow.draft-user(v-for="(user, index) in users" :class="{'active-item': index === draft.activeDrafter}")
-                span {{ index + 1 }}. {{ user.displayName }}
+          .column
             trash-talk
-        .column(v-else)
+        .columns.is-desktop(v-else)
           //- See how the draft is going
-          section
-            h3 Currently Drafting:
-              span.orange  {{ users[draft.activeDrafter].displayName }}
-          .columns.is-multiline.is-mobile
-            .column.is-one-fifth-desktop.is-half-mobile(v-for="(userPicks, index) in picks")
-              h3(:class="{'orange': index == users[draft.activeDrafter].userId}") {{ getUserName(index) }}
-              ul
-                player-card(v-for="pick in userPicks" :key="pick.id" :player="pick" :showRemove="false" :primaryColor="getColor(pick)" :score="pick.stats.fantasyScore || 0" :hidePhoto="true") {{ pick.name }}
+          .column
+            section(v-if="users.length")
+              h2 Draft For Some Awesome League
+              hr
+              h3 Currently Drafting:
+                span.orange  {{ users[draft.activeDrafter].displayName }}
+            section.drafting-users
+              .columns.is-multiline.is-mobile
+                .column.is-one-fifth-desktop.is-half-mobile(v-for="(user, index) in users")
+                  h3.underlined(:class="{'orange': user.userId == users[draft.activeDrafter].userId}") {{ user.displayName }}
+                    span.is-pulled-right(v-if="user.userId == users[draft.activeDrafter].userId") {{ draft.direction == 'forward' ? '>' : '<' }}
+                  ul
+                    player-card(v-for="pick in getUserPicks(user.userId)" :key="pick.id" :player="pick" :showRemove="false" :primaryColor="getColor(pick)" :score="pick.stats.fantasyScore || 0" :hidePhoto="true") {{ pick.name }}
+          .column.is-one-third-desktop
+            trash-talk
       draft-drawer(:roster="roster")
 </template>
 
@@ -113,7 +123,10 @@ export default {
       requiredFlex: 0,
       requiredOffense: 2,
       requiredSupport: 2,
-      requiredTank: 2
+      requiredTank: 2,
+      showDraftOrder: true,
+      showRequirements: true,
+      showRoster: true
     }
   },
   computed: {
@@ -258,6 +271,9 @@ export default {
         this.picks = snapshot.val() || []
       })
     },
+    getUserPicks (userId) {
+      return this.picks[userId] || []
+    },
     getColor (player) {
       const team = this.teams.filter(team => team.abbreviatedName === player.team)[0]
       if (team) return team.primaryColor === '000000' ? team.secondaryColor : team.primaryColor
@@ -302,11 +318,17 @@ export default {
 .draft {
   margin-bottom: 100px;
 }
+.drafting-users {
+  h3.underlined {
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    margin-bottom: .5rem;
+  }
+}
 .draft-user {
   background-color: rgba(255,255,255,0.1);
   margin: .25rem;
   &.active-item {
-    background-color: #f00;
+    background-color: #f99e1a;
   }
 }
 .draft-drawer {
