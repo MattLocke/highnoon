@@ -27,7 +27,8 @@
               b-input(type="textarea" v-model="league.message" rows="10")
             button.button.is-primary(@click="updateLeague") Save Message
             hr
-          vue-markdown(:source="league.message")
+          vue-markdown(v-if="league.message" :source="league.message")
+          p(v-else) Click on the edit button above to customize your league landing page!  Inform members of the rules you have, the prizes you're giving away - whatever makes sense!
         section(v-if="canJoinLeague && (userData.isAdmin || userData.isAlpha)")
           button.button.is-primary(@click="joinLeague") Join League
         section(v-if="isInLeague && !isOwner")
