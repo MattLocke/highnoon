@@ -18,12 +18,16 @@ export default {
     showClose: {
       type: Boolean,
       default: true
+    },
+    hideMobile: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
     getClass () {
-      if (!this.showClose) return { 'is-one-quarter-desktop': true, 'is-always-open': true }
-      return this.isOpen ? { 'is-one-quarter-desktop': true } : { 'is-narrow': true }
+      if (!this.showClose) return { 'is-one-quarter-desktop': true, 'is-always-open': true, 'is-hidden-mobile': this.hideMobile }
+      return this.isOpen ? { 'is-one-quarter-desktop': true, 'is-hidden-mobile': this.hideMobile } : { 'is-narrow': true, 'is-hidden-mobile': this.hideMobile }
     }
   }
 }

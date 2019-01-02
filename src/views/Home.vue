@@ -1,7 +1,7 @@
 <template lang="pug">
   .home
     .columns.is-marginless
-      left-bar
+      left-bar(:hideMobile="true")
         section(v-if="isEditor")
           .columns
             .column
