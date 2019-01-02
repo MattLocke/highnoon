@@ -62,7 +62,6 @@ export default {
   .is-narrow, .closedParent {
     animation-name: closing;
     animation-duration: .2s;
-    width: 2vw;
   }
   @keyframes opening {
     from { width: 2vw; }
