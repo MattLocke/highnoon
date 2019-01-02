@@ -21,7 +21,7 @@
             p.orange This is alpha-only.  This page will continue to evolve as I work on it.  For now you can invite other alpha members to join your league, do a mock draft, and upon completion of that draft you'll be taken back here.  I'll be adding ways to reset the draft, see the schedule/etc over the next few days.  Stay tuned!  Deadlines are a loomin'!
           h1 {{ league.leagueName }}
             button.button.is-primary.is-pulled-right.is-small(@click="draftPreference") Draft Preference List
-          .social-icons
+          //- .social-icons
             span [TWITTER] [INSTAGRAM] [DISCORD]
           section(v-if="isOwner && unDrafted")
             confirm-button(:customClasses="{'is-primary': true,'is-small': true,'is-pulled-right':true}" buttonText="Start Draft" confirmText="Are You Sure?" @confirm-it="startDraft") Start Draft
