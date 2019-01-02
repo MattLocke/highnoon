@@ -23,7 +23,7 @@ export default {
   computed: {
     getClass () {
       if (!this.showClose) return { 'is-one-quarter-desktop': true, 'is-always-open': true }
-      return this.isOpen ? { 'is-one-quarter': true } : { 'is-narrow': true }
+      return this.isOpen ? { 'is-one-quarter-desktop': true } : { 'is-narrow': true }
     }
   }
 }

@@ -16,35 +16,38 @@
         section(v-if="canLeaveLeague")
           confirm-button(buttonText="Leave League" confirmText="Are You Sure?" @confirm-it="leaveLeague")
       .column(v-if="league.leagueName")
-        section
-          p.orange This is alpha-only.  This page will continue to evolve as I work on it.  For now you can invite other alpha members to join your league, do a mock draft, and upon completion of that draft you'll be taken back here.  I'll be adding ways to reset the draft, see the schedule/etc over the next few days.  Stay tuned!  Deadlines are a loomin'!
-        h1 {{ league.leagueName }}
-          button.button.is-primary.is-pulled-right.is-small(@click="draftPreference") Draft Preference List
-        .social-icons
-          span [TWITTER] [INSTAGRAM] [DISCORD]
-        section(v-if="isOwner && unDrafted")
-          confirm-button(:customClasses="{'is-primary': true,'is-small': true,'is-pulled-right':true}" buttonText="Start Draft" confirmText="Are You Sure?" @confirm-it="startDraft") Start Draft
-          h2 Start Draft
-        section
-          h2 League Message
-            button.button.is-primary.is-small.is-pulled-right(@click="editingMessage = !editingMessage" v-if="isOwner") {{ editingMessage ? 'cancel' : 'edit' }}
-          hr
-          .wrap(v-if="editingMessage")
-            b-field(label="League Message")
-              b-input(type="textarea" v-model="league.message" rows="10")
-            button.button.is-primary(@click="updateLeague") Save Message
+        .container
+          section
+            p.orange This is alpha-only.  This page will continue to evolve as I work on it.  For now you can invite other alpha members to join your league, do a mock draft, and upon completion of that draft you'll be taken back here.  I'll be adding ways to reset the draft, see the schedule/etc over the next few days.  Stay tuned!  Deadlines are a loomin'!
+          h1 {{ league.leagueName }}
+            button.button.is-primary.is-pulled-right.is-small(@click="draftPreference") Draft Preference List
+          .social-icons
+            span [TWITTER] [INSTAGRAM] [DISCORD]
+          section(v-if="isOwner && unDrafted")
+            confirm-button(:customClasses="{'is-primary': true,'is-small': true,'is-pulled-right':true}" buttonText="Start Draft" confirmText="Are You Sure?" @confirm-it="startDraft") Start Draft
+            h2 Start Draft
+          section
+            h2 League Message
+              button.button.is-primary.is-small.is-pulled-right(@click="editingMessage = !editingMessage" v-if="isOwner") {{ editingMessage ? 'cancel' : 'edit' }}
             hr
-          vue-markdown(v-if="league.message" :source="league.message")
-          p(v-else) Click on the edit button above to customize your league landing page!  Inform members of the rules you have, the prizes you're giving away - whatever makes sense!
-        section(v-if="canJoinLeague && (userData.isAdmin || userData.isAlpha)")
-          button.button.is-primary(@click="joinLeague") Join League
-        section(v-if="isInLeague && !isOwner")
-          confirm-button(buttonText="Leave League" confirmText="Are You Sure?" @confirm-it="leaveLeague")
-        section(v-if="draftComplete")
-          //- Show the "matchups"
-        league-schedule
+            .wrap(v-if="editingMessage")
+              b-field(label="League Message")
+                b-input(type="textarea" v-model="league.message" rows="10")
+              button.button.is-primary(@click="updateLeague") Save Message
+              hr
+            vue-markdown(v-if="league.message" :source="league.message")
+            p(v-else) Click on the edit button above to customize your league landing page!  Inform members of the rules you have, the prizes you're giving away - whatever makes sense!
+          section(v-if="canJoinLeague && (userData.isAdmin || userData.isAlpha)")
+            button.button.is-primary(@click="joinLeague") Join League
+          section(v-if="isInLeague && !isOwner")
+            confirm-button(buttonText="Leave League" confirmText="Are You Sure?" @confirm-it="leaveLeague")
+          section(v-if="draftComplete")
+            //- Show the "matchups"
+          league-schedule
       .column(v-else)
-        h1 Please select a league from the left menu.
+        .container
+          h1 Please select a league from the left menu.
+          p If you have not yet joined a league, you may create one or join a friends!
 </template>
 
 <script>
