@@ -41,6 +41,7 @@
               button.button.is-primary.is-small(@click="removePlayer(index)") X
       .column(v-if="roster.length < 100")
         .container
+          router-link.button.is-primary.is-pulled-right.is-small(:to="`/leagues/${leagueId}`") Back to League
           h2 Choose from the players below
           section
             h3 Choose Your Player
