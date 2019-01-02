@@ -46,7 +46,7 @@
           league-schedule
       .column(v-else)
         .container
-          h1 Please select a league from the left menu.
+          h1 Please select a league from the menu.
           p If you have not yet joined a league, you may create one or join a friends!
 </template>
 
