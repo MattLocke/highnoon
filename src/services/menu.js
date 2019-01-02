@@ -15,7 +15,7 @@ export default {
         where: '/leagues',
         requiresAuth: true,
         requiresAlpha: true
-      },
+      }
     ]
     const devMenu = [
       {
