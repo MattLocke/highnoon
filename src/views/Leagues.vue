@@ -13,6 +13,8 @@
             arrow(:isLeft="true" v-model="showLeagueUsers")
           span(v-if="showLeagueUsers")
             p(v-for="user in leagueUsers") {{ user.displayName }}
+        section(v-if="canLeaveLeague")
+          confirm-button(buttonText="Leave League" confirmText="Are You Sure?" @confirm-it="leaveLeague")
       .column(v-if="league.leagueName")
         section
           p.orange This is alpha-only.  This page will continue to evolve as I work on it.  For now you can invite other alpha members to join your league, do a mock draft, and upon completion of that draft you'll be taken back here.  I'll be adding ways to reset the draft, see the schedule/etc over the next few days.  Stay tuned!  Deadlines are a loomin'!
@@ -82,6 +84,9 @@ export default {
       if (this.userLeagues.length > 4) return false
       if (this.isInLeague) return false
       return true
+    },
+    canLeaveLeague () {
+      return (this.league.status !== 'completed' && !this.isOwner && this.isInLeague)
     },
     draftComplete () {
       return false
@@ -163,7 +168,12 @@ export default {
         })
     },
     leaveLeague () {
-      // have to make sure we delete all the nodes.
+      this.$store.dispatch('setLoading', true)
+      LeagueService.leaveLeague(this.userId, this.leagueId)
+        .then(() => {
+          this.$store.dispatch('setLoading', false)
+          location.reload()
+        })
     },
     listenForDraft () {
       const db = firebase.database()

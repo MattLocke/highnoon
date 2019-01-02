@@ -117,5 +117,32 @@ export default {
     return batch.commit()
       .then(() => userMeta)
       .catch(error => error)
+  },
+  leaveLeague (userId, leagueId) {
+    // set up the batch
+    const batch = db.batch()
+
+    // make sure we point to the refs created when joining a league
+    const leagueRef = db.collection('leagueUsers').doc(leagueId)
+    const userRef = db.collection('userLeagues').doc(userId)
+
+    let userLeagues = []
+
+    return userRef.get()
+      .then((leagues) => {
+        const tmp = leagues.data()
+        delete tmp[leagueId]
+        userLeagues = tmp
+        return null
+      })
+      .then(() => leagueRef.get())
+      .then(leagueSnapshot => leagueSnapshot.data())
+      .then((leagueData) => {
+        const leagueTmp = leagueData
+        delete leagueTmp[userId]
+        batch.set(leagueRef, leagueTmp)
+        batch.set(userRef, userLeagues)
+        return batch.commit()
+      })
   }
 }

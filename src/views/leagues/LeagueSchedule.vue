@@ -59,7 +59,7 @@ export default {
         })
     },
     generateSchedule () {
-      const currentWeek = this.config.currentWeek
+      // const currentWeek = this.config.currentWeek
       const half = this.leagueUsers.length / 2
       const weeks = []
       for (let i = 0; i < this.totalWeeks; i++) {
@@ -84,4 +84,3 @@ export default {
   }
 }
 </script>
-
