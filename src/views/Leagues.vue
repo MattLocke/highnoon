@@ -8,6 +8,11 @@
           .left-bar-item.has-pointer(:class="{'active-item': $route.params.leagueId == league.leagueId}" v-for="league in fantasyLeagues" :key="league.leagueId" @click="setLeague(league.leagueId)") {{ league.leagueName }}
         section(v-if="userData.isAdmin || userData.isAlpha")
           router-link.button.is-primary(to="/createLeague") Create League
+        section(v-if="leagueUsers.length")
+          h2 League Users
+            arrow(:isLeft="true" v-model="showLeagueUsers")
+          span(v-if="showLeagueUsers")
+            p(v-for="user in leagueUsers") {{ user.displayName }}
       .column(v-if="league.leagueName")
         section
           p.orange This is alpha-only.  This page will continue to evolve as I work on it.  For now you can invite other alpha members to join your league, do a mock draft, and upon completion of that draft you'll be taken back here.  I'll be adding ways to reset the draft, see the schedule/etc over the next few days.  Stay tuned!  Deadlines are a loomin'!
@@ -35,9 +40,7 @@
           confirm-button(buttonText="Leave League" confirmText="Are You Sure?" @confirm-it="leaveLeague")
         section(v-if="draftComplete")
           //- Show the "matchups"
-        section
-          h2 League Users
-          p(v-for="user in leagueUsers") {{ user.displayName }}
+        league-schedule
       .column(v-else)
         h1 Please select a league from the left menu.
 </template>
@@ -47,14 +50,16 @@ import firebase from 'firebase/app'
 import 'firebase/database'
 import { fireInit } from '@/fireLogin'
 import { shuffle } from 'lodash'
-
 import vueMarkdown from 'vue-markdown'
 
 import LeagueService from '@/services/league'
 
+import LeagueSchedule from '@/views/leagues/LeagueSchedule'
+
 export default {
   name: 'Leagues',
   components: {
+    LeagueSchedule,
     vueMarkdown
   },
   data () {
@@ -65,7 +70,8 @@ export default {
       },
       leagueUsers: [],
       editingMessage: false,
-      draftStatus: ''
+      draftStatus: '',
+      showLeagueUsers: false
     }
   },
   computed: {
@@ -76,6 +82,9 @@ export default {
       if (this.userLeagues.length > 4) return false
       if (this.isInLeague) return false
       return true
+    },
+    draftComplete () {
+      return false
     },
     isInLeague () {
       return this.userLeagues.some(league => league.leagueId === this.leagueId)
