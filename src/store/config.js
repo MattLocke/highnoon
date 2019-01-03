@@ -20,9 +20,8 @@ export default {
     loadConfig: (context) => {
       db.collection('config')
         .doc('owl')
-        .get()
-        .then((configData) => {
-          context.commit('SET_CONFIG', configData.data())
+        .onSnapshot((doc) => {
+          context.commit('SET_CONFIG', doc.data())
         })
     }
   },
