@@ -8,6 +8,13 @@
           .left-bar-item.has-pointer(:class="{'active-item': $route.params.leagueId == league.leagueId}" v-for="league in fantasyLeagues" :key="league.leagueId" @click="setLeague(league.leagueId)") {{ league.leagueName }}
         section(v-if="userData.isAdmin || userData.isAlpha")
           router-link.button.is-primary(to="/createLeague") Create League
+        section(v-if="league.leagueType == 'standard' && league.status != 'complete'")
+          h2 Draft Preference List
+            arrow(:isLeft="true" v-model="showDraftPreference")
+          .wrap(v-if="showDraftPreference")
+            p You can use this list to auto-draft for you in case you can't make it to the live draft.  Keep in mind, if you use this list, even if you're there for the live draft, this list will take priority!
+            hr
+            button.button.is-primary(@click="draftPreference") Draft Preference List
         section(v-if="leagueUsers.length")
           h2 League Users
             arrow(:isLeft="true" v-model="showLeagueUsers")
@@ -16,34 +23,32 @@
         section(v-if="canLeaveLeague")
           confirm-button(buttonText="Leave League" confirmText="Are You Sure?" @confirm-it="leaveLeague")
       .column(v-if="league.leagueName")
-        .container
-          section
-            p.orange This is alpha-only.  This page will continue to evolve as I work on it.  For now you can invite other alpha members to join your league, do a mock draft, and upon completion of that draft you'll be taken back here.  I'll be adding ways to reset the draft, see the schedule/etc over the next few days.  Stay tuned!  Deadlines are a loomin'!
-          h1 {{ league.leagueName }}
-            button.button.is-primary.is-pulled-right.is-small(@click="draftPreference" v-if="league.leagueType == 'standard' && league.status != 'complete'") Draft Preference List
-          //- .social-icons
-            span [TWITTER] [INSTAGRAM] [DISCORD]
-          section(v-if="isOwner && unDrafted")
-            confirm-button(:customClasses="{'is-primary': true,'is-small': true,'is-pulled-right':true}" buttonText="Start Draft" confirmText="Are You Sure?" @confirm-it="startDraft") Start Draft
-            h2 Start Draft
-          section
-            h2 League Message
-              button.button.is-primary.is-small.is-pulled-right(@click="editingMessage = !editingMessage" v-if="isOwner") {{ editingMessage ? 'cancel' : 'edit' }}
+        section
+          p.orange This is alpha-only.  This page will continue to evolve as I work on it.  For now you can invite other alpha members to join your league, do a mock draft, and upon completion of that draft you'll be taken back here.  I'll be adding ways to reset the draft, see the schedule/etc over the next few days.  Stay tuned!  Deadlines are a loomin'!
+        h1 {{ league.leagueName }}
+        //- .social-icons
+          span [TWITTER] [INSTAGRAM] [DISCORD]
+        section(v-if="isOwner && unDrafted")
+          confirm-button(:customClasses="{'is-primary': true,'is-small': true,'is-pulled-right':true}" buttonText="Start Draft" confirmText="Are You Sure?" @confirm-it="startDraft") Start Draft
+          h2 Start Draft
+        section
+          h2 League Message
+            button.button.is-primary.is-small.is-pulled-right(@click="editingMessage = !editingMessage" v-if="isOwner") {{ editingMessage ? 'cancel' : 'edit' }}
+          hr
+          .wrap(v-if="editingMessage")
+            b-field(label="League Message")
+              b-input(type="textarea" v-model="league.message" rows="10")
+            button.button.is-primary(@click="updateLeague") Save Message
             hr
-            .wrap(v-if="editingMessage")
-              b-field(label="League Message")
-                b-input(type="textarea" v-model="league.message" rows="10")
-              button.button.is-primary(@click="updateLeague") Save Message
-              hr
-            vue-markdown(v-if="league.message" :source="league.message")
-            p(v-else) Click on the edit button above to customize your league landing page!  Inform members of the rules you have, the prizes you're giving away - whatever makes sense!
-          section(v-if="canJoinLeague && (userData.isAdmin || userData.isAlpha)")
-            button.button.is-primary(@click="joinLeague") Join League
-          section(v-if="isInLeague && !isOwner")
-            confirm-button(buttonText="Leave League" confirmText="Are You Sure?" @confirm-it="leaveLeague")
-          section(v-if="draftComplete")
-            //- Show the "matchups"
-          league-schedule
+          vue-markdown(v-if="league.message" :source="league.message")
+          p(v-else) Click on the edit button above to customize your league landing page!  Inform members of the rules you have, the prizes you're giving away - whatever makes sense!
+        section(v-if="canJoinLeague && (userData.isAdmin || userData.isAlpha)")
+          button.button.is-primary(@click="joinLeague") Join League
+        section(v-if="isInLeague && !isOwner")
+          confirm-button(buttonText="Leave League" confirmText="Are You Sure?" @confirm-it="leaveLeague")
+        section(v-if="draftComplete")
+          //- Show the "matchups"
+        league-schedule
       .column(v-else)
         .container
           h1 Please select a league from the menu.
@@ -76,7 +81,8 @@ export default {
       leagueUsers: [],
       editingMessage: false,
       draftStatus: '',
-      showLeagueUsers: false
+      showLeagueUsers: false,
+      showDraftPreference: false
     }
   },
   computed: {
