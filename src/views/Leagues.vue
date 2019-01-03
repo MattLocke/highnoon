@@ -6,8 +6,8 @@
           h2 Fantasy Leagues
           .left-bar-item(v-if="!fantasyLeagues.length") You currently have no Fantasy leagues.
           .left-bar-item.has-pointer(:class="{'active-item': $route.params.leagueId == league.leagueId}" v-for="league in fantasyLeagues" :key="league.leagueId" @click="setLeague(league.leagueId)") {{ league.leagueName }}
-        section(v-if="userData.isAdmin || userData.isAlpha")
-          router-link.button.is-primary(to="/createLeague") Create League
+          hr
+          router-link.button.is-primary(to="/createLeague" v-if="userData.isAdmin || userData.isAlpha") Create League
         section(v-if="league.leagueType == 'standard' && league.status != 'complete'")
           h2 Draft Preference List
             arrow(:isLeft="true" v-model="showDraftPreference")
@@ -16,12 +16,16 @@
             hr
             button.button.is-primary(@click="draftPreference") Draft Preference List
         section(v-if="leagueUsers.length")
-          h2 League Users
+          h2 League Users -
+            span.orange  {{ leagueUsers.length }}
             arrow(:isLeft="true" v-model="showLeagueUsers")
           span(v-if="showLeagueUsers")
             p(v-for="user in leagueUsers") {{ user.displayName }}
         section(v-if="canLeaveLeague")
           confirm-button(buttonText="Leave League" confirmText="Are You Sure?" @confirm-it="leaveLeague")
+        section(v-if="isInLeague")
+          h2 Share with others
+          button.button.is-primary(@click="copyLink") Copy Share Link
       .column(v-if="league.leagueName")
         section
           p.orange This is alpha-only.  This page will continue to evolve as I work on it.  For now you can invite other alpha members to join your league, do a mock draft, and upon completion of that draft you'll be taken back here.  I'll be adding ways to reset the draft, see the schedule/etc over the next few days.  Stay tuned!  Deadlines are a loomin'!
@@ -164,6 +168,16 @@ export default {
   methods: {
     addToRoster (player) {
       this.roster.push(player)
+    },
+    copyLink () {
+      this.$copyText(`https://highnoon.gg/#/leagues/${this.leagueId}`)
+        .then(() => {
+          this.$toast.open({
+            message: 'Successfully copied the link!',
+            type: 'is-success',
+            position: 'is-bottom'
+          })
+        })
     },
     draftPreference () {
       this.$router.push({ path: `/draftPreference/${this.leagueId}` })
