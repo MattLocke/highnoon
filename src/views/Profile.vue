@@ -31,7 +31,7 @@
 
           section.social
             h2 Social Settings
-            .columns
+            .columns.is-multiline
               .column.is-narrow
                 b-field(label="Battle.net")
                   b-input(v-model="localProfile.battleNet")
@@ -41,6 +41,12 @@
               .column.is-narrow
                 b-field(label="Reddit")
                   b-input(v-model="localProfile.reddit")
+              .column.is-narrow
+                b-field(label="XBOX Live")
+                  b-input(v-model="localProfile.xbox")
+              .column.is-narrow
+                b-field(label="PSN")
+                  b-input(v-model="localProfile.psn")
           section
             button.button.is-primary(@click="saveProfile") Save Profile
             hr
@@ -69,7 +75,11 @@ export default {
       localProfile: {
         primaryRole: '',
         getEmails: true,
-        reddit: ''
+        reddit: '',
+        battleNet: '',
+        discord: '',
+        psn: '',
+        xbox: ''
       },
       updatingAvatar: false
     }
