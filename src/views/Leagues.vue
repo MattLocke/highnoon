@@ -185,6 +185,31 @@ export default {
     draftPreference () {
       this.$router.push({ path: `/draftPreference/${this.leagueId}` })
     },
+    getLeague (leagueId) {
+      this.$store.dispatch('setLoading', true)
+      LeagueService.getLeague(leagueId)
+        .then((league) => {
+          this.league = { ...this.league, ...league }
+          this.getLeagueUsers(leagueId)
+        })
+        .catch(() => {
+          this.$store.dispatch('setLoading', false)
+          this.$toast.open({
+            message: 'Failure to find that link',
+            type: 'is-danger',
+            position: 'is-bottom'
+          })
+        })
+    },
+    getLeagueUsers (leagueId) {
+      this.$store.dispatch('setLoading', true)
+      LeagueService.getLeagueUsers(leagueId)
+        .then((users) => {
+          this.leagueUsers = Object.values(users)
+          this.listenForDraft()
+          this.$store.dispatch('setLoading', false)
+        })
+    },
     joinLeague () {
       this.$store.dispatch('setLoading', true)
       LeagueService.joinLeague(this.userData, this.league)
@@ -210,31 +235,6 @@ export default {
     },
     setLeague (leagueId) {
       this.$router.push({ path: `/leagues/${leagueId}` })
-    },
-    getLeague (leagueId) {
-      this.$store.dispatch('setLoading', true)
-      LeagueService.getLeague(leagueId)
-        .then((league) => {
-          this.league = { ...this.league, ...league }
-          this.getLeagueUsers(leagueId)
-        })
-        .catch(() => {
-          this.$store.dispatch('setLoading', false)
-          this.$toast.open({
-            message: 'Failure to find that link',
-            type: 'is-danger',
-            position: 'is-bottom'
-          })
-        })
-    },
-    getLeagueUsers (leagueId) {
-      this.$store.dispatch('setLoading', true)
-      LeagueService.getLeagueUsers(leagueId)
-        .then((users) => {
-          this.leagueUsers = Object.values(users)
-          this.listenForDraft()
-          this.$store.dispatch('setLoading', false)
-        })
     },
     startDraft () {
       // we'll need to build out the random order and save that to draftOrder
