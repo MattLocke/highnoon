@@ -3,7 +3,7 @@
     .columns.is-marginless
       left-bar(:showClose="false")
         section
-          h2 Your Roster - {{ roster.length }} of 9
+          h2.has-pointer(@click="showRoster = !showRoster") Your Roster - {{ roster.length }} of 9
             arrow(:isLeft="true" v-model="showRoster")
           .roster-section(v-show="showRoster")
             .columns.is-multiline.is-mobile
@@ -12,7 +12,7 @@
               .column.is-one-third-desktop.is-half-mobile(v-for="placeholder in placeholders")
                 player-card(:showRemove="false")
         section
-          h3 Remaining Requirements
+          h3.has-pointer(@click="showRequirements = !showRequirements") Remaining Requirements
             arrow(:isLeft="true" v-model="showRequirements")
           .columns.is-mobile(v-show="showRequirements")
             .column.has-text-centered
@@ -32,7 +32,7 @@
                 img(src="images/roles/flex-white.svg" alt="flex")
                 | {{ remaining.flex }}
         section
-          h3 Draft Order
+          h3.has-pointer(@click="showDraftOrder = !showDraftOrder") Draft Order
             arrow(:isLeft="true" v-model="showDraftOrder")
           .wrap(v-show="showDraftOrder")
             .left-bar-item(v-for="(user, index) in users" :class="{'active-item': index === draft.activeDrafter}")

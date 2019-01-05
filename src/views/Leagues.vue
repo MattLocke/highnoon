@@ -9,14 +9,14 @@
           hr
           router-link.button.is-primary(to="/createLeague" v-if="userData.isAdmin || userData.isAlpha") Create League
         section(v-if="league.leagueType == 'standard' && league.status != 'complete'")
-          h2 Draft Preference List
+          h2.has-pointer(@click="showDraftPreference = !showDraftPreference") Draft Preference List
             arrow(:isLeft="true" v-model="showDraftPreference")
           .wrap(v-if="showDraftPreference")
             p You can use this list to auto-draft for you in case you can't make it to the live draft.  Keep in mind, if you use this list, even if you're there for the live draft, this list will take priority!
             hr
             button.button.is-primary(@click="draftPreference") Draft Preference List
         section(v-if="leagueUsers.length")
-          h2 League Users -
+          h2.has-pointer(@click="showLeagueUsers = !showLeagueUsers") League Users -
             span.orange  {{ leagueUsers.length }}
             arrow(:isLeft="true" v-model="showLeagueUsers")
           span(v-if="showLeagueUsers")
@@ -32,7 +32,7 @@
         h1 {{ league.leagueName }}
         //- .social-icons
           span [TWITTER] [INSTAGRAM] [DISCORD]
-        section(v-if="isOwner && unDrafted")
+        section(v-if="canStartDraft")
           confirm-button(:customClasses="{'is-primary': true,'is-small': true,'is-pulled-right':true}" buttonText="Start Draft" confirmText="Are You Sure?" @confirm-it="startDraft") Start Draft
           h2 Start Draft
         section
@@ -100,6 +100,9 @@ export default {
     },
     canLeaveLeague () {
       return (this.league.status !== 'completed' && !this.isOwner && this.isInLeague)
+    },
+    canStartDraft () {
+      return (this.isOwner && this.unDrafted && this.leagueUsers.length > 1)
     },
     draftComplete () {
       return false

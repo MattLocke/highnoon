@@ -1,7 +1,7 @@
 <template lang="pug">
   .league-schedule
     section
-      h2 League Schedule
+      h2.has-pointer(@click="showSchedule = !showSchedule") League Schedule
         arrow(:isLeft="true" v-model="showSchedule")
       .wrap(v-if="showSchedule")
         button.button.is-primary(@click="generateSchedule") Generate Schedule
