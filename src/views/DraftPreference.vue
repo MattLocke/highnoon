@@ -28,7 +28,7 @@
             .column.has-text-right
               span {{ roster ? roster.length : 0 }}/100
         .left-bar-item.roster-player(v-if="roster" v-for="(player, index) in roster")
-          .columns.is-gapless.is-mobile
+          .columns.is-mobile
             .column.is-narrow
               img(:src="`images/roles/${player.attributes.role}-white.svg`")
             .column.is-narrow
@@ -42,9 +42,11 @@
       .column(v-if="roster.length < 100")
         .container
           router-link.button.is-primary.is-pulled-right.is-small(:to="`/leagues/${leagueId}`") Back to League
-          h2 Choose from the players below
+          h2 Preference list for:
+            span.orange  {{ leagueData.leagueName }}
           section
-            h3 Choose Your Player
+            h3 Choose Your Players
+            p This list will serve as a "preference" for the draft to the league it's associated with.  Keep in mind during the draft it may not always choose your highest available player.  If roles have not been fulfilled, it will fill those roles choosing the best it can from your list.  If your list is too short, we'll take the player with the highest High Noon Score.  Right now, the player list is fixed in order, so make your decisions carefully!  After I get more time, I'll add the ability to easily re-order the list.
           section
             .columns
               .column.is-narrow
@@ -69,11 +71,13 @@
 <script>
 import firebase from 'firebase/app'
 import 'firebase/database'
-import { fireInit } from '@/fireLogin'
+
+import LeagueService from '@/services/league'
 
 import PlayerLine from '@/views/draft/PlayerLine'
 
 export default {
+  name: 'DraftPreference',
   components: {
     PlayerLine
   },
@@ -86,6 +90,7 @@ export default {
       filterText: '',
       filterTeam: '',
       filterRole: '',
+      leagueData: [],
       roster: []
     }
   },
@@ -151,7 +156,10 @@ export default {
     }
   },
   mounted () {
-    fireInit()
+    LeagueService.getLeague(this.leagueId)
+      .then((leagueData) => {
+        this.leagueData = leagueData
+      })
   },
   methods: {
     addToRoster (player) {
