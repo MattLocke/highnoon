@@ -7,8 +7,9 @@
         button.button.is-primary(@click="generateSchedule") Generate Schedule
         hr
         .wrap(v-if="schedule.length")
-          div(v-for="(week, index) in schedule")
-            leagueScheduleWeek(:week="week" :index="index")
+          .columns.is-multiline
+            .column.is-narrow(v-for="(week, index) in schedule")
+              leagueScheduleWeek(:week="week" :index="index")
 </template>
 
 <script>
@@ -63,11 +64,10 @@ export default {
       const half = this.leagueUsers.length / 2
       const weeks = []
       for (let i = 0; i < this.totalWeeks; i++) {
-        let homeTeams = [...this.leagueUsers]
+        let homeTeams = shuffle([...this.leagueUsers])
         let offset = i % half
         let awayTeams = homeTeams.splice(offset, half)
         let week = []
-        homeTeams = shuffle(homeTeams)
 
         for (let j = 0; j < half; j++) {
           let matchup = {
