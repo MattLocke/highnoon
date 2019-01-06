@@ -25,6 +25,7 @@
         section
           .columns
             .column
+              confirm-button(buttonText="Delete Roster" confirmText="Are You Sure?" @confirm-it="deleteRoster")
             .column.has-text-right
               span {{ roster ? roster.length : 0 }}/100
         .left-bar-item.roster-player(v-if="roster" v-for="(player, index) in roster")
@@ -165,6 +166,9 @@ export default {
     addToRoster (player) {
       this.roster.push(player)
       this.updateRoster()
+    },
+    deleteRoster () {
+      firebase.database().ref(`/draftPreference/${this.leagueId}/${this.userId}`).set(null)
     },
     removePlayer (index) {
       this.roster.splice(index, 1)
