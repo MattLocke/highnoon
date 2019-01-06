@@ -4,17 +4,18 @@
       h2.has-pointer(@click="showSchedule = !showSchedule") League Schedule
         arrow(:isLeft="true" v-model="showSchedule")
       .wrap(v-if="showSchedule")
-        button.button.is-primary(@click="generateSchedule") Generate Schedule
-        hr
-        .wrap(v-if="schedule.length")
+        .wrap(v-if="hasSchedule")
+          p This is where you can see the week-to-week matchups.  This list is completely randomized, so if you play some people more than once and others not at all, it's just the luck of the draw.
+          hr
           .columns.is-multiline
             .column.is-narrow(v-for="(week, index) in schedule")
               leagueScheduleWeek(:week="week" :index="index")
+        .wrap(v-else)
+          p The schedule will be created when the draft has started.
 </template>
 
 <script>
-import { shuffle } from 'lodash'
-
+import { isEmpty } from 'lodash'
 import LeagueService from '@/services/league'
 
 import LeagueScheduleWeek from '@/views/leagues/LeagueScheduleWeek'
@@ -26,18 +27,16 @@ export default {
   },
   data () {
     return {
-      leagueUsers: [],
       schedule: [],
-      showSchedule: false,
-      totalWeeks: 20
+      showSchedule: false
     }
   },
   computed: {
     leagueId () {
       return this.$route.params.leagueId
     },
-    config () {
-      return this.$store.getters.getConfig
+    hasSchedule () {
+      return !isEmpty(this.schedule)
     }
   },
   watch: {
@@ -45,41 +44,19 @@ export default {
       immediate: true,
       handler (val) {
         if (val) {
-          this.getLeagueUsers(val)
+          this.getSchedule(val)
         }
       }
     }
   },
   methods: {
-    getLeagueUsers (leagueId) {
+    getSchedule (leagueId) {
       this.$store.dispatch('setLoading', true)
-      LeagueService.getLeagueUsers(leagueId)
-        .then((users) => {
-          this.leagueUsers = Object.values(users)
+      LeagueService.getSchedule(leagueId)
+        .then((schedule) => {
+          this.schedule = schedule
           this.$store.dispatch('setLoading', false)
         })
-    },
-    generateSchedule () {
-      // const currentWeek = this.config.currentWeek
-      const half = this.leagueUsers.length / 2
-      const weeks = []
-      for (let i = 0; i < this.totalWeeks; i++) {
-        let homeTeams = shuffle([...this.leagueUsers])
-        let offset = i % half
-        let awayTeams = homeTeams.splice(offset, half)
-        let week = []
-
-        for (let j = 0; j < half; j++) {
-          let matchup = {
-            home: homeTeams[j],
-            away: awayTeams[j]
-          }
-          week.push(matchup)
-        }
-
-        weeks.push(week)
-      }
-      this.schedule = weeks
     }
   }
 }

@@ -2,6 +2,7 @@ import firebase from 'firebase/app'
 import 'firebase/firestore'
 import { fireInit } from '@/fireLogin'
 import logger from '@/services/logger'
+import { shuffle } from 'lodash'
 
 fireInit()
 
@@ -63,11 +64,31 @@ export default {
       .then(() => leagueId)
       .catch((error) => Promise.reject(error))
   },
-  updateLeague (league) {
-    // fantasyLeagues
-    return db.collection('fantasyLeagues').doc(league.id)
-      .set(league, { merge: true })
-      .then(l => l)
+  generateSchedule (currentWeek, totalWeeks, leagueUsers) {
+    // const currentWeek = this.config.currentWeek
+    const half = leagueUsers.length / 2
+    const weeks = {}
+    const remainingWeeks = Number(totalWeeks) - Number(currentWeek)
+
+    // Build a schedule for each of the remaining weeks.
+    for (let i = 0; i < remainingWeeks; i++) {
+      let homeTeams = shuffle([...leagueUsers])
+      let offset = i % half
+      let awayTeams = homeTeams.splice(offset, half)
+      let week = []
+      const weekNiceName = Number(currentWeek + i + 1)
+
+      for (let j = 0; j < half; j++) {
+        let matchup = {
+          home: homeTeams[j],
+          away: awayTeams[j]
+        }
+        week.push(matchup)
+      }
+
+      weeks[weekNiceName] = week
+    }
+    return weeks
   },
   getLeague (leagueId) {
     logger.logIt(`Getting league with id: ${leagueId}`)
@@ -79,6 +100,11 @@ export default {
     return db.collection('leagueUsers').doc(leagueId)
       .get()
       .then(users => users.data())
+  },
+  getSchedule (leagueId) {
+    return db.collection('leagueSchedule').doc(leagueId)
+      .get()
+      .then(schedule => schedule.data())
   },
   joinLeague (user, league) {
     // foundation Ids
@@ -144,5 +170,14 @@ export default {
         batch.set(userRef, userLeagues)
         return batch.commit()
       })
+  },
+  setSchedule (schedule, leagueId) {
+    return db.collection('leagueSchedule').doc(leagueId).set(schedule)
+  },
+  updateLeague (league) {
+    // fantasyLeagues
+    return db.collection('fantasyLeagues').doc(league.id)
+      .set(league, { merge: true })
+      .then(l => l)
   }
 }

@@ -104,6 +104,9 @@ export default {
     canStartDraft () {
       return (this.isOwner && this.unDrafted && this.leagueUsers.length > 1)
     },
+    config () {
+      return this.$store.getters.getConfig
+    },
     draftComplete () {
       return false
     },
@@ -112,6 +115,9 @@ export default {
     },
     isOwner () {
       return this.userId === this.league.ownerId
+    },
+    totalWeeks () {
+      return this.config.totalWeeks
     },
     userId () {
       return this.$store.getters.getUserId
@@ -240,8 +246,13 @@ export default {
       // we'll need to build out the random order and save that to draftOrder
       this.$store.dispatch('setLoading', true)
       let tmpUsers = []
-      LeagueService.getLeagueUsers(this.leagueId)
+      const schedule = LeagueService.generateSchedule(this.config.currentWeek, this.config.totalWeeks, this.leagueUsers)
+
+      LeagueService.setSchedule(schedule, this.leagueId)
+        .then(() => LeagueService.getLeagueUsers(this.leagueId))
         .then((users) => {
+          console.log('Should have users back from api call...')
+          console.table(users)
           tmpUsers = Object.values(users)
           const shuffledUsers = shuffle([...tmpUsers])
           const db = firebase.database()

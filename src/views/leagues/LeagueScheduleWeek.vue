@@ -1,6 +1,6 @@
 <template lang="pug">
   .league-schedule-week
-    h3 Week {{ index + 1 }}
+    h3 Week {{ index }}
     div(v-for="match in week")
       span {{ match.home.displayName }} vs {{ match.away.displayName }}
 </template>
