@@ -47,6 +47,8 @@
           vue-markdown(v-if="league.message" :source="league.message")
           p(v-else) Click on the edit button above to customize your league landing page!  Inform members of the rules you have, the prizes you're giving away - whatever makes sense!
         section(v-if="canJoinLeague && (userData.isAdmin || userData.isAlpha)")
+          b-field(label="password" v-if="league.password")
+            b-input(type="password" v-model="localPassword")
           button.button.is-primary(@click="joinLeague") Join League
         section(v-if="isInLeague && !isOwner")
           confirm-button(buttonText="Leave League" confirmText="Are You Sure?" @confirm-it="leaveLeague")
@@ -83,6 +85,7 @@ export default {
         image: ''
       },
       leagueUsers: [],
+      localPassword: '',
       editingMessage: false,
       draftStatus: '',
       showLeagueUsers: false,
@@ -217,6 +220,16 @@ export default {
         })
     },
     joinLeague () {
+      if (this.league.password) {
+        if (this.localPassword !== this.league.password) {
+          this.$toast.open({
+            message: 'Invalid league password',
+            type: 'is-danger',
+            position: 'is-bottom'
+          })
+          return
+        }
+      }
       this.$store.dispatch('setLoading', true)
       LeagueService.joinLeague(this.userData, this.league)
         .then(() => {
@@ -251,8 +264,6 @@ export default {
       LeagueService.setSchedule(schedule, this.leagueId)
         .then(() => LeagueService.getLeagueUsers(this.leagueId))
         .then((users) => {
-          console.log('Should have users back from api call...')
-          console.table(users)
           tmpUsers = Object.values(users)
           const shuffledUsers = shuffle([...tmpUsers])
           const db = firebase.database()
