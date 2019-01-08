@@ -14,7 +14,7 @@ export default {
       .then(userRef => userRef)
       .catch((error) => {
         logger.errorIt(`Error adding user: ${error}`)
-        return false
+        return null
       })
   },
   getProfile (userId) {
@@ -24,7 +24,11 @@ export default {
       .get()
       .then((user) => {
         if (user.exists) return user.data()
-        return false
+        return null
+      })
+      .catch((error) => {
+        logger.errorIt(error)
+        return null
       })
   },
   setLastActive (userId) {
@@ -39,12 +43,16 @@ export default {
       .then(() => true)
       .catch((error) => {
         logger.errorIt(error)
-        return false
+        return null
       })
   },
   getAllUsers () {
     return db.collection('users')
       .get()
       .then((users) => users.docs.map(user => user.data()))
+      .catch((error) => {
+        logger.errorIt(error)
+        return null
+      })
   }
 }
