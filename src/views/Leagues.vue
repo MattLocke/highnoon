@@ -105,7 +105,7 @@ export default {
       return (this.league.status !== 'completed' && !this.isOwner && this.isInLeague)
     },
     canStartDraft () {
-      return (this.isOwner && this.unDrafted && this.leagueUsers.length > 1)
+      return (this.isOwner && this.unDrafted && this.leagueUsers.length % 2 === 0)
     },
     config () {
       return this.$store.getters.getConfig
