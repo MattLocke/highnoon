@@ -260,7 +260,13 @@ export default {
       this.$store.dispatch('setLoading', true)
       let tmpUsers = []
       const schedule = LeagueService.generateSchedule(this.config.currentWeek, this.config.totalWeeks, this.leagueUsers)
-
+      if (!schedule) {
+        this.$toast.open({
+          message: 'Unable to generate schedule.  Try refreshing the page and trying again!',
+          type: 'is-danger',
+          position: 'is-bottom'
+        })
+      }
       LeagueService.setSchedule(schedule, this.leagueId)
         .then(() => LeagueService.getLeagueUsers(this.leagueId))
         .then((users) => {
