@@ -5,6 +5,8 @@
         img.logo(src="images/high_noon_white.svg" width="36" height="36")
         |  HIGHNOON
         span.orange .GG
+          span.white(v-if="profile.isAlpha")  |
+            span.orange  ALPHA USER
       a.navbar-burger.burger(role="button" :class="{'is-active': isActive}" @click="isActive=!isActive")
         span
         span

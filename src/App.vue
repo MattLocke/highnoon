@@ -249,6 +249,10 @@ a:hover {
   color: $primary;
 }
 
+.white {
+  color: $white;
+}
+
 .is-left-menu {
   border-right: 1px solid rgba(255,255,255,0.3);
   min-height: 100vh;
