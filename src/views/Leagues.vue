@@ -3,33 +3,29 @@
     .columns.is-marginless
       left-bar
         section
-          h2 Fantasy Leagues
-          .left-bar-item(v-if="!fantasyLeagues.length") You currently have no Fantasy leagues.
-          .left-bar-item.has-pointer(:class="{'active-item': $route.params.leagueId == league.leagueId}" v-for="league in fantasyLeagues" :key="league.leagueId" @click="setLeague(league.leagueId)") {{ league.leagueName }}
-          hr
-          router-link.button.is-primary(to="/createLeague" v-if="userData.isAdmin || userData.isAlpha") Create League
+          collapsible(title-text="Fantasy Leagues" :start-collapsed="isInLeague")
+            .left-bar-item(v-if="!fantasyLeagues.length") You currently have no Fantasy leagues.
+            .left-bar-item.has-pointer(:class="{'active-item': $route.params.leagueId == league.leagueId}" v-for="league in fantasyLeagues" :key="league.leagueId" @click="setLeague(league.leagueId)") {{ league.leagueName }}
+            hr
+            router-link.button.is-primary(to="/createLeague" v-if="userData.isAdmin || userData.isAlpha") Create League
         section(v-if="league.leagueType == 'standard' && league.status != 'complete'")
-          h2.has-pointer(@click="showDraftPreference = !showDraftPreference") Draft Preference List
-            arrow(:isLeft="true" v-model="showDraftPreference")
-          .wrap(v-if="showDraftPreference")
+          collapsible(title-text="Draft Preference List" :start-collapsed="true")
             p You can use this list to auto-draft for you in case you can't make it to the live draft.  Keep in mind, if you use this list, even if you're there for the live draft, this list will take priority!
             hr
             button.button.is-primary(@click="draftPreference") Draft Preference List
         section(v-if="leagueUsers.length")
-          h2.has-pointer(@click="showLeagueUsers = !showLeagueUsers") League Users -
-            span.orange  {{ leagueUsers.length }}
-            arrow(:isLeft="true" v-model="showLeagueUsers")
-          span(v-if="showLeagueUsers")
-            p(v-for="user in leagueUsers") {{ user.displayName }}
+          collapsible(title-text="League Users" :start-collapsed="true")
+            .left-bar-item(v-for="user in leagueUsers") {{ user.displayName }}
         section(v-if="canLeaveLeague")
           confirm-button(buttonText="Leave League" confirmText="Are You Sure?" @confirm-it="leaveLeague")
-        section(v-if="isInLeague")
-          h2 Share with others
-          button.button.is-primary(@click="copyLink") Copy Share Link
+        section(v-if="isOwner")
+          h2 Delete League
+          confirm-button(button-text="Delete League" confirm-text="Are You Sure?" extra-text="This action can not be undone, and all users will lose their points and picks associated with this league." @confirm-it="deleteLeague")
       .column(v-if="league.leagueName")
         section
           p.orange This is alpha-only.  This page will continue to evolve as I work on it.  For now you can invite other alpha members to join your league, do a mock draft, and upon completion of that draft you'll be taken back here.  I'll be adding ways to reset the draft, see the schedule/etc over the next few days.  Stay tuned!  Deadlines are a loomin'!
         h1 {{ league.leagueName }}
+          button.button.is-primary.is-pulled-right.is-small(@click="copyLink" v-if="isInLeague") Copy Share Link
         //- .social-icons
           span [TWITTER] [INSTAGRAM] [DISCORD]
         section(v-if="canStartDraft")
@@ -44,7 +40,7 @@
               b-input(type="textarea" v-model="league.message" rows="10")
             button.button.is-primary(@click="updateLeague") Save Message
             hr
-          vue-markdown(v-if="league.message" :source="league.message")
+          vue-markdown(v-if="leagueMessage" :source="leagueMessage")
           p(v-else) Click on the edit button above to customize your league landing page!  Inform members of the rules you have, the prizes you're giving away - whatever makes sense!
         section(v-if="canJoinLeague && (userData.isAdmin || userData.isAlpha)")
           b-field(label="password" v-if="league.password")
@@ -54,7 +50,7 @@
           confirm-button(buttonText="Leave League" confirmText="Are You Sure?" @confirm-it="leaveLeague")
         section(v-if="draftComplete")
           //- Show the "matchups"
-        league-schedule
+          league-schedule
       .column(v-else)
         .container
           h1 Please select a league from the menu.
@@ -118,6 +114,9 @@ export default {
     },
     isOwner () {
       return this.userId === this.league.ownerId
+    },
+    leagueMessage () {
+      return this.league.message || '# Welcome to your new league!  Edit this message to create your own!'
     },
     totalWeeks () {
       return this.config.totalWeeks
@@ -187,6 +186,19 @@ export default {
           this.$toast.open({
             message: 'Successfully copied the link!',
             type: 'is-success',
+            position: 'is-bottom'
+          })
+        })
+    },
+    deleteLeague () {
+      LeagueService.deleteLeague(this.leagueId)
+        .then(() => {
+          this.$router.push({ path: `/leagues` })
+        })
+        .catch(() => {
+          this.$toast.open({
+            message: 'There was an issue deleting your league.',
+            type: 'is-danger',
             position: 'is-bottom'
           })
         })
