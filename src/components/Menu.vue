@@ -14,15 +14,15 @@
     #primaryNav.navbar-menu(:class="{'is-active': isActive}" @click="isActive=!isActive")
       .navbar-end
         router-link.navbar-item(
-          v-for="(menuItem, index) in menuItems"
-          :key="index"
-          :to="menuItem.where"
-          v-if="canSee(menuItem)") {{ menuItem.name }}
-        router-link.navbar-item(
           v-if="currentUser"
           to="/profile") {{ profile.displayName }}
         router-link.navbar-item(
           v-else to="/login") Log In
+        router-link.navbar-item(
+          v-for="(menuItem, index) in menuItems"
+          :key="index"
+          :to="menuItem.where"
+          v-if="canSee(menuItem)") {{ menuItem.name }}
         a.navbar-item(
           href="https://discord.gg/wTR5AEu"
         ) Discord
