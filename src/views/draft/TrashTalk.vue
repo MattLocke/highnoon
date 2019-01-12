@@ -2,7 +2,7 @@
   section.trashtalk
     h2 Trash Talk
     b-field
-      b-input(maxlength="200" type="textarea" v-model="newMessage")
+      b-input(maxlength="200" type="textarea" v-model="newMessage" @keyup.enter="addMessage")
     b-field
       button.button.is-primary(v-if="newMessage.length" @click="addMessage") Send
       button.button.is-primary(v-else disabled) Send
@@ -40,18 +40,27 @@ export default {
       }
     }
   },
+  mounted () {
+    window.addEventListener('keyup', (event) => {
+      if (event.keyCode === 13) {
+        this.addMessage()
+      }
+    })
+  },
   methods: {
     addMessage () {
-      const db = firebase.database()
-      const messageObject = {
-        userDisplayName: this.user.displayName,
-        message: this.newMessage,
-        when: new Date().getTime()
+      if (this.newMessage.length) {
+        const db = firebase.database()
+        const messageObject = {
+          userDisplayName: this.user.displayName,
+          message: this.newMessage,
+          when: new Date().getTime()
+        }
+        db.ref(`/draftMessages/${this.leagueId}`).push(messageObject)
+          .then(() => {
+            this.newMessage = ''
+          })
       }
-      db.ref(`/draftMessages/${this.leagueId}`).push(messageObject)
-        .then(() => {
-          this.newMessage = ''
-        })
     },
     getMessages () {
       const db = firebase.database()
