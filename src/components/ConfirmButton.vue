@@ -2,6 +2,8 @@
   .confirm-button
     a.button(:class="customClasses" v-show="!sure" v-on:click="sure = true") {{ buttonText }}
     a.button(:class="customClasses" v-show="sure" v-on:click="confirmDelete()") {{ confirmText }}
+    p(v-if="extraText && sure")
+      i {{ extraText }}
 </template>
 
 <script>
@@ -23,6 +25,10 @@ export default {
     confirmText: {
       type: String,
       default: 'Confirm'
+    },
+    extraText: {
+      type: String,
+      default: ''
     }
   },
   data () {
