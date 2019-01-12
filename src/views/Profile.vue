@@ -48,6 +48,9 @@
                 b-field(label="PSN")
                   b-input(v-model="localProfile.psn")
           section
+            b-field(label="Alpha")
+              b-checkbox(v-model="localProfile.isAlpha")
+          section
             button.button.is-primary(@click="saveProfile") Save Profile
             hr
             a(@click="logOut()") Log Out
