@@ -60,7 +60,6 @@
 <script>
 import firebase from 'firebase/app'
 import 'firebase/database'
-import { fireInit } from '@/fireLogin'
 import { shuffle } from 'lodash'
 import vueMarkdown from 'vue-markdown'
 
@@ -173,9 +172,6 @@ export default {
       }
     }
   },
-  mounted () {
-    fireInit()
-  },
   methods: {
     addToRoster (player) {
       this.roster.push(player)
@@ -211,6 +207,8 @@ export default {
       LeagueService.getLeague(leagueId)
         .then((league) => {
           this.league = { ...this.league, ...league }
+        })
+        .then(() => {
           this.getLeagueUsers(leagueId)
         })
         .catch(() => {
@@ -226,7 +224,7 @@ export default {
       this.$store.dispatch('setLoading', true)
       LeagueService.getLeagueUsers(leagueId)
         .then((users) => {
-          this.leagueUsers = Object.values(users)
+          if (users) this.leagueUsers = Object.values(users)
           this.listenForDraft()
           this.$store.dispatch('setLoading', false)
         })
