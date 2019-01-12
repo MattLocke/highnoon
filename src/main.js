@@ -17,6 +17,7 @@ import leftBar from './components/LeftBar'
 import topBar from './components/TopBar'
 import confirmButton from './components/ConfirmButton'
 import arrow from './components/Arrow'
+import collapsible from './components/Collapsible'
 
 Vue.use(Buefy)
 Vue.use(VueClipboard)
@@ -36,6 +37,7 @@ Vue.component('leftBar', leftBar)
 Vue.component('topBar', topBar)
 Vue.component('confirmButton', confirmButton)
 Vue.component('arrow', arrow)
+Vue.component('collapsible', collapsible)
 
 fireInit()
 
