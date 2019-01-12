@@ -33,7 +33,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .left-bar {
     padding-top: 1.5rem;
     .logo {
