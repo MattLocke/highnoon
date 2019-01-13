@@ -41,7 +41,9 @@
             button.button.is-primary(@click="updateLeague") Save Message
             hr
           vue-markdown(v-if="leagueMessage" :source="leagueMessage")
-          p(v-else) Click on the edit button above to customize your league landing page!  Inform members of the rules you have, the prizes you're giving away - whatever makes sense!
+          .wrap(v-else)
+            img(src="https://firebasestorage.googleapis.com/v0/b/overwatch-pickem.appspot.com/o/images%2Fleagues%2Fwelcome-to-your-league.jpg?alt=media&token=bbf8225c-6bd0-4b1a-b5e0-d864a3047395")
+            p Click on the edit button above to customize your league landing page!  Inform members of the rules you have, the prizes you're giving away - whatever makes sense!
         section(v-if="canJoinLeague && (userData.isAdmin || userData.isAlpha)")
           b-field(label="password" v-if="league.password")
             b-input(type="password" v-model="localPassword")
@@ -115,7 +117,7 @@ export default {
       return this.userId === this.league.ownerId
     },
     leagueMessage () {
-      return this.league.message || '# Welcome to your new league!  Edit this message to create your own!'
+      return this.league.message
     },
     totalWeeks () {
       return this.config.totalWeeks
