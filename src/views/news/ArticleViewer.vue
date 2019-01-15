@@ -4,7 +4,8 @@
       h1 {{ featuredArticle.headline }}
         button.button.is-pulled-right.is-primary.is-small(@click="editArticle" v-if="isEditor") Edit
       span.category Posted under {{ featuredArticle.category }} on {{ featuredArticle.postDate | formatNewsDate }}
-      vue-markdown(:source="featuredArticle.message")
+      .news-content
+        vue-markdown(:source="featuredArticle.message")
       hr
       span {{ featuredArticle.author }}
       button.button.is-small.is-pulled-right.is-primary(@click="copyLink") Copy Share Link
@@ -58,3 +59,20 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+  .news-section {
+    h1, h2, h3 {
+      em {
+        color: #f99e1a;
+        font-style: normal;
+      }
+    }
+    .news-content {
+      h1 {
+        margin: 2rem 0 -1rem;
+      }
+    }
+
+  }
+</style>

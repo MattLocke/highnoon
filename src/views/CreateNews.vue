@@ -29,9 +29,9 @@
             .column
               b-field(label="Post Date")
                 b-datepicker(placeholder="Select Date" v-model="postDate")
-          .field
+          .field(v-if="user.isEditor || user.isAdmin")
             b-checkbox(v-model="newsItem.approved") Approved
-          .field
+          .field(v-if="user.isEditor || user.isAdmin")
             b-checkbox(v-model="newsItem.frontPage") Worthy of Home Page
           hr
           .columns
@@ -48,8 +48,9 @@
           section.news-section
             h1 {{ headline }}
             p Posted under {{ newsItem.category }} on {{ cleanPostDate | formatNewsDate }}
-            vue-markdown(:source="newsItem.message")
-            span By: {{ user.signature }}
+            .news-content
+              vue-markdown(:source="newsItem.message")
+              span By: {{ user.signature }}
 </template>
 
 <script>
@@ -80,7 +81,7 @@ export default {
   },
   computed: {
     canSave () {
-      return this.newsItem.title && this.newsItem.blurb && this.newsItem.message && this.postDate && this.newsItem.category && this.isEditor
+      return this.newsItem.title && this.newsItem.blurb && this.newsItem.message && this.postDate && this.newsItem.category && (this.isEditor || this.user.isWriter)
     },
     cleanPostDate () {
       return Number(moment(this.postDate).format('X'))

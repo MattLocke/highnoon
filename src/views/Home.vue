@@ -2,7 +2,7 @@
   .home
     .columns.is-marginless
       left-bar(:hideMobile="true")
-        section(v-if="isEditor")
+        section(v-if="isWriter")
           .columns
             .column
               router-link(to="/CreateNews") Create News
@@ -15,7 +15,7 @@
           news-item(v-for="article in latestArticles" :key="article.id" :article="article" v-on:set-article="setArticle")
 
       top-bar(toggle-text="View More News")
-        section(v-if="isEditor")
+        section(v-if="isWriter")
           .columns
             .column
               router-link(to="/CreateNews") Create News
@@ -56,8 +56,8 @@ export default {
     }
   },
   computed: {
-    isEditor () {
-      return has(this.$store.state.user.userData, 'isEditor')
+    isWriter () {
+      return has(this.$store.state.user.userData, 'isEditor') || has(this.$store.state.user.userData, 'isWriter')
     }
   },
   methods: {
@@ -73,7 +73,7 @@ export default {
         this.featuredArticle = articles[0]
         this.$store.dispatch('setLoading', false)
       })
-    if (this.isEditor) {
+    if (this.isWriter) {
       newsService.getPendingNews()
         .then(articles => {
           this.pendingArticles = articles
