@@ -41,32 +41,31 @@
             .column.is-narrow
               button.button.is-primary.is-small(@click="removePlayer(index)") X
       .column(v-if="roster.length < 100")
-        .container
-          router-link.button.is-primary.is-pulled-right.is-small(:to="`/leagues/${leagueId}`") Back to League
-          h2 Preference list for:
-            span.orange  {{ leagueData.leagueName }}
-          section
-            h3 Choose Your Players
-            p This list will serve as a "preference" for the draft to the league it's associated with.  Keep in mind during the draft it may not always choose your highest available player.  If roles have not been fulfilled, it will fill those roles choosing the best it can from your list.  If your list is too short, we'll take the player with the highest High Noon Score.  Right now, the player list is fixed in order, so make your decisions carefully!  After I get more time, I'll add the ability to easily re-order the list.
-          section
-            .columns
-              .column.is-narrow
-                b-field(label="Filter Team")
-                  b-select(placeholder="Filter By Team" v-model="filterTeam")
-                    option(value="") All
-                    option(v-for="team in teams" :value="team.abbreviatedName") {{ team.name }}
-              .column.is-narrow
-                b-field(label="Filter Role")
-                  b-select(placeholder="Filter By Role" v-model="filterRole")
-                    option(value="") All
-                    option(value="flex") Flex
-                    option(value="offense") Offense
-                    option(value="support") Support
-                    option(value="tank") Tank
-            b-field(label="Filter Players")
-              b-input(type="text" v-model="filterText")
-          section
-            player-line(:player="player" :key="`${Math.random()}${player.id}`" v-for="player in filteredPlayers" @add-player="addToRoster($event)" :roster="roster" :canSelect="true")
+        router-link.button.is-primary.is-pulled-right.is-small(:to="`/leagues/${leagueId}`") Back to League
+        h2 Preference list for:
+          span.orange  {{ leagueData.leagueName }}
+        section
+          h3 Choose Your Players
+          p This list will serve as a "preference" for the draft to the league it's associated with.  Keep in mind during the draft it may not always choose your highest available player.  If roles have not been fulfilled, it will fill those roles choosing the best it can from your list.  If your list is too short, we'll take the player with the highest High Noon Score.  Right now, the player list is fixed in order, so make your decisions carefully!  After I get more time, I'll add the ability to easily re-order the list.
+        section
+          .columns
+            .column.is-narrow
+              b-field(label="Filter Team")
+                b-select(placeholder="Filter By Team" v-model="filterTeam")
+                  option(value="") All
+                  option(v-for="team in teams" :value="team.abbreviatedName") {{ team.name }}
+            .column.is-narrow
+              b-field(label="Filter Role")
+                b-select(placeholder="Filter By Role" v-model="filterRole")
+                  option(value="") All
+                  option(value="flex") Flex
+                  option(value="offense") Offense
+                  option(value="support") Support
+                  option(value="tank") Tank
+          b-field(label="Filter Players")
+            b-input(type="text" v-model="filterText")
+        section
+          player-line(:player="player" :key="`${Math.random()}${player.id}`" v-for="player in filteredPlayers" @add-player="addToRoster($event)" :roster="roster" :canSelect="true")
 </template>
 
 <script>
