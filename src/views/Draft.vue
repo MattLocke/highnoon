@@ -27,7 +27,7 @@
               .big-number
                 img(src="images/roles/tank-white.svg" alt="tank")
                 | {{ remaining.tank }}
-            .column.has-text-centered
+            //- .column.has-text-centered
               .big-number
                 img(src="images/roles/flex-white.svg" alt="flex")
                 | {{ remaining.flex }}
@@ -43,8 +43,8 @@
                   span {{ user.displayName }}
       .column
         //- Choose your player
-        .columns.is-desktop(v-if="myTurn")
-          .column(v-if="roster.length < 9")
+        .columns.is-desktop(v-show="myTurn")
+          .column.is-two-thirds-desktop(v-if="roster.length < 9")
             section
               h2 Draft For Some Awesome League
               hr
@@ -71,9 +71,9 @@
           .column(v-else)
             section
               p Congrats!  Your team is complete!
-          .column
+          .column.is-one-third-desktop
             trash-talk
-        .columns.is-desktop(v-else)
+        .columns.is-desktop(v-show="!myTurn")
           //- See how the draft is going
           .column
             section(v-if="users.length")
