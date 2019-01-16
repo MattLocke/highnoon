@@ -5,7 +5,7 @@
         h2 Draft Preference List
         section
           h3 Chosen Roles
-          .columns
+          .columns.is-mobile
             .column.has-text-centered
               .big-number
                 img(src="images/roles/offense-white.svg" alt="offense")
@@ -18,7 +18,7 @@
               .big-number
                 img(src="images/roles/tank-white.svg" alt="tank")
                 | {{ tankPlayers.length }}
-            .column.has-text-centered
+            //- .column.has-text-centered
               .big-number
                 img(src="images/roles/flex-white.svg" alt="flex")
                 | {{ flexPlayers.length }}
