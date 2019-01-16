@@ -8,9 +8,10 @@
             .left-bar-item.has-pointer(:class="{'active-item': $route.params.leagueId == league.leagueId}" v-for="league in fantasyLeagues" :key="league.leagueId" @click="setLeague(league.leagueId)") {{ league.leagueName }}
             hr
             router-link.button.is-primary(to="/createLeague" v-if="userData.isAdmin || userData.isAlpha") Create League
-        section(v-if="league.leagueType == 'standard' && league.status != 'complete'")
+        section(v-if="league.leagueType == 'standard' && league.status != 'complete' && isInLeague")
           collapsible(title-text="Draft Preference List" :start-collapsed="true")
-            p You can use this list to auto-draft for you in case you can't make it to the live draft.  Keep in mind, if you use this list, even if you're there for the live draft, this list will take priority!
+            p You can use this list to auto-draft for you in case you can't make it to the live draft.  
+              b Keep in mind, if you use this list, even if you're there for the live draft, this list will take priority and you will have no manual control!
             hr
             button.button.is-primary(@click="draftPreference") Draft Preference List
         section(v-if="leagueUsers.length")
@@ -51,7 +52,6 @@
         section(v-if="isInLeague && !isOwner")
           confirm-button(buttonText="Leave League" confirmText="Are You Sure?" @confirm-it="leaveLeague")
         section(v-if="draftComplete")
-          //- Show the "matchups"
           league-schedule
       .column(v-else)
         .container
@@ -99,7 +99,7 @@ export default {
       return true
     },
     canLeaveLeague () {
-      return (this.league.status !== 'completed' && !this.isOwner && this.isInLeague)
+      return (!this.draftComplete && !this.isOwner && this.isInLeague)
     },
     canStartDraft () {
       return (this.isOwner && this.unDrafted && this.leagueUsers.length % 2 === 0)
@@ -108,7 +108,7 @@ export default {
       return this.$store.getters.getConfig
     },
     draftComplete () {
-      return false
+      return this.draftStatus === 'completed'
     },
     isInLeague () {
       return this.userLeagues.some(league => league.leagueId === this.leagueId)
@@ -138,7 +138,7 @@ export default {
       return this.$route.params.leagueId
     },
     unDrafted () {
-      return this.league.status === 'unDrafted'
+      return this.draftStatus === 'unDrafted'
     },
     players () {
       return this.$store.getters.getPlayers
