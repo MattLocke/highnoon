@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "overwatch-pickem"
+    "default": "overwatch-pickem",
+    "dev": "overwatch-pickem-dev"
   }
 }
