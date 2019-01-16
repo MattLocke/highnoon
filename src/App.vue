@@ -141,6 +141,9 @@ section {
 .big-number {
   font-size: 3rem;
   line-height: 1.5rem;
+  img {
+    max-height: 4rem;
+  }
 }
 
 .mdi-chevron-right:before {
