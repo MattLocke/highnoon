@@ -2,9 +2,9 @@
   .player-line
     .columns.is-gapless.is-mobile
       .column.is-narrow
-        img(:src="`images/roles/${player.attributes.role || 'flex'}-white.svg`")
+        img(:src="`images/roles/${player.attributes.role || 'flex'}-white.svg`" width="22" height="22")
       .column.is-narrow
-        img(:src="getLogo(player)")
+        img(:src="getLogo(player)" width="22" height="22")
       .column
         span.has-pointer(@click="showDetails = !showDetails") {{ player.name }}
       .column.is-narrow
@@ -73,7 +73,7 @@ export default {
     }
     img {
       height: 22px;
-      width: auto;
+      width: 22px;
     }
     .player-line-details {
       margin: 1rem;
