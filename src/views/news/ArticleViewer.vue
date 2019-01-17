@@ -30,7 +30,7 @@ export default {
       return `https://highnoon.gg/#/article/${this.featuredArticle.id}`
     },
     isEditor () {
-      return has(this.$store.state.user.userData, 'isEditor') || has(this.$store.state.user.userData, 'isEditor')
+      return has(this.$store.state.user.userData, 'isEditor') || has(this.$store.state.user.userData, 'isWriter')
     },
     tweetUrl () {
       // TODO: Make the tweet url work.
