@@ -10,8 +10,8 @@
             router-link.button.is-primary(to="/createLeague" v-if="userData.isAdmin || userData.isAlpha") Create League
         section(v-if="league.leagueType == 'standard' && league.status != 'complete' && isInLeague")
           collapsible(title-text="Draft Preference List" :start-collapsed="true")
-            p You can use this list to auto-draft for you in case you can't make it to the live draft.  
-              b Keep in mind, if you use this list, even if you're there for the live draft, this list will take priority and you will have no manual control!
+            p You can use this list to auto-draft for you in case you can't make it to the live draft.
+              b   Keep in mind, if you use this list, even if you're there for the live draft, this list will take priority and you will have no manual control!
             hr
             button.button.is-primary(@click="draftPreference") Draft Preference List
         section(v-if="leagueUsers.length")
@@ -20,13 +20,14 @@
         section(v-if="canLeaveLeague")
           confirm-button(buttonText="Leave League" confirmText="Are You Sure?" @confirm-it="leaveLeague")
         section(v-if="isOwner")
-          h2 Delete League
-          confirm-button(button-text="Delete League" confirm-text="Are You Sure?" extra-text="This action can not be undone, and all users will lose their points and picks associated with this league." @confirm-it="deleteLeague")
-      .column(v-if="league.leagueName")
-        section
+          collapsible(title-text="Delete League" :start-collapsed="true")
+            confirm-button(button-text="Delete League" confirm-text="Are You Sure?" extra-text="This action can not be undone, and all users will lose their points and picks associated with this league." @confirm-it="deleteLeague")
+      .column.is-half-desktop(v-if="league.leagueName")
+        section.is-hidden-mobile
           p.orange This is alpha-only.  This page will continue to evolve as I work on it.  For now you can invite other alpha members to join your league, do a mock draft, and upon completion of that draft you'll be taken back here.  I'll be adding ways to reset the draft, see the schedule/etc over the next few days.  Stay tuned!  Deadlines are a loomin'!
-        h1 {{ league.leagueName }}
+        h1
           button.button.is-primary.is-pulled-right.is-small(@click="copyLink" v-if="isInLeague") Copy Share Link
+          | {{ league.leagueName }}
         //- .social-icons
           span [TWITTER] [INSTAGRAM] [DISCORD]
         section(v-if="canStartDraft")
@@ -51,8 +52,7 @@
           button.button.is-primary(@click="joinLeague") Join League
         section(v-if="isInLeague && !isOwner")
           confirm-button(buttonText="Leave League" confirmText="Are You Sure?" @confirm-it="leaveLeague")
-        section(v-if="draftComplete")
-          league-schedule
+        league-schedule(v-if="draftComplete")
       .column(v-else)
         .container
           h1 Please select a league from the menu.
@@ -86,7 +86,8 @@ export default {
       editingMessage: false,
       draftStatus: '',
       showLeagueUsers: false,
-      showDraftPreference: false
+      showDraftPreference: false,
+      showMenu: true
     }
   },
   computed: {

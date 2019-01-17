@@ -1,24 +1,19 @@
 <template lang="pug">
   .left-bar.column(:class="getClass")
-    .columns.is-mobile(v-if="showClose")
-      .column
-      .column.is-narrow(@click="isOpen = !isOpen")
-        burger(v-model="isOpen")
-    slot(v-if="isOpen")
+    p.show-menu.orange.is-hidden-desktop(@click="showMenu = !showMenu") {{ showMenu ? 'Hide' : 'Show' }} Menu
+      arrow(:isLeft="true" v-model="showMenu")
+    .wrap(v-if="showMenu")
+      slot
 </template>
 
 <script>
 export default {
   data () {
     return {
-      isOpen: true
+      showMenu: true
     }
   },
   props: {
-    showClose: {
-      type: Boolean,
-      default: true
-    },
     hideMobile: {
       type: Boolean,
       default: false
@@ -26,8 +21,7 @@ export default {
   },
   computed: {
     getClass () {
-      if (!this.showClose) return { 'is-one-quarter-desktop': true, 'is-always-open': true, 'is-hidden-mobile': this.hideMobile }
-      return this.isOpen ? { 'is-one-quarter-desktop': true, 'is-hidden-mobile': this.hideMobile } : { 'is-narrow': true, 'is-hidden-mobile': this.hideMobile }
+      return { 'is-one-quarter-desktop': true, 'is-hidden-mobile': this.hideMobile }
     }
   }
 }
@@ -35,7 +29,9 @@ export default {
 
 <style lang="scss">
   .left-bar {
-    padding-top: 1.5rem;
+    .show-menu {
+      margin-bottom: .5rem;
+    }
     .logo {
       height: 20px;
       width: auto;

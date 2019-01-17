@@ -122,6 +122,7 @@ html {
   background-color: $dark-blue;
   background-image: radial-gradient(#263277, $dark-blue);
   min-height: 99vh;
+  width: 100vw;
 }
 
 body {
@@ -273,12 +274,18 @@ h1 {
   font-family: 'overFont';
   font-size: 2rem;
   color: #fff;
+  .button {
+    margin-top: .7rem;
+  }
 }
 
 h2 {
   font-family: 'overFont';
   font-size: 1.6rem;
   color: #fff;
+  .button {
+    margin-top: .5rem;
+  }
 }
 
 h3 {

@@ -9,7 +9,7 @@
 export default {
   props: {
     index: {
-      type: Number,
+      type: [Number, String],
       required: true
     },
     week: {

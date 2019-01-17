@@ -125,6 +125,7 @@ export default {
       requiredSupport: 2,
       requiredTank: 2,
       showDraftOrder: true,
+      showMenu: true,
       showRequirements: true,
       showRoster: true
     }

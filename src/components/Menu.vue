@@ -6,7 +6,7 @@
         |  HIGHNOON
         span.orange .GG
           span.white(v-if="profile.isAlpha")  |
-            span.orange  ALPHA USER
+            span.orange  ALPHA
       a.navbar-burger.burger(role="button" :class="{'is-active': isActive}" @click="isActive=!isActive")
         span
         span
