@@ -45,7 +45,7 @@ export default {
 // Set your colors
 $primary: #f99e1a;
 $primary-invert: findColorInvert($primary);
-$secondary: #0a0d1e;
+$secondary: #1f5ca1;
 $twitter: #4099FF;
 $dark-blue: #090c1c;
 $twitter-invert: findColorInvert($twitter);
@@ -122,7 +122,7 @@ html {
   background-color: $dark-blue;
   background-image: radial-gradient(#263277, $dark-blue);
   min-height: 99vh;
-  width: 100vw;
+  width: 98vw;
 }
 
 body {
@@ -270,6 +270,25 @@ a:hover {
   text-transform: capitalize;
 }
 
+.is-button-header {
+  h1, h2 {
+    padding-left: .25rem;
+  }
+  .column {
+    padding: 0;
+    .button {
+      display: block;
+      height: 1.6rem;
+      line-height: 1.6rem;
+      border-radius: 0;
+      font-size: 1rem;
+    }
+  }
+  .column.is-narrow {
+    background-color: $primary;
+  }
+}
+
 h1 {
   font-family: 'overFont';
   font-size: 2rem;
@@ -305,5 +324,12 @@ strong {
 hr {
   opacity: .5;
   height: 1px;
+}
+
+/* overrides */
+#app {
+  .button {
+    border-radius: 0;
+  }
 }
 </style>

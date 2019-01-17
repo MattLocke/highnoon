@@ -22,20 +22,24 @@
         section(v-if="isOwner")
           collapsible(title-text="Delete League" :start-collapsed="true")
             confirm-button(button-text="Delete League" confirm-text="Are You Sure?" extra-text="This action can not be undone, and all users will lose their points and picks associated with this league." @confirm-it="deleteLeague")
-      .column.is-half-desktop(v-if="league.leagueName")
-        section.is-hidden-mobile
+        section
+          //- router-link.button.is-primary.is-small(:to="`/manageTeam/${leagueId}`") Manage Team
+          button.button.is-secondary.is-small(@click="copyLink" v-if="isInLeague") Copy Share Link
+      .column(v-if="league.leagueName")
+        section.is-hidden-mobile(v-if="!userData.isAdmin")
           p.orange This is alpha-only.  This page will continue to evolve as I work on it.  For now you can invite other alpha members to join your league, do a mock draft, and upon completion of that draft you'll be taken back here.  I'll be adding ways to reset the draft, see the schedule/etc over the next few days.  Stay tuned!  Deadlines are a loomin'!
-        h1
-          button.button.is-primary.is-pulled-right.is-small(@click="copyLink" v-if="isInLeague") Copy Share Link
-          | {{ league.leagueName }}
+        h1 {{ league.leagueName }}
         //- .social-icons
           span [TWITTER] [INSTAGRAM] [DISCORD]
-        section(v-if="canStartDraft")
-          confirm-button(:customClasses="{'is-primary': true,'is-small': true,'is-pulled-right':true}" buttonText="Start Draft" confirmText="Are You Sure?" @confirm-it="startDraft") Start Draft
-          h2 Start Draft
+        section
+          .columns.is-mobile.is-button-header(v-if="canStartDraft")
+            .column
+              h2 Start Draft
+            .column.is-narrow
+              confirm-button(:customClasses="{'is-primary': true,'is-small': true,'is-pulled-right':true}" buttonText="Start Draft" confirmText="Are You Sure?" @confirm-it="startDraft") Start Draft
         section
           h2 League Message
-            button.button.is-primary.is-small.is-pulled-right(@click="editingMessage = !editingMessage" v-if="isOwner") {{ editingMessage ? 'cancel' : 'edit' }}
+            button.button.is-secondary.is-small.is-pulled-right(@click="editingMessage = !editingMessage" v-if="isOwner") {{ editingMessage ? 'cancel' : 'edit' }}
           hr
           .wrap(v-if="editingMessage")
             b-field(label="League Message")
