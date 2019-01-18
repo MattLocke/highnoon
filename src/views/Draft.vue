@@ -12,29 +12,22 @@
               .column.is-one-third-desktop.is-half-mobile(v-for="placeholder in placeholders")
                 player-card(:showRemove="false")
         section
-          h3.has-pointer(@click="showRequirements = !showRequirements") Remaining Requirements
-            arrow(:isLeft="true" v-model="showRequirements")
-          .columns.is-mobile(v-show="showRequirements")
-            .column.has-text-centered
-              .big-number
-                img(src="images/roles/offense-white.svg" alt="offense")
-                | {{ remaining.offense }}
-            .column.has-text-centered
-              .big-number
-                img(src="images/roles/support-white.svg" alt="support")
-                | {{ remaining.support }}
-            .column.has-text-centered
-              .big-number
-                img(src="images/roles/tank-white.svg" alt="tank")
-                | {{ remaining.tank }}
-            //- .column.has-text-centered
-              .big-number
-                img(src="images/roles/flex-white.svg" alt="flex")
-                | {{ remaining.flex }}
+          collapsible(title-text="Remaining Requirements" :start-collapsed="true")
+            .columns.is-mobile(v-show="showRequirements")
+              .column.has-text-centered
+                .big-number
+                  img(src="images/roles/offense-white.svg" alt="offense")
+                  | {{ remaining.offense }}
+              .column.has-text-centered
+                .big-number
+                  img(src="images/roles/support-white.svg" alt="support")
+                  | {{ remaining.support }}
+              .column.has-text-centered
+                .big-number
+                  img(src="images/roles/tank-white.svg" alt="tank")
+                  | {{ remaining.tank }}
         section
-          h3.has-pointer(@click="showDraftOrder = !showDraftOrder") Draft Order
-            arrow(:isLeft="true" v-model="showDraftOrder")
-          .wrap(v-show="showDraftOrder")
+          collapsible(title-text="Draft Order" :start-collapsed="true")
             .left-bar-item(v-for="(user, index) in users" :class="{'active-item': index === draft.activeDrafter}")
               .columns.is-mobile
                 .column.is-narrow
@@ -47,8 +40,9 @@
           .column.is-two-thirds-desktop(v-if="roster.length < 9")
             section
               h2 Draft For Some Awesome League
-              hr
-              h3 Choose Your Player
+            section
+              collapsible(title-text="Drafted Players" :start-collapsed="true")
+                drafting-users(:users="users" :draft="draft" :picks="picks")
             section
               .columns
                 .column.is-narrow
@@ -60,7 +54,6 @@
                   b-field(label="Filter Role")
                     b-select(placeholder="Filter By Role" v-model="filterRole")
                       option(value="") All
-                      option(value="flex") Flex
                       option(value="offense") Offense
                       option(value="support") Support
                       option(value="tank") Tank
@@ -81,13 +74,8 @@
               hr
               h3 Currently Drafting:
                 span.orange  {{ users[draft.activeDrafter].displayName }}
-            section.drafting-users
-              .columns.is-multiline.is-mobile
-                .column.is-one-fifth-desktop.is-half-mobile(v-for="(user, index) in users")
-                  h3.underlined(:class="{'orange': user.userId == users[draft.activeDrafter].userId}") {{ user.displayName }}
-                    span.is-pulled-right(v-if="user.userId == users[draft.activeDrafter].userId") {{ draft.direction == 'forward' ? '>' : '<' }}
-                  ul
-                    player-card(v-for="pick in getUserPicks(user.userId)" :key="pick.id" :player="pick" :showRemove="false" :primaryColor="getColor(pick)" :score="pick.stats.fantasyScore || 0" :hidePhoto="true") {{ pick.name }}
+            section
+              drafting-users(:users="users" :draft="draft" :picks="picks")
           .column.is-one-third-desktop
             trash-talk
       draft-drawer(:roster="roster")
@@ -98,6 +86,7 @@ import firebase from 'firebase/app'
 import 'firebase/database'
 
 import DraftDrawer from '@/views/draft/DraftDrawer'
+import DraftingUsers from '@/views/draft/DraftingUsers'
 import PlayerCard from '@/components/PlayerCard'
 import PlayerLine from '@/views/draft/PlayerLine'
 import TrashTalk from '@/views/draft/TrashTalk'
@@ -106,6 +95,7 @@ export default {
   name: 'Draft',
   components: {
     DraftDrawer,
+    DraftingUsers,
     PlayerCard,
     PlayerLine,
     TrashTalk
@@ -120,7 +110,7 @@ export default {
       filterRole: '',
       picks: [],
       users: [],
-      requiredFlex: 0,
+      preferenceList: [],
       requiredOffense: 2,
       requiredSupport: 2,
       requiredTank: 2,
@@ -171,9 +161,6 @@ export default {
       fPlayers = fPlayers.sort(function (a, b) { return (a.stats.fantasyScore < b.stats.fantasyScore) ? 1 : ((b.stats.fantasyScore < a.stats.fantasyScore) ? -1 : 0) })
       return fPlayers
     },
-    flexPlayers () {
-      return this.roster.filter(player => player.attributes.role === 'flex')
-    },
     offensePlayers () {
       return this.roster.filter(player => player.attributes.role === 'offense')
     },
@@ -185,14 +172,13 @@ export default {
     },
     remaining () {
       const remaining = {}
-      remaining.flex = this.requiredFlex - this.flexPlayers.length > 0 ? this.requiredFlex - this.flexPlayers.length : 0
       remaining.offense = this.requiredOffense - this.offensePlayers.length > 0 ? this.requiredOffense - this.offensePlayers.length : 0
       remaining.tank = this.requiredTank - this.tankPlayers.length > 0 ? this.requiredTank - this.tankPlayers.length : 0
       remaining.support = this.requiredSupport - this.supportPlayers.length > 0 ? this.requiredSupport - this.supportPlayers.length : 0
       return remaining
     },
     totalRemaining () {
-      return this.remaining.flex + this.remaining.offense + this.remaining.support + this.remaining.tank
+      return this.remaining.offense + this.remaining.support + this.remaining.tank
     },
     userId () {
       return this.$store.getters.getUserId
@@ -223,6 +209,7 @@ export default {
           this.getPicks()
           this.getDraft()
           this.getDraftOrder()
+          this.getPreferenceList()
         }
       }
     },
@@ -272,9 +259,6 @@ export default {
         this.picks = snapshot.val() || []
       })
     },
-    getUserPicks (userId) {
-      return this.picks[userId] || []
-    },
     getColor (player) {
       const team = this.teams.filter(team => team.abbreviatedName === player.team)[0]
       if (team) return team.primaryColor === '000000' ? team.secondaryColor : team.primaryColor
@@ -296,9 +280,6 @@ export default {
       const strictMode = !!(this.totalRemaining >= this.placeholders.length)
 
       switch (player.attributes.role) {
-        case 'flex': {
-          return strictMode ? !!(this.remaining.flex > 0) : true
-        }
         case 'offense': {
           return strictMode ? !!(this.remaining.offense > 0) : true
         }
