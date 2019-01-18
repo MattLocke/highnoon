@@ -1,5 +1,5 @@
 <template lang="pug">
-  .player-line
+  .player-line(v-if="!existsInRoster")
     .columns.is-gapless.is-mobile
       .column.is-narrow
         img(:src="`images/roles/${player.attributes.role || 'flex'}-white.svg`" width="22" height="22")

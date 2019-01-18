@@ -23,8 +23,8 @@
           collapsible(title-text="Delete League" :start-collapsed="true")
             confirm-button(button-text="Delete League" confirm-text="Are You Sure?" extra-text="This action can not be undone, and all users will lose their points and picks associated with this league." @confirm-it="deleteLeague")
         section
-          //- router-link.button.is-primary.is-small(:to="`/manageTeam/${leagueId}`") Manage Team
-          button.button.is-secondary.is-small(@click="copyLink" v-if="isInLeague") Copy Share Link
+          router-link.button.is-primary.is-small(:to="`/manageTeam/${leagueId}`") Manage Team
+          button.button.is-secondary.is-small.is-pulled-right(@click="copyLink" v-if="isInLeague") Copy Share Link
       .column(v-if="league.leagueName")
         section.is-hidden-mobile(v-if="!userData.isAdmin")
           p.orange This is alpha-only.  This page will continue to evolve as I work on it.  For now you can invite other alpha members to join your league, do a mock draft, and upon completion of that draft you'll be taken back here.  I'll be adding ways to reset the draft, see the schedule/etc over the next few days.  Stay tuned!  Deadlines are a loomin'!
