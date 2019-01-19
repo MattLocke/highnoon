@@ -17,24 +17,28 @@ export default {
     }
   },
   actions: {
-    getPlayers: (context) => {
-      db.collection(`players`)
-        .get()
-        .then((players) => {
-          const thePlayers = players.docs.map(player => ({ ...player.data() }))
-          db.collection(`playerStats`)
-            .get()
-            .then((stats) => {
-              const theStats = stats.docs.map(stat => ({ ...stat.data() }))
-              const playersToSave = []
-              thePlayers.forEach((player) => {
-                const tmpStats = theStats.find(stat => stat.playerId === player.id) || { fantasyScore: 0 }
-                player = { ...player, stats: tmpStats }
-                playersToSave.push(player)
+    getPlayers: ({ state, commit, dispatch }) => {
+      if (!state.players.length) {
+        dispatch('setLoading', true)
+        db.collection(`players`)
+          .get()
+          .then((players) => {
+            const thePlayers = players.docs.map(player => ({ ...player.data() }))
+            db.collection(`playerStats`)
+              .get()
+              .then((stats) => {
+                const theStats = stats.docs.map(stat => ({ ...stat.data() }))
+                const playersToSave = []
+                thePlayers.forEach((player) => {
+                  const tmpStats = theStats.find(stat => stat.playerId === player.id) || { fantasyScore: 0 }
+                  player = { ...player, stats: tmpStats }
+                  playersToSave.push(player)
+                })
+                commit('SET_PLAYERS', playersToSave)
+                dispatch('setLoading', false)
               })
-              context.commit('SET_PLAYERS', playersToSave)
-            })
-        })
+          })
+      }
     }
   },
   getters: {
