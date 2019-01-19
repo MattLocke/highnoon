@@ -23,7 +23,7 @@
           collapsible(title-text="Delete League" :start-collapsed="true")
             confirm-button(button-text="Delete League" confirm-text="Are You Sure?" extra-text="This action can not be undone, and all users will lose their points and picks associated with this league." @confirm-it="deleteLeague")
         section
-          router-link.button.is-primary.is-small(:to="`/manageTeam/${leagueId}`") Manage Team
+          router-link.button.is-primary.is-small(:to="`/manageTeam/${leagueId}`" :disabled="!draftComplete") Manage Team
           button.button.is-secondary.is-small.is-pulled-right(@click="copyLink" v-if="isInLeague") Copy Share Link
       .column(v-if="league.leagueName")
         section.is-hidden-mobile(v-if="!userData.isAdmin")
@@ -85,7 +85,6 @@ export default {
         message: '',
         image: ''
       },
-      leagueUsers: [],
       localPassword: '',
       editingMessage: false,
       draftStatus: '',
@@ -123,6 +122,9 @@ export default {
     },
     leagueMessage () {
       return this.league.message
+    },
+    leagueUsers () {
+      return this.$store.getters.getLeagueUsers
     },
     totalWeeks () {
       return this.config.totalWeeks
@@ -168,7 +170,10 @@ export default {
     leagueId: {
       immediate: true,
       handler (val) {
-        if (val) this.getLeague(val)
+        if (val) {
+          this.$store.dispatch('fetchLeagueUsers', this.leagueId)
+          this.getLeague(val)
+        }
       }
     },
     draftStatus: {
@@ -216,7 +221,7 @@ export default {
           this.league = { ...this.league, ...league }
         })
         .then(() => {
-          this.getLeagueUsers(leagueId)
+          this.listenForDraft()
         })
         .catch(() => {
           this.$store.dispatch('setLoading', false)
@@ -225,15 +230,6 @@ export default {
             type: 'is-danger',
             position: 'is-bottom'
           })
-        })
-    },
-    getLeagueUsers (leagueId) {
-      this.$store.dispatch('setLoading', true)
-      LeagueService.getLeagueUsers(leagueId)
-        .then((users) => {
-          if (users) this.leagueUsers = Object.values(users)
-          this.listenForDraft()
-          this.$store.dispatch('setLoading', false)
         })
     },
     joinLeague () {
