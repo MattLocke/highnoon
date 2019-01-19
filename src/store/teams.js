@@ -17,13 +17,15 @@ export default {
     }
   },
   actions: {
-    getTeams: (context, payload) => {
-      db.collection('teams')
-        .get()
-        .then((teams) => {
-          const theTeams = teams.docs.map(team => ({ ...team.data() }))
-          context.commit('SET_TEAMS', theTeams)
-        })
+    getTeams: ({ state, commit }) => {
+      if (!state.teams.length) {
+        db.collection('teams')
+          .get()
+          .then((teams) => {
+            const theTeams = teams.docs.map(team => ({ ...team.data() }))
+            commit('SET_TEAMS', theTeams)
+          })
+      }
     }
   },
   getters: {
