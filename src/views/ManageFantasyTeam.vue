@@ -17,7 +17,7 @@
       .column
         section
           h1 Manage Your Fantasy Team
-        .columns
+        .columns.is-multiline
           .column.is-narrow
             section
               h2 Captain
@@ -29,12 +29,12 @@
             section
               h2 Offense
               .columns
-                .column
+                .column.is-narrow
                   b-field
                     b-select(placeholder="Choose Player" v-model="lineUp.offense1")
                       option(v-for="player in myPlayersOffense" :value="player") {{ player.name }}
                   player-card(:player="lineUp.offense1" :showRemove="false" :score="lineUp.offense1 ? lineUp.offense1.stats.fantasyScore : 0")
-                .column
+                .column.is-narrow
                   b-field
                     b-select(placeholder="Choose Player" v-model="lineUp.offense2")
                       option(v-for="player in myPlayersOffense" :value="player") {{ player.name }}
@@ -43,12 +43,12 @@
             section
               h2 Support
               .columns
-                .column
+                .column.is-narrow
                   b-field
                     b-select(placeholder="Choose Player" v-model="lineUp.support1")
                       option(v-for="player in myPlayersSupport" :value="player") {{ player.name }}
                   player-card(:player="lineUp.support1" :showRemove="false" :score="lineUp.support1 ? lineUp.support1.stats.fantasyScore : 0")
-                .column
+                .column.is-narrow
                   b-field
                     b-select(placeholder="Choose Player" v-model="lineUp.support2")
                       option(v-for="player in myPlayersSupport" :value="player") {{ player.name }}
@@ -57,12 +57,12 @@
             section
               h2 Tank
               .columns
-                .column
+                .column.is-narrow
                   b-field
                     b-select(placeholder="Choose Player" v-model="lineUp.tank1")
                       option(v-for="player in myPlayersTank" :value="player") {{ player.name }}
                   player-card(:player="lineUp.tank1" :showRemove="false" :score="lineUp.tank1 ? lineUp.tank1.stats.fantasyScore : 0")
-                .column
+                .column.is-narrow
                   b-field
                     b-select(placeholder="Choose Player" v-model="lineUp.tank2")
                       option(v-for="player in myPlayersTank" :value="player") {{ player.name }}
