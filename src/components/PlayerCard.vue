@@ -88,10 +88,10 @@ export default {
     border: 1px solid #fff;
     border-radius: 4px;
     padding-bottom: .25rem;
-    height: 100%;
     position: relative;
     overflow: hidden;
     min-width: 80px;
+    max-width: 150px;
     .player-title, .fantasy-points {
       background-color: #333;
       padding-top: .25rem;
