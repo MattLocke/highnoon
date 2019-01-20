@@ -4,6 +4,11 @@
       left-bar
         section
           collapsible(title-text="Fantasy Leagues" :start-collapsed="isInLeague")
+            h3 You are in 
+              span.orange {{ fantasyLeagues.length }}
+              |  of
+              span.orange  8
+              |  leagues
             .left-bar-item(v-if="!fantasyLeagues.length") You currently have no Fantasy leagues.
             .left-bar-item.has-pointer(:class="{'active-item': $route.params.leagueId == league.leagueId}" v-for="league in fantasyLeagues" :key="league.leagueId" @click="setLeague(league.leagueId)") {{ league.leagueName }}
             hr
@@ -98,7 +103,7 @@ export default {
       // Needs to check league type, number of users, league status, etc.
       if (this.league.leagueType === 'standard' && this.leagueUsers.length > 11) return false
       if (this.league.isLocked) return false
-      if (this.userLeagues.length > 4) return false
+      if (this.userLeagues.length > 8) return false
       if (this.isInLeague) return false
       return true
     },
