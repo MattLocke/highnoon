@@ -4,8 +4,8 @@
       left-bar
         section
           collapsible(title-text="Fantasy Leagues" :start-collapsed="isInLeague")
-            h3 You are in 
-              span.orange {{ fantasyLeagues.length }}
+            h3 You are in
+              span.orange  {{ fantasyLeagues.length }}
               |  of
               span.orange  8
               |  leagues
