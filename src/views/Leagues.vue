@@ -31,8 +31,8 @@
         h1 {{ league.leagueName }}
         //- .social-icons
           span [TWITTER] [INSTAGRAM] [DISCORD]
-        section
-          .columns.is-mobile.is-button-header(v-if="canStartDraft")
+        section(v-if="canStartDraft")
+          .columns.is-mobile.is-button-header
             .column
               h2 Start Draft
             .column.is-narrow
