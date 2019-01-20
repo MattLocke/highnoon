@@ -9,6 +9,7 @@ import Draft from './views/Draft'
 import DraftPreference from './views/DraftPreference'
 import Fantasy from './views/Fantasy'
 import Home from './views/Home'
+import HowStandardWorks from './views/HowStandardWorks'
 import LeagueFantasy from './views/LeagueFantasy'
 import LeaguePickem from './views/LeaguePickem'
 import Leagues from './views/Leagues'
@@ -55,6 +56,11 @@ let router = new Router({
       meta: {
         requiresAuth: true
       }
+    },
+    {
+      path: '/howStandardWorks',
+      name: 'howStandardWorks',
+      component: HowStandardWorks
     },
     {
       path: '/article/:articleId',
