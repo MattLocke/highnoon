@@ -38,34 +38,6 @@
           .column
             b-field(label="Password (optional)")
               b-input(placeholder="password" v-model="league.password")
-      section(v-if="league.leagueType == 'standard'")
-        .columns
-          .column
-            b-field(label="Role Requirements")
-              b-select(v-model="requiredRoles")
-                option(value=2) 2/2/2/x
-                option(value=1) 1/1/1/x
-                option(value=0) x/x/x/x
-          .column
-            .has-text-centered
-              label.label Offense
-              span.big-number {{ league.requiredOffense }}
-              span.micro minimum
-          .column
-            .has-text-centered
-              label.label Support
-              span.big-number {{ league.requiredSupport }}
-              span.micro minimum
-          .column
-            .has-text-centered
-              label.label Tank
-              span.big-number {{ league.requiredTank }}
-              span.micro minimum
-          .column
-            .has-text-centered
-              label.label Flex
-              span.big-number {{ league.requiredFlex }}
-              span.micro minimum
       section(v-if="league.leagueType")
         button.button.is-primary(@click="createLeague" v-if="canCreateLeague") Create League
         button.button.is-primary(disabled v-else) Create League
@@ -78,10 +50,6 @@
 </template>
 
 <script>
-import firebase from 'firebase/app'
-import 'firebase/database'
-import { fireInit } from '@/fireLogin'
-
 import LeagueService from '@/services/league'
 
 export default {
@@ -101,10 +69,8 @@ export default {
         requiredOffense: 2,
         requiredSupport: 2,
         requiredTank: 2,
-        requiredFlex: 0,
         status: 'unDrafted'
-      },
-      requiredRoles: 2
+      }
     }
   },
   computed: {
@@ -122,37 +88,12 @@ export default {
     }
   },
   watch: {
-    requiredRoles: {
-      immediate: true,
-      handler (val) {
-        switch (Number(val)) {
-          case 2:
-            this.league.requiredOffense = 2
-            this.league.requiredSupport = 2
-            this.league.requiredTank = 2
-            break
-          case 1:
-            this.league.requiredOffense = 1
-            this.league.requiredSupport = 1
-            this.league.requiredTank = 1
-            break
-          case 0:
-          default:
-            this.league.requiredOffense = 0
-            this.league.requiredSupport = 0
-            this.league.requiredTank = 0
-        }
-      }
-    },
     'league.password': {
       handler (val) {
         if (val.length > 0) this.league.passwordProtected = true
         else this.league.passwordProtected = false
       }
     }
-  },
-  mounted () {
-    fireInit()
   },
   methods: {
     createLeague () {
@@ -161,12 +102,9 @@ export default {
         ownerId: this.ownerId
       }
 
-      const db = firebase.database()
-
       this.$store.dispatch('setLoading', true)
       LeagueService.createLeague(this.userData, leagueData)
         .then((leagueId) => {
-          db.ref(`/draftStatus/${leagueId}`).set('unDrafted')
           this.$store.dispatch('setLoading', false)
           if (leagueId) this.$router.push({ path: `/leagues/${leagueId}` })
         })
