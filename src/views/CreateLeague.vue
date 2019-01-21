@@ -45,7 +45,7 @@
       .container
         section
           p I'm sorry, looks like you're all out of leagues!  Feel free to
-            a(href="#")  support me through patreon
+            a(href="https://www.patreon.com/highnoonpickem")  support me through patreon
             |  to have unlimited leagues!
 </template>
 

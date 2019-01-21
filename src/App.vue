@@ -113,6 +113,20 @@ $link-focus-border: $primary;
     margin-right: 0;
   }
 }
+
+#app .navbar-item.has-dropdown .navbar-link {
+  color: #fff;
+}
+
+#app .navbar-item.has-dropdown:hover .navbar-link {
+  background-color: transparent;
+}
+
+#app .navbar-dropdown {
+  background-color: rgba(0,0,0,0.9);
+  border-top: none;
+}
+
 #rv.login {
   margin-right: 0;
   padding: 2rem;
