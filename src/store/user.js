@@ -8,7 +8,9 @@ export default {
     },
     fireUserData: {
       uid: 0,
-      user: {}
+      user: {
+        uid: 0
+      }
     }
   },
   mutations: {
@@ -33,7 +35,7 @@ export default {
       context.commit('LOGIN', payload)
     },
     saveFireData: (context, payload) => {
-      context.commit('FBLOGIN', payload)
+      if (payload) context.commit('FBLOGIN', payload)
     },
     logOut: (context) => {
       context.commit('LOGOUT')
@@ -43,10 +45,10 @@ export default {
     }
   },
   getters: {
-    isLoggedIn: state => state.loggedIn,
+    isLoggedIn: state => !!(get(state.fireUserData, 'uid', false)),
     isVerified: state => get(state.fireUserData, 'emailVerified', false),
     getUserData: state => state.userData,
     getFBUserData: state => state.fireUserData,
-    getUserId: state => state.fireUserData ? state.fireUserData.uid : 0
+    getUserId: state => get(state.fireUserData, 'uid', 0)
   }
 }

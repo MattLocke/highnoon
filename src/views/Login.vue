@@ -68,7 +68,7 @@ export default {
     loggedIn: {
       immediate: true,
       handler () {
-        if (this.loggedIn) this.$router.push({ path: '/home' })
+        if (this.loggedIn) this.$router.push({ path: this.leagueId ? `/leagues/${this.leagueId}` : '/home' })
       }
     }
   },
@@ -81,22 +81,22 @@ export default {
       this.$store.dispatch('setLoading', true)
       firebase.auth().signInWithEmailAndPassword(this.user, this.pass)
         .then((user) => {
-          this.$store.dispatch('saveFireData', user)
-          userService.getProfile(user.user.uid)
-            .then(userData => {
-              this.$store.dispatch('logIn', userData)
-              this.$store.dispatch('setLoading', false)
-              if (this.leagueId) this.$router.push({ path: '/ViewLeague/' + this.leagueId })
-              else this.$router.push({ path: '/home' })
-            })
-            .catch((error) => {
-              this.$store.dispatch('setLoading', false)
-              this.$toast.open({
-                message: `Error signing in: ${error.message}`,
-                type: 'is-danger',
-                position: 'is-bottom'
-              })
-            })
+          this.$store.dispatch('saveFireData', user.user)
+          return userService.getProfile(user.user.uid)
+        })
+        .then(userData => {
+          this.$store.dispatch('logIn', userData)
+          this.$store.dispatch('setLoading', false)
+          if (this.leagueId) this.$router.push({ path: '/ViewLeague/' + this.leagueId })
+          else this.$router.push({ path: '/home' })
+        })
+        .catch((error) => {
+          this.$store.dispatch('setLoading', false)
+          this.$toast.open({
+            message: `Error signing in: ${error.message}`,
+            type: 'is-danger',
+            position: 'is-bottom'
+          })
         })
         .catch((error) => {
           this.$store.dispatch('setLoading', false)

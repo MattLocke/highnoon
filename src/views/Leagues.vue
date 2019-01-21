@@ -161,7 +161,6 @@ export default {
       immediate: true,
       handler (val) {
         if (val && val.length === 0) {
-          this.$store.dispatch('setLoading', true)
           this.$store.dispatch('getPlayers')
         } else this.$store.dispatch('setLoading', false)
       }
@@ -226,6 +225,7 @@ export default {
           this.league = { ...this.league, ...league }
         })
         .then(() => {
+          this.$store.dispatch('setLoading', false)
           this.listenForDraft()
         })
         .catch(() => {
