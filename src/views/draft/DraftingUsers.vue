@@ -40,6 +40,9 @@ export default {
     },
     draftComplete () {
       return this.draft.status === 'completed'
+    },
+    user () {
+      return this.$store.getters.getUserData
     }
   },
   methods: {
