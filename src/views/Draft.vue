@@ -36,6 +36,10 @@
                   span {{ user.displayName }}
       .column
         //- Choose your player
+        section(v-if="isCompleted")
+          p The draft has been completed.
+          hr
+          router-link.button.is-primary(:to="`/manageTeam/${leagueId}`") Manage Your Team
         .columns.is-desktop(v-show="myTurn")
           .column.is-two-thirds-desktop(v-if="roster.length < 9")
             section
@@ -43,7 +47,7 @@
             section
               collapsible(title-text="Drafted Players" :start-collapsed="true")
                 drafting-users(:users="users" :draft="draft" :picks="picks")
-            section
+            section(v-if="!isCompleted")
               .columns
                 .column.is-narrow
                   b-field(label="Filter Team")
@@ -59,7 +63,7 @@
                       option(value="tank") Tank
               b-field(label="Filter Players")
                 b-input(type="text" v-model="filterText")
-            section
+            section(v-if="!isCompleted")
               player-line(:player="player" :key="`${Math.random()}${player.id}`" v-for="player in filteredPlayers" @add-player="addToRoster($event)" :canSelect="canSelect(player)" :roster="selectedPlayers")
           .column(v-else)
             section
@@ -72,7 +76,7 @@
             section(v-if="users.length")
               h2 Draft For Some Awesome League
               hr
-              h3 Currently Drafting:
+              h3(v-if="!isCompleted") Currently Drafting:
                 span.orange  {{ users[draft.activeDrafter].displayName }}
             section
               drafting-users(:users="users" :draft="draft" :picks="picks")
@@ -161,6 +165,9 @@ export default {
       fPlayers = fPlayers.sort(function (a, b) { return (a.stats.fantasyScore < b.stats.fantasyScore) ? 1 : ((b.stats.fantasyScore < a.stats.fantasyScore) ? -1 : 0) })
       return fPlayers
     },
+    isCompleted () {
+      return this.draft.status === 'completed'
+    },
     offensePlayers () {
       return this.roster.filter(player => player.attributes.role === 'offense')
     },
@@ -190,8 +197,8 @@ export default {
   watch: {
     draft: {
       handler (val) {
-        if (val && val.status === 'completed') this.$router.push({ path: `/manageTeam/${this.leagueId}` })
-        if (!val || val.status !== 'active') this.$router.push({ path: `/leagues/${this.leagueId}` })
+        // if they shouldn't be here, send them home!
+        if (!val || val.status === 'unDrafted') this.$router.push({ path: `/leagues/${this.leagueId}` })
       }
     },
     players: {
@@ -210,7 +217,7 @@ export default {
           this.getPicks()
           this.getDraft()
           this.getDraftOrder()
-          this.getPreferenceList()
+          // this.getPreferenceList()
         }
       }
     },
