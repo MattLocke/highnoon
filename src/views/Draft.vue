@@ -190,6 +190,7 @@ export default {
   watch: {
     draft: {
       handler (val) {
+        if (val && val.status === 'completed') this.$router.push({ path: `/manageTeam/${this.leagueId}` })
         if (!val || val.status !== 'active') this.$router.push({ path: `/leagues/${this.leagueId}` })
       }
     },
