@@ -153,6 +153,9 @@ export default {
     }
   },
   watch: {
+    autoMode () {
+      this.updateRoster()
+    },
     players: {
       immediate: true,
       handler (val) {
