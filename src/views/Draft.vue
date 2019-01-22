@@ -64,7 +64,25 @@
               b-field(label="Filter Players")
                 b-input(type="text" v-model="filterText")
             section(v-if="!isCompleted")
-              player-line(:player="player" :key="`${Math.random()}${player.id}`" v-for="player in filteredPlayers" @add-player="addToRoster($event)" :canSelect="canSelect(player)" :roster="selectedPlayers")
+              b-table(
+                :data="filteredPlayers"
+                :loading="!(filteredPlayers.length)"
+                ref="table"
+                :paginated="filteredPlayers.length > 20"
+                :per-page="20"
+                :show-detail-icon="true")
+                template(slot-scope="props")
+                  b-table-column(width="60")
+                    button.button.is-primary.is-small(@click="addToRoster(props.row)") Select
+                  b-table-column(label="Role" width="30" field="attributes.role" sortable)
+                    img(:src="`images/roles/${props.row.attributes.role || 'flex'}-white.svg`" width="22" height="22")
+                  b-table-column(label="Team" width="30" field="team" sortable)
+                    img(:src="`images/teams/${props.row.team}.svg`" width="22" height="22")
+                  b-table-column(label="Player Name" field="name" sortable)
+                    span {{ props.row.name }}
+                  b-table-column(label="Rating" width="40" field="stats.fantasyScore" sortable)
+                    span {{ props.row.stats.fantasyScore || 'N/A' }}
+              //- player-line(:player="player" :key="`${Math.random()}${player.id}`" v-for="player in filteredPlayers" @add-player="addToRoster($event)" :canSelect="canSelect(player)" :roster="selectedPlayers")
           .column(v-else)
             section
               p Congrats!  Your team is complete!
@@ -86,6 +104,7 @@
 </template>
 
 <script>
+import { differenceWith } from 'lodash'
 import firebase from 'firebase/app'
 import 'firebase/database'
 
@@ -162,7 +181,7 @@ export default {
       if (this.filterText) fPlayers = fPlayers.filter(player => player.name.toLowerCase().includes(this.filterText.toLowerCase()))
       if (this.filterRole) fPlayers = fPlayers.filter(player => player.attributes.role === this.filterRole)
       if (this.filterTeam) fPlayers = fPlayers.filter(player => player.team === this.filterTeam)
-      fPlayers = fPlayers.sort(function (a, b) { return (a.stats.fantasyScore < b.stats.fantasyScore) ? 1 : ((b.stats.fantasyScore < a.stats.fantasyScore) ? -1 : 0) })
+      fPlayers = differenceWith(fPlayers, this.selectedPlayers, (a, b) => a.id === b.id)
       return fPlayers
     },
     isCompleted () {

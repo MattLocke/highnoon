@@ -4,6 +4,9 @@
       left-bar(:showClose="false")
         h2 Draft Preference List
         section
+          .field
+            b-switch(v-model="autoMode") Enable Auto-Draft
+        section
           h3 Chosen Roles
           .columns.is-mobile
             .column.has-text-centered
@@ -18,10 +21,6 @@
               .big-number
                 img(src="images/roles/tank-white.svg" alt="tank")
                 | {{ tankPlayers.length }}
-            //- .column.has-text-centered
-              .big-number
-                img(src="images/roles/flex-white.svg" alt="flex")
-                | {{ flexPlayers.length }}
         section
           .columns
             .column
@@ -58,38 +57,36 @@
               b-field(label="Filter Role")
                 b-select(placeholder="Filter By Role" v-model="filterRole")
                   option(value="") All
-                  option(value="flex") Flex
                   option(value="offense") Offense
                   option(value="support") Support
                   option(value="tank") Tank
           b-field(label="Filter Players")
             b-input(type="text" v-model="filterText")
-        //- section
+        section
           b-table(
             :data="filteredPlayers"
             :loading="!(filteredPlayers.length)"
             ref="table"
-            detailed
-            detail-key="id"
+            :paginated="filteredPlayers && filteredPlayers.length > 20"
+            :per-page="20"
             :show-detail-icon="true")
             template(slot-scope="props")
-              b-table-column(label="Select" width="60")
+              b-table-column(width="60")
                 button.button.is-primary.is-small(@click="addToRoster(props.row)") Select
-              b-table-column(label="Role" width="30")
+              b-table-column(label="Role" width="30" field="attributes.role" sortable)
                 img(:src="`images/roles/${props.row.attributes.role || 'flex'}-white.svg`" width="22" height="22")
-              b-table-column(label="Team" width="30")
+              b-table-column(label="Team" width="30" field="team" sortable)
                 img(:src="`images/teams/${props.row.team}.svg`" width="22" height="22")
-              b-table-column(label="Player Name")
+              b-table-column(label="Player Name" field="name" sortable)
                 span {{ props.row.name }}
-              b-table-column(label="Rating" width="40")
+              b-table-column(label="Rating" width="40" field="stats.fantasyScore" sortable)
                 span {{ props.row.stats.fantasyScore || 'N/A' }}
-            template(slot="detail" slot-scope="props")
-              p Details go here.
-        section
+        //- section
           player-line(:player="player" :key="`${Math.random()}${player.id}`" v-for="player in filteredPlayers" @add-player="addToRoster($event)" :roster="roster" :canSelect="true")
 </template>
 
 <script>
+import _ from 'lodash'
 import firebase from 'firebase/app'
 import 'firebase/database'
 
@@ -129,7 +126,8 @@ export default {
       if (this.filterText) fPlayers = fPlayers.filter(player => player.name.toLowerCase().includes(this.filterText.toLowerCase()))
       if (this.filterRole) fPlayers = fPlayers.filter(player => player.attributes.role === this.filterRole)
       if (this.filterTeam) fPlayers = fPlayers.filter(player => player.team === this.filterTeam)
-      fPlayers = fPlayers.sort(function (a, b) { return (a.stats.fantasyScore < b.stats.fantasyScore) ? 1 : ((b.stats.fantasyScore < a.stats.fantasyScore) ? -1 : 0) })
+      fPlayers = _.differenceWith(fPlayers, this.roster, (a, b) => a.id === b.id)
+
       return fPlayers
     },
     flexPlayers () {
@@ -173,7 +171,7 @@ export default {
             console.log('heard back from db...')
             const tmp = snapshot.val()
             if (tmp) {
-              this.roster = tmp.players
+              this.roster = tmp.players || []
               this.autoMode = tmp.autoMode
             }
           })
@@ -186,6 +184,7 @@ export default {
       .then((leagueData) => {
         this.leagueData = leagueData
       })
+    this.$store.dispatch('getTeams')
   },
   methods: {
     addToRoster (player) {
@@ -194,9 +193,13 @@ export default {
     },
     deleteRoster () {
       firebase.database().ref(`/draftPreference/${this.leagueId}/${this.userId}`).set(null)
+        .then(() => {
+          this.roster = []
+        })
     },
     removePlayer (index) {
-      this.roster.splice(index, 1)
+      if (this.roster && this.roster.length > 1) this.roster.splice(index, 1)
+      else this.roster = []
       this.updateRoster()
     },
     updateRoster () {
