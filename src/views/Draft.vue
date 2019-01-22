@@ -3,7 +3,7 @@
     .columns.is-marginless
       left-bar(:showClose="false")
         section
-          h2.has-pointer(@click="showRoster = !showRoster") Your Roster - {{ roster.length }} of 9
+          h2.has-pointer(@click="showRoster = !showRoster") Your Roster - {{ roster.length }} of 12
             arrow(:isLeft="true" v-model="showRoster")
           .roster-section(v-show="showRoster")
             .columns.is-multiline.is-mobile
@@ -41,7 +41,7 @@
           hr
           router-link.button.is-primary(:to="`/manageTeam/${leagueId}`") Manage Your Team
         .columns.is-desktop(v-show="myTurn")
-          .column.is-two-thirds-desktop(v-if="roster.length < 9")
+          .column.is-two-thirds-desktop(v-if="roster.length < 12")
             section
               h2 Draft For Some Awesome League
             section
@@ -149,7 +149,7 @@ export default {
       return selected
     },
     placeholders () {
-      let remaining = 9 - this.roster.length
+      let remaining = 12 - this.roster.length
       let tmp = []
       for (let i = 0; i < remaining; i++) {
         tmp.push(['placeholder'])

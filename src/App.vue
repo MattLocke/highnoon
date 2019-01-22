@@ -149,6 +149,10 @@ section {
   padding: 1rem;
 }
 
+#app .b-table .table tr.detail {
+  background: none!important;
+}
+
 .has-pointer {
   cursor: pointer;
 }

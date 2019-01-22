@@ -102,6 +102,7 @@ export default {
     canJoinLeague () {
       // Needs to check league type, number of users, league status, etc.
       if (this.league.leagueType === 'standard' && this.leagueUsers.length > 11) return false
+      if (this.leagueUsers.length > 11) return false
       if (this.league.isLocked) return false
       if (this.userLeagues.length > 8) return false
       if (this.isInLeague) return false
