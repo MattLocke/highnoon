@@ -44,7 +44,11 @@ exports.tryAutomatedPick = functions.database.ref('/draft/{leagueId}')
         })
         .then((preferenceList) => {
           console.log(`We ${preferenceList.val() ? 'found ' : 'did not find '}a preference list.`)
-          return processPreferenceList(preferenceList.val(), after, leagueId)
+          const prefList = preferenceList.val()
+          // make sure they have opted in
+          if (prefList.autoMode) return processPreferenceList(prefList.players, after, leagueId)
+          // if not, pass null down the chain
+          return null
         })
         .then((thePlayer) => {
           selectedPlayer = thePlayer
@@ -122,7 +126,7 @@ function workDraftPick (leagueId, picks) {
       })
 
       // If we're maxed on picks, just end the draft
-      if (totalPicks >= (draftOrder.length * 9)) {
+      if (totalPicks >= (draftOrder.length * 12)) {
         // console.log(`------Ending the draft for league: ${leagueId} because total picks (${totalPicks}) was greater than or equal to the max of: ${draftOrder.length * 9}.`)
         return admin.database().ref(`/draft/${leagueId}/status`).set('completed')
       }

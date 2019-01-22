@@ -64,6 +64,27 @@
                   option(value="tank") Tank
           b-field(label="Filter Players")
             b-input(type="text" v-model="filterText")
+        //- section
+          b-table(
+            :data="filteredPlayers"
+            :loading="!(filteredPlayers.length)"
+            ref="table"
+            detailed
+            detail-key="id"
+            :show-detail-icon="true")
+            template(slot-scope="props")
+              b-table-column(label="Select" width="60")
+                button.button.is-primary.is-small(@click="addToRoster(props.row)") Select
+              b-table-column(label="Role" width="30")
+                img(:src="`images/roles/${props.row.attributes.role || 'flex'}-white.svg`" width="22" height="22")
+              b-table-column(label="Team" width="30")
+                img(:src="`images/teams/${props.row.team}.svg`" width="22" height="22")
+              b-table-column(label="Player Name")
+                span {{ props.row.name }}
+              b-table-column(label="Rating" width="40")
+                span {{ props.row.stats.fantasyScore || 'N/A' }}
+            template(slot="detail" slot-scope="props")
+              p Details go here.
         section
           player-line(:player="player" :key="`${Math.random()}${player.id}`" v-for="player in filteredPlayers" @add-player="addToRoster($event)" :roster="roster" :canSelect="true")
 </template>
@@ -91,7 +112,8 @@ export default {
       filterTeam: '',
       filterRole: '',
       leagueData: [],
-      roster: []
+      roster: [],
+      autoMode: false
     }
   },
   computed: {
@@ -149,7 +171,11 @@ export default {
           const db = firebase.database()
           db.ref(`/draftPreference/${this.leagueId}/${this.userId}`).on('value', (snapshot) => {
             console.log('heard back from db...')
-            this.roster = snapshot.val() || []
+            const tmp = snapshot.val()
+            if (tmp) {
+              this.roster = tmp.players
+              this.autoMode = tmp.autoMode
+            }
           })
         }
       }
@@ -175,9 +201,13 @@ export default {
     },
     updateRoster () {
       const db = firebase.database()
+      const prefList = {
+        autoMode: this.autoMode,
+        players: this.roster
+      }
       this.$store.dispatch('setLoading', true)
       db.ref(`/draftPreference/${this.leagueId}/${this.userId}`)
-        .set(this.roster)
+        .set(prefList)
         .then(() => {
           this.$store.dispatch('setLoading', false)
         })
