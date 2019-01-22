@@ -40,7 +40,7 @@
           p The draft has been completed.
           hr
           router-link.button.is-primary(:to="`/manageTeam/${leagueId}`") Manage Your Team
-        .columns.is-desktop(v-show="myTurn")
+        .columns.is-desktop(v-show="myTurn && !autoMode")
           .column.is-two-thirds-desktop(v-if="roster.length < 12")
             section
               h2 Draft For Some Awesome League
@@ -87,7 +87,7 @@
               p Congrats!  Your team is complete!
           .column.is-one-third-desktop
             trash-talk
-        .columns.is-desktop(v-show="!myTurn")
+        .columns.is-desktop(v-show="!myTurn || autoMode")
           //- See how the draft is going
           .column
             section(v-if="users.length")
@@ -124,6 +124,7 @@ export default {
   },
   data () {
     return {
+      autoMode: false,
       draft: {
         activeDrafter: null
       },
@@ -235,7 +236,7 @@ export default {
           this.getPicks()
           this.getDraft()
           this.getDraftOrder()
-          // this.getPreferenceList()
+          this.getPreferenceList()
         }
       }
     },
@@ -283,6 +284,16 @@ export default {
       const db = firebase.database()
       db.ref(`/draftPicks/${this.leagueId}`).on('value', (snapshot) => {
         this.picks = snapshot.val() || []
+      })
+    },
+    getPreferenceList () {
+      const db = firebase.database()
+      db.ref(`/draftPreference/${this.leagueId}/${this.userId}`).on('value', (snapshot) => {
+        const tmp = snapshot.val()
+        if (tmp) {
+          this.preferenceList = tmp.players || []
+          this.autoMode = tmp.autoMode
+        }
       })
     },
     getColor (player) {

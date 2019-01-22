@@ -15,8 +15,7 @@
             router-link.button.is-primary(to="/createLeague" v-if="userData.isAdmin || userData.isAlpha") Create League
         section(v-if="league.leagueType == 'standard' && league.status != 'complete' && isInLeague")
           collapsible(title-text="Draft Preference List" :start-collapsed="true")
-            p You can use this list to auto-draft for you in case you can't make it to the live draft.
-              b   Keep in mind, if you use this list, even if you're there for the live draft, this list will take priority and you will have no manual control!
+            p You can use this list to auto-draft for you in case you can't make it to the live draft!  Make sure to enable "Auto Draft" if you need it to pick based on your preference list while you're gone!
             hr
             button.button.is-primary(@click="draftPreference") Draft Preference List
         section(v-if="leagueUsers.length")
