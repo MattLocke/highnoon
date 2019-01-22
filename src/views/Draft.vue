@@ -82,7 +82,6 @@
                     span {{ props.row.name }}
                   b-table-column(label="Rating" width="40" field="stats.fantasyScore" sortable)
                     span {{ props.row.stats.fantasyScore || 'N/A' }}
-              //- player-line(:player="player" :key="`${Math.random()}${player.id}`" v-for="player in filteredPlayers" @add-player="addToRoster($event)" :canSelect="canSelect(player)" :roster="selectedPlayers")
           .column(v-else)
             section
               p Congrats!  Your team is complete!
