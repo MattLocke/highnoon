@@ -13,7 +13,7 @@
             .left-bar-item.has-pointer(:class="{'active-item': $route.params.leagueId == league.leagueId}" v-for="league in fantasyLeagues" :key="league.leagueId" @click="setLeague(league.leagueId)") {{ league.leagueName }}
             hr
             router-link.button.is-primary(to="/createLeague" v-if="userData.isAdmin || userData.isAlpha") Create League
-        section(v-if="league.leagueType == 'standard' && league.status != 'complete' && isInLeague")
+        section(v-if="league.leagueType == 'standard' && !draftComplete && isInLeague")
           collapsible(title-text="Draft Preference List" :start-collapsed="true")
             p You can use this list to auto-draft for you in case you can't make it to the live draft!  Make sure to enable "Auto Draft" if you need it to pick based on your preference list while you're gone!
             hr
