@@ -1,6 +1,7 @@
 <template lang="pug">
   #app
     main-menu
+    b-notification(type="is-warning" v-if="notification.message") {{ notification.message }}
     b-loading(:is-full-page="true" :active.sync="isLoading" :can-cancel="false")
     router-view#rv(:key="$route.fullPath")
 </template>
@@ -22,6 +23,11 @@ export default {
       return this.$store.getters.loading
     }
   },
+  data () {
+    return {
+      notification: {}
+    }
+  },
   mounted () {
     this.$store.dispatch('saveFireData', firebase.auth().currentUser)
     this.$store.dispatch('loadConfig')
@@ -34,6 +40,11 @@ export default {
           this.$store.dispatch('setLoading', false)
         })
     } else this.$store.dispatch('setLoading', false)
+
+    const db = firebase.database()
+    db.ref('/notification/system').on('value', (snapshot) => {
+      this.notification = snapshot.val() || {}
+    })
   }
 }
 </script>
@@ -137,6 +148,10 @@ html {
   background-image: radial-gradient(#263277, $dark-blue);
   min-height: 99vh;
   width: 98vw;
+}
+
+.notification .is-warning {
+  margin: 1rem 1rem 1rem 2rem;
 }
 
 body {

@@ -54,6 +54,10 @@
             button.button.is-primary(@click="saveProfile") Save Profile
             hr
             a(@click="logOut()") Log Out
+          section(v-if="localProfile.isAdmin")
+            b-field(label="System Notification")
+              b-input(v-model="notificationMessage")
+            button.button.is-primary(@click="setNotificationMessage") Set Notification
 </template>
 
 <script>
@@ -84,6 +88,7 @@ export default {
         psn: '',
         xbox: ''
       },
+      notificationMessage: '',
       updatingAvatar: false
     }
   },
@@ -154,6 +159,10 @@ export default {
             })
           })
       }
+    },
+    setNotificationMessage () {
+      const db = firebase.database()
+      db.ref('/notification/system').set({ message: this.notificationMessage })
     }
   }
 }
