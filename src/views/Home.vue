@@ -65,6 +65,19 @@ export default {
       this.featuredArticle = article
     }
   },
+  watch: {
+    isWriter: {
+      immediate: true,
+      handler (val) {
+        if (val) {
+          newsService.getPendingNews()
+            .then(articles => {
+              this.pendingArticles = articles
+            })
+        }
+      }
+    }
+  },
   mounted () {
     this.$store.dispatch('setLoading', true)
     newsService.getNews()
@@ -73,12 +86,6 @@ export default {
         this.featuredArticle = articles[0]
         this.$store.dispatch('setLoading', false)
       })
-    if (this.isWriter) {
-      newsService.getPendingNews()
-        .then(articles => {
-          this.pendingArticles = articles
-        })
-    }
   }
 }
 </script>
