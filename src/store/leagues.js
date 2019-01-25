@@ -10,6 +10,7 @@ db.settings({ timestampsInSnapshots: true })
 export default {
   state: {
     leagues: [],
+    leagueRoster: {},
     leagueUsers: [],
     leagueSchedule: []
   },
@@ -22,6 +23,9 @@ export default {
     },
     SET_LEAGUE_SCHEDULE: (state, payload) => {
       state.leagueSchedule = payload
+    },
+    SET_LEAGUE_ROSTER: (state, payload) => {
+      state.leagueRoster = payload
     }
   },
   actions: {
@@ -63,11 +67,25 @@ export default {
             commit('SET_LEAGUE_USERS', theLeagueUsers)
           })
       }
+    },
+    fetchRoster: ({ state, commit }, payload) => {
+      if (payload && !state.leagueRoster.length) {
+        db.collection('standardLeagueRoster').doc(payload)
+          .get()
+          .then((leagueRoster) => {
+            let theLeagueRoster = []
+            if (leagueRoster.exists) {
+              theLeagueRoster = leagueRoster.data()
+            }
+            commit('SET_LEAGUE_ROSTER', theLeagueRoster)
+          })
+      }
     }
   },
   getters: {
     getUserLeagues: state => state.leagues,
     getLeagueUsers: state => state.leagueUsers,
-    getLeagueSchedule: state => state.leagueSchedule
+    getLeagueSchedule: state => state.leagueSchedule,
+    getLeagueRoster: state => state.leagueRoster
   }
 }

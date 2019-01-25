@@ -205,6 +205,15 @@ export default {
         return batch.commit()
       })
   },
+  saveRoster (userId, leagueId, roster) {
+    const rosterObj = {
+      [userId]: {
+        roster,
+        lastValid: Date.now()
+      }
+    }
+    return db.collection('standardLeagueRoster').doc(leagueId).set(rosterObj, { merge: true })
+  },
   setSchedule (schedule, leagueId) {
     return db.collection('leagueSchedule').doc(leagueId).set(schedule)
   },
