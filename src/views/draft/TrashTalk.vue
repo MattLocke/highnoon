@@ -49,7 +49,8 @@ export default {
   },
   methods: {
     addMessage () {
-      if (this.newMessage.length) {
+      this.cleanMessage()
+      if (this.newMessage.length > 1) {
         const db = firebase.database()
         const messageObject = {
           userDisplayName: this.user.displayName,
@@ -62,10 +63,15 @@ export default {
           })
       }
     },
+    cleanMessage () {
+      this.newMessage = this.newMessage.replace(/[\n\r]/g, '')
+    },
     getMessages () {
       const db = firebase.database()
       db.ref(`/draftMessages/${this.leagueId}`).on('child_added', (snapshot) => {
         this.messages.unshift(snapshot.val())
+        // only care about the last 50
+        if (this.messages.length > 50) this.messages.length = 50
       })
     }
   }
