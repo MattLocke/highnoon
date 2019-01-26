@@ -83,6 +83,7 @@ export default {
     .trash-box {
       max-height: 50vh;
       overflow: auto;
+      overflow-x: hidden;
     }
     .message-box {
       background-color: rgba(0,0,0,0.3);
