@@ -43,7 +43,7 @@
         .columns.is-desktop(v-show="myTurn && !autoMode")
           .column.is-two-thirds-desktop(v-if="roster.length < 12")
             section
-              h2 Draft For Some Awesome League
+              h2 {{ draft.leagueName }} Live Draft
             section
               collapsible(title-text="Drafted Players" :start-collapsed="true")
                 drafting-users(:users="users" :draft="draft" :picks="picks")
@@ -91,7 +91,7 @@
           //- See how the draft is going
           .column
             section(v-if="users.length")
-              h2 Draft For Some Awesome League
+              h2 {{ draft.leagueName }} Live Draft
               hr
               h3(v-if="!isCompleted") Currently Drafting:
                 span.orange  {{ users[draft.activeDrafter].displayName }}

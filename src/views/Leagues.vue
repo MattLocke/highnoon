@@ -299,6 +299,7 @@ export default {
           const shuffledUsers = shuffle([...tmpUsers])
           const db = firebase.database()
           const draft = {
+            leagueName: this.league.leagueName,
             selectedPlayers: [],
             players: this.players,
             activeDrafter: 0,
