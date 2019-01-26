@@ -261,6 +261,7 @@ export default {
             .update({ doneProcessing: false })
         })
         .then(() => {
+          this.filterText = ''
           this.$store.dispatch('setLoading', false)
         })
     },
