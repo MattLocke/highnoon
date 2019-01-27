@@ -33,6 +33,8 @@
         section(v-if="isOwner")
           collapsible(title-text="Delete League" :start-collapsed="true")
             confirm-button(button-text="Delete League" confirm-text="Are You Sure?" extra-text="This action can not be undone, and all users will lose their points and picks associated with this league." @confirm-it="deleteLeague")
+        section(v-if="draftComplete")
+          confirm-button(button-text="Reset Draft" confirm-text="Are You Sure?" @confirm-it="resetDraft")
         section
           router-link.button.is-primary.is-small(:to="`/manageTeam/${leagueId}`" :disabled="!draftComplete") Manage Team
           button.button.is-secondary.is-small.is-pulled-right(@click="copyLink" v-if="isInLeague") Copy Share Link
@@ -276,6 +278,13 @@ export default {
         const draft = snapshot.val()
         this.draftStatus = draft ? draft.status || 'unDrafted' : 'unDrafted'
       })
+    },
+    resetDraft () {
+      this.$store.dispatch('setLoading', true)
+      LeagueService.resetDraft(this.leagueId)
+        .then(() => {
+          this.$store.dispatch('setLoading', false)
+        })
     },
     setLeague (leagueId) {
       this.$router.push({ path: `/leagues/${leagueId}` })

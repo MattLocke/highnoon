@@ -1,5 +1,6 @@
 import firebase from 'firebase/app'
 import 'firebase/firestore'
+import 'firebase/database'
 import { fireInit } from '@/fireLogin'
 import logger from '@/services/logger'
 import { shuffle } from 'lodash'
@@ -7,6 +8,7 @@ import { shuffle } from 'lodash'
 fireInit()
 
 var db = firebase.firestore()
+var rdb = firebase.database()
 db.settings({ timestampsInSnapshots: true })
 
 export default {
@@ -204,6 +206,11 @@ export default {
         batch.set(userRef, userLeagues)
         return batch.commit()
       })
+  },
+  resetDraft (leagueId) {
+    return rdb.ref(`/draft/${leagueId}`).remove()
+      .then(() => rdb.ref(`/draftPicks/${leagueId}`).remove())
+      .then(() => db.collection('standardLeagueRoster').doc(leagueId).delete())
   },
   saveRoster (userId, leagueId, roster) {
     const rosterObj = {
