@@ -9,8 +9,8 @@
           collapsible(title-text="Unclaimed Players" :start-collapsed="true")
             .left-bar-item Coming Soon
         section
-          collapsible(title-text="Your Schedule")
-            .left-bar-item Coming Soon
+          collapsible(title-text="Your Next Match")
+            my-schedule(:leagueId="leagueId")
       .column
         section
           h1 Manage Your Fantasy Team
@@ -104,6 +104,7 @@ import { differenceWith, isEqual, get, isEmpty } from 'lodash'
 import LeagueService from '@/services/league'
 
 import DraftingUsers from '@/views/draft/DraftingUsers'
+import MySchedule from '@/views/manage/MySchedule'
 import PlayerCard from '@/components/PlayerCard'
 import RoleButtons from '@/views/manage/RoleButtons'
 
@@ -111,6 +112,7 @@ export default {
   name: 'ManageTeam',
   components: {
     DraftingUsers,
+    MySchedule,
     PlayerCard,
     RoleButtons
   },
