@@ -4,20 +4,28 @@
     b-field
       b-input(maxlength="200" type="textarea" v-model="newMessage" @keyup.enter="addMessage")
     b-field
+      picker(@select="addEmoji")
+    b-field
       button.button.is-primary(v-if="newMessage.length" @click="addMessage") Send
       button.button.is-primary(v-else disabled) Send
     hr
     .trash-box
       .message-box(v-for="message in messages")
         .from {{ message.userDisplayName }}
+          span.is-pulled-right {{ formatWhen(message.when) }}
         .content {{ message.message }}
 </template>
 
 <script>
 import firebase from 'firebase/app'
 import 'firebase/database'
+import moment from 'moment-timezone'
+import { Picker } from 'emoji-mart-vue'
 
 export default {
+  components: {
+    Picker
+  },
   data () {
     return {
       messages: [],
@@ -48,6 +56,9 @@ export default {
     })
   },
   methods: {
+    addEmoji (emoji) {
+      this.newMessage = `${this.newMessage}${emoji.native}`
+    },
     addMessage () {
       this.cleanMessage()
       if (this.newMessage.length > 1) {
@@ -65,6 +76,9 @@ export default {
     },
     cleanMessage () {
       this.newMessage = this.newMessage.replace(/[\n\r]/g, '')
+    },
+    formatWhen (theTime) {
+      return moment(theTime).format('MMM Do YYYY - h:mm:ss a')
     },
     getMessages () {
       const db = firebase.database()
