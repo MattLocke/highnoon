@@ -197,7 +197,7 @@ export default {
       this.roster.push(player)
     },
     copyLink () {
-      this.$copyText(`https://highnoon.gg/#/leagues/${this.leagueId}`)
+      this.$copyText(`https://highnoon.gg/#/LeagueStandard/${this.leagueId}`)
         .then(() => {
           this.$toast.open({
             message: 'Successfully copied the link!',
