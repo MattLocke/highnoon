@@ -138,6 +138,14 @@ $link-focus-border: $primary;
   border-top: none;
 }
 
+#app .tabs ul li a {
+  color: #fff;
+}
+
+#app .tabs ul li.is-active a {
+  color: $primary;
+}
+
 #rv.login {
   margin-right: 0;
   padding: 2rem;
