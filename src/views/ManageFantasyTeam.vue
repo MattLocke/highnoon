@@ -14,32 +14,32 @@
       .column
         section
           h1 Manage Your Fantasy Team
-        .columns.is-multiline.is-hidden-mobile(v-if="myAvailablePicks.length")
-          .column.is-narrow
+        .columns.is-multiline.is-hidden-mobile.is-gapless(v-if="myAvailablePicks.length")
+          .column
             section
               player-card(:player="lineUp.captain.id ? lineUp.captain : null" :showRemove="false" :score="lineUp.captain.stats ? lineUp.captain.stats.fantasyScore : 0")
               h2.has-text-centered Captain
-          .column.is-narrow
+          .column
             section
               player-card(:player="lineUp.offense1.id ? lineUp.offense1 : null" :showRemove="false" :score="lineUp.offense1.stats ? lineUp.offense1.stats.fantasyScore : 0")
               h2.has-text-centered Offense 1
-          .column.is-narrow
+          .column
             section
               player-card(:player="lineUp.offense2.id ? lineUp.offense2 : null" :showRemove="false" :score="lineUp.offense2.stats ? lineUp.offense2.stats.fantasyScore : 0")
               h2.has-text-centered Offense 2
-          .column.is-narrow
+          .column
             section
               player-card(:player="lineUp.support1.id ? lineUp.support1 : null" :showRemove="false" :score="lineUp.support1.stats ? lineUp.support1.stats.fantasyScore : 0")
               h2.has-text-centered Support 1
-          .column.is-narrow
+          .column
             section
               player-card(:player="lineUp.support2.id ? lineUp.support2 : null" :showRemove="false" :score="lineUp.support2.stats ? lineUp.support2.stats.fantasyScore : 0")
               h2.has-text-centered Support 2
-          .column.is-narrow
+          .column
             section
               player-card(:player="lineUp.tank1.id ? lineUp.tank1 : null" :showRemove="false" :score="lineUp.tank1.stats ? lineUp.tank1.stats.fantasyScore : 0")
               h2.has-text-centered Tank 1
-          .column.is-narrow
+          .column
             section
               player-card(:player="lineUp.tank2.id ? lineUp.tank2 : null" :showRemove="false" :score="lineUp.tank2.stats ? lineUp.tank2.stats.fantasyScore : 0")
               h2.has-text-centered Tank 2
