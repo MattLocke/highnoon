@@ -43,11 +43,18 @@ export default {
       return this.$store.getters.getUserData
     }
   },
-  mounted () {
-    LeagueService.getSchedule(this.leagueId)
-      .then(schedule => {
-        this.schedule = schedule
-      })
+  watch: {
+    leagueId: {
+      immediate: true,
+      handler (val) {
+        if (!isEmpty(val)) {
+          LeagueService.getSchedule(this.leagueId)
+            .then(schedule => {
+              this.schedule = schedule
+            })
+        }
+      }
+    }
   }
 }
 </script>
