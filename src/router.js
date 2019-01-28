@@ -10,7 +10,8 @@ import DraftPreference from './views/DraftPreference'
 import Fantasy from './views/Fantasy'
 import Home from './views/Home'
 import HowStandardWorks from './views/HowStandardWorks'
-import LeagueFantasy from './views/LeagueFantasy'
+import LeagueStandard from './views/LeagueStandard'
+import LeagueUnlimited from './views/LeagueUnlimited'
 import LeaguePickem from './views/LeaguePickem'
 import Leagues from './views/Leagues'
 import Login from './views/Login'
@@ -102,16 +103,8 @@ let router = new Router({
       }
     },
     {
-      path: '/leagueFantasy',
-      name: 'leagueFantasy',
-      component: LeagueFantasy,
-      meta: {
-        requiresAuth: true
-      }
-    },
-    {
-      path: '/leaguePickem',
-      name: 'leaguePickem',
+      path: '/LeaguePickem',
+      name: 'LeaguePickem',
       component: LeaguePickem,
       meta: {
         requiresAuth: true
@@ -121,6 +114,22 @@ let router = new Router({
       path: '/leagues/:leagueId?',
       name: 'leagues',
       component: Leagues,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/LeagueStandard/:leagueId?',
+      name: 'LeagueStandard',
+      component: LeagueStandard,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/LeagueUnlimited/:leagueId?',
+      name: 'LeagueUnlimited',
+      component: LeagueUnlimited,
       meta: {
         requiresAuth: true
       }

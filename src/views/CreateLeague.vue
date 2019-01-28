@@ -1,6 +1,6 @@
 <template lang="pug">
   .create-league
-    .container(v-if="numLeagues < 4")
+    .container(v-if="numLeagues < 8")
       h1 Create A New League
       section(v-show="!league.leagueType")
         .columns
@@ -15,8 +15,8 @@
             img.img(src="/images/league-unlimited.jpg" alt="unlimited league icon")
             p Unlimited league sizes.  No roster restrictions.  Build your perfect team and see how well you score.  No head to head matchup, instead the points each week will be used for leaderboards.
             .has-text-centered
-              //- button.button.is-primary(@click="league.leagueType = 'unlimited'") Choose Unlimited
-              button.button.is-primary(disabled) Choose Unlimited
+              button.button.is-primary(@click="league.leagueType = 'unlimited'") Choose Unlimited
+              //- button.button.is-primary(disabled) Choose Unlimited
           .column
             h2 Pick 'em
             img.img(src="/images/league-pickem.jpg" alt="pickem league icon")
@@ -65,11 +65,7 @@ export default {
         discord: null,
         instagram: null,
         reddit: null,
-        twitter: null,
-        requiredOffense: 2,
-        requiredSupport: 2,
-        requiredTank: 2,
-        status: 'unDrafted'
+        twitter: null
       }
     }
   },
@@ -97,21 +93,35 @@ export default {
   },
   methods: {
     createLeague () {
-      const leagueData = {
+      let leagueData = {
         ...this.league,
         ownerId: this.ownerId
+      }
+      // no point in having useless nodes for an object
+      if (leagueData.leagueType === 'standard') {
+        leagueData = {
+          requiredOffense: 2,
+          requiredSupport: 2,
+          requiredTank: 2,
+          status: 'unDrafted',
+          ...leagueData
+        }
       }
 
       this.$store.dispatch('setLoading', true)
       LeagueService.createLeague(this.userData, leagueData)
         .then((leagueId) => {
           this.$store.dispatch('setLoading', false)
-          if (leagueId) this.$router.push({ path: `/leagues/${leagueId}` })
+          const upperType = this.capFirst(leagueData.leagueType)
+          if (leagueId) this.$router.push({ path: `/League${upperType}/${leagueId}` })
         })
         .catch(() => {
           this.$store.dispatch('setLoading', false)
           // some kind of error message here as well.
         })
+    },
+    capFirst (string) {
+      return `${string.charAt(0).toUpperCase()}${string.slice(1)}`
     }
   }
 }
