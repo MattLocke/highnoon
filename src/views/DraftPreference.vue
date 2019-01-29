@@ -6,6 +6,7 @@
         section
           .field
             b-switch(v-model="autoMode") Enable Auto-Draft
+          p This will let the system draft for you in case you can't make it to the live draft.  While active, picks will be placed on your behalf automatically, so be sure you want to enable this!
         section
           h3 Chosen Roles
           .columns.is-mobile
