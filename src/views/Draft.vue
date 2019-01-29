@@ -217,7 +217,7 @@ export default {
     draft: {
       handler (val) {
         // if they shouldn't be here, send them home!
-        if (!val || val.status === 'unDrafted') this.$router.push({ path: `/leagues/${this.leagueId}` })
+        if (!val || val.status === 'unDrafted') this.$router.push({ path: `/LeagueStandard/${this.leagueId}` })
       }
     },
     players: {

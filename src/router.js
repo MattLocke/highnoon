@@ -16,6 +16,7 @@ import LeaguePickem from './views/LeaguePickem'
 import Leagues from './views/Leagues'
 import Login from './views/Login'
 import ManageTeam from './views/ManageFantasyTeam'
+import ManageUnlimitedTeam from './views/ManageUnlimitedTeam'
 import Messages from './views/Messages'
 import Picks from './views/Picks'
 import PlayerProfile from './views/PlayerProfile'
@@ -85,6 +86,14 @@ let router = new Router({
       path: '/manageTeam/:leagueId',
       name: 'manageTeam',
       component: ManageTeam,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/manageUnlimitedTeam/:leagueId',
+      name: 'manageUnlimitedTeam',
+      component: ManageUnlimitedTeam,
       meta: {
         requiresAuth: true
       }

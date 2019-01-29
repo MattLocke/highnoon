@@ -68,6 +68,7 @@ export default {
     loggedIn: {
       immediate: true,
       handler () {
+        // TODO: Fix this redirect to handle various league types
         if (this.loggedIn) this.$router.push({ path: this.leagueId ? `/leagues/${this.leagueId}` : '/home' })
       }
     }

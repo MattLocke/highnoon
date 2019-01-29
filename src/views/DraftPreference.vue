@@ -40,7 +40,7 @@
             .column.is-narrow
               button.button.is-primary.is-small(@click="removePlayer(index)") X
       .column(v-if="roster.length < 100")
-        router-link.button.is-primary.is-pulled-right.is-small(:to="`/leagues/${leagueId}`") Back to League
+        router-link.button.is-primary.is-pulled-right.is-small(:to="`/LeagueStandard/${leagueId}`") Back to League
         h2 Preference list for:
           span.orange  {{ leagueData.leagueName }}
         section
@@ -81,8 +81,6 @@
                 span {{ props.row.name }}
               b-table-column(label="Rating" width="40" field="stats.fantasyScore" sortable)
                 span {{ props.row.stats.fantasyScore || 'N/A' }}
-        //- section
-          player-line(:player="player" :key="`${Math.random()}${player.id}`" v-for="player in filteredPlayers" @add-player="addToRoster($event)" :roster="roster" :canSelect="true")
 </template>
 
 <script>

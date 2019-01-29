@@ -10,11 +10,15 @@ db.settings({ timestampsInSnapshots: true })
 export default {
   state: {
     leagues: [],
+    leagueId: '',
     leagueRoster: {},
     leagueUsers: [],
     leagueSchedule: []
   },
   mutations: {
+    SET_LEAGUE_ID: (state, payload) => {
+      state.leagueId = payload
+    },
     SET_LEAGUES: (state, payload) => {
       state.leagues = payload
     },
@@ -56,8 +60,8 @@ export default {
       }
     },
     fetchLeagueUsers: ({ state, commit }, payload) => {
-      if (payload && !state.leagueUsers.length) {
-        db.collection('standardLeagueUsers').doc(payload)
+      if (payload.leagueId && !state.leagueUsers.length) {
+        db.collection(`${payload.leagueType}LeagueUsers`).doc(payload.leagueId)
           .get()
           .then((leagueUsers) => {
             let theLeagueUsers = []
@@ -69,14 +73,15 @@ export default {
       }
     },
     fetchRoster: ({ state, commit }, payload) => {
-      if (payload && !state.leagueRoster.length) {
-        db.collection('standardLeagueRoster').doc(payload)
+      if (payload.leagueId !== state.leagueId || !state.leagueRoster.length) {
+        db.collection(`${payload.leagueType}LeagueRoster`).doc(payload.leagueId)
           .get()
           .then((leagueRoster) => {
             let theLeagueRoster = []
             if (leagueRoster.exists) {
               theLeagueRoster = leagueRoster.data()
             }
+            commit('SET_LEAGUE_ID', payload.leagueId)
             commit('SET_LEAGUE_ROSTER', theLeagueRoster)
           })
       }

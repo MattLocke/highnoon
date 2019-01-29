@@ -3,14 +3,9 @@
     .columns.is-marginless
       left-bar
         section
-          collapsible(title-text="Pending Trades" :start-collapsed="true")
-            .left-bar-item Coming Soon
+          router-link.button.is-primary(:to="`/LeagueUnlimited/${leagueId}`") Back To League
         section
-          collapsible(title-text="Unclaimed Players" :start-collapsed="true")
-            .left-bar-item Coming Soon
-        section
-          collapsible(title-text="Your Next Match")
-            my-schedule(:leagueId="leagueId")
+          p More information to help you build your team coming soon!
       .column
         section
           h1 Manage Your Fantasy Team
@@ -79,7 +74,10 @@
         section
           collapsible(title-text="My Bench")
             b-table(
-              :data="myAvailablePicks")
+              :data="myAvailablePicks"
+              :paginated="true"
+              :per-page="30"
+              )
               template(slot-scope="props")
                 b-table-column(label="Role" width="30" field="attributes.role" sortable)
                   img(:src="`images/roles/${props.row.attributes.role || 'flex'}-white.svg`" width="22" height="22")
@@ -93,9 +91,6 @@
                   role-buttons(:player="props.row" @setRole="setRole")
                 b-table-column(label="Rating" width="40" field="stats.fantasyScore" sortable)
                   span {{ props.row.stats.fantasyScore || 'N/A' }}
-        section
-          collapsible(title-text="League Rosters" :start-collapsed="true")
-            drafting-users(:users="leagueUsers" :draft="draft" :picks="draftPicks")
 </template>
 
 <script>
@@ -103,16 +98,12 @@ import { differenceWith, isEqual, get, isEmpty } from 'lodash'
 
 import LeagueService from '@/services/league'
 
-import DraftingUsers from '@/views/draft/DraftingUsers'
-import MySchedule from '@/views/manage/MySchedule'
 import PlayerCard from '@/components/PlayerCard'
 import RoleButtons from '@/views/manage/RoleButtons'
 
 export default {
   name: 'ManageTeam',
   components: {
-    DraftingUsers,
-    MySchedule,
     PlayerCard,
     RoleButtons
   },
@@ -134,12 +125,6 @@ export default {
     canSaveRoster () {
       return (this.lineUp.captain.id && this.lineUp.offense1.id && this.lineUp.offense2.id && this.lineUp.support1.id && this.lineUp.support2.id && this.lineUp.tank1.id && this.lineUp.tank2.id)
     },
-    draft () {
-      return this.$store.getters.getDraft
-    },
-    draftPicks () {
-      return this.$store.getters.getDraftPicks
-    },
     leagueId () {
       return this.$route.params.leagueId
     },
@@ -152,9 +137,6 @@ export default {
     leagueUsers () {
       return this.$store.getters.getLeagueUsers
     },
-    myLeagueSchedule () {
-      return []
-    },
     myAvailablePicks () {
       let available = []
       const usedPicks = [
@@ -166,23 +148,11 @@ export default {
         this.lineUp.tank1,
         this.lineUp.tank2
       ]
-      available = differenceWith(this.myPicks, usedPicks, isEqual)
+      available = differenceWith(this.players, usedPicks, isEqual)
       return [ ...available ]
-    },
-    myPicks () {
-      return this.draftPicks[this.userData.id] || []
     },
     players () {
       return this.$store.getters.getPlayers
-    },
-    myPlayersOffense () {
-      return this.myAvailablePicks ? this.myAvailablePicks.filter(pick => pick.attributes.role === 'offense') : []
-    },
-    myPlayersSupport () {
-      return this.myAvailablePicks ? this.myAvailablePicks.filter(pick => pick.attributes.role === 'support') : []
-    },
-    myPlayersTank () {
-      return this.myAvailablePicks ? this.myAvailablePicks.filter(pick => pick.attributes.role === 'tank') : []
     },
     userData () {
       return this.$store.getters.getUserData
@@ -192,8 +162,16 @@ export default {
     leagueRoster: {
       immediate: true,
       handler (val) {
-        if (!isEmpty(val)) {
+        if (!isEmpty(val) && !isEmpty(this.userData)) {
           const tmp = get(val, this.userData.id, { roster: this.lineUp })
+          this.lineUp = tmp.roster
+        }
+      }
+    },
+    userData: {
+      handler (val) {
+        if (!isEmpty(val) && !isEmpty(this.leagueRoster)) {
+          const tmp = get(this.leagueRoster, val.id, { roster: this.lineUp })
           this.lineUp = tmp.roster
         }
       }
@@ -203,10 +181,10 @@ export default {
     saveRoster () {
       // save it to the db
       this.$store.dispatch('setLoading', true)
-      LeagueService.saveRoster(this.userData.id, this.leagueId, this.lineUp)
+      LeagueService.saveRoster(this.userData.id, this.leagueId, this.lineUp, 'unlimited')
         .then(() => {
           // forward to league view page
-          this.$router.push({ path: `/LeagueStandard/${this.leagueId}` })
+          this.$router.push({ path: `/LeagueUnlimited/${this.leagueId}` })
         })
       return true
     },
@@ -215,11 +193,8 @@ export default {
     }
   },
   mounted () {
-    this.$store.dispatch('fetchDraft', this.leagueId)
-    this.$store.dispatch('fetchDraftPicks', this.leagueId)
-    this.$store.dispatch('fetchLeagueSchedule', this.leagueId)
-    this.$store.dispatch('fetchLeagueUsers', { leagueId: this.leagueId, leagueType: 'standard' })
-    this.$store.dispatch('fetchRoster', { leagueId: this.leagueId, leagueType: 'standard' })
+    this.$store.dispatch('fetchLeagueUsers', { leagueId: this.leagueId, leagueType: 'unlimited' })
+    this.$store.dispatch('fetchRoster', { leagueId: this.leagueId, leagueType: 'unlimited' })
     this.$store.dispatch('getPlayers')
     this.$store.dispatch('getTeams')
   }

@@ -212,14 +212,14 @@ export default {
       .then(() => rdb.ref(`/draftPicks/${leagueId}`).remove())
       .then(() => db.collection('standardLeagueRoster').doc(leagueId).delete())
   },
-  saveRoster (userId, leagueId, roster) {
+  saveRoster (userId, leagueId, roster, type = 'standard') {
     const rosterObj = {
       [userId]: {
         roster,
         lastValid: Date.now()
       }
     }
-    return db.collection('standardLeagueRoster').doc(leagueId).set(rosterObj, { merge: true })
+    return db.collection(`${type}LeagueRoster`).doc(leagueId).set(rosterObj, { merge: true })
   },
   setSchedule (schedule, leagueId) {
     return db.collection('leagueSchedule').doc(leagueId).set(schedule)

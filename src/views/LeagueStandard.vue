@@ -281,9 +281,6 @@ export default {
           this.$store.dispatch('setLoading', false)
         })
     },
-    setLeague (leagueId) {
-      this.$router.push({ path: `/leagues/${leagueId}` })
-    },
     startDraft () {
       // we'll need to build out the random order and save that to draftOrder
       this.$store.dispatch('setLoading', true)
