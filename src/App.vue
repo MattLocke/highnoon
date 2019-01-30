@@ -188,6 +188,16 @@ section {
   }
 }
 
+.league-message {
+  blockquote {
+    margin-top: 1rem;
+    background-color: rgba(0,0,0,0.4);
+  }
+  ol {
+    padding: 2rem 3rem;
+  }
+}
+
 .mdi-chevron-right:before {
   content: ">";
 }
