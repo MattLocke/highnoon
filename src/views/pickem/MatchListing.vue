@@ -42,7 +42,7 @@ export default {
   margin-bottom: .25rem;
   padding: .25rem;
   .team-name {
-    width: 28px;
+    width: 32px;
   }
   .b-checkbox.checkbox {
     margin-top: .35rem;
