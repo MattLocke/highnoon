@@ -112,7 +112,7 @@ let router = new Router({
       }
     },
     {
-      path: '/LeaguePickem',
+      path: '/LeaguePickem/:leagueId',
       name: 'LeaguePickem',
       component: LeaguePickem,
       meta: {
@@ -128,7 +128,7 @@ let router = new Router({
       }
     },
     {
-      path: '/LeagueStandard/:leagueId?',
+      path: '/LeagueStandard/:leagueId',
       name: 'LeagueStandard',
       component: LeagueStandard,
       meta: {
@@ -136,7 +136,7 @@ let router = new Router({
       }
     },
     {
-      path: '/LeagueUnlimited/:leagueId?',
+      path: '/LeagueUnlimited/:leagueId',
       name: 'LeagueUnlimited',
       component: LeagueUnlimited,
       meta: {
