@@ -22,8 +22,8 @@
             img.img(src="/images/league-pickem.jpg" alt="pickem league icon")
             p Each week choose which team will win each of the matchups.  This is more simple than we offered in Season 1 due to the overhead running full-fledged fantasy leagues brings to the table!
             .has-text-centered
-              //- button.button.is-primary(@click="league.leagueType = 'pickem'") Choose Pick'Em
-              button.button.is-primary(disabled) Choose Pick'Em
+              button.button.is-primary(@click="league.leagueType = 'pickem'") Choose Pick'Em
+              //- button.button.is-primary(disabled) Choose Pick'Em
       section(v-show="league.leagueType")
         .columns
           .column

@@ -33,6 +33,9 @@ Vue.filter('formatNewsDate', function (value) {
 Vue.filter('formatJSDate', function (value) {
   if (value) return moment(value).format('MMM D, YYYY')
 })
+Vue.filter('formatJSTime', function (value) {
+  if (value) return moment(value).format('h:mm:ss a')
+})
 
 Vue.component('leftBar', leftBar)
 Vue.component('topBar', topBar)
