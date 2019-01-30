@@ -34,7 +34,7 @@ Vue.filter('formatJSDate', function (value) {
   if (value) return moment(value).format('MMM D, YYYY')
 })
 Vue.filter('formatJSTime', function (value) {
-  if (value) return moment(value).format('h:mm:ss a')
+  if (value) return moment(value).format('h:mm a')
 })
 
 Vue.component('leftBar', leftBar)
