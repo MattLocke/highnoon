@@ -25,6 +25,7 @@
             confirm-button(button-text="Delete League" confirm-text="Are You Sure?" extra-text="This action can not be undone, and all users will lose their points and picks associated with this league." @confirm-it="deleteLeague")
         section(v-if="draftComplete")
           confirm-button(button-text="Reset Draft" confirm-text="Are You Sure?" @confirm-it="resetDraft")
+          p This will reset the draft for all players in the league.  You may want to do this between stages, or there may have been an issue during the draft, whatever the reason, this is your key to resetting it!
         section
           router-link.button.is-primary.is-small(:to="`/manageTeam/${leagueId}`" :disabled="!draftComplete") Manage Team
           button.button.is-secondary.is-small.is-pulled-right(@click="copyLink" v-if="isInLeague") Copy Share Link
@@ -42,7 +43,7 @@
               confirm-button(:customClasses="{'is-primary': true,'is-small': true,'is-pulled-right':true}" buttonText="Start Draft" confirmText="Are You Sure?" @confirm-it="startDraft") Start Draft
         b-tabs(v-model="activeContentTab")
           b-tab-item(label="League Message")
-            section
+            section.league-message
               h2 League Message
                 button.button.is-secondary.is-small.is-pulled-right(@click="editingMessage = !editingMessage" v-if="isOwner") {{ editingMessage ? 'cancel' : 'edit' }}
               hr
@@ -179,7 +180,7 @@ export default {
       immediate: true,
       handler (val) {
         if (val) {
-          this.$store.dispatch('fetchLeagueUsers', this.leagueId)
+          this.$store.dispatch('fetchLeagueUsers', { leagueId: this.leagueId, leagueType: 'standard' })
           this.getLeague(val)
         }
       }

@@ -13,7 +13,7 @@
         h1 {{ league.leagueName }}
         b-tabs(v-model="activeContentTab")
           b-tab-item(label="League Message")
-            section
+            section.league-message
               h2 League Message
                 button.button.is-secondary.is-small.is-pulled-right(@click="editingMessage = !editingMessage" v-if="isOwner") {{ editingMessage ? 'cancel' : 'edit' }}
               hr
@@ -87,7 +87,7 @@ export default {
       immediate: true,
       handler (val) {
         if (val) {
-          this.$store.dispatch('fetchLeagueUsers', this.leagueId)
+          this.$store.dispatch('fetchLeagueUsers', { leagueId: this.leagueId, leagueType: 'unlimited' })
           this.getLeague(val)
         }
       }
@@ -153,7 +153,7 @@ export default {
     },
     leaveLeague () {
       this.$store.dispatch('setLoading', true)
-      LeagueService.leaveLeague(this.userId, this.leagueId)
+      LeagueService.leaveLeague(this.userId, this.leagueId, 'unlimited')
         .then(() => {
           this.$store.dispatch('setLoading', false)
           location.reload()
