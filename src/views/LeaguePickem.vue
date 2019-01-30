@@ -29,6 +29,7 @@
 
 <script>
 import { get, sortBy } from 'lodash'
+import vueMarkdown from 'vue-markdown'
 
 import LeagueService from '@/services/league'
 
@@ -41,7 +42,8 @@ export default {
   components: {
     MatchListing,
     PickemLeaderboard,
-    TrashTalk
+    TrashTalk,
+    vueMarkdown
   },
   data () {
     return {
@@ -72,6 +74,9 @@ export default {
     },
     leagueId () {
       return this.$route.params.leagueId
+    },
+    leagueMessage () {
+      return this.league.message
     },
     matches () {
       return this.$store.getters.getMatches
@@ -106,6 +111,14 @@ export default {
           this.listenForDraft()
         })
         .catch(() => {
+          this.$store.dispatch('setLoading', false)
+        })
+    },
+    updateLeague () {
+      this.$store.dispatch('setLoading', true)
+      LeagueService.updateLeague(this.league, 'pickem')
+        .then(() => {
+          this.editingMessage = false
           this.$store.dispatch('setLoading', false)
         })
     }
