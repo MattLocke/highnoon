@@ -9,6 +9,11 @@
             .column
               a(@click="viewPending = !viewPending" v-if="viewPending") View Current
               a(@click="viewPending = !viewPending" v-else) View Pending
+            .column
+              a(@click="viewHidden = !viewHidden" v-if="!viewHidden") View Hidden
+              a(@click="viewHidden = !viewHidden" v-else) Hide Hidden
+        .wrap(v-if="viewHidden")
+          news-item(v-for="article in hiddenArticles" :key="article.id" :article="article" v-on:set-article="setArticle")
         .wrap(v-if="viewPending")
           news-item(v-for="article in pendingArticles" :key="article.id" :article="article" v-on:set-article="setArticle")
         .wrap(v-else)
@@ -52,7 +57,9 @@ export default {
       latestArticles: [],
       pendingArticles: [],
       featuredArticle: {},
-      viewPending: false
+      hiddenArticles: [],
+      viewPending: false,
+      viewHidden: false
     }
   },
   computed: {
@@ -73,6 +80,10 @@ export default {
           newsService.getPendingNews()
             .then(articles => {
               this.pendingArticles = articles
+            })
+          newsService.getHiddenNews()
+            .then(articles => {
+              this.hiddenArticles = articles
             })
         }
       }

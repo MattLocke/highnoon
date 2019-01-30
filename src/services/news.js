@@ -20,7 +20,18 @@ export default {
     const now = Number(moment().format('X'))
     return db.collection('news')
       .where('approved', '==', true)
+      .where('frontPage', '==', true)
       .where('postDate', '<', now)
+      .orderBy('postDate', 'desc')
+      .limit(10)
+      .get()
+      .then(articles => articles.docs.map(article => ({ id: article.id, ...article.data() })))
+  },
+  getHiddenNews () {
+    logger.logIt('Getting hidden news.')
+    return db.collection('news')
+      .where('approved', '==', true)
+      .where('frontPage', '==', false)
       .orderBy('postDate', 'desc')
       .limit(10)
       .get()

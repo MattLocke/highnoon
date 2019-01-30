@@ -41,18 +41,33 @@ export default {
         return false
       })
   },
+  getImageListings (folder) {
+    var db = firebase.firestore()
+    return db.collection('images').doc(folder)
+      .get()
+      .then(images => images.data())
+  },
   uploadImage (folder, imageName, image) {
     var uploadPath = `images/${folder}/${imageName}`
     var imageRef = firebase.storage().ref().child(uploadPath)
 
-    return imageRef.put(image)
-      .then((snapshot) => {
-        logger.logIt('Successfully uploaded the image! ', snapshot)
-        return true
-      })
-      .catch((error) => {
-        logger.errorIt(error)
-        return false
-      })
+    var uploadTask = imageRef.put(image)
+    uploadTask.on('state_changed', (snapshot) => {
+      var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+      console.log(`Upload is ${progress}% done`)
+    }, (error) => {
+      console.error(error)
+    }, () => {
+      logger.logIt('Successfully uploaded the image!')
+      var db = firebase.firestore()
+      var currentTime = Date.now()
+      uploadTask.snapshot.ref.getDownloadURL()
+        .then((downloadURL) => {
+          return db.collection('images').doc(folder).set({ [currentTime]: { imageName, currentTime, downloadURL } }, { merge: true })
+        })
+        .then(() => {
+          window.location.reload()
+        })
+    })
   }
 }

@@ -2,48 +2,52 @@
   .create-news
     .columns
       .column.is-one-third
-        .box
-          .columns
-            .column.is-half
-              b-field(label="Title")
-                b-input(v-model="newsItem.title")
-            .column.is-half
-              b-field(label="Slug")
-                b-input(v-model="slug" disabled)
-          b-field(label="Blurb")
-            b-input(type="textarea" v-model="newsItem.blurb" rows="2")
-          b-field(label="Body")
-            b-input(type="textarea" v-model="newsItem.message" rows="10")
-          p
-            a(href="http://commonmark.org/help/") Quick Reference
-          hr
-          .columns
-            .column.is-narrow
-              b-field(label="Category")
-                b-select(placeholder="Select a Category" v-model="newsItem.category")
-                  option Analysis
-                  option Editorial
-                  option Interview
-                  option News
-                  option Spotlight
-                  option Tutorial
-            .column
-              b-field(label="Post Date")
-                b-datepicker(placeholder="Select Date" v-model="postDate")
-          .field(v-if="user.isEditor || user.isAdmin")
-            b-checkbox(v-model="newsItem.approved") Approved
-          .field(v-if="user.isEditor || user.isAdmin")
-            b-checkbox(v-model="newsItem.frontPage") Worthy of Home Page
-          hr
-          .columns
-            .column.is-narrow(v-if="editId")
-              button.button.is-primary(@click="updateNews" v-if="canSave") Update News
-              button.button.is-primary(disabled v-else) Save News
-            .column.is-narrow(v-else)
-              button.button.is-primary(@click="saveNews" v-if="canSave") Save News
-              button.button.is-primary(disabled v-else) Save News
-            .column
-              button.button(@click="cancelCreate") Cancel
+        b-tabs(v-model="activeContentTab")
+          b-tab-item(label="Create Article")
+            .box
+              .columns
+                .column.is-half
+                  b-field(label="Title")
+                    b-input(v-model="newsItem.title")
+                .column.is-half
+                  b-field(label="Slug")
+                    b-input(v-model="slug" disabled)
+              b-field(label="Blurb")
+                b-input(type="textarea" v-model="newsItem.blurb" rows="2")
+              b-field(label="Body")
+                b-input(type="textarea" v-model="newsItem.message" rows="10")
+              p
+                a(href="http://commonmark.org/help/") Quick Reference
+              hr
+              .columns
+                .column.is-narrow
+                  b-field(label="Category")
+                    b-select(placeholder="Select a Category" v-model="newsItem.category")
+                      option Analysis
+                      option Editorial
+                      option Interview
+                      option News
+                      option Spotlight
+                      option Tutorial
+                .column
+                  b-field(label="Post Date")
+                    b-datepicker(placeholder="Select Date" v-model="postDate")
+              .field(v-if="user.isEditor || user.isAdmin")
+                b-checkbox(v-model="newsItem.approved") Approved
+              .field(v-if="user.isEditor || user.isAdmin")
+                b-checkbox(v-model="newsItem.frontPage") Worthy of Home Page
+              hr
+              .columns
+                .column.is-narrow(v-if="editId")
+                  button.button.is-primary(@click="updateNews" v-if="canSave") Update News
+                  button.button.is-primary(disabled v-else) Save News
+                .column.is-narrow(v-else)
+                  button.button.is-primary(@click="saveNews" v-if="canSave") Save News
+                  button.button.is-primary(disabled v-else) Save News
+                .column
+                  button.button(@click="cancelCreate") Cancel
+          b-tab-item(label="Upload News Image")
+            news-image-uploader
       .column.is-two-thirds
         .box
           section.news-section
@@ -61,9 +65,12 @@ import { has } from 'lodash'
 
 import NewsService from '@/services/news'
 
+import NewsImageUploader from '@/views/news/NewsImageUploader'
+
 export default {
   name: 'CreateNews',
   components: {
+    NewsImageUploader,
     vueMarkdown
   },
   data () {
@@ -76,6 +83,7 @@ export default {
         approved: false,
         frontPage: true
       },
+      activeContentTab: null,
       editItem: {},
       postDate: null
     }
@@ -116,6 +124,15 @@ export default {
     },
     user () {
       return this.$store.getters.getUserData
+    }
+  },
+  watch: {
+    activeContentTab (val) {
+      if (val) {
+        this.$nextTick(() => {
+          window.dispatchEvent(new Event('resize'))
+        })
+      }
     }
   },
   methods: {
