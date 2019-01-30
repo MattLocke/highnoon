@@ -21,11 +21,12 @@
             .column.is-narrow
               b-field(label="Category")
                 b-select(placeholder="Select a Category" v-model="newsItem.category")
-                  option News
-                  option Spotlight
-                  option Interview
                   option Analysis
                   option Editorial
+                  option Interview
+                  option News
+                  option Spotlight
+                  option Tutorial
             .column
               b-field(label="Post Date")
                 b-datepicker(placeholder="Select Date" v-model="postDate")
