@@ -27,3 +27,13 @@ else (index === users.length) index-- && direction = backward
 // Check to see if all the rosters are full
 // if they are, end the draft
 // otherwise, continue
+
+  watch: {
+    activeContentTab (val) {
+      if (val) {
+        this.$nextTick(() => {
+          window.dispatchEvent(new Event('resize'))
+        })
+      }
+    }
+  },
