@@ -2,7 +2,7 @@
   .draft
     .columns.is-marginless
       left-bar(:showClose="false")
-        section
+        section(v-if="isInLeague")
           h2.has-pointer(@click="showRoster = !showRoster") Your Roster - {{ roster.length }} of 12
             arrow(:isLeft="true" v-model="showRoster")
           .roster-section(v-show="showRoster")
@@ -11,7 +11,7 @@
                 player-card(:player="player" :showRemove="false" :primaryColor="getColor(player)" :score="player.stats.fantasyScore || 0")
               .column.is-one-third-desktop.is-half-mobile(v-for="placeholder in placeholders")
                 player-card(:showRemove="false")
-        section
+        section(v-if="isInLeague")
           collapsible(title-text="Remaining Requirements" :start-collapsed="true")
             .columns.is-mobile(v-show="showRequirements")
               .column.has-text-centered
@@ -36,7 +36,7 @@
                   span {{ user.displayName }}
       .column
         //- Choose your player
-        section(v-if="isCompleted")
+        section(v-if="isCompleted && isInLeague")
           p The draft has been completed.
           hr
           router-link.button.is-primary(:to="`/manageTeam/${leagueId}`") Manage Your Team
@@ -132,7 +132,6 @@ export default {
       filterTeam: '',
       filterRole: '',
       picks: [],
-      users: [],
       preferenceList: [],
       requiredOffense: 2,
       requiredSupport: 2,
@@ -140,41 +139,11 @@ export default {
       showDraftOrder: true,
       showMenu: true,
       showRequirements: true,
-      showRoster: true
+      showRoster: true,
+      users: []
     }
   },
   computed: {
-    players () {
-      return this.$store.getters.getPlayers
-    },
-    myTurn () {
-      if (this.users.length) return this.users[this.draft.activeDrafter].userId === this.userId
-      return false
-    },
-    roster () {
-      return this.picks[this.userId] || []
-    },
-    stats () {
-      return this.$store.getters.getStats
-    },
-    teams () {
-      return this.$store.getters.getTeams
-    },
-    selectedPlayers () {
-      let selected = []
-      Object.keys(this.picks).forEach((key) => {
-        selected = [...selected, ...this.picks[key]]
-      })
-      return selected
-    },
-    placeholders () {
-      let remaining = 12 - this.roster.length
-      let tmp = []
-      for (let i = 0; i < remaining; i++) {
-        tmp.push(['placeholder'])
-      }
-      return tmp
-    },
     filteredPlayers () {
       let fPlayers = [...this.players]
 
@@ -187,14 +156,29 @@ export default {
     isCompleted () {
       return this.draft.status === 'completed'
     },
+    isInLeague () {
+      return this.userLeagues.some(league => league.leagueId === this.leagueId)
+    },
+    leagueId () {
+      return this.$route.params.leagueId
+    },
+    myTurn () {
+      if (this.users.length) return this.users[this.draft.activeDrafter].userId === this.userId
+      return false
+    },
     offensePlayers () {
       return this.roster.filter(player => player.attributes.role === 'offense')
     },
-    supportPlayers () {
-      return this.roster.filter(player => player.attributes.role === 'support')
+    placeholders () {
+      let remaining = 12 - this.roster.length
+      let tmp = []
+      for (let i = 0; i < remaining; i++) {
+        tmp.push(['placeholder'])
+      }
+      return tmp
     },
-    tankPlayers () {
-      return this.roster.filter(player => player.attributes.role === 'tank')
+    players () {
+      return this.$store.getters.getPlayers
     },
     remaining () {
       const remaining = {}
@@ -203,14 +187,36 @@ export default {
       remaining.support = this.requiredSupport - this.supportPlayers.length > 0 ? this.requiredSupport - this.supportPlayers.length : 0
       return remaining
     },
+    roster () {
+      return this.picks[this.userId] || []
+    },
+    selectedPlayers () {
+      let selected = []
+      Object.keys(this.picks).forEach((key) => {
+        selected = [...selected, ...this.picks[key]]
+      })
+      return selected
+    },
+    stats () {
+      return this.$store.getters.getStats
+    },
+    supportPlayers () {
+      return this.roster.filter(player => player.attributes.role === 'support')
+    },
+    tankPlayers () {
+      return this.roster.filter(player => player.attributes.role === 'tank')
+    },
+    teams () {
+      return this.$store.getters.getTeams
+    },
     totalRemaining () {
       return this.remaining.offense + this.remaining.support + this.remaining.tank
     },
     userId () {
       return this.$store.getters.getUserId
     },
-    leagueId () {
-      return this.$route.params.leagueId
+    userLeagues () {
+      return this.$store.getters.getUserLeagues
     }
   },
   watch: {
@@ -218,6 +224,14 @@ export default {
       handler (val) {
         // if they shouldn't be here, send them home!
         if (!val || val.status === 'unDrafted') this.$router.push({ path: `/LeagueStandard/${this.leagueId}` })
+      }
+    },
+    leagueId: {
+      immediate: true,
+      handler (val) {
+        if (val) {
+          this.$store.dispatch('fetchLeagueUsers', { leagueId: this.leagueId, leagueType: 'standard' })
+        }
       }
     },
     players: {
@@ -229,6 +243,12 @@ export default {
         } else this.$store.dispatch('setLoading', false)
       }
     },
+    teams: {
+      immediate: true,
+      handler (val) {
+        if (val && val.length === 0) this.$store.dispatch('getTeams')
+      }
+    },
     userId: {
       immediate: true,
       handler (val) {
@@ -238,12 +258,6 @@ export default {
           this.getDraftOrder()
           this.getPreferenceList()
         }
-      }
-    },
-    teams: {
-      immediate: true,
-      handler (val) {
-        if (val && val.length === 0) this.$store.dispatch('getTeams')
       }
     }
   },
@@ -264,6 +278,32 @@ export default {
           this.filterText = ''
           this.$store.dispatch('setLoading', false)
         })
+    },
+    canSelect (player) {
+      // if they met all the requirements, they can pick whoever!
+      if (!this.draft.doneProcessing) return false
+      if (this.totalRemaining === 0) return true
+
+      // if there is only enough for roles that need feeling, strict mode!
+      const strictMode = !!(this.totalRemaining >= this.placeholders.length)
+
+      switch (player.attributes.role) {
+        case 'offense': {
+          return strictMode ? !!(this.remaining.offense > 0) : true
+        }
+        case 'support': {
+          return strictMode ? !!(this.remaining.support > 0) : true
+        }
+        case 'tank': {
+          return strictMode ? !!(this.remaining.tank > 0) : true
+        }
+        default: return false
+      }
+    },
+    getColor (player) {
+      const team = this.teams.filter(team => team.abbreviatedName === player.team)[0]
+      if (team) return team.primaryColor === '000000' ? team.secondaryColor : team.primaryColor
+      return '222'
     },
     getDraft () {
       if (this.leagueId) {
@@ -297,38 +337,12 @@ export default {
         }
       })
     },
-    getColor (player) {
-      const team = this.teams.filter(team => team.abbreviatedName === player.team)[0]
-      if (team) return team.primaryColor === '000000' ? team.secondaryColor : team.primaryColor
-      return '222'
-    },
     getScore (player) {
       const match = this.stats.filter(stat => stat.playerId === player.id)
       return match[0] ? match[0].fantasyScore : 0
     },
     getUserName (id) {
       return this.users.find(user => user.userId === id).displayName
-    },
-    canSelect (player) {
-      // if they met all the requirements, they can pick whoever!
-      if (!this.draft.doneProcessing) return false
-      if (this.totalRemaining === 0) return true
-
-      // if there is only enough for roles that need feeling, strict mode!
-      const strictMode = !!(this.totalRemaining >= this.placeholders.length)
-
-      switch (player.attributes.role) {
-        case 'offense': {
-          return strictMode ? !!(this.remaining.offense > 0) : true
-        }
-        case 'support': {
-          return strictMode ? !!(this.remaining.support > 0) : true
-        }
-        case 'tank': {
-          return strictMode ? !!(this.remaining.tank > 0) : true
-        }
-        default: return false
-      }
     }
   }
 }
