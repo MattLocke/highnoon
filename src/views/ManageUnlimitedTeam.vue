@@ -72,9 +72,25 @@
           section.has-text-centered
             button.button.is-primary(@click="saveRoster" :disabled="!canSaveRoster") Save Roster And Return To League
         section
+          .columns
+            .column.is-narrow
+              b-field(label="Filter Team")
+                b-select(placeholder="Filter By Team" v-model="filterTeam")
+                  option(value="") All
+                  option(v-for="team in teams" :value="team.abbreviatedName") {{ team.name }}
+            .column.is-narrow
+              b-field(label="Filter Role")
+                b-select(placeholder="Filter By Role" v-model="filterRole")
+                  option(value="") All
+                  option(value="offense") Offense
+                  option(value="support") Support
+                  option(value="tank") Tank
+          b-field(label="Filter Players")
+            b-input(type="text" v-model="filterText")
+        section
           collapsible(title-text="My Bench")
             b-table(
-              :data="myAvailablePicks"
+              :data="filteredPlayers"
               :paginated="true"
               :per-page="30"
               )
@@ -110,6 +126,9 @@ export default {
   data () {
     return {
       availablePicks: [],
+      filterText: '',
+      filterTeam: '',
+      filterRole: '',
       lineUp: {
         captain: {},
         offense1: {},
@@ -124,6 +143,15 @@ export default {
   computed: {
     canSaveRoster () {
       return (this.lineUp.captain.id && this.lineUp.offense1.id && this.lineUp.offense2.id && this.lineUp.support1.id && this.lineUp.support2.id && this.lineUp.tank1.id && this.lineUp.tank2.id)
+    },
+    filteredPlayers () {
+      let fPlayers = [...this.myAvailablePicks]
+
+      if (this.filterText) fPlayers = fPlayers.filter(player => player.name.toLowerCase().includes(this.filterText.toLowerCase()))
+      if (this.filterRole) fPlayers = fPlayers.filter(player => player.attributes.role === this.filterRole)
+      if (this.filterTeam) fPlayers = fPlayers.filter(player => player.team === this.filterTeam)
+
+      return fPlayers
     },
     leagueId () {
       return this.$route.params.leagueId
@@ -153,6 +181,9 @@ export default {
     },
     players () {
       return this.$store.getters.getPlayers
+    },
+    teams () {
+      return this.$store.getters.getTeams
     },
     userData () {
       return this.$store.getters.getUserData
