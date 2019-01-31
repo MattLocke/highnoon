@@ -99,57 +99,24 @@ export default {
             position: 'is-bottom'
           })
         })
-        .catch((error) => {
-          this.$store.dispatch('setLoading', false)
-          this.$toast.open({
-            message: `Error signing in: ${error.message}`,
-            type: 'is-danger',
-            position: 'is-bottom'
-          })
-        })
     },
     register () {
+      let userData = {}
+      let fbUser = {}
       this.$store.dispatch('setLoading', true)
       firebase.auth().createUserWithEmailAndPassword(this.user, this.pass)
         .then((user) => {
-          console.table(user)
-          const userData = {
+          userData = {
             id: user.user.uid,
             email: this.user,
             displayName: this.displayName,
             lifetimePoints: 0
           }
-          userService.createProfile(userData)
-            .then((data) => {
-              // all is good in the hood, time to redirect.
-              user.user.sendEmailVerification()
-                .then(() => {
-                  // send them an email verification.  They'll need that to do anything.
-                  this.$store.dispatch('setLoading', false)
-                  if (this.leagueId) this.$router.push({ path: '/ViewLeague/' + this.leagueId })
-                  else {
-                    this.$store.dispatch('logIn', userData)
-                    this.$router.push({ path: '/home' })
-                  }
-                })
-                .catch((error) => {
-                  this.$store.dispatch('setLoading', false)
-                  this.$toast.open({
-                    message: `Error registering: ${error.message}`,
-                    type: 'is-danger',
-                    position: 'is-bottom',
-                    duration: '10000'
-                  })
-                })
-            })
-            .catch((error) => {
-              this.$toast.open({
-                message: `Error registering: ${error.message}`,
-                type: 'is-danger',
-                position: 'is-bottom',
-                duration: '10000'
-              })
-            })
+          fbUser = user
+          return userService.createProfile(userData)
+        })
+        .then((data) => {
+          return fbUser.user.sendEmailVerification()
         })
         .catch((error) => {
           this.$store.dispatch('setLoading', false)
@@ -159,6 +126,15 @@ export default {
             position: 'is-bottom',
             duration: '10000'
           })
+        })
+        .finally(() => {
+          // send them an email verification.  They'll need that to do anything.
+          this.$store.dispatch('setLoading', false)
+          if (this.leagueId) this.$router.push({ path: '/ViewLeague/' + this.leagueId })
+          else {
+            this.$store.dispatch('logIn', userData)
+            this.$router.push({ path: '/home' })
+          }
         })
     },
     resetPassword () {
