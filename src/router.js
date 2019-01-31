@@ -22,6 +22,7 @@ import Picks from './views/Picks'
 import PlayerProfile from './views/PlayerProfile'
 import Profile from './views/Profile'
 import Staff from './views/Staff'
+import Upload from './views/Upload'
 
 Vue.use(Router)
 
@@ -179,6 +180,14 @@ let router = new Router({
       path: '/staff',
       name: 'staff',
       component: Staff,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/upload',
+      name: 'upload',
+      component: Upload,
       meta: {
         requiresAuth: true
       }
