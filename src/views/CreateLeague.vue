@@ -108,6 +108,21 @@ export default {
         }
       }
 
+      if (leagueData.leagueType === 'standard') {
+        leagueData.message = `![Discord Admins](https://firebasestorage.googleapis.com/v0/b/overwatch-pickem.appspot.com/o/images%2Fnews%2Fhn_defhead_standraft2.png?alt=media&token=5ab433e3-ac25-4037-93ed-ea5a23b7d28a)
+        [View full Standard Draft requirements and guidelines.](https://highnoon.gg/#/article/Na1lrkeu2s2Pwi8wbQrp)`
+      }
+
+      if (leagueData.leagueType === 'unlimited') {
+        leagueData.message = `![Discord Admins](https://firebasestorage.googleapis.com/v0/b/overwatch-pickem.appspot.com/o/images%2Fnews%2Fhn_defhead_unldraft.png?alt=media&token=854eab8b-86b4-4691-9220-782c7e979d2f)
+        [View full Unlimited Draft requirements and guidelines.](https://highnoon.gg/#/article/DUtOLV2iYsTplEgvH3fv)`
+      }
+
+      if (leagueData.leagueType === 'pickem') {
+        leagueData.message = `![Discord Admins](https://firebasestorage.googleapis.com/v0/b/overwatch-pickem.appspot.com/o/images%2Fnews%2Fhn_defhead_pickem.png?alt=media&token=dbab607a-c3f7-400d-93f0-2638878e91e2)
+        [View full Pick 'Em requirements and guidelines.](https://highnoon.gg/#/article/Jx3Z8ZbpWlAon6zx9Osd)`
+      }
+
       this.$store.dispatch('setLoading', true)
       LeagueService.createLeague(this.userData, leagueData)
         .then((leagueId) => {
