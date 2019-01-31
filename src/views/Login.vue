@@ -21,7 +21,7 @@
             button.button.is-primary(type="submit" v-if="canSignIn") Sign In
             a.button(disabled v-else) Sign In
             p.is-mice
-              a.is-pulled-right(@click="signInMode = false") Or Sign Up
+              a.is-pulled-right(@click="signInMode = false") Or Register
           .sign-up(v-else)
             hr
             button.button.is-primary(type="submit" v-if="canSignIn") Register
@@ -205,7 +205,6 @@ export default {
     font-weight: 400;
   }
   .logo {
-    margin-top: 10vh;
     width: 10vw;
     height: 10vw;
     min-width: 100px;
