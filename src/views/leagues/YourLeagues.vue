@@ -19,7 +19,7 @@ export default {
   name: 'YourLeagues',
   props: {
     userId: {
-      type: String,
+      type: [String, Number],
       required: true
     }
   },
