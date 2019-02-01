@@ -26,6 +26,8 @@
               .wrap(v-else)
                 img(src="https://firebasestorage.googleapis.com/v0/b/overwatch-pickem.appspot.com/o/images%2Fleagues%2Fwelcome-to-your-league.jpg?alt=media&token=bbf8225c-6bd0-4b1a-b5e0-d864a3047395")
                 p Click on the edit button above to customize your league landing page!  Inform members of the rules you have, the prizes you're giving away - whatever makes sense!
+          b-tab-item(label="Your Roster")
+            league-roster(:league="league")
           b-tab-item(label="Trash Talk")
             trash-talk
         unlimited-leaderboard
@@ -36,6 +38,7 @@ import vueMarkdown from 'vue-markdown'
 
 import LeagueService from '@/services/league'
 
+import LeagueRoster from '@/views/leagues/LeagueRoster'
 import TrashTalk from '@/views/draft/TrashTalk'
 import UnlimitedLeaderboard from '@/views/leagues/UnlimitedLeaderboard'
 import YourLeagues from '@/views/leagues/YourLeagues'
@@ -43,6 +46,7 @@ import YourLeagues from '@/views/leagues/YourLeagues'
 export default {
   name: 'UnlimitedLeague',
   components: {
+    LeagueRoster,
     TrashTalk,
     UnlimitedLeaderboard,
     vueMarkdown,

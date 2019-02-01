@@ -24,8 +24,9 @@
           collapsible(title-text="Delete League" :start-collapsed="true")
             confirm-button(button-text="Delete League" confirm-text="Are You Sure?" extra-text="This action can not be undone, and all users will lose their points and picks associated with this league." @confirm-it="deleteLeague")
         section(v-if="draftComplete && isOwner")
-          confirm-button(button-text="Reset Draft" confirm-text="Are You Sure?" @confirm-it="resetDraft")
-          p This will reset the draft for all players in the league.  You may want to do this between stages, or there may have been an issue during the draft, whatever the reason, this is your key to resetting it!
+          collapsible(title-text="Reset Draft" :start-collapsed="true")
+            p This will reset the draft for all players in the league.  You may want to do this between stages, or there may have been an issue during the draft, whatever the reason, this is your key to resetting it!
+            confirm-button(button-text="Reset Draft" confirm-text="Are You Sure?" @confirm-it="resetDraft")
         section
           router-link.button.is-primary.is-small(:to="`/manageTeam/${leagueId}`" :disabled="!draftComplete") Manage Team
           button.button.is-secondary.is-small.is-pulled-right(@click="copyLink" v-if="isInLeague") Copy Share Link
@@ -56,6 +57,8 @@
               .wrap(v-else)
                 img(src="https://firebasestorage.googleapis.com/v0/b/overwatch-pickem.appspot.com/o/images%2Fleagues%2Fwelcome-to-your-league.jpg?alt=media&token=bbf8225c-6bd0-4b1a-b5e0-d864a3047395")
                 p Click on the edit button above to customize your league landing page!  Inform members of the rules you have, the prizes you're giving away - whatever makes sense!
+          b-tab-item(label="Your Roster" v-if="draftComplete && isInLeague")
+            league-roster(:league="league")
           b-tab-item(label="Trash Talk")
             trash-talk
         section(v-if="canJoinLeague && (userData.isAdmin || userData.isAlpha)")
@@ -79,6 +82,7 @@ import vueMarkdown from 'vue-markdown'
 
 import LeagueService from '@/services/league'
 
+import LeagueRoster from '@/views/leagues/LeagueRoster'
 import LeagueSchedule from '@/views/leagues/LeagueSchedule'
 import TrashTalk from '@/views/draft/TrashTalk'
 import YourLeagues from '@/views/leagues/YourLeagues'
@@ -86,6 +90,7 @@ import YourLeagues from '@/views/leagues/YourLeagues'
 export default {
   name: 'StandardLeague',
   components: {
+    LeagueRoster,
     LeagueSchedule,
     vueMarkdown,
     TrashTalk,

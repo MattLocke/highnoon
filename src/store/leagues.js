@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash'
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 import { fireInit } from '@/fireLogin'
@@ -73,7 +74,7 @@ export default {
       }
     },
     fetchRoster: ({ state, commit }, payload) => {
-      if (payload.leagueId !== state.leagueId || !state.leagueRoster.length) {
+      if (payload.leagueId !== state.leagueId || isEmpty(state.leagueRoster.length)) {
         db.collection(`${payload.leagueType}LeagueRoster`).doc(payload.leagueId)
           .get()
           .then((leagueRoster) => {
