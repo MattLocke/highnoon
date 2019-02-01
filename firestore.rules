@@ -1,96 +1,90 @@
 service cloud.firestore {
   match /databases/{database}/documents {
-  
-    match /{document=**} {
+    // Make sure the uid of the requesting user matches name of the user
+    // document. The wildcard expression {userId} makes the userId variable
+    // available in rules.
+    allow read;
+
+    match /config/{configId} {
       allow read;
     }
-    
-    match /articleComments/{articleId} {
-    	allow write: if request.auth != null;
-    }
-    
-    match /allTeams/{allTeamsId} {
-      allow read, write;
-    }
-    
-    match /comments/{commentId} {
-      allow read, write;
+
+    match /images/{folder} {
+      allow read;
     }
 
-    match /competitions/{competitionsId} {
-      allow write: if request.auth != null;
-    }
-
-    match /completedMatches/{completedMatchesId} {
-      allow read, write;
-    }
-
-    match /cron/{cronId} {
-      allow read, write;
-    }
-
-    match /features/{featuresId} {
-      allow read, write;
-    }
-
-    match /leaguePassword/{leaguePasswordId} {
-      allow read, write;
-    }
-
-    match /leagueUsers/{leagueUsersId} {
-      allow write: if request.auth != null;
-    }
-
-    match /leagues/{leagueId} {
-      allow write: if request.auth != null;
-    }
-
-    match /matchPicks/{matchPickId} {
-      allow write: if request.auth != null;
+    match /leagueSchedule/{leagueId} {
+      allow read;
     }
 
     match /matches/{matchId} {
-      allow write: if request.auth != null;
-    }
-    
-    match /messages/{document=**} {
-      allow write: if request.auth != null;
+      allow read;
     }
 
     match /news/{newsId} {
-      allow write: if request.auth != null;
-    }
-    
-    match /pushTokens/{tokenId} {
-    	allow write: if request.auth != null;
+    	allow read;
+    	allow write: if get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isWriter == true;
     }
 
-    match /users/{userId} {
-      allow write: if request.auth.uid == userId;
+    match /pickemLeagueUsers/{leagueId} {
+    	allow read;
+    	allow write: if request.auth.uid != null;
+    }
+
+    match /pickemLeagues/{leagueId} {
+    	allow read;
+    	allow write: if request.auth.uid != null;
+    }
+
+    match /playerStats/{playerId} {
+      allow read;
+    }
+
+    match /players/{playerId} {
+      allow read;
+    }
+
+    match /standardLeagueRoster/{leagueId} {
+    	allow read;
+    	allow write: if request.auth.uid != null;
+    }
+
+    match /standardLeagueUsers/{leagueId} {
+    	allow read;
+    	allow write: if request.auth.uid != null;
+    }
+
+    match /standardLeagues/{leagueId} {
+    	allow read;
+    	allow write: if request.auth.uid != null;
     }
 
     match /teams/{teamId} {
-      allow write: if request.auth != null;
+      allow read;
     }
-    
-    match /pickStats/{pickId} {
-    	allow write: if request.auth != null;
+
+    match /unlimitedLeagueRoster/{leagueId} {
+    	allow read;
+    	allow write: if request.auth.uid != null;
     }
-    
-    match /notification/{notificationId} {
-    	allow write: if request.auth != null;
+
+    match /unlimitedLeagueUsers/{leagueId} {
+    	allow read;
+    	allow write: if request.auth.uid != null;
     }
-    
-    match /leaderboardStandard/{userId} {
-    	allow write: if request.auth != null;
+
+    match /unlimitedLeagues/{leagueId} {
+    	allow read;
+    	allow write: if request.auth.uid != null;
     }
-    
-    match /leaderboardSimple/{userId} {
-    	allow write: if request.auth != null;
+
+    match /userLeagues/{userId} {
+    	allow read, write: if request.auth.uid == userId;
     }
-    
-    match /leaderboardLeague/{leagueId} {
-    	allow write: if request.auth != null;
+
+    match /users/{userId} {
+      allow read, update, delete: if request.auth.uid == userId;
+      allow create: if request.auth.uid != null;
     }
   }
 }
