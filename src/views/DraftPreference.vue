@@ -181,7 +181,6 @@ export default {
         if (val) {
           const db = firebase.database()
           db.ref(`/draftPreference/${this.leagueId}/${this.userId}`).on('value', (snapshot) => {
-            console.log('heard back from db...')
             const tmp = snapshot.val()
             if (tmp) {
               this.roster = tmp.players || []

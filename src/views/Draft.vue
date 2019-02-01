@@ -75,7 +75,7 @@
                     :show-detail-icon="true")
                     template(slot-scope="props")
                       b-table-column(width="60")
-                        button.button.is-primary.is-small(@click="addToRoster(props.row)" :disabled="!myTurn") Select
+                        button.button.is-primary.is-small(@click="addToRoster(props.row)" :disabled="!myTurn || autoMode") Select
                       b-table-column(label="Role" width="30" field="attributes.role" sortable)
                         img(:src="`images/roles/${props.row.attributes.role || 'flex'}-white.svg`" width="22" height="22")
                       b-table-column(label="Team" width="30" field="team" sortable)
@@ -84,16 +84,21 @@
                         span {{ props.row.name }}
                       b-table-column(label="Rating" width="40" field="stats.fantasyScore" sortable)
                         span {{ props.row.stats.fantasyScore || 'N/A' }}
+                p The draft has been completed.
+                p(v-if="isInLeague") You can
+                  router-link(:to="`/manageTeam/${leagueId}`")  Manage Your Team
+                  |  and start building that dream team!
               b-tab-item(label="Drafted Players")
                 section
-                  collapsible(title-text="Currently Drafting" v-if="!isCompleted")
-                    h3.orange.ow-font {{ users[draft.activeDrafter || 0].displayName }}
-                    hr
+                  collapsible(title-text="Currently Drafting")
+                    .wrap(v-if="!isCompleted")
+                      h3.orange.ow-font {{ users[draft.activeDrafter || 0].displayName }}
+                      hr
                     drafting-users(:users="users" :draft="draft" :picks="picks")
               b-tab-item(label="Preference List")
                 section
                   collapsible(title-text="Draft Preference / Remaining")
-                    draft-preference(:embedded="true" :seedPlayers="remaining")
+                    draft-preference(:embedded="true" :seedPlayers="filteredPlayers")
           .column.is-one-third-desktop
             trash-talk
       draft-drawer(:roster="roster")
@@ -261,6 +266,13 @@ export default {
           this.getDraftOrder()
           this.getPreferenceList()
           this.$store.dispatch('getLeagues', val)
+          const db = firebase.database()
+          db.ref(`/draftPreference/${this.leagueId}/${this.userId}`).on('value', (snapshot) => {
+            const tmp = snapshot.val()
+            if (tmp) {
+              this.autoMode = tmp.autoMode
+            }
+          })
         }
       }
     }
@@ -268,7 +280,8 @@ export default {
   methods: {
     addToRoster (player) {
       this.$store.dispatch('setLoading', true)
-      this.activeTab = 1
+      // don't need to move them to the tab if they're on automatic mode
+      if (!this.autoMode) this.activeTab = 1
       const db = firebase.database()
       const tmp = [...this.roster]
       tmp.push(player)
