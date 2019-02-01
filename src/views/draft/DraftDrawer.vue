@@ -21,3 +21,18 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.draft-drawer {
+  position: fixed;
+  transform: translate3d(0, 0, 0);
+  bottom: 0;
+  background-color: rgba(0,0,0,0.8);
+  width: 100%;
+  .role-image {
+    height: 18px;
+    width: auto;
+    margin-bottom: -3px;
+  }
+}
+</style>
