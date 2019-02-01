@@ -40,65 +40,60 @@
           p The draft has been completed.
           hr
           router-link.button.is-primary(:to="`/manageTeam/${leagueId}`") Manage Your Team
-        .columns.is-desktop(v-show="myTurn && !autoMode")
-          .column.is-two-thirds-desktop(v-if="roster.length < 12")
-            section
-              h2 {{ draft.leagueName }} Live Draft
-            section
-              collapsible(title-text="Drafted Players" :start-collapsed="true")
-                drafting-users(:users="users" :draft="draft" :picks="picks")
-            section(v-if="!isCompleted")
-              .columns
-                .column.is-narrow
-                  b-field(label="Filter Team")
-                    b-select(placeholder="Filter By Team" v-model="filterTeam")
-                      option(value="") All
-                      option(v-for="team in teams" :value="team.abbreviatedName") {{ team.name }}
-                .column.is-narrow
-                  b-field(label="Filter Role")
-                    b-select(placeholder="Filter By Role" v-model="filterRole")
-                      option(value="") All
-                      option(value="offense") Offense
-                      option(value="support") Support
-                      option(value="tank") Tank
-              b-field(label="Filter Players")
-                b-input(type="text" v-model="filterText")
-            section(v-if="!isCompleted")
-              b-table(
-                :data="filteredPlayers"
-                :loading="!(filteredPlayers.length)"
-                ref="table"
-                :paginated="filteredPlayers.length > 20"
-                :per-page="20"
-                :show-detail-icon="true")
-                template(slot-scope="props")
-                  b-table-column(width="60")
-                    button.button.is-primary.is-small(@click="addToRoster(props.row)") Select
-                  b-table-column(label="Role" width="30" field="attributes.role" sortable)
-                    img(:src="`images/roles/${props.row.attributes.role || 'flex'}-white.svg`" width="22" height="22")
-                  b-table-column(label="Team" width="30" field="team" sortable)
-                    img(:src="`images/teams/${props.row.team}.svg`" width="22" height="22")
-                  b-table-column(label="Player Name" field="name" sortable)
-                    span {{ props.row.name }}
-                  b-table-column(label="Rating" width="40" field="stats.fantasyScore" sortable)
-                    span {{ props.row.stats.fantasyScore || 'N/A' }}
-          .column(v-else)
-            section
-              p Congrats!  Your team is complete!
-          .column.is-one-third-desktop
-            trash-talk
-        .columns.is-desktop(v-show="!myTurn || autoMode")
+        .columns.is-desktop
           //- See how the draft is going
           .column(v-if="users.length")
             h1 {{ draft.leagueName }} Live Draft
-            section
-              collapsible(title-text="Currently Drafting" v-if="!isCompleted")
-                h3.orange.ow-font {{ users[draft.activeDrafter || 0].displayName }}
-                hr
-                drafting-users(:users="users" :draft="draft" :picks="picks")
-            section
-              collapsible(title-text="Draft Preference / Remaining")
-                draft-preference(:embedded="true" :seedPlayers="remaining")
+            b-tabs(v-model="activeTab")
+              b-tab-item(label="Build Your Team")
+                section
+                  h2 {{ draft.leagueName }} Live Draft
+                section(v-if="!isCompleted")
+                  .columns
+                    .column.is-narrow
+                      b-field(label="Filter Team")
+                        b-select(placeholder="Filter By Team" v-model="filterTeam")
+                          option(value="") All
+                          option(v-for="team in teams" :value="team.abbreviatedName") {{ team.name }}
+                    .column.is-narrow
+                      b-field(label="Filter Role")
+                        b-select(placeholder="Filter By Role" v-model="filterRole")
+                          option(value="") All
+                          option(value="offense") Offense
+                          option(value="support") Support
+                          option(value="tank") Tank
+                    .column
+                      b-field(label="Filter Players")
+                        b-input(type="text" v-model="filterText")
+                section(v-if="!isCompleted")
+                  b-table(
+                    :data="filteredPlayers"
+                    :loading="!(filteredPlayers.length)"
+                    ref="table"
+                    :paginated="filteredPlayers.length > 20"
+                    :per-page="20"
+                    :show-detail-icon="true")
+                    template(slot-scope="props")
+                      b-table-column(width="60")
+                        button.button.is-primary.is-small(@click="addToRoster(props.row)" :disabled="!myTurn") Select
+                      b-table-column(label="Role" width="30" field="attributes.role" sortable)
+                        img(:src="`images/roles/${props.row.attributes.role || 'flex'}-white.svg`" width="22" height="22")
+                      b-table-column(label="Team" width="30" field="team" sortable)
+                        img(:src="`images/teams/${props.row.team}.svg`" width="22" height="22")
+                      b-table-column(label="Player Name" field="name" sortable)
+                        span {{ props.row.name }}
+                      b-table-column(label="Rating" width="40" field="stats.fantasyScore" sortable)
+                        span {{ props.row.stats.fantasyScore || 'N/A' }}
+              b-tab-item(label="Drafted Players")
+                section
+                  collapsible(title-text="Currently Drafting" v-if="!isCompleted")
+                    h3.orange.ow-font {{ users[draft.activeDrafter || 0].displayName }}
+                    hr
+                    drafting-users(:users="users" :draft="draft" :picks="picks")
+              b-tab-item(label="Preference List")
+                section
+                  collapsible(title-text="Draft Preference / Remaining")
+                    draft-preference(:embedded="true" :seedPlayers="remaining")
           .column.is-one-third-desktop
             trash-talk
       draft-drawer(:roster="roster")
@@ -128,6 +123,7 @@ export default {
   },
   data () {
     return {
+      activeTab: null,
       autoMode: false,
       draft: {
         activeDrafter: null
@@ -161,7 +157,7 @@ export default {
       return this.draft.status === 'completed'
     },
     isInLeague () {
-      return this.userLeagues.some(league => league.leagueId === this.leagueId)
+      return !!(this.userLeagues.some(league => league.leagueId === this.leagueId))
     },
     leagueId () {
       return this.$route.params.leagueId
@@ -238,6 +234,9 @@ export default {
         }
       }
     },
+    myTurn (val) {
+      if (val) this.activeTab = 0
+    },
     players: {
       immediate: true,
       handler (val) {
@@ -261,6 +260,7 @@ export default {
           this.getDraft()
           this.getDraftOrder()
           this.getPreferenceList()
+          this.$store.dispatch('getLeagues', val)
         }
       }
     }
@@ -268,6 +268,7 @@ export default {
   methods: {
     addToRoster (player) {
       this.$store.dispatch('setLoading', true)
+      this.activeTab = 1
       const db = firebase.database()
       const tmp = [...this.roster]
       tmp.push(player)

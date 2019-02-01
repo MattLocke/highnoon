@@ -5,7 +5,7 @@
         h2(v-if="!embedded") Draft Preference List
         section
           .field
-            b-switch(v-model="autoMode") Enable Auto-Draft
+            b-switch(v-model="autoMode") Auto-Draft {{ autoMode ? 'Enabled' : 'Disabled' }}
           p This will let the system draft for you in case you can't make it to the live draft.  While active, picks will be placed on your behalf automatically, so be sure you want to enable this!
         section(v-if="!embedded")
           h3 Chosen Roles
@@ -45,8 +45,8 @@
         h2 Preference list for:
           span.orange  {{ leagueData.leagueName }}
         section
-          h3 Choose Your Players
-          p This list will serve as a "preference" for the draft to the league it's associated with.  Keep in mind during the draft it may not always choose your highest available player.  If roles have not been fulfilled, it will fill those roles choosing the best it can from your list.  If your list is too short, we'll take the player with the highest High Noon Score.  Right now, the player list is fixed in order, so make your decisions carefully!  After I get more time, I'll add the ability to easily re-order the list.
+          collapsible(title-text="Choose Your Players" :start-collapsed="true")
+            p This list will serve as a "preference" for the draft to the league it's associated with.  Keep in mind during the draft it may not always choose your highest available player.  If roles have not been fulfilled, it will fill those roles choosing the best it can from your list.  If your list is too short, we'll take the player with the highest High Noon Score.  Right now, the player list is fixed in order, so make your decisions carefully!  After I get more time, I'll add the ability to easily re-order the list.
         section
           .columns
             .column.is-narrow
@@ -61,8 +61,9 @@
                   option(value="offense") Offense
                   option(value="support") Support
                   option(value="tank") Tank
-          b-field(label="Filter Players")
-            b-input(type="text" v-model="filterText")
+            .column
+              b-field(label="Filter Players")
+                b-input(type="text" v-model="filterText")
         section
           b-table(
             :data="filteredPlayers"
