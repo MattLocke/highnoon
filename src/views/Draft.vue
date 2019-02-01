@@ -45,7 +45,7 @@
           .column(v-if="users.length")
             h1 {{ draft.leagueName }} Live Draft
             b-tabs(v-model="activeTab")
-              b-tab-item(label="Build Your Team")
+              b-tab-item(label="Build Your Team" v-if="isInLeague")
                 section
                   h2 {{ draft.leagueName }} Live Draft
                 section(v-if="!isCompleted")
@@ -68,7 +68,6 @@
                 section(v-if="!isCompleted")
                   b-table(
                     :data="filteredPlayers"
-                    :loading="!(filteredPlayers.length)"
                     ref="table"
                     :paginated="filteredPlayers.length > 20"
                     :per-page="20"
@@ -84,8 +83,8 @@
                         span {{ props.row.name }}
                       b-table-column(label="Rating" width="40" field="stats.fantasyScore" sortable)
                         span {{ props.row.stats.fantasyScore || 'N/A' }}
-                p The draft has been completed.
-                p(v-if="isInLeague") You can
+                p(v-if="isCompleted") The draft has been completed.
+                p(v-if="isInLeague && isCompleted") You can
                   router-link(:to="`/manageTeam/${leagueId}`")  Manage Your Team
                   |  and start building that dream team!
               b-tab-item(label="Drafted Players")
@@ -95,7 +94,7 @@
                       h3.orange.ow-font {{ users[draft.activeDrafter || 0].displayName }}
                       hr
                     drafting-users(:users="users" :draft="draft" :picks="picks")
-              b-tab-item(label="Preference List")
+              b-tab-item(label="Preference List" v-if="isInLeague")
                 section
                   collapsible(title-text="Draft Preference / Remaining")
                     draft-preference(:embedded="true" :seedPlayers="filteredPlayers")
