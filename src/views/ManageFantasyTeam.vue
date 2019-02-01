@@ -170,7 +170,7 @@ export default {
       return [ ...available ]
     },
     myPicks () {
-      return this.draftPicks[this.userData.id] || []
+      return this.draftPicks ? this.draftPicks[this.userData.id] || [] : []
     },
     players () {
       return this.$store.getters.getPlayers
