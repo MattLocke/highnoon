@@ -1,5 +1,5 @@
 <template lang="pug">
-  .left-bar.column(:class="getClass")
+  .left-bar(:class="getClass")
     p.show-menu.orange.is-hidden-desktop(@click="showMenu = !showMenu") {{ showMenu ? 'Hide' : 'Show' }} Menu
       arrow(:isLeft="true" v-model="showMenu")
     .wrap(v-if="showMenu")
@@ -14,6 +14,10 @@ export default {
     }
   },
   props: {
+    embedded: {
+      type: Boolean,
+      default: false
+    },
     hideMobile: {
       type: Boolean,
       default: false
@@ -21,7 +25,8 @@ export default {
   },
   computed: {
     getClass () {
-      return { 'is-one-quarter-desktop': true, 'is-hidden-mobile': this.hideMobile }
+      if (this.embedded) return {}
+      return { 'column': true, 'is-one-quarter-desktop': true, 'is-hidden-mobile': this.hideMobile }
     }
   }
 }
