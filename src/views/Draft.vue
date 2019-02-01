@@ -89,14 +89,16 @@
             trash-talk
         .columns.is-desktop(v-show="!myTurn || autoMode")
           //- See how the draft is going
-          .column
-            section(v-if="users.length")
-              h2 {{ draft.leagueName }} Live Draft
-              hr
-              h3(v-if="!isCompleted") Currently Drafting:
-                span.orange  {{ users[draft.activeDrafter].displayName }}
+          .column(v-if="users.length")
+            h1 {{ draft.leagueName }} Live Draft
             section
-              drafting-users(:users="users" :draft="draft" :picks="picks")
+              collapsible(title-text="Currently Drafting" v-if="!isCompleted")
+                h3.orange.ow-font {{ users[draft.activeDrafter || 0].displayName }}
+                hr
+                drafting-users(:users="users" :draft="draft" :picks="picks")
+            section
+              collapsible(title-text="Draft Preference / Remaining")
+                draft-preference(:embedded="true" :seedPlayers="remaining")
           .column.is-one-third-desktop
             trash-talk
       draft-drawer(:roster="roster")
@@ -108,6 +110,7 @@ import firebase from 'firebase/app'
 import 'firebase/database'
 
 import DraftDrawer from '@/views/draft/DraftDrawer'
+import DraftPreference from '@/views/DraftPreference'
 import DraftingUsers from '@/views/draft/DraftingUsers'
 import PlayerCard from '@/components/PlayerCard'
 import PlayerLine from '@/views/draft/PlayerLine'
@@ -117,6 +120,7 @@ export default {
   name: 'Draft',
   components: {
     DraftDrawer,
+    DraftPreference,
     DraftingUsers,
     PlayerCard,
     PlayerLine,
@@ -363,17 +367,6 @@ export default {
   margin: .25rem;
   &.active-item {
     background-color: #f99e1a;
-  }
-}
-.draft-drawer {
-  position: fixed;
-  bottom: 0;
-  background-color: rgba(0,0,0,0.8);
-  width: 100%;
-  .role-image {
-    height: 18px;
-    width: auto;
-    margin-bottom: -3px;
   }
 }
 </style>

@@ -1,13 +1,13 @@
 <template lang="pug">
   .draft-preference
-    .columns
-      left-bar(:showClose="false")
-        h2 Draft Preference List
+    div(:class="{'columns': !embedded}")
+      left-bar(:showClose="false" :embedded="embedded")
+        h2(v-if="!embedded") Draft Preference List
         section
           .field
             b-switch(v-model="autoMode") Enable Auto-Draft
           p This will let the system draft for you in case you can't make it to the live draft.  While active, picks will be placed on your behalf automatically, so be sure you want to enable this!
-        section
+        section(v-if="!embedded")
           h3 Chosen Roles
           .columns.is-mobile
             .column.has-text-centered
@@ -41,7 +41,7 @@
             .column.is-narrow
               button.button.is-primary.is-small(@click="removePlayer(index)") X
       .column(v-if="roster.length < 100")
-        router-link.button.is-primary.is-pulled-right.is-small(:to="`/LeagueStandard/${leagueId}`") Back to League
+        router-link.button.is-primary.is-pulled-right.is-small(:to="`/LeagueStandard/${leagueId}`" v-if="!embedded") Back to League
         h2 Preference list for:
           span.orange  {{ leagueData.leagueName }}
         section
@@ -95,6 +95,16 @@ import PlayerLine from '@/views/draft/PlayerLine'
 
 export default {
   name: 'DraftPreference',
+  props: {
+    embedded: {
+      type: Boolean,
+      default: false
+    },
+    seedPlayers: {
+      type: Array,
+      default: () => []
+    }
+  },
   components: {
     PlayerLine
   },
@@ -113,12 +123,6 @@ export default {
     }
   },
   computed: {
-    stats () {
-      return this.$store.getters.getStats
-    },
-    teams () {
-      return this.$store.getters.getTeams
-    },
     filteredPlayers () {
       let fPlayers = [...this.players]
 
@@ -132,8 +136,17 @@ export default {
     flexPlayers () {
       return this.roster ? this.roster.filter(player => player.attributes.role === 'flex') : []
     },
+    leagueId () {
+      return this.$route.params.leagueId
+    },
     offensePlayers () {
       return this.roster ? this.roster.filter(player => player.attributes.role === 'offense') : []
+    },
+    players () {
+      return this.seedPlayers.length ? this.seedPlayers : this.$store.getters.getPlayers
+    },
+    stats () {
+      return this.$store.getters.getStats
     },
     supportPlayers () {
       return this.roster ? this.roster.filter(player => player.attributes.role === 'support') : []
@@ -141,14 +154,11 @@ export default {
     tankPlayers () {
       return this.roster ? this.roster.filter(player => player.attributes.role === 'tank') : []
     },
-    players () {
-      return this.$store.getters.getPlayers
+    teams () {
+      return this.$store.getters.getTeams
     },
     userId () {
       return this.$store.getters.getUserId
-    },
-    leagueId () {
-      return this.$route.params.leagueId
     }
   },
   watch: {
