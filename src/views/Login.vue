@@ -11,9 +11,9 @@
           b-field(label="Display Name" v-if="!signInMode")
             b-input(v-model="displayName" placeholder="Display Name")
           b-field(label="Email")
-            b-input(v-model="user" placeholder="Email")
+            b-input#username(v-model="user" placeholder="Email")
           b-field(label="Password")
-            b-input(type="password" v-model="pass" placeholder="Password" password-reveal)
+            b-input#password(type="password" v-model="pass" placeholder="Password" password-reveal)
           .sign-in(v-if="signInMode")
             p.is-mice
               a(@click="resetPassword") Forget your password?
