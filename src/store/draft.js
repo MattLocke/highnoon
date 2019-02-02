@@ -9,11 +9,15 @@ var db = firebase.database()
 export default {
   state: {
     draft: {},
-    draftPicks: []
+    draftPicks: [],
+    draftOrder: []
   },
   mutations: {
     SET_DRAFT: (state, payload) => {
       state.draft = payload
+    },
+    SET_DRAFT_ORDER: (state, payload) => {
+      state.draftOrder = payload
     },
     SET_DRAFT_PICKS: (state, payload) => {
       state.draftPicks = payload
@@ -29,6 +33,15 @@ export default {
         context.commit('SET_DRAFT', {})
       }
     },
+    fetchDraftOrder: ({ state, commit }, leagueId) => {
+      if (leagueId && !state.draftOrder.length) {
+        db.ref(`/draftOrder/${leagueId}`).on('value', (snapshot) => {
+          commit('SET_DRAFT_ORDER', snapshot.val())
+        })
+      } else {
+        commit('SET_DRAFT_ORDER', [])
+      }
+    },
     fetchDraftPicks: (context, leagueId) => {
       if (leagueId) {
         db.ref(`/draftPicks/${leagueId}`).on('value', (snapshot) => {
@@ -41,6 +54,7 @@ export default {
   },
   getters: {
     getDraft: state => state.draft,
+    getDraftOrder: state => state.draftOrder,
     getDraftPicks: state => state.draftPicks
   }
 }

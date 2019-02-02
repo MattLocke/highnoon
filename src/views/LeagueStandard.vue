@@ -42,7 +42,15 @@
             .column
               h2 Start Draft
             .column.is-narrow
-              confirm-button(:customClasses="{'is-primary': true,'is-small': true,'is-pulled-right':true}" buttonText="Start Draft" confirmText="Are You Sure?" @confirm-it="startDraft") Start Draft
+              confirm-button(:customClasses="{'is-primary': true,'is-small': true,'is-pulled-right':true}" buttonText="Start Draft" confirmText="Are You Sure?" @confirm-it="startDraft")
+        section(v-if="!draftOrder.length && isOwner")
+          .columns.is-mobile.is-button-header(v-if="this.leagueUsers.length % 2 === 0")
+            .column
+              h2 Create Draft Order
+            .column.is-narrow
+              confirm-button(:customClasses="{'is-primary': true,'is-small': true,'is-pulled-right':true}" buttonText="Create Draft Order" confirmText="Are You Sure?" @confirm-it="createSchedule" extraText="This action should be considered only when EVERYONE has joined your league.  This locks in the draft order and allows you to start the draft.")
+          .wrap(v-else)
+            p You need an even number of users in your league in order to create a draft order and start the draft!
         b-tabs(v-model="activeContentTab")
           b-tab-item(label="League Message")
             section.league-message
@@ -60,6 +68,12 @@
                 p Click on the edit button above to customize your league landing page!  Inform members of the rules you have, the prizes you're giving away - whatever makes sense!
           b-tab-item(label="Your Roster" v-if="draftComplete && isInLeague")
             league-roster(:league="league")
+          b-tab-item(label="Draft Order" v-if="draftOrder.length")
+            p This is the order for the draft.  Keep in mind this is a snake draft.  If you have no idea what that means, it's similar to what
+              a(href="https://www.dummies.com/sports/fantasy-sports/fantasy-football/understanding-fantasy-football-snake-and-auction-drafts/" target="_blank")  this page describes
+              | .
+            ol
+              li(v-for="team in draftOrder") {{ team.displayName }}
           b-tab-item(label="Trash Talk")
             trash-talk
         section(v-if="canJoinLeague && (userData.isAdmin || userData.isAlpha)")
@@ -119,19 +133,23 @@ export default {
       if (this.league.isLocked) return false
       if (this.userLeagues.length > 8) return false
       if (this.isInLeague) return false
+      if (this.draftOrder.length) return false
       return true
     },
     canLeaveLeague () {
       return (!this.draftComplete && !this.isOwner && this.isInLeague)
     },
     canStartDraft () {
-      return (this.isOwner && this.unDrafted && this.leagueUsers.length % 2 === 0)
+      return (this.isOwner && this.unDrafted && this.leagueUsers.length % 2 === 0 && this.draftOrder.length)
     },
     config () {
       return this.$store.getters.getConfig
     },
     draftComplete () {
       return this.draftStatus === 'completed'
+    },
+    draftOrder () {
+      return this.$store.getters.getDraftOrder
     },
     isInLeague () {
       return this.userLeagues.some(league => league.leagueId === this.leagueId)
@@ -187,6 +205,7 @@ export default {
       handler (val) {
         if (val) {
           this.$store.dispatch('fetchLeagueUsers', { leagueId: this.leagueId, leagueType: 'standard' })
+          this.$store.dispatch('fetchDraftOrder', this.leagueId)
           this.getLeague(val)
         }
       }
@@ -212,6 +231,39 @@ export default {
             position: 'is-bottom'
           })
         })
+    },
+    createSchedule () {
+      this.$store.dispatch('setLoading', true)
+      const schedule = LeagueService.generateSchedule(this.config.currentWeek, this.config.totalWeeks, this.leagueUsers)
+
+      if (!schedule) {
+        this.$toast.open({
+          message: 'Unable to generate schedule.  Try refreshing the page and trying again!',
+          type: 'is-danger',
+          position: 'is-bottom'
+        })
+      } else {
+        LeagueService.setSchedule(schedule, this.leagueId)
+          .then(() => {
+            const shuffledUsers = shuffle([...this.leagueUsers])
+            firebase.database().ref(`/draftOrder/${this.leagueId}`)
+              .set(shuffledUsers)
+              .catch(() => {
+                this.$store.dispatch('setLoading', false)
+                this.$toast.open({
+                  message: 'Unable to generate schedule.  Try refreshing the page and trying again!',
+                  type: 'is-danger',
+                  position: 'is-bottom'
+                })
+              })
+              .finally(() => {
+                // snag the schedule that we created so it's set in vuex
+                this.$store.dispatch('fetchDraftOrder', this.leagueId)
+                this.$store.dispatch('fetchLeagueSchedule', this.leagueId)
+                this.$store.dispatch('setLoading', false)
+              })
+          })
+      }
     },
     deleteLeague () {
       LeagueService.deleteLeague(this.leagueId)
@@ -291,37 +343,17 @@ export default {
     startDraft () {
       // we'll need to build out the random order and save that to draftOrder
       this.$store.dispatch('setLoading', true)
-      let tmpUsers = []
-      const schedule = LeagueService.generateSchedule(this.config.currentWeek, this.config.totalWeeks, this.leagueUsers)
-      if (!schedule) {
-        this.$toast.open({
-          message: 'Unable to generate schedule.  Try refreshing the page and trying again!',
-          type: 'is-danger',
-          position: 'is-bottom'
-        })
+
+      const draft = {
+        leagueName: this.league.leagueName,
+        players: this.players,
+        activeDrafter: 0,
+        direction: 'forward',
+        status: 'active',
+        doneProcessing: true
       }
-      LeagueService.setSchedule(schedule, this.leagueId)
-        .then(() => LeagueService.getLeagueUsers(this.leagueId))
-        .then((users) => {
-          tmpUsers = Object.values(users)
-          const shuffledUsers = shuffle([...tmpUsers])
-          const db = firebase.database()
-          const draft = {
-            leagueName: this.league.leagueName,
-            selectedPlayers: [],
-            players: this.players,
-            activeDrafter: 0,
-            direction: 'forward',
-            status: 'active',
-            doneProcessing: true
-          }
-          this.$store.dispatch('setLoading', true)
-          db.ref(`/draftOrder/${this.leagueId}`)
-            .set(shuffledUsers)
-            .then(() => {
-              db.ref(`/draft/${this.leagueId}`).set(draft)
-            })
-        })
+
+      firebase.database().ref(`/draft/${this.leagueId}`).set(draft)
     },
     updateLeague () {
       this.$store.dispatch('setLoading', true)
