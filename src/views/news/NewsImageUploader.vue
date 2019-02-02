@@ -1,7 +1,8 @@
 <template lang="pug">
   section.news-image-uploader
     picture-input(ref="newsPictureInput", width="800", height="250", accept="image/jpeg,image/png", size=".3", buttonClass="button is-primary" @change="setImageChosen")
-    button.button.is-primary(@click="uploadNewsPicture" :disabled="!hasImage") Upload News Picture
+    button.button.is-primary(@click="uploadNewsPicture" v-if="!hasImage") Upload News Picture
+    button.button.is-primary(v-else disabled) Upload News Picture
     hr
     h2 Previous Uploads
     b-table(
