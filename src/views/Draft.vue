@@ -74,7 +74,8 @@
                     :show-detail-icon="true")
                     template(slot-scope="props")
                       b-table-column(width="60")
-                        button.button.is-primary.is-small(@click="addToRoster(props.row)" :disabled="!myTurn || autoMode") Select
+                        button.button.is-primary.is-small(@click="addToRoster(props.row)" v-if="!myTurn || autoMode") Select
+                        button.button.is-primary.is-small(v-else disabled) Select
                       b-table-column(label="Role" width="30" field="attributes.role" sortable)
                         img(:src="`images/roles/${props.row.attributes.role || 'flex'}-white.svg`" width="22" height="22")
                       b-table-column(label="Team" width="30" field="team" sortable)

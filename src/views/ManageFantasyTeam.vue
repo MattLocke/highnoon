@@ -3,12 +3,12 @@
     .columns.is-marginless
       left-bar
         section
-          collapsible(title-text="Pending Trades" :start-collapsed="true")
-            .left-bar-item Coming Soon
+          collapsible(title-text="Manage Trades" :start-collapsed="true")
+            my-trades(:myPlayers="myAvailablePicks" :otherPlayers="otherPicks")
         section
           collapsible(title-text="Unclaimed Players" :start-collapsed="true")
             .left-bar-item Coming Soon
-        section
+        section(v-if="leagueSchedule.length")
           collapsible(title-text="Your Next Match")
             my-schedule(:leagueId="leagueId")
       .column
@@ -44,7 +44,8 @@
               player-card(:player="lineUp.tank2.id ? lineUp.tank2 : null" :showRemove="false" :score="lineUp.tank2.stats ? lineUp.tank2.stats.fantasyScore : 0")
               h2.has-text-centered Tank 2
         section.is-hidden-mobile
-          button.button.is-primary(@click="saveRoster" :disabled="!canSaveRoster") Save Roster And Return To League
+          button.button.is-primary(@click="saveRoster" v-if="!canSaveRoster") Save Roster And Return To League
+          button.button.is-primary(v-else disabled) Save Roster And Return To League
         section.is-hidden-desktop
           h2.ow-font.mobile-roster
             img(src="images/roles/captain-white.svg" width="20" height="20")
@@ -75,7 +76,8 @@
             img(:src="`images/teams/${lineUp.tank2.team}.svg`" width="20" height="20" v-if="lineUp.tank2.team")
             | {{ lineUp.tank2.name || 'Empty' }}
           section.has-text-centered
-            button.button.is-primary(@click="saveRoster" :disabled="!canSaveRoster") Save Roster And Return To League
+            button.button.is-primary(@click="saveRoster" v-if="!canSaveRoster") Save Roster And Return To League
+            button.button.is-primary(v-else disabled) Save Roster And Return To League
         section
           collapsible(title-text="My Bench")
             b-table(
@@ -99,12 +101,13 @@
 </template>
 
 <script>
-import { differenceWith, isEqual, get, isEmpty } from 'lodash'
+import { differenceWith, isEqual, get, isEmpty, sortBy } from 'lodash'
 
 import LeagueService from '@/services/league'
 
 import DraftingUsers from '@/views/draft/DraftingUsers'
 import MySchedule from '@/views/manage/MySchedule'
+import MyTrades from '@/views/manage/MyTrades'
 import PlayerCard from '@/components/PlayerCard'
 import RoleButtons from '@/views/manage/RoleButtons'
 
@@ -113,6 +116,7 @@ export default {
   components: {
     DraftingUsers,
     MySchedule,
+    MyTrades,
     PlayerCard,
     RoleButtons
   },
@@ -170,7 +174,14 @@ export default {
       return [ ...available ]
     },
     myPicks () {
-      return this.draftPicks ? this.draftPicks[this.userData.id] || [] : []
+      const thePicks = this.draftPicks ? this.draftPicks[this.userData.id] || [] : []
+      return sortBy(thePicks, 'name')
+    },
+    otherPicks () {
+      const thePicks = this.draftPicks ? Object.values(this.draftPicks) : []
+      const flat = [].concat.apply([], thePicks)
+      const other = differenceWith(flat, this.myPicks, isEqual)
+      return sortBy([ ...other ], 'name')
     },
     players () {
       return this.$store.getters.getPlayers
