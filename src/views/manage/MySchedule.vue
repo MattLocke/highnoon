@@ -13,7 +13,6 @@
 
 <script>
 import { isEmpty } from 'lodash'
-import LeagueService from '@/services/league'
 
 export default {
   name: 'MySchedule',
@@ -21,11 +20,6 @@ export default {
     leagueId: {
       type: String,
       required: true
-    }
-  },
-  data () {
-    return {
-      schedule: {}
     }
   },
   computed: {
@@ -39,6 +33,9 @@ export default {
       }
       return false
     },
+    schedule () {
+      return this.$store.getters.getLeagueSchedule
+    },
     userData () {
       return this.$store.getters.getUserData
     }
@@ -48,10 +45,7 @@ export default {
       immediate: true,
       handler (val) {
         if (!isEmpty(val)) {
-          LeagueService.getSchedule(this.leagueId)
-            .then(schedule => {
-              this.schedule = schedule
-            })
+          this.$store.dispatch('fetchLeagueSchedule', val)
         }
       }
     }
