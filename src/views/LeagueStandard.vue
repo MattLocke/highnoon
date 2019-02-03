@@ -28,7 +28,7 @@
             p This will reset the draft for all players in the league.  You may want to do this between stages, or there may have been an issue during the draft, whatever the reason, this is your key to resetting it!
             confirm-button(button-text="Reset Draft" confirm-text="Are You Sure?" @confirm-it="resetDraft")
         section
-          router-link.button.is-primary.is-small(:to="`/manageTeam/${leagueId}`" v-if="!draftComplete") Manage Team
+          router-link.button.is-primary.is-small(:to="`/manageTeam/${leagueId}`" v-if="draftComplete") Manage Team
           button.button.is-primary.is-small(disabled v-else) Manage Team
           button.button.is-secondary.is-small.is-pulled-right(@click="copyLink" v-if="isInLeague") Copy Share Link
       .column(v-if="league.leagueName")

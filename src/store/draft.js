@@ -38,8 +38,6 @@ export default {
         db.ref(`/draftOrder/${leagueId}`).on('value', (snapshot) => {
           commit('SET_DRAFT_ORDER', snapshot.val())
         })
-      } else {
-        commit('SET_DRAFT_ORDER', [])
       }
     },
     fetchDraftPicks: (context, leagueId) => {

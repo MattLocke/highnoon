@@ -74,7 +74,7 @@
                     :show-detail-icon="true")
                     template(slot-scope="props")
                       b-table-column(width="60")
-                        button.button.is-primary.is-small(@click="addToRoster(props.row)" v-if="myTurn || !autoMode") Select
+                        button.button.is-primary.is-small(@click="addToRoster(props.row)" v-if="myTurn && !autoMode") Select
                         button.button.is-primary.is-small(v-else disabled) Select
                       b-table-column(label="Role" width="30" field="attributes.role" sortable)
                         img(:src="`images/roles/${props.row.attributes.role || 'flex'}-white.svg`" width="22" height="22")
@@ -240,7 +240,8 @@ export default {
       }
     },
     myTurn (val) {
-      if (val) this.activeTab = 0
+      if (val && !this.autoMode) this.activeTab = 0
+      else this.activeTabe = 1
     },
     players: {
       immediate: true,
@@ -280,8 +281,6 @@ export default {
   methods: {
     addToRoster (player) {
       this.$store.dispatch('setLoading', true)
-      // don't need to move them to the tab if they're on automatic mode
-      if (!this.autoMode) this.activeTab = 1
       const db = firebase.database()
       const tmp = [...this.roster]
       tmp.push(player)

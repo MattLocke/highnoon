@@ -44,7 +44,7 @@
               player-card(:player="lineUp.tank2.id ? lineUp.tank2 : null" :showRemove="false" :score="lineUp.tank2.stats ? lineUp.tank2.stats.fantasyScore : 0")
               h2.has-text-centered Tank 2
         section.is-hidden-mobile
-          button.button.is-primary(@click="saveRoster" v-if="!canSaveRoster") Save Roster And Return To League
+          button.button.is-primary(@click="saveRoster" v-if="canSaveRoster") Save Roster And Return To League
           button.button.is-primary(v-else disabled) Save Roster And Return To League
         section.is-hidden-desktop
           h2.ow-font.mobile-roster
@@ -76,7 +76,7 @@
             img(:src="`images/teams/${lineUp.tank2.team}.svg`" width="20" height="20" v-if="lineUp.tank2.team")
             | {{ lineUp.tank2.name || 'Empty' }}
           section.has-text-centered
-            button.button.is-primary(@click="saveRoster" v-if="!canSaveRoster") Save Roster And Return To League
+            button.button.is-primary(@click="saveRoster" v-if="canSaveRoster") Save Roster And Return To League
             button.button.is-primary(v-else disabled) Save Roster And Return To League
         section
           collapsible(title-text="My Bench")
