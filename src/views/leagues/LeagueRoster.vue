@@ -61,7 +61,7 @@
     section(v-else)
       p Your roster is empty!
     section
-      router-link.button.is-primary.is-small(:to="`/manageTeam/${league.id}`" v-if="league.type === 'standard'") Manage Team
+      router-link.button.is-primary.is-small(:to="`/manageTeam/${league.id}`" v-if="league.leagueType === 'standard'") Manage Team
       router-link.button.is-primary.is-small(:to="`/manageUnlimitedTeam/${league.id}`" v-else) Manage Team
 </template>
 
