@@ -21,21 +21,21 @@ export default {
       state.leagueId = payload
     },
     SET_LEAGUES: (state, payload) => {
-      state.leagues = payload
-    },
-    SET_LEAGUE_USERS: (state, payload) => {
-      state.leagueUsers = payload
-    },
-    SET_LEAGUE_SCHEDULE: (state, payload) => {
-      state.leagueSchedule = payload
+      if (payload) state.leagues = payload
     },
     SET_LEAGUE_ROSTER: (state, payload) => {
-      state.leagueRoster = payload
+      if (payload) state.leagueRoster = payload
+    },
+    SET_LEAGUE_USERS: (state, payload) => {
+      if (payload) state.leagueUsers = payload
+    },
+    SET_LEAGUE_SCHEDULE: (state, payload) => {
+      if (payload) state.leagueSchedule = payload
     }
   },
   actions: {
-    getLeagues: ({ state, commit }, payload) => {
-      if (payload && !state.leagues.length) {
+    getLeagues: ({ commit }, payload) => {
+      if (payload) {
         db.collection('userLeagues').doc(payload)
           .get()
           .then((leagues) => {

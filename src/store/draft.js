@@ -17,7 +17,7 @@ export default {
       state.draft = payload
     },
     SET_DRAFT_ORDER: (state, payload) => {
-      state.draftOrder = payload
+      if (payload) state.draftOrder = payload
     },
     SET_DRAFT_PICKS: (state, payload) => {
       state.draftPicks = payload
@@ -27,7 +27,7 @@ export default {
     fetchDraft: (context, leagueId) => {
       if (leagueId) {
         db.ref(`/draft/${leagueId}`).on('value', (snapshot) => {
-          context.commit('SET_DRAFT', snapshot.val())
+          if (snapshot.exists) context.commit('SET_DRAFT', snapshot.val())
         })
       } else {
         context.commit('SET_DRAFT', {})
@@ -36,7 +36,7 @@ export default {
     fetchDraftOrder: ({ state, commit }, leagueId) => {
       if (leagueId && !state.draftOrder.length) {
         db.ref(`/draftOrder/${leagueId}`).on('value', (snapshot) => {
-          commit('SET_DRAFT_ORDER', snapshot.val())
+          if (snapshot.exists) commit('SET_DRAFT_ORDER', snapshot.val())
         })
       }
     },

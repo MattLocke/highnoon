@@ -2,7 +2,8 @@
   .collapsible
     h2.has-pointer(@click="showContent = !showContent") {{ titleText }}
       arrow(:isLeft="true" v-model="showContent")
-    slot(v-if="showContent")
+    .wrap(v-show="showContent")
+      slot
 </template>
 
 <script>

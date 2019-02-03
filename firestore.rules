@@ -50,6 +50,11 @@ service cloud.firestore {
     	allow write: if request.auth.uid != null;
     }
 
+    match /standardLeagueTrades/{leagueId} {
+      allow read;
+      allow write: if request.auth.uid != null;
+    }
+
     match /standardLeagueUsers/{leagueId} {
     	allow read;
     	allow write: if request.auth.uid != null;

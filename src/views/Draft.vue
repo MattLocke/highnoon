@@ -241,7 +241,7 @@ export default {
     },
     myTurn (val) {
       if (val && !this.autoMode) this.activeTab = 0
-      else this.activeTabe = 1
+      else this.activeTab = 1
     },
     players: {
       immediate: true,

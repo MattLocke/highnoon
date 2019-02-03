@@ -8,7 +8,7 @@
             p You can use this list to auto-draft for you in case you can't make it to the live draft!  Make sure to enable "Auto Draft" if you need it to pick based on your preference list while you're gone!
             hr
             button.button.is-primary(@click="draftPreference") Draft Preference List
-        section(v-if="leagueUsers.length")
+        section(v-if="leagueUsers && leagueUsers.length")
           collapsible(title-text="League Users" :start-collapsed="true")
             .left-bar-item(v-for="user in leagueUsers") {{ user.displayName }}
         section(v-if="canLeaveLeague")
@@ -32,8 +32,6 @@
           button.button.is-primary.is-small(disabled v-else) Manage Team
           button.button.is-secondary.is-small.is-pulled-right(@click="copyLink" v-if="isInLeague") Copy Share Link
       .column(v-if="league.leagueName")
-        section.is-hidden-mobile(v-if="!userData.isAdmin")
-          p.orange This is alpha-only.  This page will continue to evolve as I work on it.  For now you can invite other alpha members to join your league, do a mock draft, and upon completion of that draft you'll be taken back here.  I'll be adding ways to reset the draft, see the schedule/etc over the next few days.  Stay tuned!  Deadlines are a loomin'!
         h1 {{ league.leagueName }}
         //- .social-icons
           span [TWITTER] [INSTAGRAM] [DISCORD]
@@ -43,8 +41,8 @@
               h2 Start Draft
             .column.is-narrow
               confirm-button(:customClasses="{'is-primary': true,'is-small': true,'is-pulled-right':true}" buttonText="Start Draft" confirmText="Are You Sure?" @confirm-it="startDraft")
-        section(v-if="!draftOrder.length && isOwner")
-          .columns.is-mobile.is-button-header(v-if="this.leagueUsers.length % 2 === 0")
+        section(v-if="isOwner && (!draftOrder || !draftOrder.length)")
+          .columns.is-mobile.is-button-header(v-if="this.leagueUsers && this.leagueUsers.length % 2 === 0")
             .column
               h2 Create Draft Order
             .column.is-narrow
@@ -68,7 +66,7 @@
                 p Click on the edit button above to customize your league landing page!  Inform members of the rules you have, the prizes you're giving away - whatever makes sense!
           b-tab-item(label="Your Roster" v-if="draftComplete && isInLeague")
             league-roster(:league="league")
-          b-tab-item(label="Draft Order" v-if="draftOrder.length")
+          b-tab-item(label="Draft Order" v-if="draftOrder && draftOrder.length")
             p This is the order for the draft.  Keep in mind this is a snake draft.  If you have no idea what that means, it's similar to what
               a(href="https://www.dummies.com/sports/fantasy-sports/fantasy-football/understanding-fantasy-football-snake-and-auction-drafts/" target="_blank")  this page describes
               | .
@@ -76,7 +74,7 @@
               li(v-for="team in draftOrder") {{ team.displayName }}
           b-tab-item(label="Trash Talk")
             trash-talk
-        section(v-if="canJoinLeague && (userData.isAdmin || userData.isAlpha)")
+        section(v-if="canJoinLeague")
           b-field(label="password" v-if="league.password")
             b-input(type="password" v-model="localPassword")
           button.button.is-primary(@click="joinLeague") Join League
@@ -129,9 +127,9 @@ export default {
   computed: {
     canJoinLeague () {
       // Needs to check league type, number of users, league status, etc.
-      if (this.league.leagueType === 'standard' && this.leagueUsers.length > 11) return false
+      if (this.league.leagueType === 'standard' && this.leagueUsers.length && this.leagueUsers.length > 11) return false
       if (this.league.isLocked) return false
-      if (this.userLeagues.length > 8) return false
+      if (!this.userLeagues || this.userLeagues.length > 8) return false
       if (this.isInLeague) return false
       if (this.draftOrder.length) return false
       return true
@@ -140,7 +138,7 @@ export default {
       return (!this.draftComplete && !this.isOwner && this.isInLeague)
     },
     canStartDraft () {
-      return (this.isOwner && this.unDrafted && this.leagueUsers.length % 2 === 0 && this.draftOrder.length)
+      return (this.isOwner && this.unDrafted && this.leagueUsers.length && this.leagueUsers.length % 2 === 0 && this.draftOrder && this.draftOrder.length)
     },
     config () {
       return this.$store.getters.getConfig
@@ -161,7 +159,7 @@ export default {
       return this.league.message
     },
     leagueUsers () {
-      return this.$store.getters.getLeagueUsers
+      return this.$store.getters.getLeagueUsers || []
     },
     totalWeeks () {
       return this.config.totalWeeks
