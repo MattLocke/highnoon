@@ -1,8 +1,12 @@
 <template lang="pug">
   section.news-image-uploader
     picture-input(ref="newsPictureInput", width="800", height="250", accept="image/jpeg,image/png", size=".3", buttonClass="button is-primary" @change="setImageChosen")
-    button.button.is-primary(@click="uploadNewsPicture" v-if="!hasImage") Upload News Picture
-    button.button.is-primary(v-else disabled) Upload News Picture
+    b-field(label="Category")
+      b-select(placeholder="Select a Category" v-model="category")
+        option news
+        option featuredleague
+    button.button.is-primary(@click="uploadNewsPicture" v-if="hasImage") Upload Picture
+    button.button.is-primary(v-else disabled) Upload Picture
     hr
     h2 Previous Uploads
     b-table(
@@ -31,11 +35,19 @@ export default {
   data () {
     return {
       existingImages: [],
-      hasImage: false
+      hasImage: false,
+      category: 'news'
     }
   },
-  mounted () {
-    this.listImages()
+  watch: {
+    category: {
+      immediate: true,
+      handler (val) {
+        if (val) {
+          this.listImages()
+        }
+      }
+    }
   },
   methods: {
     copyLink (link) {
@@ -52,9 +64,9 @@ export default {
         })
     },
     listImages () {
-      ImageService.getImageListings('news')
+      ImageService.getImageListings(this.category)
         .then((images) => {
-          this.existingImages = Object.values(images)
+          this.existingImages = images ? Object.values(images) : []
         })
     },
     setImageChosen (data) {
@@ -65,7 +77,7 @@ export default {
       const theFile = this.$refs.newsPictureInput.file
       console.table(theFile)
 
-      ImageService.uploadImage('news', theFile.name, theFile)
+      ImageService.uploadImage(this.category, theFile.name, theFile)
         .then((response) => {
           console.table(response)
           if (response) {
