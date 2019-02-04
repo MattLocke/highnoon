@@ -57,6 +57,8 @@
                 button.button.is-secondary.is-small.is-pulled-right(@click="editingMessage = !editingMessage" v-if="isOwner") {{ editingMessage ? 'cancel' : 'edit' }}
               hr
               .wrap(v-if="editingMessage")
+                b-field(label="League Title")
+                  b-input(type="text" v-model="league.leagueName")
                 b-field(label="League Message")
                   b-input(type="textarea" v-model="league.message" rows="10")
                 button.button.is-primary(@click="updateLeague") Save Message
