@@ -1,9 +1,12 @@
 <template lang="pug">
   #app
-    main-menu
+    main-menu(v-if="liveConfig.canUseSite")
     b-notification(type="is-warning" v-if="notification.message") {{ notification.message }}
     b-loading(:is-full-page="true" :active.sync="isLoading" :can-cancel="false")
-    router-view#rv(:key="$route.fullPath")
+    router-view#rv(:key="$route.fullPath" v-if="liveConfig.canUseSite")
+    .site-down.has-text-centered
+      img(src="images/high_noon_white.svg")
+      h1 {{ liveConfig.siteIsDownMessage }}
 </template>
 
 <script>
@@ -25,7 +28,8 @@ export default {
   },
   data () {
     return {
-      notification: {}
+      notification: {},
+      liveConfig: {}
     }
   },
   mounted () {
@@ -44,6 +48,11 @@ export default {
     const db = firebase.database()
     db.ref('/notification/system').on('value', (snapshot) => {
       this.notification = snapshot.val() || {}
+    })
+
+    // set up live db listeners
+    db.ref('/liveConfig').on('value', (snapshot) => {
+      this.liveConfig = snapshot.val() || {}
     })
   }
 }
@@ -144,6 +153,16 @@ $link-focus-border: $primary;
 
 #app .tabs ul li.is-active a {
   color: $primary;
+}
+
+#app .site-down {
+  position: absolute;
+  top: 50%;
+  margin-top: -200px;
+  img {
+    width: 200px;
+    height: 200px;
+  }
 }
 
 #rv.login {
