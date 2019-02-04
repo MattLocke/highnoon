@@ -11,7 +11,7 @@
         .league-title {{ league.leagueName }}
           span.is-pulled-right.ow-font {{ league.leagueType }}
       hr
-      router-link.button.is-primary(to="/createLeague" v-if="userData.isAdmin || userData.isAlpha") Create League
+      router-link.button.is-primary(to="/createLeague" v-if="underLeagueLimit") Create League
 </template>
 
 <script>
@@ -24,6 +24,9 @@ export default {
     }
   },
   computed: {
+    underLeagueLimit () {
+      return !!(this.userLeagues.length < 9 || this.userData.isPremier || this.userData.isAdmin)
+    },
     userData () {
       return this.$store.getters.getUserData
     },

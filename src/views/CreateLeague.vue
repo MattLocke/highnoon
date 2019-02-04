@@ -1,6 +1,6 @@
 <template lang="pug">
   .create-league
-    .container(v-if="numLeagues < 8")
+    .container(v-if="numLeagues < 8 || userData.isAdmin || userData.isPremier")
       h1 Create A New League
       section(v-show="!league.leagueType")
         .columns
@@ -44,9 +44,9 @@
     .box(v-else)
       .container
         section
-          p I'm sorry, looks like you're all out of leagues!  Feel free to
+          p I'm sorry, looks like you're all out of leagues!  Right now the only users with unlimited leagues
             a(href="https://www.patreon.com/highnoonpickem")  support me through patreon
-            |  to have unlimited leagues!
+            |  .  With leagues generating data, and data costing money, I tried to find a nice threshold where most users can be in several leagues, but I don't have to shutter the doors because I'm just bleeding to death.  So thank you to those who support me, and if you're having other issues, please hit me up or use the report issue button below.  Thank you!
 </template>
 
 <script>
