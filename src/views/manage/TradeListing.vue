@@ -1,23 +1,30 @@
 <template lang="pug">
   .left-bar-item.trade-listing
-    span.request-date.is-pulled-right {{ trade.requestDate | formatJSDate }}
-    h3 Trade
     .columns.is-mobile
       .column
-        img(:src="`images/roles/${trade.askerPlayer.attributes.role || 'flex'}-white.svg`" width="22" height="22")
-        | {{ trade.askerPlayer.name }}
-      .column.is-narrow for
+        h2
+          img(:src="`images/roles/${trade.askerPlayer.attributes.role || 'flex'}-white.svg`" width="22" height="22")
+          | {{ trade.askerPlayer.name }}
       .column.is-narrow
-        img(:src="`images/roles/${trade.responderPlayer.attributes.role || 'flex'}-white.svg`" width="22" height="22")
-        | {{ trade.responderPlayer.name }}
+        h2
+          span.orange for
+      .column
+        h2.is-pulled-right
+          img(:src="`images/roles/${trade.responderPlayer.attributes.role || 'flex'}-white.svg`" width="22" height="22")
+          | {{ trade.responderPlayer.name }}
+    span.request-date.is-pulled-right {{ trade.requestDate | formatJSDate }}
+    .columns
       .column.is-narrow(v-if="trade.responderId === userId && trade.status === 'pending'")
-        button.button.is-primary.is-small Accept
+        button.button.is-primary.is-small(@click="acceptTrade") Accept Trade
       .column.is-narrow(v-else-if="trade.askerId === userId && trade.status === 'pending'")
-        button.button.is-primary.is-small Cancel
-      .column.is-narrow(v-else) {{ trade.status }}
+        button.button.is-primary.is-small(@click="cancelTrade") Cancel Trade Offer
+      .column.is-narrow(v-else)
+        button.button.is-primary.is-small {{ trade.status }}
 </template>
 
 <script>
+import TradeService from '@/services/trades'
+
 export default {
   name: 'TradeListing',
   props: {
@@ -29,6 +36,15 @@ export default {
   computed: {
     userId () {
       return this.$store.getters.getUserId
+    }
+  },
+  methods: {
+    cancelTrade () {
+      TradeService.cancelTrade(this.trade)
+    },
+    acceptTrade () {
+      this.$store.dispatch('setLoading', true)
+      TradeService.acceptTrade(this.trade)
     }
   }
 }

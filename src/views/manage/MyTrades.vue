@@ -91,8 +91,17 @@ export default {
       handler (val) {
         if (val) {
           firebase.database().ref(`trades/${val}`).on('value', (snapshot) => {
-            this.trades = snapshot.val() ? Object.values(snapshot.val()) : []
+            const tmp = snapshot.val() ? Object.values(snapshot.val()) : []
+            this.trades = tmp.filter(trade => trade.status !== 'complete')
           })
+        }
+      }
+    },
+    trades: {
+      handler (val, oldVal) {
+        if (oldVal) {
+          // we had a trade complete, so for now we refresh to prevent corruption
+          if (val.length < oldVal.length) window.location.reload()
         }
       }
     }

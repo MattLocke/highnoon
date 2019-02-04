@@ -4,14 +4,14 @@
       left-bar
         section
           collapsible(title-text="Manage Trades" :start-collapsed="true")
-            my-trades(:myPlayers="myAvailablePicks" :otherPlayers="otherPicks")
+            my-trades(:myPlayers="myPicks" :otherPlayers="otherPicks")
         section
           collapsible(title-text="Unclaimed Players" :start-collapsed="true")
             .left-bar-item Coming Soon
         section(v-if="leagueSchedule.length")
           collapsible(title-text="Your Next Match")
             my-schedule(:leagueId="leagueId")
-      .column
+      .column(v-if="lineUp.captain")
         section
           h1 Manage Your Fantasy Team
         .columns.is-multiline.is-hidden-mobile.is-gapless(v-if="myAvailablePicks.length")
@@ -101,7 +101,7 @@
 </template>
 
 <script>
-import { differenceWith, isEqual, get, isEmpty, sortBy } from 'lodash'
+import { differenceWith, isEmpty, isEqual, sortBy } from 'lodash'
 
 import LeagueService from '@/services/league'
 
@@ -136,6 +136,7 @@ export default {
   },
   computed: {
     canSaveRoster () {
+      if (isEmpty(this.lineUp)) return false
       return (this.lineUp.captain.id && this.lineUp.offense1.id && this.lineUp.offense2.id && this.lineUp.support1.id && this.lineUp.support2.id && this.lineUp.tank1.id && this.lineUp.tank2.id)
     },
     draft () {
@@ -177,6 +178,9 @@ export default {
       const thePicks = this.draftPicks ? this.draftPicks[this.userData.id] || [] : []
       return sortBy(thePicks, 'name')
     },
+    myRoster () {
+      if (this.userData.id && !isEmpty(this.leagueRoster)) return this.leagueRoster[this.userData.id] ? this.leagueRoster[this.userData.id].roster : {}
+    },
     otherPicks () {
       const thePicks = this.draftPicks ? Object.values(this.draftPicks) : []
       const flat = [].concat.apply([], thePicks)
@@ -200,12 +204,23 @@ export default {
     }
   },
   watch: {
-    leagueRoster: {
+    leagueId: {
+      immediate: true,
+      handler (val) {
+        if (val) {
+          this.$store.dispatch('fetchDraft', val)
+          this.$store.dispatch('fetchDraftPicks', val)
+          this.$store.dispatch('fetchLeagueSchedule', val)
+          this.$store.dispatch('fetchLeagueUsers', { leagueId: val, leagueType: 'standard' })
+          this.$store.dispatch('fetchRoster', { leagueId: val, leagueType: 'standard' })
+        }
+      }
+    },
+    myRoster: {
       immediate: true,
       handler (val) {
         if (!isEmpty(val)) {
-          const tmp = get(val, this.userData.id, { roster: this.lineUp })
-          this.lineUp = tmp.roster
+          this.lineUp = { ...val }
         }
       }
     }
@@ -226,11 +241,6 @@ export default {
     }
   },
   mounted () {
-    this.$store.dispatch('fetchDraft', this.leagueId)
-    this.$store.dispatch('fetchDraftPicks', this.leagueId)
-    this.$store.dispatch('fetchLeagueSchedule', this.leagueId)
-    this.$store.dispatch('fetchLeagueUsers', { leagueId: this.leagueId, leagueType: 'standard' })
-    this.$store.dispatch('fetchRoster', { leagueId: this.leagueId, leagueType: 'standard' })
     this.$store.dispatch('getPlayers')
     this.$store.dispatch('getTeams')
   }

@@ -74,7 +74,7 @@
                     :show-detail-icon="true")
                     template(slot-scope="props")
                       b-table-column(width="60")
-                        button.button.is-primary.is-small(@click="addToRoster(props.row)" v-if="myTurn && !autoMode") Select
+                        button.button.is-primary.is-small(@click="addToRoster(props.row)" v-if="myTurn && !autoMode && !actionPending") Select
                         button.button.is-primary.is-small(v-else disabled) Select
                       b-table-column(label="Role" width="30" field="attributes.role" sortable)
                         img(:src="`images/roles/${props.row.attributes.role || 'flex'}-white.svg`" width="22" height="22")
@@ -128,6 +128,7 @@ export default {
   },
   data () {
     return {
+      actionPending: false,
       activeTab: null,
       autoMode: false,
       draft: {
@@ -229,6 +230,9 @@ export default {
       handler (val) {
         // if they shouldn't be here, send them home!
         if (!val || val.status === 'unDrafted') this.$router.push({ path: `/LeagueStandard/${this.leagueId}` })
+        if (val) {
+          this.actionPending = false
+        }
       }
     },
     leagueId: {
@@ -280,6 +284,7 @@ export default {
   },
   methods: {
     addToRoster (player) {
+      this.actionPending = true
       this.$store.dispatch('setLoading', true)
       const db = firebase.database()
       const tmp = [...this.roster]

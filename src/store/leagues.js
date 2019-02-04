@@ -12,7 +12,15 @@ export default {
   state: {
     leagues: [],
     leagueId: '',
-    leagueRoster: {},
+    leagueRoster: {
+      captain: {},
+      offense1: {},
+      offense2: {},
+      support1: {},
+      support2: {},
+      tank1: {},
+      tank2: {}
+    },
     leagueUsers: [],
     leagueSchedule: []
   },
@@ -78,12 +86,20 @@ export default {
         db.collection(`${payload.leagueType}LeagueRoster`).doc(payload.leagueId)
           .get()
           .then((leagueRoster) => {
-            let theLeagueRoster = []
+            let theLeagueRoster = {
+              captain: {},
+              offense1: {},
+              offense2: {},
+              support1: {},
+              support2: {},
+              tank1: {},
+              tank2: {}
+            }
             if (leagueRoster.exists) {
               theLeagueRoster = leagueRoster.data()
             }
             commit('SET_LEAGUE_ID', payload.leagueId)
-            commit('SET_LEAGUE_ROSTER', theLeagueRoster)
+            if (!isEmpty(theLeagueRoster)) commit('SET_LEAGUE_ROSTER', theLeagueRoster)
           })
       }
     }

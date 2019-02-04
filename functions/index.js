@@ -71,6 +71,13 @@ exports.tryAutomatedPick = functions.database.ref('/draft/{leagueId}')
     }
   })
 
+exports.tradePlayer = functions.database.ref('/trades/{leagueId}/{tradeId}')
+  .onUpdate((change, context) => {
+    const trade = change.after.val()
+    console.log(`Status of trade updated to: ${trade.status}`)
+    return performTradeFirebase(trade)
+  })
+
 function workDraftPick (leagueId, picks) {
   let draftOrder = []
   let draft = {}
@@ -214,4 +221,77 @@ function findMissing (allPicks, userId) {
   if (roles.tank < 2) return 'tank'
   if (roles.support < 2) return 'support'
   return null
+}
+
+function performTradeFirebase (trade) {
+  if (trade.status === 'active') {
+    const askerPicksRef = admin.database().ref(`draftPicks/${trade.leagueId}/${trade.askerId}`)
+    const responderPicksRef = admin.database().ref(`draftPicks/${trade.leagueId}/${trade.responderId}`)
+    const tradeRef = admin.database().ref(`trades/${trade.leagueId}/${trade.id}`)
+    const rostersRef = admin.firestore().collection('standardLeagueRoster').doc(trade.leagueId)
+
+    var updateAskerPicks = askerPicksRef.once('value', (snapshot) => {
+      var askerPicks = snapshot.val()
+      fancyLog('Getting Asker Picks')
+
+      // remove player from askers picks, add player
+      console.log(`Asker Picks Length: ${askerPicks.length}`)
+      var askerPicksClean = askerPicks.filter(pick => pick.id !== trade.askerPlayer.id)
+      console.log(`Asker Picks Length After Removal: ${askerPicksClean.length}`)
+      if (askerPicks.length > askerPicksClean.length) askerPicksClean.push(trade.responderPlayer)
+      console.log(`Asker Picks Length After New Addition: ${askerPicksClean.length}`)
+      return askerPicksRef.set(askerPicksClean)
+    })
+
+    var updateResponderPicks = responderPicksRef.once('value', (snapshot) => {
+      var responderPicks = snapshot.val()
+      fancyLog('Getting Responder Picks')
+
+      // remove player from responders picks, add player
+      console.log(`Responder Picks Length: ${responderPicks.length}`)
+      var responderPicksClean = responderPicks.filter(pick => pick.id !== trade.responderPlayer.id)
+      console.log(`Responder Picks Length After Removal: ${responderPicksClean.length}`)
+      responderPicksClean.push(trade.responderPlayer)
+      console.log(`Responder Picks Length After New Addition: ${responderPicksClean.length}`)
+      return responderPicksRef.set(responderPicksClean)
+    })
+
+    var updateRoster = rostersRef.get().then(doc => {
+      var fullRoster = doc.data()
+      var askerRoster = cleanRoster(fullRoster[trade.askerId].roster, trade.askerPlayer)
+      var responderRoster = cleanRoster(fullRoster[trade.responderId].roster, trade.responderPlayer)
+      fancyLog('Updating Roster')
+      var newRoster = { ...fullRoster }
+      if (!_.isEqual(askerRoster, fullRoster[trade.askerId].roster) || !_.isEqual(responderRoster, fullRoster[trade.responderId].roster)) {
+        // this means someone traded someone out of their roster, so we have to do stuff :(
+        newRoster[trade.askerId].roster = askerRoster
+        newRoster[trade.responderId].roster = responderRoster
+      }
+      return rostersRef.set(newRoster)
+    })
+
+    var updateTrade = tradeRef.update({ status: 'complete' })
+    
+    return Promise.all([updateAskerPicks, updateResponderPicks, updateRoster, updateTrade])
+  } else {
+    return Promise.resolve(true)
+  }
+}
+
+function cleanRoster(roster, player) {
+  var r = { ...roster }
+  if (_.isEqual(r.captain, player)) r.captain = {}
+  if (_.isEqual(r.offense1, player)) r.offense1 = {}
+  if (_.isEqual(r.offense2, player)) r.offense2 = {}
+  if (_.isEqual(r.support1, player)) r.support1 = {}
+  if (_.isEqual(r.support2, player)) r.support2 = {}
+  if (_.isEqual(r.tank1, player)) r.tank1 = {}
+  if (_.isEqual(r.tank2, player)) r.tank2 = {}
+  return r
+}
+
+function fancyLog(message) {
+  console.log(`--------------------`)
+  console.log(message)
+  console.log(`--------------------`)
 }
