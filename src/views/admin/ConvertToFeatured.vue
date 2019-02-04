@@ -6,6 +6,8 @@
         |  to upload one!
       b-field(label="League Image URL")
         b-input(type="text" v-model="featureURL")
+      b-field(label="Featured Message")
+        b-input(maxlength="1000" type="textarea" v-model="featureMessage")
       b-field
         button.button.is-primary(@click="updateFeatured") {{ league.featuredURL ? 'Revoke' : 'Convert' }}
 </template>
@@ -23,7 +25,8 @@ export default {
   },
   data () {
     return {
-      featureURL: ''
+      featureURL: '',
+      featureMessage: ''
     }
   },
   watch: {
@@ -39,7 +42,7 @@ export default {
   methods: {
     updateFeatured () {
       this.$store.dispatch('setLoading', true)
-      LeagueService.makeFeatured(this.league.leagueType, this.league.id, this.featureURL)
+      LeagueService.makeFeatured(this.league.leagueType, this.league.id, this.featureURL, this.featureMessage)
         .then(() => {
           window.location.reload()
         })
