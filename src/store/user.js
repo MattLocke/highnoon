@@ -1,4 +1,12 @@
 import { get } from 'lodash'
+import firebase from 'firebase/app'
+import 'firebase/firestore'
+import { fireInit } from '@/fireLogin'
+
+fireInit()
+
+var db = firebase.firestore()
+db.settings({ timestampsInSnapshots: true })
 
 export default {
   state: {
@@ -11,7 +19,8 @@ export default {
       user: {
         uid: 0
       }
-    }
+    },
+    picks: []
   },
   mutations: {
     LOGIN: (state, payload) => {
@@ -28,9 +37,25 @@ export default {
     },
     SAVE_AVATAR: (state, payload) => {
       state.userData.profileImageUrl = payload
+    },
+    SET_PICKS: (state, payload) => {
+      if (payload) state.picks = payload
     }
   },
   actions: {
+    fetchPicks: ({ state, commit, dispatch }) => {
+      if (!state.picks.length && state.fireUserData.uid) {
+        dispatch('setLoading', true)
+        db.collection('picks')
+          .doc(state.fireUserData.uid)
+          .get()
+          .then((picks) => {
+            const thePicks = picks.data()
+            commit('SET_PICKS', thePicks)
+            dispatch('setLoading', false)
+          })
+      }
+    },
     logIn: (context, payload) => {
       context.commit('LOGIN', payload)
     },
@@ -49,6 +74,7 @@ export default {
     isVerified: state => get(state.fireUserData, 'emailVerified', false),
     getUserData: state => state.userData,
     getFBUserData: state => state.fireUserData,
-    getUserId: state => get(state.fireUserData, 'uid', 0)
+    getUserId: state => get(state.fireUserData, 'uid', 0),
+    getUserPicks: state => state.picks
   }
 }

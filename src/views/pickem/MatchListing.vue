@@ -5,13 +5,13 @@
         img(:src="`images/teams/${match.competitors[0].abbreviatedName}.svg`" width="28")
       .column.is-narrow
         .ow-font.team-name {{ match.competitors[0].abbreviatedName }}
-      .column.is-narrow
-        b-checkbox.is-pulled-right(:disabled="isDisabled")
+      .column.is-narrow(v-if="!isDisabled")
+        b-radio.is-pulled-right.winner-radio(v-model="matchWinner" size="is-medium" :native-value="match.competitors[0].id")
       .column.has-text-centered
         .match-date {{ match.startDateTS | formatJSDate }}
         .match-time {{ match.startDateTS | formatJSTime }}
-      .column.is-narrow
-        b-checkbox(:disabled="isDisabled")
+      .column.is-narrow(v-if="!isDisabled")
+        b-radio.is-pulled-right.winner-radio(v-model="matchWinner" size="is-medium" :native-value="match.competitors[1].id")
       .column.is-narrow
         .ow-font.team-name.is-pulled-right {{ match.competitors[1].abbreviatedName }}
       .column.is-narrow
@@ -19,18 +19,72 @@
 </template>
 
 <script>
+import PicksService from '@/services/picks'
+
 export default {
   name: 'MatchListing',
   props: {
+    leagueId: {
+      type: [String, Number],
+      required: true
+    },
     match: {
       type: Object,
       required: true
+    }
+  },
+  data () {
+    return {
+      matchWinner: ''
     }
   },
   computed: {
     isDisabled () {
       const now = Date.now()
       return (this.match.startDateTS < now)
+    },
+    userId () {
+      return this.$store.getters.getUserId
+    },
+    userPicks () {
+      return this.$store.getters.getUserPicks
+    }
+  },
+  watch: {
+    matchWinner (val) {
+      if (val) this.savePick()
+    },
+    userPicks: {
+      immediate: true,
+      handler (val) {
+        if (val) {
+          if (val[this.match.id]) {
+            this.matchWinner = val[this.match.id].winner
+          }
+        }
+      }
+    }
+  },
+  methods: {
+    savePick () {
+      // make sure we don't fire a save for something that already exists
+      if (!this.userPicks[this.match.id]) {
+        this.$store.dispatch('setLoading', true)
+        const pick = {
+          matchId: this.match.id,
+          userId: this.userId,
+          winner: this.matchWinner
+        }
+        PicksService.savePick(pick)
+          .then(() => {
+            this.$store.dispatch('setLoading', false)
+            this.$toast.open({
+              message: 'Successfully saved pick!',
+              type: 'is-success',
+              position: 'is-bottom'
+            })
+          })
+      }
     }
   }
 }
@@ -57,6 +111,11 @@ export default {
   }
   img {
     margin: 0 .5rem -.75rem .5rem;
+  }
+  .winner-radio {
+    .check {
+      margin-bottom: -1.8rem;
+    }
   }
 }
 </style>
