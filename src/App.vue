@@ -6,7 +6,7 @@
     router-view#rv(:key="$route.fullPath" v-if="liveConfig.canUseSite || (userData && userData.isAdmin)")
     .site-down.has-text-centered(v-else)
       img(src="images/high_noon_white.svg")
-      h1 {{ liveConfig.siteIsDownMessage }}
+      h1 {{ liveConfig.siteIsDownMessage || 'We will be officially launching on Monday, February 4th, 2019 at 11:00am PDT' }}
     report-issue(v-if="userData")
 </template>
 
