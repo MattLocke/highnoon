@@ -55,7 +55,8 @@ export default {
 
 <style lang="scss">
 .report-issue {
-  position: absolute;
+  position: fixed;
+  transform: translate3d(0, 0, 0);
   z-index: 999;
   width: 220px;
   bottom: 0;
