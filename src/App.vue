@@ -1,12 +1,13 @@
 <template lang="pug">
   #app
-    main-menu(v-if="liveConfig.canUseSite")
+    main-menu(v-if="liveConfig.canUseSite || (userData && userData.isAdmin)")
     b-notification(type="is-warning" v-if="notification.message") {{ notification.message }}
     b-loading(:is-full-page="true" :active.sync="isLoading" :can-cancel="false")
-    router-view#rv(:key="$route.fullPath" v-if="liveConfig.canUseSite")
-    .site-down.has-text-centered
+    router-view#rv(:key="$route.fullPath" v-if="liveConfig.canUseSite || (userData && userData.isAdmin)")
+    .site-down.has-text-centered(v-else)
       img(src="images/high_noon_white.svg")
       h1 {{ liveConfig.siteIsDownMessage }}
+    report-issue(v-if="userData")
 </template>
 
 <script>
@@ -15,11 +16,13 @@ import firebase from 'firebase/app'
 import userService from '@/services/user'
 
 import mainMenu from '@/components/Menu'
+import reportIssue from '@/components/ReportIssue'
 
 export default {
   name: 'HighNoon',
   components: {
-    mainMenu
+    mainMenu,
+    reportIssue
   },
   computed: {
     isLoading () {
@@ -29,7 +32,8 @@ export default {
   data () {
     return {
       notification: {},
-      liveConfig: {}
+      liveConfig: {},
+      userData: null
     }
   },
   mounted () {
@@ -40,6 +44,7 @@ export default {
     if (firebase.auth().currentUser) {
       userService.getProfile(firebase.auth().currentUser.uid)
         .then(userData => {
+          this.userData = userData
           this.$store.dispatch('logIn', userData)
           this.$store.dispatch('setLoading', false)
         })

@@ -9,6 +9,11 @@ service cloud.firestore {
       allow read;
     }
 
+    match /feedback/{feedbackId} {
+      allow read;
+      allow write: if request.auth.uid != null;
+    }
+
     match /images/{folder} {
       allow read;
     }
