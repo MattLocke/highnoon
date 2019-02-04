@@ -93,11 +93,6 @@ export default {
         batch.delete(leagueRef)
         batch.delete(leagueUsersRef)
 
-        if (leagueType === 'pickem') {
-          const picksRef = db.collection('pickemPicks').doc(leagueId)
-          batch.delete(picksRef)
-        }
-
         return batch.commit()
           .then(() => leagueId)
           .catch((error) => Promise.reject(error))
