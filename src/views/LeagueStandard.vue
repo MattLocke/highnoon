@@ -2,6 +2,7 @@
   .leagues
     .columns.is-marginless
       left-bar
+        transfer-ownership(leagueType="standard" v-if="userData.isAdmin")
         your-leagues(:userId="userId")
         section(v-if="league.leagueType == 'standard' && !draftComplete && isInLeague")
           collapsible(title-text="Draft Preference List" :start-collapsed="true")
@@ -97,6 +98,7 @@ import LeagueService from '@/services/league'
 
 import LeagueRoster from '@/views/leagues/LeagueRoster'
 import LeagueSchedule from '@/views/leagues/LeagueSchedule'
+import TransferOwnership from '@/views/admin/TransferOwnership'
 import TrashTalk from '@/views/draft/TrashTalk'
 import YourLeagues from '@/views/leagues/YourLeagues'
 
@@ -106,6 +108,7 @@ export default {
     LeagueRoster,
     LeagueSchedule,
     vueMarkdown,
+    TransferOwnership,
     TrashTalk,
     YourLeagues
   },
