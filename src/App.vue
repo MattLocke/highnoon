@@ -159,6 +159,7 @@ $link-focus-border: $primary;
   position: absolute;
   top: 50%;
   margin-top: -200px;
+  width: 100%;
   img {
     width: 200px;
     height: 200px;
