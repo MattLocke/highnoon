@@ -1,6 +1,6 @@
 <template lang="pug">
   .drafting-users
-    .columns.is-multiline.is-mobile
+    .columns.is-multiline.is-mobile(v-if="users")
       .column.is-one-fifth-desktop.is-half-mobile(v-for="(theUser, index) in users")
         h3.underlined(:class="{'orange': theUser.userId == users[draft.activeDrafter].userId && !draftComplete}") {{ theUser.displayName }}
           span.is-pulled-right(v-if="theUser.userId == users[draft.activeDrafter].userId && !draftComplete") {{ draft.direction == 'forward' ? '>' : '<' }}
