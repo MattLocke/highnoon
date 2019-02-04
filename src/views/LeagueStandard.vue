@@ -129,9 +129,10 @@ export default {
       // Needs to check league type, number of users, league status, etc.
       if (this.league.leagueType === 'standard' && this.leagueUsers.length && this.leagueUsers.length > 11) return false
       if (this.league.isLocked) return false
-      if (!this.userLeagues || this.userLeagues.length > 8) return false
       if (this.isInLeague) return false
       if (this.draftOrder.length) return false
+      if (this.userData.isPremier || this.userData.isAdmin) return true
+      if (this.userLeagues && this.userLeagues.length > 7) return false
       return true
     },
     canLeaveLeague () {
