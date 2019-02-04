@@ -16,6 +16,7 @@ service cloud.firestore {
 
     match /images/{folder} {
       allow read;
+      allow write: if get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true;
     }
 
     match /leagueSchedule/{leagueId} {
@@ -38,6 +39,11 @@ service cloud.firestore {
     }
 
     match /pickemLeagues/{leagueId} {
+    	allow read;
+    	allow write: if request.auth.uid != null;
+    }
+
+    match /picks/{userId} {
     	allow read;
     	allow write: if request.auth.uid != null;
     }
