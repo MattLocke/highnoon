@@ -1,6 +1,6 @@
 <template lang="pug">
   section.convert-to-featured
-    collapsible(title-text="Convert To Featured" :start-collapsed="true")
+    collapsible(:title-text="league.isFeatured ? 'Update Feature' : 'Convert To Featured'" :start-collapsed="true")
       p Converts a league so it can be featured on the featured leagues page. It will need an image, so you can
         a(href="/#/upload" target="_blank")  click here
         |  to upload one!
@@ -35,6 +35,7 @@ export default {
       handler (val) {
         if (val) {
           this.featureURL = val.featuredURL
+          this.featureMessage = val.featuredMessage
         }
       }
     }

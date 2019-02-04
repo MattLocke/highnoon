@@ -10,6 +10,8 @@ db.settings({ timestampsInSnapshots: true })
 
 export default {
   state: {
+    featuredPickem: [],
+    featuredUnlimited: [],
     leagues: [],
     leagueId: '',
     leagueRoster: {
@@ -25,6 +27,12 @@ export default {
     leagueSchedule: []
   },
   mutations: {
+    SET_FEATURED_PICKEM: (state, payload) => {
+      if (payload) state.featuredPickem = payload
+    },
+    SET_FEATURED_UNLIMITED: (state, payload) => {
+      if (payload) state.featuredUnlimited = payload
+    },
     SET_LEAGUE_ID: (state, payload) => {
       state.leagueId = payload
     },
@@ -42,6 +50,34 @@ export default {
     }
   },
   actions: {
+    fetchFeaturedPickem: ({ state, commit }) => {
+      if (!state.featuredPickem.length) {
+        db.collection('pickemLeagues')
+          .where('isFeatured', '==', true)
+          .get()
+          .then((leagues) => {
+            const theLeagues = leagues.docs.map(league => ({ ...league.data() }))
+            commit('SET_FEATURED_PICKEM', theLeagues)
+          })
+          .catch((error) => {
+            console.table(error)
+          })
+      }
+    },
+    fetchFeaturedUnlimited: ({ state, commit }) => {
+      if (!state.featuredUnlimited.length) {
+        db.collection('unlimitedLeagues')
+          .where('isFeatured', '==', true)
+          .get()
+          .then((leagues) => {
+            const theLeagues = leagues.docs.map(league => ({ ...league.data() }))
+            commit('SET_FEATURED_UNLIMITED', theLeagues)
+          })
+          .catch((error) => {
+            console.table(error)
+          })
+      }
+    },
     getLeagues: ({ commit }, payload) => {
       if (payload) {
         db.collection('userLeagues').doc(payload)
@@ -105,6 +141,8 @@ export default {
     }
   },
   getters: {
+    getFeaturedPickem: state => state.featuredPickem,
+    getFeaturedUnlimited: state => state.featuredUnlimited,
     getUserLeagues: state => state.leagues,
     getLeagueUsers: state => state.leagueUsers,
     getLeagueSchedule: state => state.leagueSchedule,
