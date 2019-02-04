@@ -252,6 +252,18 @@ export default {
             const shuffledUsers = shuffle([...this.leagueUsers])
             firebase.database().ref(`/draftOrder/${this.leagueId}`)
               .set(shuffledUsers)
+              .then(() => {
+                const draft = {
+                  leagueName: this.league.leagueName,
+                  players: this.players,
+                  activeDrafter: 0,
+                  direction: 'forward',
+                  status: 'unDrafted',
+                  doneProcessing: true
+                }
+
+                firebase.database().ref(`/draft/${this.leagueId}`).set(draft)
+              })
               .catch(() => {
                 this.$store.dispatch('setLoading', false)
                 this.$toast.open({
