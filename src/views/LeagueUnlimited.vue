@@ -2,6 +2,7 @@
   .leagues
     .columns.is-marginless
       left-bar
+        convert-to-featured(:league="league" v-if="userData.isAdmin")
         your-leagues(:userId="userId")
         section(v-if="isOwner")
           collapsible(title-text="Delete League" :start-collapsed="true")
@@ -47,6 +48,7 @@ import vueMarkdown from 'vue-markdown'
 
 import LeagueService from '@/services/league'
 
+import ConvertToFeatured from '@/views/admin/ConvertToFeatured'
 import LeagueRoster from '@/views/leagues/LeagueRoster'
 import TrashTalk from '@/views/draft/TrashTalk'
 import UnlimitedLeaderboard from '@/views/leagues/UnlimitedLeaderboard'
@@ -55,6 +57,7 @@ import YourLeagues from '@/views/leagues/YourLeagues'
 export default {
   name: 'UnlimitedLeague',
   components: {
+    ConvertToFeatured,
     LeagueRoster,
     TrashTalk,
     UnlimitedLeaderboard,

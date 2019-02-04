@@ -207,6 +207,9 @@ export default {
         return batch.commit()
       })
   },
+  makeFeatured (leagueType, leagueId, imageURL) {
+    return db.collection(`${leagueType}Leagues`).doc(leagueId).set({ featuredURL: imageURL || null, isFeatured: !!(imageURL) }, { merge: true })
+  },
   resetDraft (leagueId) {
     return rdb.ref(`/draft/${leagueId}`).remove()
       .then(() => rdb.ref(`/draftPicks/${leagueId}`).remove())

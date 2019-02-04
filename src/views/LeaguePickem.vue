@@ -2,6 +2,7 @@
   .league-pickem
     .columns
       left-bar
+        convert-to-featured(:league="league" v-if="userData.isAdmin")
         your-leagues(:userId="userId")
         section
           collapsible(title-text="Your Picks")
@@ -39,6 +40,7 @@ import vueMarkdown from 'vue-markdown'
 
 import LeagueService from '@/services/league'
 
+import ConvertToFeatured from '@/views/admin/ConvertToFeatured'
 import MatchListing from '@/views/pickem/MatchListing'
 import PickemLeaderboard from '@/views/leagues/PickemLeaderboard'
 import TrashTalk from '@/views/draft/TrashTalk'
@@ -47,6 +49,7 @@ import YourLeagues from '@/views/leagues/YourLeagues'
 export default {
   name: 'LeaguePickem',
   components: {
+    ConvertToFeatured,
     MatchListing,
     PickemLeaderboard,
     TrashTalk,
@@ -91,6 +94,9 @@ export default {
     },
     matches () {
       return this.$store.getters.getMatches
+    },
+    userData () {
+      return this.$store.getters.getUserData
     },
     userId () {
       return this.$store.getters.getUserId
