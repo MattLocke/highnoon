@@ -6,6 +6,9 @@
         section(v-if="isOwner")
           collapsible(title-text="Delete League" :start-collapsed="true")
             confirm-button(button-text="Delete League" confirm-text="Are You Sure?" extra-text="This action can not be undone, and all users will lose their points and picks associated with this league." @confirm-it="deleteLeague")
+        section(v-if="leagueUsers && leagueUsers.length")
+          collapsible(title-text="League Users" :start-collapsed="true")
+            .left-bar-item(v-for="user in leagueUsers") {{ user.displayName }}
         section(v-if="isInLeague")
           router-link.button.is-primary.is-small(:to="`/manageUnlimitedTeam/${leagueId}`") Manage Team
           button.button.is-secondary.is-small.is-pulled-right(@click="copyLink" v-if="isInLeague") Copy Share Link
@@ -26,10 +29,16 @@
               .wrap(v-else)
                 img(src="https://firebasestorage.googleapis.com/v0/b/overwatch-pickem.appspot.com/o/images%2Fleagues%2Fwelcome-to-your-league.jpg?alt=media&token=bbf8225c-6bd0-4b1a-b5e0-d864a3047395")
                 p Click on the edit button above to customize your league landing page!  Inform members of the rules you have, the prizes you're giving away - whatever makes sense!
-          b-tab-item(label="Your Roster")
+          b-tab-item(label="Your Roster" v-if="isInLeague")
             league-roster(:league="league")
-          b-tab-item(label="Trash Talk")
+          b-tab-item(label="Trash Talk" v-if="isInLeague")
             trash-talk
+        section(v-if="canJoinLeague")
+          b-field(label="password" v-if="league.password")
+            b-input(type="password" v-model="localPassword")
+          button.button.is-primary(@click="joinLeague") Join League
+        section(v-if="isInLeague && !isOwner")
+          confirm-button(buttonText="Leave League" confirmText="Are You Sure?" @confirm-it="leaveLeague")
         unlimited-leaderboard
 </template>
 
@@ -67,6 +76,15 @@ export default {
     }
   },
   computed: {
+    canJoinLeague () {
+      // Needs to check league type, number of users, league status, etc.
+      if (this.league.leagueType !== 'unlimited') return false
+      if (this.league.isLocked) return false
+      if (this.isInLeague) return false
+      if (this.userData.isPremier || this.userData.isAdmin) return true
+      if (this.userLeagues && this.userLeagues.length > 7) return false
+      return true
+    },
     isInLeague () {
       return this.userLeagues.some(league => league.leagueId === this.leagueId)
     },
@@ -79,8 +97,14 @@ export default {
     leagueMessage () {
       return this.league.message
     },
+    leagueUsers () {
+      return this.$store.getters.getLeagueUsers || []
+    },
     userId () {
       return this.$store.getters.getUserId
+    },
+    userData () {
+      return this.$store.getters.getUserData
     },
     userLeagues () {
       return this.$store.getters.getUserLeagues
