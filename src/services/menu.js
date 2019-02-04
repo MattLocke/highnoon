@@ -6,15 +6,9 @@ export default {
         where: '/home'
       },
       {
-        name: 'Players',
-        where: '/fantasy',
-        requiresAuth: true
-      },
-      {
         name: 'Leagues',
         where: '/leagues',
-        requiresAuth: true,
-        requiresAlpha: true
+        requiresAuth: true
       }
     ]
     const devMenu = [

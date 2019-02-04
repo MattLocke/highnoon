@@ -5,8 +5,8 @@
         img.logo(src="images/high_noon_white.svg" width="36" height="36")
         |  HIGHNOON
         span.orange .GG
-          span.white(v-if="profile.isAlpha")  |
-            span.orange  ALPHA
+          span.white  |
+            span.orange  BETA
       a.navbar-burger.burger(role="button" :class="{'is-active': isActive}" @click="isActive=!isActive")
         span
         span
@@ -68,7 +68,6 @@ export default {
     canSee (menuItem) {
       if (this.profile.isAdmin) return true
       if (menuItem.requiresAuth && !this.currentUser) return false
-      if (menuItem.requiresAlpha && !this.profile.isAlpha) return false
       return true
     },
     logOut () {
