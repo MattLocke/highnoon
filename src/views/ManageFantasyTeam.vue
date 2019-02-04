@@ -8,6 +8,8 @@
         section
           collapsible(title-text="Unclaimed Players" :start-collapsed="true")
             .left-bar-item Coming Soon
+        section
+          scoring-info
         section(v-if="leagueSchedule.length")
           collapsible(title-text="Your Next Match")
             my-schedule(:leagueId="leagueId")
@@ -110,6 +112,7 @@ import MySchedule from '@/views/manage/MySchedule'
 import MyTrades from '@/views/manage/MyTrades'
 import PlayerCard from '@/components/PlayerCard'
 import RoleButtons from '@/views/manage/RoleButtons'
+import ScoringInfo from '@/views/leagues/ScoringInfo'
 
 export default {
   name: 'ManageTeam',
@@ -118,7 +121,8 @@ export default {
     MySchedule,
     MyTrades,
     PlayerCard,
-    RoleButtons
+    RoleButtons,
+    ScoringInfo
   },
   data () {
     return {

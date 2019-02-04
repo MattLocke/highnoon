@@ -5,7 +5,7 @@
         section
           router-link.button.is-primary(:to="`/LeagueUnlimited/${leagueId}`") Back To League
         section
-          p More information to help you build your team coming soon!
+          scoring-info
       .column
         section
           h1 Manage Your Fantasy Team
@@ -39,7 +39,7 @@
               player-card(:player="lineUp.tank2.id ? lineUp.tank2 : null" :showRemove="false" :score="lineUp.tank2.stats ? lineUp.tank2.stats.fantasyScore : 0")
               h2.has-text-centered Tank 2
         section.is-hidden-mobile
-          button.button.is-primary(@click="saveRoster" v-if="!canSaveRoster") Save Roster And Return To League
+          button.button.is-primary(@click="saveRoster" v-if="canSaveRoster") Save Roster And Return To League
           button.button.is-primary(disabled v-else) Save Roster And Return To League
         section.is-hidden-desktop
           h2.ow-font.mobile-roster
@@ -71,7 +71,7 @@
             img(:src="`images/teams/${lineUp.tank2.team}.svg`" width="20" height="20" v-if="lineUp.tank2.team")
             | {{ lineUp.tank2.name || 'Empty' }}
           section.has-text-centered
-            button.button.is-primary(@click="saveRoster" v-if="!canSaveRoster") Save Roster And Return To League
+            button.button.is-primary(@click="saveRoster" v-if="canSaveRoster") Save Roster And Return To League
             button.button.is-primary(v-else disabled) Save Roster And Return To League
         section
           .columns
@@ -118,12 +118,14 @@ import LeagueService from '@/services/league'
 
 import PlayerCard from '@/components/PlayerCard'
 import RoleButtons from '@/views/manage/RoleButtons'
+import ScoringInfo from '@/views/leagues/ScoringInfo'
 
 export default {
   name: 'ManageTeam',
   components: {
     PlayerCard,
-    RoleButtons
+    RoleButtons,
+    ScoringInfo
   },
   data () {
     return {
@@ -144,7 +146,7 @@ export default {
   },
   computed: {
     canSaveRoster () {
-      return (this.lineUp.captain.id && this.lineUp.offense1.id && this.lineUp.offense2.id && this.lineUp.support1.id && this.lineUp.support2.id && this.lineUp.tank1.id && this.lineUp.tank2.id)
+      return !!(this.lineUp.captain.id && this.lineUp.offense1.id && this.lineUp.offense2.id && this.lineUp.support1.id && this.lineUp.support2.id && this.lineUp.tank1.id && this.lineUp.tank2.id)
     },
     filteredPlayers () {
       let fPlayers = [...this.myAvailablePicks]
