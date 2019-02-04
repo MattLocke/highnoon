@@ -139,6 +139,10 @@ $link-focus-border: $primary;
   }
 }
 
+.notices .toast {
+  border-radius: 8px!important;
+}
+
 #app .navbar-item.has-dropdown .navbar-link {
   color: #fff;
 }
