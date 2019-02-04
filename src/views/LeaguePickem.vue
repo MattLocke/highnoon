@@ -7,6 +7,9 @@
         section
           collapsible(title-text="Your Picks")
             match-listing(v-for="match in currentWeeksMatches" :match="match" :key="match.id" :leagueId="leagueId")
+        section(v-if="leagueUsers && leagueUsers.length")
+          collapsible(title-text="League Users" :start-collapsed="true")
+            .left-bar-item(v-for="user in leagueUsers") {{ user.displayName }}
         section(v-if="isOwner")
           collapsible(title-text="Delete League" :start-collapsed="true")
             confirm-button(button-text="Delete League" confirm-text="Are You Sure?" extra-text="This action can not be undone, and all users will lose their points and picks associated with this league." @confirm-it="deleteLeague")
@@ -91,6 +94,9 @@ export default {
     },
     leagueMessage () {
       return this.league.message
+    },
+    leagueUsers () {
+      return this.$store.getters.getLeagueUsers || []
     },
     matches () {
       return this.$store.getters.getMatches
