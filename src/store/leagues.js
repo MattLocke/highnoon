@@ -91,8 +91,8 @@ export default {
           })
       }
     },
-    fetchLeagueSchedule: ({ state, commit }, payload) => {
-      if (payload && !state.leagueSchedule.length) {
+    fetchLeagueSchedule: ({ commit }, payload) => {
+      if (payload) {
         db.collection('leagueSchedule').doc(payload)
           .get()
           .then((leagueSchedule) => {
@@ -104,8 +104,8 @@ export default {
           })
       }
     },
-    fetchLeagueUsers: ({ state, commit }, payload) => {
-      if (payload.leagueId && !state.leagueUsers.length) {
+    fetchLeagueUsers: ({ commit }, payload) => {
+      if (payload.leagueId) {
         db.collection(`${payload.leagueType}LeagueUsers`).doc(payload.leagueId)
           .get()
           .then((leagueUsers) => {

@@ -12,6 +12,10 @@ var rdb = firebase.database()
 db.settings({ timestampsInSnapshots: true })
 
 export default {
+  changeOwner (leagueId, leagueType, ownerId) {
+    return db.collection(`${leagueType}Leagues`).doc(leagueId)
+      .set({ ownerId }, { merge: true })
+  },
   createLeague (user, leagueData) {
     logger.logIt('Creating League...')
 
