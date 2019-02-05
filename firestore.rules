@@ -96,7 +96,8 @@ service cloud.firestore {
     }
 
     match /userLeagues/{userId} {
-    	allow read, write: if request.auth.uid == userId;
+    	allow read;
+      allow write: if request.auth.uid != null;
     }
 
     match /users/{userId} {

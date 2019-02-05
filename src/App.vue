@@ -1,12 +1,9 @@
 <template lang="pug">
   #app
-    main-menu(v-if="liveConfig.canUseSite || (userData && userData.isAdmin)")
+    main-menu
     b-notification(type="is-warning" v-if="notification.message") {{ notification.message }}
     b-loading(:is-full-page="true" :active.sync="isLoading" :can-cancel="false")
-    router-view#rv(:key="$route.fullPath" v-if="liveConfig.canUseSite || (userData && userData.isAdmin)")
-    .site-down.has-text-centered(v-else)
-      img(src="images/high_noon_white.svg")
-      h1 {{ liveConfig.siteIsDownMessage || 'We will be officially launching on Monday, February 4th, 2019 at 11:00am PDT' }}
+    router-view#rv(:key="$route.fullPath")
     report-issue(v-if="userData")
 </template>
 

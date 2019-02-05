@@ -29,24 +29,40 @@ export default {
   mutations: {
     SET_FEATURED_PICKEM: (state, payload) => {
       if (payload) state.featuredPickem = payload
+      else state.featuredPickem = []
     },
     SET_FEATURED_UNLIMITED: (state, payload) => {
       if (payload) state.featuredUnlimited = payload
+      else state.featuredUnlimited = []
     },
     SET_LEAGUE_ID: (state, payload) => {
       state.leagueId = payload
     },
     SET_LEAGUES: (state, payload) => {
       if (payload) state.leagues = payload
+      else state.leagues = []
     },
     SET_LEAGUE_ROSTER: (state, payload) => {
       if (payload) state.leagueRoster = payload
+      else {
+        state.leagueRoster = {
+          captain: {},
+          offense1: {},
+          offense2: {},
+          support1: {},
+          support2: {},
+          tank1: {},
+          tank2: {}
+        }
+      }
     },
     SET_LEAGUE_USERS: (state, payload) => {
       if (payload) state.leagueUsers = payload
+      else state.leagueUsers = []
     },
     SET_LEAGUE_SCHEDULE: (state, payload) => {
       if (payload) state.leagueSchedule = payload
+      else state.leagueSchedule = []
     }
   },
   actions: {

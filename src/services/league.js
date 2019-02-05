@@ -177,7 +177,9 @@ export default {
     // return user meta on success, so we can append it on the front end
     return batch.commit()
       .then(() => userMeta)
-      .catch(error => error)
+      .catch(error => {
+        console.table(error)
+      })
   },
   leaveLeague (userId, leagueId, leagueType = 'standard') {
     // set up the batch

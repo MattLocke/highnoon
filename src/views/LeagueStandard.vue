@@ -10,7 +10,11 @@
             hr
             button.button.is-primary(@click="draftPreference") Draft Preference List
         section(v-if="leagueUsers && leagueUsers.length")
-          collapsible(title-text="League Users" :start-collapsed="true")
+          collapsible(title-text="League Users")
+            h3 
+              span.orange {{ leagueUsers.length }}
+              |  of
+              span.orange  10
             .left-bar-item(v-for="user in leagueUsers") {{ user.displayName }}
         section(v-if="canLeaveLeague")
           confirm-button(buttonText="Leave League" confirmText="Are You Sure?" @confirm-it="leaveLeague")

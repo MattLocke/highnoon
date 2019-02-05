@@ -5,8 +5,16 @@
         convert-to-featured(:league="league" v-if="userData.isAdmin")
         transfer-ownership(leagueType="pickem" v-if="userData.isAdmin")
         your-leagues(:userId="userId")
+        section(v-if="isOwner")
+          collapsible(title-text="League Password" :start-collapsed="true")
+            b-field(label="Password")
+              b-input(v-model="league.password")
+            b-field
+              button.button.is-primary(@click="updateLeague") Update Password
+            p To remove the password, simply update with no password in the field.
         section
           collapsible(title-text="Your Picks")
+            p These are your picks for the matches for the upcoming week.  The picks are bound to your profile, so they carry over between leagues.  I may make them on a per-league basis in the future, but the technical debt for that is too much for one man to bear right now with the other league types in the mix.  Sorry for the inconvenience!  :(
             match-listing(v-for="match in currentWeeksMatches" :match="match" :key="match.id" :leagueId="leagueId")
         section(v-if="leagueUsers && leagueUsers.length")
           collapsible(title-text="League Users" :start-collapsed="true")
@@ -14,6 +22,8 @@
         section(v-if="isOwner")
           collapsible(title-text="Delete League" :start-collapsed="true")
             confirm-button(button-text="Delete League" confirm-text="Are You Sure?" extra-text="This action can not be undone, and all users will lose their points and picks associated with this league." @confirm-it="deleteLeague")
+        section(v-if="isInLeague")
+          button.button.is-secondary.is-small(@click="copyLink") Copy Share Link
       .column
         h1 {{ league.leagueName }}
         b-tabs(v-model="activeContentTab")
@@ -37,6 +47,12 @@
             trash-talk
           b-tab-item(label="Pick Stats" v-if="isInLeague")
             p Shortly after launch I will begin populating this with some statistics, as well as information that can help you with your picks!
+        section(v-if="canJoinLeague")
+          b-field(label="password" v-if="league.password")
+            b-input(type="password" v-model="localPassword")
+          button.button.is-primary(@click="joinLeague") Join League
+        section(v-if="isInLeague && !isOwner")
+          confirm-button(buttonText="Leave League" confirmText="Are You Sure?" @confirm-it="leaveLeague")
         pickem-leaderboard
 </template>
 
@@ -71,10 +87,20 @@ export default {
       league: {
         message: '',
         image: ''
-      }
+      },
+      localPassword: ''
     }
   },
   computed: {
+    canJoinLeague () {
+      // Needs to check league type, number of users, league status, etc.
+      if (this.league.leagueType !== 'pickem') return false
+      if (this.league.isLocked) return false
+      if (this.isInLeague) return false
+      if (this.userData.isPremier || this.userData.isAdmin) return true
+      if (this.userLeagues && this.userLeagues.length > 7) return false
+      return true
+    },
     config () {
       return this.$store.getters.getConfig
     },
@@ -132,12 +158,23 @@ export default {
     this.$store.dispatch('fetchPicks')
   },
   methods: {
+    copyLink () {
+      this.$copyText(`https://highnoon.gg/#/LeaguePickem/${this.leagueId}`)
+        .then(() => {
+          this.$toast.open({
+            message: 'Successfully copied the link!',
+            type: 'is-success',
+            position: 'is-bottom'
+          })
+        })
+    },
     deleteLeague () {
       LeagueService.deleteLeague(this.leagueId, 'pickem')
         .then(() => {
           this.$router.push({ path: `/leagues` })
         })
-        .catch(() => {
+        .catch((error) => {
+          console.table(error)
           this.$toast.open({
             message: 'There was an issue deleting your league.',
             type: 'is-danger',
@@ -157,6 +194,32 @@ export default {
         })
         .catch(() => {
           this.$store.dispatch('setLoading', false)
+        })
+    },
+    joinLeague () {
+      if (this.league.password) {
+        if (this.localPassword !== this.league.password) {
+          this.$toast.open({
+            message: 'Invalid league password',
+            type: 'is-danger',
+            position: 'is-bottom'
+          })
+          return
+        }
+      }
+      this.$store.dispatch('setLoading', true)
+      LeagueService.joinLeague(this.userData, this.league, 'pickem')
+        .then(() => {
+          this.$store.dispatch('setLoading', false)
+          location.reload()
+        })
+    },
+    leaveLeague () {
+      this.$store.dispatch('setLoading', true)
+      LeagueService.leaveLeague(this.userId, this.leagueId, 'pickem')
+        .then(() => {
+          this.$store.dispatch('setLoading', false)
+          location.reload()
         })
     },
     updateLeague () {

@@ -54,6 +54,14 @@ export default {
     matchWinner (val) {
       if (val) this.savePick()
     },
+    userId: {
+      immediate: true,
+      handler (val) {
+        if (val) {
+          this.$store.dispatch('fetchPicks')
+        }
+      }
+    },
     userPicks: {
       immediate: true,
       handler (val) {

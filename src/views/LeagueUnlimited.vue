@@ -6,6 +6,13 @@
         transfer-ownership(leagueType="unlimited" v-if="userData.isAdmin")
         your-leagues(:userId="userId")
         section(v-if="isOwner")
+          collapsible(title-text="League Password" :start-collapsed="true")
+            b-field(label="Password")
+              b-input(v-model="league.password")
+            b-field
+              button.button.is-primary(@click="updateLeague") Update Password
+            p To remove the password, simply update with no password in the field.
+        section(v-if="isOwner")
           collapsible(title-text="Delete League" :start-collapsed="true")
             confirm-button(button-text="Delete League" confirm-text="Are You Sure?" extra-text="This action can not be undone, and all users will lose their points and picks associated with this league." @confirm-it="deleteLeague")
         section(v-if="leagueUsers && leagueUsers.length")
@@ -181,7 +188,7 @@ export default {
         }
       }
       this.$store.dispatch('setLoading', true)
-      LeagueService.joinLeague(this.userData, this.league)
+      LeagueService.joinLeague(this.userData, this.league, 'unlimited')
         .then(() => {
           this.$store.dispatch('setLoading', false)
           location.reload()

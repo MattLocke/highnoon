@@ -18,6 +18,12 @@
           to="/profile") {{ profile.displayName }}
         router-link.navbar-item(
           v-else to="/login") Log In
+        .navbar-item.has-dropdown.is-hoverable
+          a.navbar-link How-To
+          .navbar-dropdown
+            a.navbar-item(href="https://highnoon.gg/#/article/Na1lrkeu2s2Pwi8wbQrp") Standard
+            a.navbar-item(href="https://highnoon.gg/#/article/DUtOLV2iYsTplEgvH3fv") Unlimited
+            a.navbar-item(href="https://highnoon.gg/#/article/Jx3Z8ZbpWlAon6zx9Osd") Pickem
         router-link.navbar-item(
           v-for="(menuItem, index) in menuItems"
           :key="index"

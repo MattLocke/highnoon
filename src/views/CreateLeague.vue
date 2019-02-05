@@ -7,7 +7,7 @@
           .column
             h2 Standard
             img.img(src="/images/league-standard.jpg" alt="standard league icon")
-            p You and up to 11 other buddies can get together and draft teams to compete against one another!  Each week you'll be matched against a new opponent and best record at the end wins!
+            p You and up to 9 other buddies can get together and draft teams to compete against one another!  Each week you'll be matched against a new opponent and best record at the end wins!
             .has-text-centered
               button.button.is-primary(@click="league.leagueType = 'standard'") Choose Standard
           .column

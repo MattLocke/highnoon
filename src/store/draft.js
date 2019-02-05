@@ -18,6 +18,7 @@ export default {
     },
     SET_DRAFT_ORDER: (state, payload) => {
       if (payload) state.draftOrder = payload
+      else state.draftorder = []
     },
     SET_DRAFT_PICKS: (state, payload) => {
       state.draftPicks = payload

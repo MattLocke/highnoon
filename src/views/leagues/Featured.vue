@@ -12,7 +12,8 @@
             .image.is-128x128
               img(:src="league.featuredURL")
           .column.has-text-centered-mobile
-            h3 {{ league.leagueName }}
+            h3
+              router-link(:to="`/LeagueUnlimited/${league.id}`") {{ league.leagueName }}
             span {{ league.featuredMessage }}
           .column.is-narrow.has-text-centered-mobile
             b-field
@@ -26,7 +27,8 @@
             .image.is-128x128
               img(:src="league.featuredURL")
           .column.has-text-centered-mobile
-            h3 {{ league.leagueName }}
+            h3
+              router-link(:to="`/LeaguePickem/${league.id}`") {{ league.leagueName }}
             span {{ league.featuredMessage }}
           .column.is-narrow.has-text-centered-mobile
             b-field
