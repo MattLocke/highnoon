@@ -263,16 +263,19 @@ function performTradeFirebase (trade) {
 
     var updateRoster = rostersRef.get().then(doc => {
       var fullRoster = doc.data()
-      var askerRoster = cleanRoster(fullRoster[trade.askerId].roster, trade.askerPlayer)
-      var responderRoster = cleanRoster(fullRoster[trade.responderId].roster, trade.responderPlayer)
-      fancyLog('Updating Roster')
-      var newRoster = { ...fullRoster }
-      if (!_.isEqual(askerRoster, fullRoster[trade.askerId].roster) || !_.isEqual(responderRoster, fullRoster[trade.responderId].roster)) {
-        // this means someone traded someone out of their roster, so we have to do stuff :(
-        newRoster[trade.askerId].roster = askerRoster
-        newRoster[trade.responderId].roster = responderRoster
+      if (fullRoster && fullRoster[trade.responderId]) {
+        var askerRoster = cleanRoster(fullRoster[trade.askerId].roster, trade.askerPlayer)
+        var responderRoster = cleanRoster(fullRoster[trade.responderId].roster, trade.responderPlayer)
+        fancyLog('Updating Roster')
+        var newRoster = { ...fullRoster }
+        if (!_.isEqual(askerRoster, fullRoster[trade.askerId].roster) || !_.isEqual(responderRoster, fullRoster[trade.responderId].roster)) {
+          // this means someone traded someone out of their roster, so we have to do stuff :(
+          newRoster[trade.askerId].roster = askerRoster
+          newRoster[trade.responderId].roster = responderRoster
+        }
+        return rostersRef.set(newRoster)
       }
-      return rostersRef.set(newRoster)
+      return null
     })
 
     var updateTrade = tradeRef.update({ status: 'complete' })
