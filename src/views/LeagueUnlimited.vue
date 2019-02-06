@@ -41,7 +41,8 @@
                 img(src="https://firebasestorage.googleapis.com/v0/b/overwatch-pickem.appspot.com/o/images%2Fleagues%2Fwelcome-to-your-league.jpg?alt=media&token=bbf8225c-6bd0-4b1a-b5e0-d864a3047395")
                 p Click on the edit button above to customize your league landing page!  Inform members of the rules you have, the prizes you're giving away - whatever makes sense!
           b-tab-item(label="Your Roster" v-if="isInLeague")
-            league-roster(:league="league")
+            league-roster(:league="league" v-if="liveConfig.canCreateUnlimitedRoster")
+            span(v-else) {{ liveConfig.featureDownMessage }}
           b-tab-item(label="Trash Talk" v-if="isInLeague")
             trash-talk
         section(v-if="canJoinLeague")
@@ -114,6 +115,12 @@ export default {
     },
     leagueUsers () {
       return this.$store.getters.getLeagueUsers || []
+    },
+    liveConfig () {
+      return this.$store.getters.getLiveConfig
+    },
+    players () {
+      return this.$store.getters.getPlayers
     },
     userId () {
       return this.$store.getters.getUserId

@@ -12,10 +12,13 @@
             b-field
               button.button.is-primary(@click="updateLeague") Update Password
             p To remove the password, simply update with no password in the field.
-        section
+        section(v-if="liveConfig.canPick")
           collapsible(title-text="Your Picks")
             p These are your picks for the matches for the upcoming week.  The picks are bound to your profile, so they carry over between leagues.  I may make them on a per-league basis in the future, but the technical debt for that is too much for one man to bear right now with the other league types in the mix.  Sorry for the inconvenience!  :(
             match-listing(v-for="match in currentWeeksMatches" :match="match" :key="match.id" :leagueId="leagueId")
+        section(v-else)
+          h2 Your Picks
+          span {{ liveConfig.featureDownMessage }}
         section(v-if="leagueUsers && leagueUsers.length")
           collapsible(title-text="League Users" :start-collapsed="true")
             .left-bar-item(v-for="user in leagueUsers") {{ user.displayName }}
@@ -128,6 +131,9 @@ export default {
     },
     leagueUsers () {
       return this.$store.getters.getLeagueUsers || []
+    },
+    liveConfig () {
+      return this.$store.getters.getLiveConfig
     },
     matches () {
       return this.$store.getters.getMatches

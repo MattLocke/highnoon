@@ -56,7 +56,6 @@ export default {
   },
   data () {
     return {
-      players: [],
       currentPage: 1,
       filterText: ''
     }
@@ -64,13 +63,10 @@ export default {
   computed: {
     filteredPlayers () {
       return this.players.filter(player => player.name.toLowerCase().includes(this.filterText.toLowerCase()))
+    },
+    players () {
+      return Object.values(this.$store.getters.getPlayers)
     }
-  },
-  mounted () {
-    playerService.getAllPlayers()
-      .then(players => {
-        this.players = players
-      })
   }
 }
 </script>

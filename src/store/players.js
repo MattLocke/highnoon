@@ -24,21 +24,21 @@ export default {
         db.collection(`players`)
           .get()
           .then((players) => {
-            thePlayers = players.docs.map(player => ({ ...player.data() }))
+            players.docs.forEach(player => {
+              const p = player.data()
+              thePlayers[p.id] = p
+            })
             return null
           })
           .then(() => {
             return db.collection(`playerStats`).get()
           })
           .then((stats) => {
-            const theStats = stats.docs.map(stat => ({ ...stat.data() }))
-            const playersToSave = []
-            thePlayers.forEach((player) => {
-              const tmpStats = theStats.find(stat => stat.playerId === player.id) || { fantasyScore: 0 }
-              player = { ...player, stats: tmpStats }
-              playersToSave.push(player)
+            stats.docs.forEach(stat => {
+              const s = stat.data()
+              thePlayers[s.id] = { ...thePlayers[s.id], stats: s }
             })
-            commit('SET_PLAYERS', playersToSave)
+            commit('SET_PLAYERS', thePlayers)
           })
           .catch((error) => {
             // TODO: update with proper error msg

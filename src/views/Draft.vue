@@ -2,6 +2,8 @@
   .draft
     .columns.is-marginless
       left-bar(:showClose="false")
+        section(v-if="isOwner")
+          fix-draft-button(:leagueId="leagueId")
         section(v-if="isInLeague")
           h2.has-pointer(@click="showRoster = !showRoster") Your Roster - {{ roster.length }} of 12
             arrow(:isLeft="true" v-model="showRoster")
@@ -109,9 +111,12 @@ import { differenceWith } from 'lodash'
 import firebase from 'firebase/app'
 import 'firebase/database'
 
+import LeagueService from '@/services/league'
+
 import DraftDrawer from '@/views/draft/DraftDrawer'
 import DraftPreference from '@/views/DraftPreference'
 import DraftingUsers from '@/views/draft/DraftingUsers'
+import FixDraftButton from '@/views/draft/FixDraftButton'
 import PlayerCard from '@/components/PlayerCard'
 import PlayerLine from '@/views/draft/PlayerLine'
 import TrashTalk from '@/views/draft/TrashTalk'
@@ -122,6 +127,7 @@ export default {
     DraftDrawer,
     DraftPreference,
     DraftingUsers,
+    FixDraftButton,
     PlayerCard,
     PlayerLine,
     TrashTalk
@@ -137,6 +143,9 @@ export default {
       filterText: '',
       filterTeam: '',
       filterRole: '',
+      league: {
+        ownerId: ''
+      },
       picks: [],
       preferenceList: [],
       requiredOffense: 2,
@@ -164,6 +173,9 @@ export default {
     },
     isInLeague () {
       return !!(this.userLeagues.some(league => league.leagueId === this.leagueId))
+    },
+    isOwner () {
+      return this.userId === this.league.ownerId
     },
     leagueId () {
       return this.$route.params.leagueId
@@ -240,6 +252,7 @@ export default {
       handler (val) {
         if (val) {
           this.$store.dispatch('fetchLeagueUsers', { leagueId: this.leagueId, leagueType: 'standard' })
+          this.getLeague(val)
         }
       }
     },
@@ -252,14 +265,7 @@ export default {
       handler (val) {
         if (val && val.length === 0) {
           this.$store.dispatch('setLoading', true)
-          this.$store.dispatch('getPlayers')
         } else this.$store.dispatch('setLoading', false)
-      }
-    },
-    teams: {
-      immediate: true,
-      handler (val) {
-        if (val && val.length === 0) this.$store.dispatch('getTeams')
       }
     },
     userId: {
@@ -345,6 +351,12 @@ export default {
           this.users = snapshot.val()
         })
       }
+    },
+    getLeague (leagueId) {
+      LeagueService.getLeague(leagueId)
+        .then((league) => {
+          this.league = { ...this.league, ...league }
+        })
     },
     getPicks () {
       const db = firebase.database()

@@ -36,6 +36,8 @@ export default {
   mounted () {
     this.$store.dispatch('saveFireData', firebase.auth().currentUser)
     this.$store.dispatch('loadConfig')
+    this.$store.dispatch('getPlayers')
+    this.$store.dispatch('getTeams')
     this.$store.dispatch('setLoading', true)
 
     if (firebase.auth().currentUser) {
@@ -55,6 +57,7 @@ export default {
     // set up live db listeners
     db.ref('/liveConfig').on('value', (snapshot) => {
       this.liveConfig = snapshot.val() || {}
+      this.$store.dispatch('saveLiveConfig', snapshot.val())
     })
   }
 }
@@ -215,6 +218,12 @@ section {
   line-height: 1.5rem;
   img {
     max-height: 4rem;
+  }
+}
+
+.roster-view {
+  h2 {
+    max-width: 150px;
   }
 }
 

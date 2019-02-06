@@ -40,12 +40,14 @@
         h1 {{ league.leagueName }}
         //- .social-icons
           span [TWITTER] [INSTAGRAM] [DISCORD]
-        section(v-if="canStartDraft")
+        section(v-if="liveConfig.canStartDraft && canStartDraft")
           .columns.is-mobile.is-button-header
             .column
               h2 Start Draft
             .column.is-narrow
               confirm-button(:customClasses="{'is-primary': true,'is-small': true,'is-pulled-right':true}" buttonText="Start Draft" confirmText="Are You Sure?" @confirm-it="startDraft")
+        section(v-if="!liveConfig.canStartDraft")
+          span {{ liveConfig.featureDownMessage }}
         section(v-if="isOwner && (!draftOrder || !draftOrder.length)")
           .columns.is-mobile.is-button-header(v-if="this.leagueUsers && this.leagueUsers.length % 2 === 0")
             .column
@@ -171,6 +173,9 @@ export default {
     leagueUsers () {
       return this.$store.getters.getLeagueUsers || []
     },
+    liveConfig () {
+      return this.$store.getters.getLiveConfig
+    },
     totalWeeks () {
       return this.config.totalWeeks
     },
@@ -198,7 +203,6 @@ export default {
       immediate: true,
       handler (val) {
         if (val && val.length === 0) {
-          this.$store.dispatch('getPlayers')
         } else this.$store.dispatch('setLoading', false)
       }
     },

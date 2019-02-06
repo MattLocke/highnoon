@@ -1,63 +1,63 @@
 <template lang="pug">
-  .league-roster
+  .league-roster(v-if="playersLoaded")
     .columns.is-multiline.is-hidden-mobile.is-gapless(v-if="hasRoster")
       .column
         section
-          player-card(:player="roster.captain.id ? roster.captain : null" :showRemove="false" :score="roster.captain.stats ? roster.captain.stats.fantasyScore : 0")
+          player-card(:player="roster.captain ? players[roster.captain] : null" :showRemove="false")
           h2.has-text-centered Captain
       .column
         section
-          player-card(:player="roster.offense1.id ? roster.offense1 : null" :showRemove="false" :score="roster.offense1.stats ? roster.offense1.stats.fantasyScore : 0")
+          player-card(:player="roster.offense1 ? players[roster.offense1] : null" :showRemove="false")
           h2.has-text-centered Offense 1
       .column
         section
-          player-card(:player="roster.offense2.id ? roster.offense2 : null" :showRemove="false" :score="roster.offense2.stats ? roster.offense2.stats.fantasyScore : 0")
+          player-card(:player="roster.offense2 ? players[roster.offense2] : null" :showRemove="false")
           h2.has-text-centered Offense 2
       .column
         section
-          player-card(:player="roster.support1.id ? roster.support1 : null" :showRemove="false" :score="roster.support1.stats ? roster.support1.stats.fantasyScore : 0")
+          player-card(:player="roster.support1 ? players[roster.support1] : null" :showRemove="false")
           h2.has-text-centered Support 1
       .column
         section
-          player-card(:player="roster.support2.id ? roster.support2 : null" :showRemove="false" :score="roster.support2.stats ? roster.support2.stats.fantasyScore : 0")
+          player-card(:player="roster.support2 ? players[roster.support2] : null" :showRemove="false")
           h2.has-text-centered Support 2
       .column
         section
-          player-card(:player="roster.tank1.id ? roster.tank1 : null" :showRemove="false" :score="roster.tank1.stats ? roster.tank1.stats.fantasyScore : 0")
+          player-card(:player="roster.tank1 ? players[roster.tank1] : null" :showRemove="false")
           h2.has-text-centered Tank 1
       .column
         section
-          player-card(:player="roster.tank2.id ? roster.tank2 : null" :showRemove="false" :score="roster.tank2.stats ? roster.tank2.stats.fantasyScore : 0")
+          player-card(:player="roster.tank2 ? players[roster.tank2] : null" :showRemove="false")
           h2.has-text-centered Tank 2
     section.is-hidden-desktop(v-if="hasRoster")
       h2.ow-font.mobile-roster
         img(src="images/roles/captain-white.svg" width="20" height="20")
-        img(:src="`images/teams/${roster.captain.team}.svg`" width="20" height="20" v-if="roster.captain.team")
-        | {{ roster.captain.name || 'Empty' }}
+        img(:src="getTeamImage(roster.captain)" width="20" height="20" v-if="roster.captain")
+        | {{ players[roster.captain].name || 'Empty' }}
       h2.ow-font
         img(src="images/roles/offense-white.svg" width="20" height="20")
-        img(:src="`images/teams/${roster.offense1.team}.svg`" width="20" height="20" v-if="roster.offense1.team")
-        | {{ roster.offense1.name || 'Empty' }}
+        img(:src="getTeamImage(roster.offense1)" width="20" height="20" v-if="roster.offense1")
+        | {{ players[roster.offense1].name || 'Empty' }}
       h2.ow-font
         img(src="images/roles/offense-white.svg" width="20" height="20")
-        img(:src="`images/teams/${roster.offense2.team}.svg`" width="20" height="20" v-if="roster.offense2.team")
-        | {{ roster.offense2.name || 'Empty' }}
+        img(:src="getTeamImage(roster.offense2)" width="20" height="20" v-if="roster.offense2")
+        | {{ players[roster.offense2].name || 'Empty' }}
       h2.ow-font
         img(src="images/roles/support-white.svg" width="20" height="20")
-        img(:src="`images/teams/${roster.support1.team}.svg`" width="20" height="20" v-if="roster.support1.team")
-        | {{ roster.support1.name || 'Empty' }}
+        img(:src="getTeamImage(roster.support1)" width="20" height="20" v-if="roster.support1")
+        | {{ players[roster.support1].name || 'Empty' }}
       h2.ow-font
         img(src="images/roles/support-white.svg" width="20" height="20")
-        img(:src="`images/teams/${roster.support2.team}.svg`" width="20" height="20" v-if="roster.support2.team")
-        | {{ roster.support2.name || 'Empty' }}
+        img(:src="getTeamImage(roster.support2)" width="20" height="20" v-if="roster.support2")
+        | {{ players[roster.support2].name || 'Empty' }}
       h2.ow-font
         img(src="images/roles/tank-white.svg" width="20" height="20")
-        img(:src="`images/teams/${roster.tank1.team}.svg`" width="20" height="20" v-if="roster.tank1.team")
-        | {{ roster.tank1.name || 'Empty' }}
+        img(:src="getTeamImage(roster.tank1)" width="20" height="20" v-if="roster.tank1")
+        | {{ players[roster.tank1].name || 'Empty' }}
       h2.ow-font
         img(src="images/roles/tank-white.svg" width="20" height="20")
-        img(:src="`images/teams/${roster.tank2.team}.svg`" width="20" height="20" v-if="roster.tank2.team")
-        | {{ roster.tank2.name || 'Empty' }}
+        img(:src="getTeamImage(roster.tank2)" width="20" height="20" v-if="roster.tank2")
+        | {{ players[roster.tank2].name || 'Empty' }}
     section(v-else)
       p Your roster is empty!
     section
@@ -88,6 +88,12 @@ export default {
     fullRoster () {
       return this.$store.getters.getLeagueRoster
     },
+    players () {
+      return this.$store.getters.getPlayers
+    },
+    playersLoaded () {
+      return !isEmpty(this.players)
+    },
     roster () {
       return get(this.fullRoster[this.userId], 'roster', {})
     },
@@ -104,6 +110,15 @@ export default {
           this.$store.dispatch('fetchRoster', { leagueId: this.league.id, leagueType: this.league.leagueType })
         }
       }
+    }
+  },
+  methods: {
+    getTeamImage (id) {
+      if (this.playersLoaded && id && this.players[id]) {
+        console.log(this.playersLoaded)
+        return `images/teams/${this.players[id].team}.svg`
+      }
+      return ``
     }
   }
 }

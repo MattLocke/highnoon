@@ -14,7 +14,12 @@ export default {
     return db.collection('players')
       .orderBy('name', 'asc')
       .get()
-      .then(players => players.docs.map(player => player.data()))
+      .then(players => players.docs.map(player => {
+        const indexedPlayer = {}
+        const p = player.data()
+        indexedPlayer[p.id] = p
+        return indexedPlayer
+      }))
   },
   getPlayer (playerName) {
     logger.logIt(`Getting player with name: ${playerName}`)
@@ -22,5 +27,11 @@ export default {
       .doc(playerName)
       .get()
       .then(player => player.exists ? player.data() : null)
+  },
+  buildPlayerList (players, playerIds) {
+
+  },
+  buildAPlayer (players, playerId) {
+    return players.find(player => player.id === playerId)
   }
 }

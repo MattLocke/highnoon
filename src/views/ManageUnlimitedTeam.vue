@@ -6,70 +6,72 @@
           router-link.button.is-primary(:to="`/LeagueUnlimited/${leagueId}`") Back To League
         section
           scoring-info
-      .column
+      .column(v-if="playersLoaded")
         section
           h1 Manage Your Fantasy Team
+          p The captain role is (for now) just a flex role so you can have a player outside of the 2/2/2 we're enforcing.  Their points will count the same as any other role, so it's safe to feature your favorite DPS as your captain!
         .columns.is-multiline.is-hidden-mobile.is-gapless(v-if="myAvailablePicks.length")
           .column
-            section
-              player-card(:player="lineUp.captain.id ? lineUp.captain : null" :showRemove="false" :score="lineUp.captain.stats ? lineUp.captain.stats.fantasyScore : 0")
+            section.roster-view
+              player-card(:player="lineUp.captain ? players[lineUp.captain] : null" :showRemove="false")
               h2.has-text-centered Captain
-          .column
+          .column.roster-view
             section
-              player-card(:player="lineUp.offense1.id ? lineUp.offense1 : null" :showRemove="false" :score="lineUp.offense1.stats ? lineUp.offense1.stats.fantasyScore : 0")
+              player-card(:player="lineUp.offense1 ? players[lineUp.offense1] : null" :showRemove="false")
               h2.has-text-centered Offense 1
-          .column
+          .column.roster-view
             section
-              player-card(:player="lineUp.offense2.id ? lineUp.offense2 : null" :showRemove="false" :score="lineUp.offense2.stats ? lineUp.offense2.stats.fantasyScore : 0")
+              player-card(:player="lineUp.offense2 ? players[lineUp.offense2] : null" :showRemove="false")
               h2.has-text-centered Offense 2
-          .column
+          .column.roster-view
             section
-              player-card(:player="lineUp.support1.id ? lineUp.support1 : null" :showRemove="false" :score="lineUp.support1.stats ? lineUp.support1.stats.fantasyScore : 0")
+              player-card(:player="lineUp.support1 ? players[lineUp.support1] : null" :showRemove="false")
               h2.has-text-centered Support 1
-          .column
+          .column.roster-view
             section
-              player-card(:player="lineUp.support2.id ? lineUp.support2 : null" :showRemove="false" :score="lineUp.support2.stats ? lineUp.support2.stats.fantasyScore : 0")
+              player-card(:player="lineUp.support2 ? players[lineUp.support2] : null" :showRemove="false")
               h2.has-text-centered Support 2
-          .column
+          .column.roster-view
             section
-              player-card(:player="lineUp.tank1.id ? lineUp.tank1 : null" :showRemove="false" :score="lineUp.tank1.stats ? lineUp.tank1.stats.fantasyScore : 0")
+              player-card(:player="lineUp.tank1 ? players[lineUp.tank1] : null" :showRemove="false")
               h2.has-text-centered Tank 1
-          .column
+          .column.roster-view
             section
-              player-card(:player="lineUp.tank2.id ? lineUp.tank2 : null" :showRemove="false" :score="lineUp.tank2.stats ? lineUp.tank2.stats.fantasyScore : 0")
+              player-card(:player="lineUp.tank2 ? players[lineUp.tank2] : null" :showRemove="false")
               h2.has-text-centered Tank 2
         section.is-hidden-mobile
           button.button.is-primary(@click="saveRoster" v-if="canSaveRoster") Save Roster And Return To League
           button.button.is-primary(disabled v-else) Save Roster And Return To League
         section.is-hidden-desktop
+          p The captain role is (for now) just a flex role so you can have a player outside of the 2/2/2 we're enforcing.  Their points will count the same as any other role, so it's safe to feature your favorite DPS as your captain!
           h2.ow-font.mobile-roster
             img(src="images/roles/captain-white.svg" width="20" height="20")
-            img(:src="`images/teams/${lineUp.captain.team}.svg`" width="20" height="20" v-if="lineUp.captain.team")
-            | {{ lineUp.captain.name || 'Empty' }}
+            img(v-if="lineUp.captain" :src="getTeamImage(lineUp.captain)" width="20" height="20")
+            | {{ players[lineUp.captain].name || 'Empty' }}
           h2.ow-font
             img(src="images/roles/offense-white.svg" width="20" height="20")
-            img(:src="`images/teams/${lineUp.offense1.team}.svg`" width="20" height="20" v-if="lineUp.offense1.team")
-            | {{ lineUp.offense1.name || 'Empty' }}
+            img(:src="getTeamImage(lineUp.offense1)" width="20" height="20" v-if="lineUp.offense1")
+            | {{ players[lineUp.offense1].name || 'Empty' }}
           h2.ow-font
             img(src="images/roles/offense-white.svg" width="20" height="20")
-            img(:src="`images/teams/${lineUp.offense2.team}.svg`" width="20" height="20" v-if="lineUp.offense2.team")
-            | {{ lineUp.offense2.name || 'Empty' }}
+            img(:src="getTeamImage(lineUp.offense2)" width="20" height="20" v-if="lineUp.offense2")
+            | {{ players[lineUp.offense2].name || 'Empty' }}
           h2.ow-font
             img(src="images/roles/support-white.svg" width="20" height="20")
-            img(:src="`images/teams/${lineUp.support1.team}.svg`" width="20" height="20" v-if="lineUp.support1.team")
-            | {{ lineUp.support1.name || 'Empty' }}
+            img(:src="getTeamImage(lineUp.support1)" width="20" height="20" v-if="lineUp.support1")
+            | {{ players[lineUp.support1].name || 'Empty' }}
           h2.ow-font
             img(src="images/roles/support-white.svg" width="20" height="20")
-            img(:src="`images/teams/${lineUp.support2.team}.svg`" width="20" height="20" v-if="lineUp.support2.team")
-            | {{ lineUp.support2.name || 'Empty' }}
+            img(:src="getTeamImage(lineUp.support2)" width="20" height="20" v-if="lineUp.support2")
+            | {{ players[lineUp.support2].name || 'Empty' }}
           h2.ow-font
             img(src="images/roles/tank-white.svg" width="20" height="20")
-            img(:src="`images/teams/${lineUp.tank1.team}.svg`" width="20" height="20" v-if="lineUp.tank1.team")
-            | {{ lineUp.tank1.name || 'Empty' }}
+            img(:src="getTeamImage(lineUp.tank1)" width="20" height="20" v-if="lineUp.tank1")
+            | {{ players[lineUp.tank1].name || 'Empty' }}
           h2.ow-font
             img(src="images/roles/tank-white.svg" width="20" height="20")
-            img(:src="`images/teams/${lineUp.tank2.team}.svg`" width="20" height="20" v-if="lineUp.tank2.team")
-            | {{ lineUp.tank2.name || 'Empty' }}
+            img(:src="getTeamImage(lineUp.tank2)" width="20" height="20" v-if="lineUp.tank2")
+            | {{ players[lineUp.tank2].name || 'Empty' }}
           section.has-text-centered
             button.button.is-primary(@click="saveRoster" v-if="canSaveRoster") Save Roster And Return To League
             button.button.is-primary(v-else disabled) Save Roster And Return To League
@@ -121,7 +123,7 @@ import RoleButtons from '@/views/manage/RoleButtons'
 import ScoringInfo from '@/views/leagues/ScoringInfo'
 
 export default {
-  name: 'ManageTeam',
+  name: 'ManageUnlimitedTeam',
   components: {
     PlayerCard,
     RoleButtons,
@@ -146,7 +148,7 @@ export default {
   },
   computed: {
     canSaveRoster () {
-      return !!(this.lineUp.captain.id && this.lineUp.offense1.id && this.lineUp.offense2.id && this.lineUp.support1.id && this.lineUp.support2.id && this.lineUp.tank1.id && this.lineUp.tank2.id)
+      return !!(this.lineUp.captain && this.lineUp.offense1 && this.lineUp.offense2 && this.lineUp.support1 && this.lineUp.support2 && this.lineUp.tank1 && this.lineUp.tank2)
     },
     filteredPlayers () {
       let fPlayers = [...this.myAvailablePicks]
@@ -172,19 +174,22 @@ export default {
     myAvailablePicks () {
       let available = []
       const usedPicks = [
-        this.lineUp.captain,
-        this.lineUp.offense1,
-        this.lineUp.offense2,
-        this.lineUp.support1,
-        this.lineUp.support2,
-        this.lineUp.tank1,
-        this.lineUp.tank2
+        this.players[this.lineUp.captain],
+        this.players[this.lineUp.offense1],
+        this.players[this.lineUp.offense2],
+        this.players[this.lineUp.support1],
+        this.players[this.lineUp.support2],
+        this.players[this.lineUp.tank1],
+        this.players[this.lineUp.tank2]
       ]
-      available = differenceWith(this.players, usedPicks, isEqual)
+      available = differenceWith(Object.values(this.players), usedPicks, isEqual)
       return [ ...available ]
     },
     players () {
       return this.$store.getters.getPlayers
+    },
+    playersLoaded () {
+      return !isEmpty(this.players)
     },
     teams () {
       return this.$store.getters.getTeams
@@ -213,6 +218,13 @@ export default {
     }
   },
   methods: {
+    getTeamImage (id) {
+      if (this.playersLoaded && id && this.players[id]) {
+        console.log(this.playersLoaded)
+        return `images/teams/${this.players[id].team}.svg`
+      }
+      return ``
+    },
     saveRoster () {
       // save it to the db
       this.$store.dispatch('setLoading', true)
@@ -224,14 +236,12 @@ export default {
       return true
     },
     setRole (eventData) {
-      this.lineUp[eventData.role] = eventData.player
+      this.lineUp[eventData.role] = eventData.player.id
     }
   },
   mounted () {
     this.$store.dispatch('fetchLeagueUsers', { leagueId: this.leagueId, leagueType: 'unlimited' })
     this.$store.dispatch('fetchRoster', { leagueId: this.leagueId, leagueType: 'unlimited' })
-    this.$store.dispatch('getPlayers')
-    this.$store.dispatch('getTeams')
   }
 }
 </script>

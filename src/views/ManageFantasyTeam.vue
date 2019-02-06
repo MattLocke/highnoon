@@ -2,9 +2,11 @@
   .manage-fantasy-team
     .columns.is-marginless
       left-bar
-        section
+        section(v-if="liveConfig.canTrade")
           collapsible(title-text="Manage Trades" :start-collapsed="true")
             my-trades(:myPlayers="myPicks" :otherPlayers="otherPicks")
+        section(v-else)
+          span {{ liveConfig.featureDownMessage }}
         section
           collapsible(title-text="Unclaimed Players" :start-collapsed="true")
             .left-bar-item Coming Soon
@@ -16,39 +18,41 @@
       .column(v-if="lineUp.captain")
         section
           h1 Manage Your Fantasy Team
+          p The captain role is (for now) just a flex role so you can have a player outside of the 2/2/2 we're enforcing.  Their points will count the same as any other role, so it's safe to feature your favorite DPS as your captain!
         .columns.is-multiline.is-hidden-mobile.is-gapless(v-if="myAvailablePicks.length")
           .column
-            section
+            section.roster-view
               player-card(:player="lineUp.captain.id ? lineUp.captain : null" :showRemove="false" :score="lineUp.captain.stats ? lineUp.captain.stats.fantasyScore : 0")
               h2.has-text-centered Captain
           .column
-            section
+            section.roster-view
               player-card(:player="lineUp.offense1.id ? lineUp.offense1 : null" :showRemove="false" :score="lineUp.offense1.stats ? lineUp.offense1.stats.fantasyScore : 0")
               h2.has-text-centered Offense 1
           .column
-            section
+            section.roster-view
               player-card(:player="lineUp.offense2.id ? lineUp.offense2 : null" :showRemove="false" :score="lineUp.offense2.stats ? lineUp.offense2.stats.fantasyScore : 0")
               h2.has-text-centered Offense 2
           .column
-            section
+            section.roster-view
               player-card(:player="lineUp.support1.id ? lineUp.support1 : null" :showRemove="false" :score="lineUp.support1.stats ? lineUp.support1.stats.fantasyScore : 0")
               h2.has-text-centered Support 1
           .column
-            section
+            section.roster-view
               player-card(:player="lineUp.support2.id ? lineUp.support2 : null" :showRemove="false" :score="lineUp.support2.stats ? lineUp.support2.stats.fantasyScore : 0")
               h2.has-text-centered Support 2
           .column
-            section
+            section.roster-view
               player-card(:player="lineUp.tank1.id ? lineUp.tank1 : null" :showRemove="false" :score="lineUp.tank1.stats ? lineUp.tank1.stats.fantasyScore : 0")
               h2.has-text-centered Tank 1
           .column
-            section
+            section.roster-view
               player-card(:player="lineUp.tank2.id ? lineUp.tank2 : null" :showRemove="false" :score="lineUp.tank2.stats ? lineUp.tank2.stats.fantasyScore : 0")
               h2.has-text-centered Tank 2
         section.is-hidden-mobile
           button.button.is-primary(@click="saveRoster" v-if="canSaveRoster") Save Roster And Return To League
           button.button.is-primary(v-else disabled) Save Roster And Return To League
         section.is-hidden-desktop
+          p The captain role is (for now) just a flex role so you can have a player outside of the 2/2/2 we're enforcing.  Their points will count the same as any other role, so it's safe to feature your favorite DPS as your captain!
           h2.ow-font.mobile-roster
             img(src="images/roles/captain-white.svg" width="20" height="20")
             img(:src="`images/teams/${lineUp.captain.team}.svg`" width="20" height="20" v-if="lineUp.captain.team")
@@ -161,6 +165,9 @@ export default {
     leagueUsers () {
       return this.$store.getters.getLeagueUsers
     },
+    liveConfig () {
+      return this.$store.getters.getLiveConfig
+    },
     myLeagueSchedule () {
       return []
     },
@@ -243,10 +250,6 @@ export default {
     setRole (eventData) {
       this.lineUp[eventData.role] = eventData.player
     }
-  },
-  mounted () {
-    this.$store.dispatch('getPlayers')
-    this.$store.dispatch('getTeams')
   }
 }
 </script>
