@@ -51,7 +51,7 @@ exports.tryAutomatedPick = functions.database.ref('/draft/{leagueId}')
           console.log(`We ${preferenceList.val() ? 'found ' : 'did not find '}a preference list.`)
           const prefList = preferenceList.val() || {}
           // make sure they have opted in
-          if (prefList.autoMode) return processPreferenceList(prefList.players, after, leagueId)
+          if (prefList && prefList.autoMode) return processPreferenceList(prefList.players, after, leagueId)
           // if not, pass null down the chain
           return null
         })
