@@ -295,7 +295,7 @@ export default {
           this.$router.push({ path: `/leagues` })
         })
         .catch(() => {
-          this.$toast.open({
+          this.$.open({
             message: 'There was an issue deleting your league.',
             type: 'is-danger',
             position: 'is-bottom'
@@ -370,7 +370,7 @@ export default {
 
       const draft = {
         leagueName: this.league.leagueName,
-        players: this.players,
+        players: Object.values(this.players),
         activeDrafter: 0,
         direction: 'forward',
         status: 'active',

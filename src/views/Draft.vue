@@ -2,12 +2,23 @@
   .draft
     .columns.is-marginless
       left-bar(:showClose="false")
-        section(v-if="isOwner")
+        //- section(v-if="isOwner")
           fix-draft-button(:leagueId="leagueId")
+        section(v-if="!isCompleted")
+          .columns
+            .column
+              h2 Remaining Time:
+                span.orange  {{ timeRemaining }}
+            .column.is-narrow(v-if="isOwner")
+              button.button.is-primary(@click="forcePick" v-if="timeRemaining < 0") Force Pick
+              button.button.is-primary(disabled v-else) Force Pick
         section(v-if="isInLeague")
           h2.has-pointer(@click="showRoster = !showRoster") Your Roster - {{ roster.length }} of 12
             arrow(:isLeft="true" v-model="showRoster")
           .roster-section(v-show="showRoster")
+            .field
+              b-switch(v-model="autoMode") Auto-Draft {{ autoMode ? 'Enabled' : 'Disabled' }}
+            p This will let the system draft for you in case you can't make it to the live draft.  While active, picks will be placed on your behalf automatically, so be sure you want to enable this!
             .columns.is-multiline.is-mobile
               .column.is-one-third-desktop.is-half-mobile(v-for="player in roster")
                 player-card(:player="player" :showRemove="false" :primaryColor="getColor(player)" :score="player.stats.fantasyScore || 0")
@@ -94,7 +105,7 @@
                 section
                   collapsible(title-text="Currently Drafting")
                     .wrap(v-if="!isCompleted")
-                      h3.orange.ow-font {{ users[draft.activeDrafter || 0].displayName }}
+                      h3.orange.ow-font {{ users[draft.activeDrafter].displayName }}
                       hr
                     drafting-users(:users="users" :draft="draft" :picks="picks")
               b-tab-item(label="Preference List" v-if="isInLeague")
@@ -143,6 +154,7 @@ export default {
       filterText: '',
       filterTeam: '',
       filterRole: '',
+      lastAction: Date.now(),
       league: {
         ownerId: ''
       },
@@ -155,6 +167,8 @@ export default {
       showMenu: true,
       showRequirements: true,
       showRoster: true,
+      timer: null,
+      timeRemaining: 90,
       users: []
     }
   },
@@ -238,12 +252,22 @@ export default {
     }
   },
   watch: {
+    autoMode (val) {
+      firebase.database().ref(`draftPreference/${this.leagueId}/${this.userId}`).update({ autoMode: val })
+    },
     draft: {
       handler (val) {
         // if they shouldn't be here, send them home!
         if (!val || val.status === 'unDrafted') this.$router.push({ path: `/LeagueStandard/${this.leagueId}` })
         if (val) {
           this.actionPending = false
+          clearInterval(this.timer)
+          if (!this.isCompleted) {
+            this.lastAction = Date.now()
+            this.timer = setInterval(() => {
+              this.timeRemaining = Math.round(90 - ((Date.now() - this.lastAction) / 1000))
+            }, 1000)
+          }
         }
       }
     },
@@ -330,6 +354,18 @@ export default {
         }
         default: return false
       }
+    },
+    forcePick () {
+      const activeDrafter = Number(this.draft.activeDrafter)
+      const activeDrafterId = this.users[activeDrafter].userId
+      LeagueService.forcePick(activeDrafterId, this.leagueId)
+        .then(() => {
+          this.$toast.open({
+            message: 'Successfully forced the pick!',
+            type: 'is-success',
+            position: 'is-bottom'
+          })
+        })
     },
     getColor (player) {
       const team = this.teams.filter(team => team.abbreviatedName === player.team)[0]

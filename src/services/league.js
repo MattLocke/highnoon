@@ -98,6 +98,11 @@ export default {
           .catch((error) => Promise.reject(error))
       })
   },
+  forcePick (userId, leagueId) {
+    // set the userId's preference list to autodraft
+    return rdb.ref(`/draftPreference/${leagueId}/${userId}`).update({ autoMode: true })
+      .then(() => rdb.ref(`/draft/${leagueId}`).update({ doneProcessing: false }))
+  },
   generateSchedule (currentWeek, totalWeeks, leagueUsers) {
     // const currentWeek = this.config.currentWeek
     const half = leagueUsers.length / 2

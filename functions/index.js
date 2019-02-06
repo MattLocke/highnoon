@@ -151,60 +151,55 @@ function workDraftPick (leagueId, picks) {
 }
 
 function processPreferenceList (preferenceList, league, leagueId) {
-  if (preferenceList) {
-    console.log(`We found a preference list.  Checking for available players in ${leagueId}`)
-    let players = [...league.players]
-    let lumpedPicks = []
-    let rawPicks = []
-    let unclaimedPlayers = []
-    let unclaimedPreference = []
-    let userId = ''
-    // get users to get an id
-    return admin.database().ref(`/draftOrder/${leagueId}`).once('value')
-        .then((users) => {
-          return users.val()[league.activeDrafter]
+  console.log(`We found a preference list.  Checking for available players in ${leagueId}`)
+  let players = [...league.players]
+  let lumpedPicks = []
+  let rawPicks = []
+  let unclaimedPlayers = []
+  let unclaimedPreference = []
+  let userId = ''
+  // get users to get an id
+  return admin.database().ref(`/draftOrder/${leagueId}`).once('value')
+      .then((users) => {
+        return users.val()[league.activeDrafter]
+      })
+      .then((user) => {
+        userId = user.userId
+        // get draftPicks
+        return admin.database().ref(`/draftPicks/${leagueId}`).once('value')
+      })
+      .then((thePicks) => {
+        // build draft picks into single array
+        rawPicks = thePicks.val() || {}
+        var tmp = thePicks.val() ? Object.values(thePicks.val()) : []
+        tmp.forEach((child) => {
+          if (child.length) child.forEach(pick => lumpedPicks.push(pick))
         })
-        .then((user) => {
-          userId = user.userId
-          // get draftPicks
-          return admin.database().ref(`/draftPicks/${leagueId}`).once('value')
-        })
-        .then((thePicks) => {
-          // build draft picks into single array
-          rawPicks = thePicks.val() || {}
-          var tmp = thePicks.val() ? Object.values(thePicks.val()) : []
-          tmp.forEach((child) => {
-            if (child.length) child.forEach(pick => lumpedPicks.push(pick))
-          })
 
-          if (lumpedPicks) console.log(`We have ${lumpedPicks.length} picks so far.`)
-          // remove array from preferenceList
-          unclaimedPlayers = _.differenceWith(players, lumpedPicks, _.isEqual)
-          console.log(`We have ${players.length} players total.`)
-          unclaimedPreference = unclaimedPlayers.filter(o1 => preferenceList.some(o2 => o1.name === o2.name));
-          const missingType = findMissing(rawPicks, userId)
-          // if we have a preference list left, take the top player.
-          if (unclaimedPreference && unclaimedPreference.length) {
-            // figure out what the best option is for them (hard)
-            if (missingType) {
-              let tP = unclaimedPreference.find(up => up.attributes.role === missingType)
-              if (tP) return tP
-            }
-            return unclaimedPreference[0]
-          }
-          // if the preference list is gone, take the first available player
+        if (lumpedPicks) console.log(`We have ${lumpedPicks.length} picks so far.`)
+        // remove array from preferenceList
+        unclaimedPlayers = _.differenceWith(players, lumpedPicks, _.isEqual)
+        console.log(`We have ${players.length} players total.`)
+        unclaimedPreference = preferenceList ? unclaimedPlayers.filter(o1 => preferenceList.some(o2 => o1.name === o2.name)) : [];
+        const missingType = findMissing(rawPicks, userId)
+        // if we have a preference list left, take the top player.
+        if (unclaimedPreference && unclaimedPreference.length) {
+          // figure out what the best option is for them (hard)
           if (missingType) {
-            tP = unclaimedPlayers.find(up => up.attributes.role === missingType)
+            let tP = unclaimedPreference.find(up => up.attributes.role === missingType)
             if (tP) return tP
           }
-          return unclaimedPlayers[0]
-        }).catch((error) => {
-          console.log(error)
-        })
-  } else {
-    console.log('No player preference list found for user.')
-    return null
-  }
+          return unclaimedPreference[0]
+        }
+        // if the preference list is gone, take the first available player
+        if (missingType) {
+          tP = unclaimedPlayers.find(up => up.attributes.role === missingType)
+          if (tP) return tP
+        }
+        return unclaimedPlayers[0]
+      }).catch((error) => {
+        console.log(error)
+      })
 }
 
 function findMissing (allPicks, userId) {
