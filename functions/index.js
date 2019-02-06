@@ -3,6 +3,11 @@ const functions = require('firebase-functions')
 const admin = require('firebase-admin')
 admin.initializeApp()
 
+const firestore = admin.firestore()
+
+// Add this magical line of code:
+firestore.settings({ timestampsInSnapshots: true })
+
 exports.matchlock = null
 
 exports.facilitateDraftPick = functions.database.ref('/draftPicks/{leagueId}')
