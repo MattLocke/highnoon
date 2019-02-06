@@ -196,7 +196,7 @@ export default {
       return tmp
     },
     players () {
-      return this.$store.getters.getPlayers
+      return Object.values(this.$store.getters.getPlayers)
     },
     remaining () {
       const remaining = {}

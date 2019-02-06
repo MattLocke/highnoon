@@ -11,7 +11,7 @@
             button.button.is-primary(@click="draftPreference") Draft Preference List
         section(v-if="leagueUsers && leagueUsers.length")
           collapsible(title-text="League Users")
-            h3 
+            h3
               span.orange {{ leagueUsers.length }}
               |  of
               span.orange  10

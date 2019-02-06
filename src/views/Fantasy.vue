@@ -45,8 +45,6 @@
 </template>
 
 <script>
-import playerService from '@/services/players'
-
 import TeamSlot from '@/views/fantasy/TeamSlot'
 
 export default {
