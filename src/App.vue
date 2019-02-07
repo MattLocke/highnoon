@@ -3,7 +3,9 @@
     main-menu
     b-notification(type="is-warning" v-if="notification.message") {{ notification.message }}
     b-loading(:is-full-page="true" :active.sync="isLoading" :can-cancel="false")
-    router-view#rv(:key="$route.fullPath")
+    router-view#rv(:key="$route.fullPath" v-if="liveConfig.canUseSite || (userData && userData.isAdmin)")
+    .site-down(v-else)
+      p {{ liveConfig.siteIsDownMessage || 'Site is currently undergoing maintenance.  If you are seeing this message for a prolonged amount of time, please make sure you have Kaspersky disabled as well as ad-blockers.  (There are no ads on the site)' }}
     report-issue(v-if="userData")
 </template>
 
