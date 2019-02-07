@@ -12,7 +12,8 @@ export default {
   state: {
     loggedIn: false,
     userData: {
-      username: 'MrNotLoggedIn'
+      username: 'MrNotLoggedIn',
+      isAdmin: false
     },
     fireUserData: {
       uid: 0,
@@ -24,7 +25,7 @@ export default {
   },
   mutations: {
     LOGIN: (state, payload) => {
-      state.userData = payload
+      state.userData = payload || {}
       state.loggedIn = true
     },
     LOGOUT: (state) => {
@@ -47,7 +48,7 @@ export default {
       if (!state.picks.length && state.userData.id) {
         dispatch('setLoading', true)
         db.collection('picks')
-          .doc(state.fireUserData.uid)
+          .doc(state.userData.id)
           .get()
           .then((picks) => {
             const thePicks = picks.data()
