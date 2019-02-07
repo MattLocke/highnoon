@@ -9,6 +9,7 @@
             .column
               h2 Remaining Time:
                 span.orange  {{ timeRemaining }}
+              p(v-if="timeRemaining < 0") The owner may now force the active user to place a pick.
             .column.is-narrow(v-if="isOwner")
               button.button.is-primary(@click="forcePick" v-if="timeRemaining < 0") Force Pick
               button.button.is-primary(disabled v-else) Force Pick
