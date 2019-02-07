@@ -320,12 +320,8 @@ export default {
       const tmp = [...this.roster]
       tmp.push(player)
 
-      db.ref(`/draftPicks/${this.leagueId}/${this.userId}`)
-        .set(tmp)
-        .then(() => {
-          return db.ref(`/draft/${this.leagueId}`)
-            .update({ doneProcessing: false })
-        })
+      db.ref(`/draft/${this.leagueId}`).update({ doneProcessing: false })
+        .then(() => db.ref(`/draftPicks/${this.leagueId}/${this.userId}`).set(tmp))
         .then(() => {
           this.filterText = ''
           this.$store.dispatch('setLoading', false)
