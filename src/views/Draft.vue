@@ -12,6 +12,8 @@
             .column.is-narrow(v-if="isOwner")
               button.button.is-primary(@click="forcePick" v-if="timeRemaining < 0") Force Pick
               button.button.is-primary(disabled v-else) Force Pick
+        section(v-if="isOwner || userData.isAdmin")
+          confirm-button(buttonText="Cancel Draft" confirmText="Are You Sure?" @confirm-it="cancelDraft")
         section(v-if="isInLeague")
           h2.has-pointer(@click="showRoster = !showRoster") Your Roster - {{ roster.length }} of 12
             arrow(:isLeft="true" v-model="showRoster")
@@ -244,6 +246,9 @@ export default {
     totalRemaining () {
       return this.remaining.offense + this.remaining.support + this.remaining.tank
     },
+    userData () {
+      return this.$store.getters.getUserData
+    },
     userId () {
       return this.$store.getters.getUserId
     },
@@ -326,6 +331,19 @@ export default {
           this.filterText = ''
           this.$store.dispatch('setLoading', false)
         })
+    },
+    cancelDraft () {
+      // remove the picks
+      firebase.database().ref(`/draftPicks`).set(null)
+        .then(() => firebase.database().ref(`/draft`).set(null))
+        .catch(() => {
+          this.$toast.open({
+            message: 'Error deleting the draft session, contact SouldrinK!',
+            type: 'is-danger',
+            position: 'is-bottom'
+          })
+        })
+      // remove the draft node
     },
     canSelect (player) {
       if (!this.myTurn) return false
