@@ -68,7 +68,7 @@ export default {
   },
   methods: {
     uploadPicture () {
-      console.log('New picture selected.')
+      // console.log('New picture selected.')
       if (this.$refs.pictureInput.file) {
         this.fileExtension = `.${this.$refs.pictureInput.fileType.substr(this.$refs.pictureInput.fileType.indexOf('/') + 1)}`
       } else {
