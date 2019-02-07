@@ -374,6 +374,7 @@ export default {
         activeDrafter: 0,
         direction: 'forward',
         status: 'active',
+        started: Date.now(),
         doneProcessing: true
       }
 
