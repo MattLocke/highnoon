@@ -28,7 +28,7 @@ export default {
     fetchDraft: (context, leagueId) => {
       if (leagueId) {
         db.ref(`/draft/${leagueId}`).on('value', (snapshot) => {
-          if (snapshot.exists) context.commit('SET_DRAFT', snapshot.val())
+          context.commit('SET_DRAFT', snapshot.val())
         })
       } else {
         context.commit('SET_DRAFT', {})
@@ -37,7 +37,7 @@ export default {
     fetchDraftOrder: ({ commit }, leagueId) => {
       if (leagueId) {
         db.ref(`/draftOrder/${leagueId}`).on('value', (snapshot) => {
-          if (snapshot.exists) commit('SET_DRAFT_ORDER', snapshot.val())
+          commit('SET_DRAFT_ORDER', snapshot.val())
         })
       }
     },
