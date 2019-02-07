@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Buefy from 'buefy'
+import EvaIcons from 'vue-eva-icons'
 import VueClipboard from 'vue-clipboard2'
 import firebase from 'firebase/app'
 import moment from 'moment-timezone'
@@ -19,6 +20,7 @@ import arrow from './components/Arrow'
 import collapsible from './components/Collapsible'
 
 Vue.use(Buefy)
+Vue.use(EvaIcons)
 Vue.use(VueClipboard)
 Vue.use(AsyncComputed)
 
