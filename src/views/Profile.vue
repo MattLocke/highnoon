@@ -50,7 +50,7 @@
             button.button.is-primary(@click="saveProfile") Save Profile
             hr
             a(@click="logOut()") Log Out
-          b-tabs(v-model="activeContentTab" v-if="localProfile.isAdmin")
+          b-tabs(v-model="activeContentTab" v-if="profile.isAdmin")
             b-tab-item(label="Upload News Image")
               news-image-uploader
             b-tab-item(label="System Notification")
@@ -58,6 +58,8 @@
                 b-field(label="System Notification")
                   b-input(v-model="notificationMessage")
                 button.button.is-primary(@click="setNotificationMessage") Set Notification
+            b-tab-item(label="Site Control Panel")
+              control-panel
 </template>
 
 <script>
@@ -69,12 +71,14 @@ import ImageService from '@/services/image'
 import UserService from '@/services/user'
 
 import Achievements from '@/views/profile/Achievements'
+import ControlPanel from '@/views/profile/ControlPanel'
 import NewsImageUploader from '@/views/news/NewsImageUploader'
 
 export default {
   name: 'Profile',
   components: {
     Achievements,
+    ControlPanel,
     NewsImageUploader,
     PictureInput
   },
