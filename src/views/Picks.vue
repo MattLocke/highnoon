@@ -73,6 +73,9 @@ export default {
       })
   },
   computed: {
+    config () {
+      return this.$store.getters.getConfig
+    },
     homeTeam () {
       if (this.activeMatch) return this.teams[this.activeMatch.competitors[0].abbreviatedName]
       return null
@@ -90,7 +93,7 @@ export default {
       return null
     },
     stageMatches () {
-      return this.weeksMatches.filter(match => match.stage === 'stage1').sort((a, b) => a.startDateTS - b.startDateTS)
+      return this.weeksMatches.filter(match => match.stage === this.config.currentStage).sort((a, b) => a.startDateTS - b.startDateTS)
     }
   },
   methods: {
