@@ -334,8 +334,8 @@ export default {
     },
     cancelDraft () {
       // remove the picks
-      firebase.database().ref(`/draftPicks`).set(null)
-        .then(() => firebase.database().ref(`/draft`).set(null))
+      firebase.database().ref(`/draftPicks/${this.leagueId}`).set(null)
+        .then(() => firebase.database().ref(`/draft/${this.leagueId}`).set(null))
         .catch(() => {
           this.$toast.open({
             message: 'Error deleting the draft session, contact SouldrinK!',
