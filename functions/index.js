@@ -142,7 +142,7 @@ function workDraftPick (leagueId, picks) {
         console.log(`------Ending the draft for league: ${leagueId} because total picks (${totalPicks}) was greater than or equal to the max of: ${draftOrder.length * 9}.`)
         return admin.database().ref(`/draft/${leagueId}/status`).set('completed')
       }
-      // console.log(`------Setting the draft position to ${draftPosition} for league: ${leagueId} with a doneProcessing value of: ${localDraft.doneProcessing}`)
+      console.log(`------Setting the draft position to ${draftPosition} for league: ${leagueId} with a doneProcessing value of: ${localDraft.doneProcessing}`)
       return admin.database().ref(`/draft/${leagueId}`).set(localDraft)
     })
     .catch((error) => {
