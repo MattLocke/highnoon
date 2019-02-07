@@ -101,7 +101,7 @@ export default {
   forcePick (userId, leagueId) {
     // set the userId's preference list to autodraft
     return rdb.ref(`/draftPreference/${leagueId}/${userId}`).update({ autoMode: true })
-      .then(() => rdb.ref(`/draft/${leagueId}`).update({ doneProcessing: false }))
+      .then(() => rdb.ref(`/draft/${leagueId}`).update({ doneProcessing: false, tickled: Date.now() }))
   },
   generateSchedule (currentWeek, totalWeeks, leagueUsers) {
     // const currentWeek = this.config.currentWeek
