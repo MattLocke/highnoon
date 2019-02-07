@@ -57,21 +57,21 @@ export default {
     userId: {
       immediate: true,
       handler (val) {
-        if (val) {
-          this.$store.dispatch('fetchPicks')
-        }
+        if (val) this.$store.dispatch('fetchPicks')
       }
     },
     userPicks: {
       immediate: true,
       handler (val) {
         if (val) {
-          if (val[this.match.id]) {
-            this.matchWinner = val[this.match.id].winner
-          }
+          if (val[this.match.id]) this.matchWinner = val[this.match.id].winner
         }
       }
     }
+  },
+  mounted () {
+    // firefox doesn't get triggered by the one in the watcher for some reason
+    this.$store.dispatch('fetchPicks')
   },
   methods: {
     savePick () {
