@@ -4,6 +4,7 @@
       left-bar
         convert-to-featured(:league="league" v-if="userData.isAdmin")
         transfer-ownership(leagueType="pickem" v-if="userData.isAdmin")
+        remove-user(v-if="isOwner || isAdmin" leagueType="pickem")
         your-leagues(:userId="userId")
         section(v-if="isOwner")
           collapsible(title-text="League Password" :start-collapsed="true")
@@ -68,6 +69,7 @@ import LeagueService from '@/services/league'
 import ConvertToFeatured from '@/views/admin/ConvertToFeatured'
 import MatchListing from '@/views/pickem/MatchListing'
 import PickemLeaderboard from '@/views/leagues/PickemLeaderboard'
+import RemoveUser from '@/views/leagues/RemoveUser'
 import TransferOwnership from '@/views/admin/TransferOwnership'
 import TrashTalk from '@/views/draft/TrashTalk'
 import YourLeagues from '@/views/leagues/YourLeagues'
@@ -78,6 +80,7 @@ export default {
     ConvertToFeatured,
     MatchListing,
     PickemLeaderboard,
+    RemoveUser,
     TransferOwnership,
     TrashTalk,
     vueMarkdown,

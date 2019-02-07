@@ -216,6 +216,14 @@ export default {
   makeFeatured (leagueType, leagueId, imageURL, message) {
     return db.collection(`${leagueType}Leagues`).doc(leagueId).set({ featuredURL: imageURL || null, isFeatured: !!(imageURL), featuredMessage: message }, { merge: true })
   },
+  removeUser (leagueId, leagueType, userId) {
+    return db.collection(`${leagueType}LeagueUsers`).doc(leagueId)
+      .update({ [userId]: firebase.firestore.FieldValue.delete() })
+      .then(() => db.collection('userLeagues').doc(userId).update({ [leagueId]: firebase.firestore.FieldValue.delete() }))
+      .catch(e => {
+        console.error(e)
+      })
+  },
   resetDraft (leagueId) {
     return rdb.ref(`/draft/${leagueId}`).remove()
       .then(() => rdb.ref(`/draftPicks/${leagueId}`).remove())
