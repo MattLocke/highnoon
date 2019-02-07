@@ -140,7 +140,7 @@ function workDraftPick (leagueId, picks) {
       // If we're maxed on picks, just end the draft
       if (totalPicks >= (draftOrder.length * 12)) {
         console.log(`------Ending the draft for league: ${leagueId} because total picks (${totalPicks}) was greater than or equal to the max of: ${draftOrder.length * 9}.`)
-        return admin.database().ref(`/draft/${leagueId}/status`).set('completed')
+        return admin.database().ref(`/draft/${leagueId}`).update({ status: 'completed', players: null })
       }
       console.log(`------Setting the draft position to ${draftPosition} for league: ${leagueId} with a doneProcessing value of: ${localDraft.doneProcessing}`)
       return admin.database().ref(`/draft/${leagueId}`).set(localDraft)
