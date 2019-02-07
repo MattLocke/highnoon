@@ -32,7 +32,8 @@ export default {
         url: window.location.href,
         userName: this.userData.displayName,
         userId: this.userData.id,
-        message: this.reportMessage
+        message: this.reportMessage,
+        when: Date.now()
       }
       FeedBackService.sendFeedback(feedback)
         .then(() => {

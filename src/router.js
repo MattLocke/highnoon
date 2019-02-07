@@ -21,6 +21,7 @@ import Messages from './views/Messages'
 import Picks from './views/Picks'
 import PlayerProfile from './views/PlayerProfile'
 import Profile from './views/Profile'
+import Status from './views/Status'
 import Staff from './views/Staff'
 import Upload from './views/Upload'
 
@@ -180,6 +181,14 @@ let router = new Router({
       path: '/staff',
       name: 'staff',
       component: Staff,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/status',
+      name: 'status',
+      component: Status,
       meta: {
         requiresAuth: true
       }
