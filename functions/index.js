@@ -178,7 +178,7 @@ function processPreferenceList (preferenceList, league, leagueId) {
 
         if (lumpedPicks) console.log(`We have ${lumpedPicks.length} picks so far.`)
         // remove array from preferenceList
-        unclaimedPlayers = _.differenceWith(players, lumpedPicks, _.isEqual)
+        unclaimedPlayers = _.differenceWith(players, lumpedPicks, (a, b) => a.id === b.id)
         console.log(`We have ${players.length} players total.`)
         unclaimedPreference = preferenceList ? unclaimedPlayers.filter(o1 => preferenceList.some(o2 => o1.name === o2.name)) : [];
         const missingType = findMissing(rawPicks, userId)
