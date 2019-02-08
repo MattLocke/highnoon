@@ -39,8 +39,6 @@
           button.button.is-secondary.is-small.is-pulled-right(@click="copyLink" v-if="isInLeague") Copy Share Link
       .column(v-if="league.leagueName")
         h1 {{ league.leagueName }}
-        //- .social-icons
-          span [TWITTER] [INSTAGRAM] [DISCORD]
         section(v-if="liveConfig.canStartDraft && canStartDraft")
           .columns.is-mobile.is-button-header
             .column
@@ -219,8 +217,8 @@ export default {
       immediate: true,
       handler (val) {
         if (val) {
-          this.$store.dispatch('fetchLeagueUsers', { leagueId: this.leagueId, leagueType: 'standard' })
-          this.$store.dispatch('fetchDraftOrder', this.leagueId)
+          this.$store.dispatch('fetchLeagueUsers', { leagueId: val, leagueType: 'standard' })
+          this.$store.dispatch('fetchDraftOrder', val)
           this.getLeague(val)
         }
       }
