@@ -16,7 +16,7 @@
         section(v-if="isOwner || userData.isAdmin")
           confirm-button(buttonText="Cancel Draft" confirmText="Are You Sure?" @confirm-it="cancelDraft")
         section(v-if="isInLeague")
-          h2.has-pointer(@click="showRoster = !showRoster") Your Roster - {{ roster.length }} of 12
+          h2.has-pointer(@click="showRoster = !showRoster") Your Roster - {{ roster ? roster.length : 0 }} of 12
             arrow(:isLeft="true" v-model="showRoster")
           .roster-section(v-show="showRoster")
             .field
@@ -58,7 +58,7 @@
           router-link.button.is-primary(:to="`/manageTeam/${leagueId}`") Manage Your Team
         .columns.is-desktop
           //- See how the draft is going
-          .column(v-if="users.length")
+          .column(v-if="users && users.length")
             h1 {{ draft.leagueName }} Live Draft
             b-tabs(v-model="activeTab")
               b-tab-item(label="Build Your Team" v-if="isInLeague")
@@ -198,7 +198,7 @@ export default {
       return this.$route.params.leagueId
     },
     myTurn () {
-      if (this.users.length) return this.users[this.draft.activeDrafter].userId === this.userId
+      if (this.users && this.users.length) return this.users[this.draft.activeDrafter].userId === this.userId
       return false
     },
     offensePlayers () {
