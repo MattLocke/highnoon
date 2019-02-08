@@ -18,7 +18,7 @@ export default {
     },
     SET_DRAFT_ORDER: (state, payload) => {
       if (payload) state.draftOrder = payload
-      else state.draftorder = []
+      else state.draftOrder = []
     },
     SET_DRAFT_PICKS: (state, payload) => {
       state.draftPicks = payload
@@ -39,6 +39,8 @@ export default {
         db.ref(`/draftOrder/${leagueId}`).on('value', (snapshot) => {
           commit('SET_DRAFT_ORDER', snapshot.val())
         })
+      } else {
+        commit('SET_DRAFT_ORDER', [])
       }
     },
     fetchDraftPicks: (context, leagueId) => {
