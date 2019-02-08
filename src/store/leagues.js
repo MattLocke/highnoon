@@ -112,9 +112,9 @@ export default {
         db.collection('leagueSchedule').doc(payload)
           .get()
           .then((leagueSchedule) => {
-            let theLeagueSchedule = []
+            let theLeagueSchedule = {}
             if (leagueSchedule.exists) {
-              theLeagueSchedule = Object.values(leagueSchedule.data())
+              theLeagueSchedule = leagueSchedule.data()
             }
             commit('SET_LEAGUE_SCHEDULE', theLeagueSchedule)
           })
