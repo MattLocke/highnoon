@@ -12,7 +12,7 @@
             .left-bar-item Coming Soon
         section
           scoring-info
-        section(v-if="leagueSchedule.length")
+        section
           collapsible(title-text="Your Next Match")
             my-schedule(:leagueId="leagueId")
       .column(v-if="lineUp.captain")
