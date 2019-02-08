@@ -117,6 +117,8 @@
                   img(:src="`images/roles/${props.row.attributes.role || 'flex'}-white.svg`" width="22" height="22")
                 b-table-column(label="Team" width="30" field="team" sortable)
                   img(:src="`images/teams/${props.row.team}.svg`" width="22" height="22")
+                //- b-table-column(label="Next" width="30")
+                  img(src="images/teams/PHI.svg" width="22" height="22")
                 b-table-column(label="Player Name" field="name" sortable)
                   span {{ props.row.name }}
                 b-table-column(label="Assign")
@@ -126,7 +128,7 @@
 </template>
 
 <script>
-import { differenceWith, get, isEmpty } from 'lodash'
+import { differenceWith, isEqual, get, isEmpty } from 'lodash'
 
 import LeagueService from '@/services/league'
 
@@ -186,15 +188,15 @@ export default {
     myAvailablePicks () {
       let available = []
       const usedPicks = [
-        this.lineUp.captain,
-        this.lineUp.offense1,
-        this.lineUp.offense2,
-        this.lineUp.support1,
-        this.lineUp.support2,
-        this.lineUp.tank1,
-        this.lineUp.tank2
+        this.players[this.lineUp.captain],
+        this.players[this.lineUp.offense1],
+        this.players[this.lineUp.offense2],
+        this.players[this.lineUp.support1],
+        this.players[this.lineUp.support2],
+        this.players[this.lineUp.tank1],
+        this.players[this.lineUp.tank2]
       ]
-      available = differenceWith(Object.values(this.players), usedPicks, (a, b) => a.id === b)
+      available = differenceWith(Object.values(this.players), usedPicks, isEqual)
       return [ ...available ]
     },
     players () {
