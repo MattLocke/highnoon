@@ -4,7 +4,7 @@
       left-bar
         convert-to-featured(:league="league" v-if="userData.isAdmin")
         transfer-ownership(leagueType="unlimited" v-if="userData.isAdmin")
-        remove-user(v-if="isOwner || userData.isAdmin" leagueType="unlimited")
+        remove-user(v-if="isOwner || isAdmin" leagueType="unlimited")
         your-leagues(:userId="userId")
         section(v-if="isOwner")
           collapsible(title-text="League Password" :start-collapsed="true")
