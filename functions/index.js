@@ -236,7 +236,7 @@ function performTradeFirebase (trade) {
 
       // remove player from askers picks, add player
       console.log(`Asker Picks Length: ${askerPicks.length}`)
-      var askerPicksClean = askerPicks.filter(pick => pick.id !== trade.askerPlayer.id)
+      var askerPicksClean = askerPicks.filter(pick => pick !== trade.askerPlayer)
       console.log(`Asker Picks Length After Removal: ${askerPicksClean.length}`)
       if (askerPicks.length > askerPicksClean.length) askerPicksClean.push(trade.responderPlayer)
       console.log(`Asker Picks Length After New Addition: ${askerPicksClean.length}`)
@@ -249,9 +249,9 @@ function performTradeFirebase (trade) {
 
       // remove player from responders picks, add player
       console.log(`Responder Picks Length: ${responderPicks.length}`)
-      var responderPicksClean = responderPicks.filter(pick => pick.id !== trade.responderPlayer.id)
+      var responderPicksClean = responderPicks.filter(pick => pick !== trade.responderPlayer)
       console.log(`Responder Picks Length After Removal: ${responderPicksClean.length}`)
-      responderPicksClean.push(trade.responderPlayer)
+      responderPicksClean.push(trade.askerPlayer)
       console.log(`Responder Picks Length After New Addition: ${responderPicksClean.length}`)
       return responderPicksRef.set(responderPicksClean)
     })
@@ -283,13 +283,14 @@ function performTradeFirebase (trade) {
 
 function cleanRoster(roster, player) {
   var r = { ...roster }
-  if (_.isEqual(r.captain, player)) r.captain = {}
-  if (_.isEqual(r.offense1, player)) r.offense1 = {}
-  if (_.isEqual(r.offense2, player)) r.offense2 = {}
-  if (_.isEqual(r.support1, player)) r.support1 = {}
-  if (_.isEqual(r.support2, player)) r.support2 = {}
-  if (_.isEqual(r.tank1, player)) r.tank1 = {}
-  if (_.isEqual(r.tank2, player)) r.tank2 = {}
+
+  if (r.captain === player) r.captain = ''
+  if (r.offense1 === player) r.offense1 = ''
+  if (r.offense2 === player) r.offense2 = ''
+  if (r.support1 === player) r.support1 = ''
+  if (r.support2 === player) r.support2 = ''
+  if (r.tank1 === player) r.tank1 = ''
+  if (r.tank2 === player) r.tank2 = ''
   return r
 }
 

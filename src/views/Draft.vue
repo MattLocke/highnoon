@@ -223,7 +223,7 @@ export default {
       return remaining
     },
     roster () {
-      return this.picks[this.userId] || []
+      const tmp = this.picks[this.userId] || []
     },
     selectedPlayers () {
       let selected = []
@@ -308,10 +308,10 @@ export default {
           this.getPreferenceList()
           this.$store.dispatch('getLeagues', val)
           const db = firebase.database()
-          db.ref(`/draftPreference/${this.leagueId}/${this.userId}`).on('value', (snapshot) => {
+          db.ref(`/draftPreference/${this.leagueId}/${this.userId}/autoMode`).on('value', (snapshot) => {
             const tmp = snapshot.val()
             if (tmp) {
-              this.autoMode = tmp.autoMode
+              this.autoMode = tmp
             }
           })
         }
@@ -324,7 +324,7 @@ export default {
       this.$store.dispatch('setLoading', true)
       const db = firebase.database()
       const tmp = [...this.roster]
-      tmp.push(player)
+      tmp.push(player.id)
 
       db.ref(`/draft/${this.leagueId}`).update({ doneProcessing: false })
         .then(() => db.ref(`/draftPicks/${this.leagueId}/${this.userId}`).set(tmp))
@@ -426,7 +426,7 @@ export default {
       })
     },
     getScore (player) {
-      const match = this.stats.filter(stat => stat.playerId === player.id)
+      const match = this.stats.filter(stat => stat.playerId === player)
       return match[0] ? match[0].fantasyScore : 0
     },
     getUserName (id) {

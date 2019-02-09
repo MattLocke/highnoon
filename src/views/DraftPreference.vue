@@ -86,7 +86,7 @@
 </template>
 
 <script>
-import _ from 'lodash'
+import { differenceWith, forEach } from 'lodash'
 import firebase from 'firebase/app'
 import 'firebase/database'
 
@@ -120,6 +120,7 @@ export default {
       filterRole: '',
       leagueData: [],
       roster: [],
+      populatedRoster: [],
       autoMode: false
     }
   },
@@ -130,7 +131,7 @@ export default {
       if (this.filterText) fPlayers = fPlayers.filter(player => player.name.toLowerCase().includes(this.filterText.toLowerCase()))
       if (this.filterRole) fPlayers = fPlayers.filter(player => player.attributes.role === this.filterRole)
       if (this.filterTeam) fPlayers = fPlayers.filter(player => player.team === this.filterTeam)
-      fPlayers = _.differenceWith(fPlayers, this.roster, (a, b) => a.id === b.id)
+      fPlayers = differenceWith(fPlayers, this.roster, (a, b) => a.id === b.id)
 
       return fPlayers
     },
@@ -142,6 +143,9 @@ export default {
     },
     offensePlayers () {
       return this.roster ? this.roster.filter(player => player.attributes.role === 'offense') : []
+    },
+    playerObjects () {
+      return this.$store.getters.getPlayers
     },
     players () {
       return this.seedPlayers.length ? this.seedPlayers : Object.values(this.$store.getters.getPlayers)
@@ -174,6 +178,11 @@ export default {
         } else this.$store.dispatch('setLoading', false)
       }
     },
+    roster: {
+      handler (val) {
+        this.populatedRoster = this.fillWithPlayers(val)
+      }
+    },
     userId: {
       immediate: true,
       handler (val) {
@@ -198,7 +207,7 @@ export default {
   },
   methods: {
     addToRoster (player) {
-      this.roster.push(player)
+      this.roster.push(player.id)
       this.updateRoster()
     },
     deleteRoster () {
@@ -206,6 +215,13 @@ export default {
         .then(() => {
           this.roster = []
         })
+    },
+    fillWithPlayers (roster) {
+      let tmp = [ ...roster ]
+      tmp = forEach(tmp, r => {
+        tmp[r] = this.playerObjects[r]
+      })
+      return tmp
     },
     removePlayer (index) {
       if (this.roster && this.roster.length > 1) this.roster.splice(index, 1)
