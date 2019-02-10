@@ -15,37 +15,37 @@
             section.roster-view.has-text-centered
               player-card(:player="lineUp.captain ? players[lineUp.captain] : null" :showRemove="false")
               h2.has-text-centered Captain
-                button.button.is-secondary.is-small.is-remove(@click="lineUp.captain = ''" v-if="lineUp.captain") X
+                button.button.is-secondary.is-small.is-remove(@click="lineUp.captain = ''" v-if="lineUp.captain" v-tooltip="'Remove'") X
           .column.roster-view
             section
               player-card(:player="lineUp.offense1 ? players[lineUp.offense1] : null" :showRemove="false")
               h2.has-text-centered Offense 1
-                button.button.is-secondary.is-small.is-remove(@click="lineUp.offense1 = ''" v-if="lineUp.offense1") X
+                button.button.is-secondary.is-small.is-remove(@click="lineUp.offense1 = ''" v-if="lineUp.offense1" v-tooltip="'Remove'") X
           .column.roster-view
             section
               player-card(:player="lineUp.offense2 ? players[lineUp.offense2] : null" :showRemove="false")
               h2.has-text-centered Offense 2
-                button.button.is-secondary.is-small.is-remove(@click="lineUp.offense2 = ''" v-if="lineUp.offense2") X
+                button.button.is-secondary.is-small.is-remove(@click="lineUp.offense2 = ''" v-if="lineUp.offense2" v-tooltip="'Remove'") X
           .column.roster-view
             section
               player-card(:player="lineUp.support1 ? players[lineUp.support1] : null" :showRemove="false")
               h2.has-text-centered Support 1
-                button.button.is-secondary.is-small.is-remove(@click="lineUp.support1 = ''" v-if="lineUp.support1") X
+                button.button.is-secondary.is-small.is-remove(@click="lineUp.support1 = ''" v-if="lineUp.support1" v-tooltip="'Remove'") X
           .column.roster-view
             section
               player-card(:player="lineUp.support2 ? players[lineUp.support2] : null" :showRemove="false")
               h2.has-text-centered Support 2
-                button.button.is-secondary.is-small.is-remove(@click="lineUp.support2 = ''" v-if="lineUp.support2") X
+                button.button.is-secondary.is-small.is-remove(@click="lineUp.support2 = ''" v-if="lineUp.support2" v-tooltip="'Remove'") X
           .column.roster-view
             section
               player-card(:player="lineUp.tank1 ? players[lineUp.tank1] : null" :showRemove="false")
               h2.has-text-centered Tank 1
-                button.button.is-secondary.is-small.is-remove(@click="lineUp.tank1 = ''" v-if="lineUp.tank1") X
+                button.button.is-secondary.is-small.is-remove(@click="lineUp.tank1 = ''" v-if="lineUp.tank1" v-tooltip="'Remove'") X
           .column.roster-view
             section
               player-card(:player="lineUp.tank2 ? players[lineUp.tank2] : null" :showRemove="false")
               h2.has-text-centered Tank 2
-                button.button.is-secondary.is-small.is-remove(@click="lineUp.tank2 = ''" v-if="lineUp.tank2") X
+                button.button.is-secondary.is-small.is-remove(@click="lineUp.tank2 = ''" v-if="lineUp.tank2" v-tooltip="'Remove'") X
         section.is-hidden-mobile
           button.button.is-primary(@click="saveRoster" v-if="canSaveRoster") Save Roster And Return To League
           button.button.is-primary(disabled v-else) Save Roster And Return To League
