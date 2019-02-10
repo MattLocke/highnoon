@@ -120,7 +120,7 @@
                 b-table-column(label="Player Name" field="name" sortable)
                   span {{ props.row.name }}
                 b-table-column(label="Assign")
-                  role-buttons(:player="props.row" @setRole="setRole" v-bind:lineUp="lineUp")
+                  role-buttons(:lineUp="lineUp" :player="props.row" @setRole="setRole")
                 b-table-column(label="Rating" width="40" field="stats.fantasyScore" sortable)
                   span {{ props.row.stats.fantasyScore || 'N/A' }}
 </template>
