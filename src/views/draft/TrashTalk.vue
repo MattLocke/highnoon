@@ -5,9 +5,15 @@
       b-input(maxlength="200" type="textarea" v-model="newMessage" @keyup.enter="addMessage")
     //- b-field
       picker(@select="addEmoji")
-    b-field
-      button.button.is-primary(v-if="newMessage.length" @click="addMessage") Send
-      button.button.is-primary(v-else disabled) Send
+    .columns
+      .column
+        b-field
+          button.button.is-primary(v-if="newMessage.length" @click="addMessage") Send
+          button.button.is-primary(v-else disabled) Send
+      .column.is-narrow
+        //- b-field
+          h3 Spectators {{ spectatorChat ? 'can' : 'can not' }} chat
+          b-switch(v-model="spectatorChat")
     hr
     .trash-box
       .message-box(v-for="message in messages")
@@ -26,10 +32,17 @@ export default {
   components: {
     Picker
   },
+  props: {
+    isOwner: {
+      type: Boolean,
+      default: false
+    }
+  },
   data () {
     return {
       messages: [],
-      newMessage: ''
+      newMessage: '',
+      spectatorChat: false
     }
   },
   computed: {
