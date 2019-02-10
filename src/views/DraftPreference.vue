@@ -28,19 +28,20 @@
               confirm-button(buttonText="Delete Roster" confirmText="Are You Sure?" @confirm-it="deleteRoster")
             .column.has-text-right
               span {{ roster ? roster.length : 0 }}/100
-        .left-bar-item.roster-player(v-if="roster" v-for="(player, index) in roster")
-          .columns.is-mobile
-            .column.is-narrow
-              img(:src="`images/roles/${player.attributes.role}-white.svg`")
-            .column.is-narrow
-              img(:src="`/images/teams/${player.team}.svg`")
-            .column
-              span {{ player.name }}
-            .column.is-narrow
-              span.is-proper {{ player.stats.fantasyScore }}
-            .column.is-narrow
-              button.button.is-primary.is-small(@click="removePlayer(index)") X
-      .column(v-if="roster.length < 100")
+        .list-group#playerList
+          .left-bar-item.roster-player.list-group-item(v-if="populatedRoster" v-for="(player, index) in roster")
+            .columns.is-mobile
+              .column.is-narrow
+                img(:src="`images/roles/${playerObjects[player].attributes.role}-white.svg`" height="22" width="22")
+              .column.is-narrow
+                img(:src="`/images/teams/${playerObjects[player].team}.svg`" height="22" width="22")
+              .column
+                span {{ playerObjects[player].name }}
+              .column.is-narrow
+                span.is-proper {{ playerObjects[player].stats.fantasyScore }}
+              .column.is-narrow
+                button.button.is-primary.is-small(@click="removePlayer(index)") X
+      .column(v-if="roster.length < 100 && playersLoaded")
         router-link.button.is-primary.is-pulled-right.is-small(:to="`/LeagueStandard/${leagueId}`" v-if="!embedded") Back to League
         h2 Preference list for:
           span.orange  {{ leagueData.leagueName }}
@@ -86,9 +87,10 @@
 </template>
 
 <script>
-import { differenceWith, forEach } from 'lodash'
+import { differenceWith, isEmpty } from 'lodash'
 import firebase from 'firebase/app'
 import 'firebase/database'
+import sortable from 'sortablejs'
 
 import LeagueService from '@/services/league'
 
@@ -131,18 +133,19 @@ export default {
       if (this.filterText) fPlayers = fPlayers.filter(player => player.name.toLowerCase().includes(this.filterText.toLowerCase()))
       if (this.filterRole) fPlayers = fPlayers.filter(player => player.attributes.role === this.filterRole)
       if (this.filterTeam) fPlayers = fPlayers.filter(player => player.team === this.filterTeam)
-      fPlayers = differenceWith(fPlayers, this.roster, (a, b) => a.id === b.id)
+      fPlayers = differenceWith(fPlayers, this.roster, (a, b) => a.id === b)
 
       return fPlayers
     },
     flexPlayers () {
-      return this.roster ? this.roster.filter(player => player.attributes.role === 'flex') : []
+      return []
     },
     leagueId () {
       return this.$route.params.leagueId
     },
     offensePlayers () {
-      return this.roster ? this.roster.filter(player => player.attributes.role === 'offense') : []
+      if (this.playersLoaded) return this.roster ? this.roster.filter(player => this.playerObjects[player].attributes.role === 'offense') : []
+      return []
     },
     playerObjects () {
       return this.$store.getters.getPlayers
@@ -150,14 +153,19 @@ export default {
     players () {
       return this.seedPlayers.length ? this.seedPlayers : Object.values(this.$store.getters.getPlayers)
     },
+    playersLoaded () {
+      return !isEmpty(this.players)
+    },
     stats () {
       return this.$store.getters.getStats
     },
     supportPlayers () {
-      return this.roster ? this.roster.filter(player => player.attributes.role === 'support') : []
+      if (this.playersLoaded) return this.roster ? this.roster.filter(player => this.playerObjects[player].attributes.role === 'support') : []
+      return []
     },
     tankPlayers () {
-      return this.roster ? this.roster.filter(player => player.attributes.role === 'tank') : []
+      if (this.playersLoaded) return this.roster ? this.roster.filter(player => this.playerObjects[player].attributes.role === 'tank') : []
+      return []
     },
     teams () {
       return this.$store.getters.getTeams
@@ -175,12 +183,15 @@ export default {
       handler (val) {
         if (val && val.length === 0) {
           this.$store.dispatch('setLoading', true)
+          this.fillWithPlayers(val) // this is in case they come straight to page, and players aren't populated
         } else this.$store.dispatch('setLoading', false)
       }
     },
     roster: {
+      immediate: true,
       handler (val) {
         this.populatedRoster = this.fillWithPlayers(val)
+        if (val && val.length) this.updateRoster()
       }
     },
     userId: {
@@ -204,11 +215,13 @@ export default {
       .then((leagueData) => {
         this.leagueData = leagueData
       })
+
+    const playerList = document.getElementById('playerList')
+    sortable.create(playerList, {})
   },
   methods: {
     addToRoster (player) {
       this.roster.push(player.id)
-      this.updateRoster()
     },
     deleteRoster () {
       firebase.database().ref(`/draftPreference/${this.leagueId}/${this.userId}`).set(null)
@@ -217,8 +230,8 @@ export default {
         })
     },
     fillWithPlayers (roster) {
-      let tmp = [ ...roster ]
-      tmp = forEach(tmp, r => {
+      let tmp = {}
+      roster.forEach(r => {
         tmp[r] = this.playerObjects[r]
       })
       return tmp
@@ -226,13 +239,12 @@ export default {
     removePlayer (index) {
       if (this.roster && this.roster.length > 1) this.roster.splice(index, 1)
       else this.roster = []
-      this.updateRoster()
     },
     updateRoster () {
       const db = firebase.database()
       const prefList = {
         autoMode: this.autoMode,
-        players: this.roster
+        players: [ ...this.roster ]
       }
       this.$store.dispatch('setLoading', true)
       db.ref(`/draftPreference/${this.leagueId}/${this.userId}`)
@@ -247,6 +259,7 @@ export default {
 
 <style lang="scss">
   .roster-player {
+    cursor: move;
     span {
       line-height: 20px;
     }

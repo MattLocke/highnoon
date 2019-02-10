@@ -1,6 +1,6 @@
 <template lang="pug">
   .draft
-    .columns.is-marginless
+    .columns.is-marginless(v-if="playersLoaded")
       left-bar(:showClose="false")
         //- section(v-if="isOwner")
           fix-draft-button(:leagueId="leagueId")
@@ -24,7 +24,7 @@
             p This will let the system draft for you in case you can't make it to the live draft.  While active, picks will be placed on your behalf automatically, so be sure you want to enable this!
             .columns.is-multiline.is-mobile
               .column.is-one-third-desktop.is-half-mobile(v-for="player in roster")
-                player-card(:player="player" :showRemove="false" :primaryColor="getColor(player)" :score="player.stats.fantasyScore || 0")
+                player-card(:player="playersObject[player]" :showRemove="false" :primaryColor="getColor(playersObject[player])" :score="playersObject[player].stats ? playersObject[player].stats.fantasyScore : 0")
               .column.is-one-third-desktop.is-half-mobile(v-for="placeholder in placeholders")
                 player-card(:showRemove="false")
         section(v-if="isInLeague")
@@ -99,7 +99,7 @@
                       b-table-column(label="Player Name" field="name" sortable)
                         span {{ props.row.name }}
                       b-table-column(label="Rating" width="40" field="stats.fantasyScore" sortable)
-                        span {{ props.row.stats.fantasyScore || 'N/A' }}
+                        span {{ props.row.stats ? props.row.stats.fantasyScore : 'N/A' }}
                 p(v-if="isCompleted") The draft has been completed.
                 p(v-if="isInLeague && isCompleted") You can
                   router-link(:to="`/manageTeam/${leagueId}`")  Manage Your Team
@@ -121,7 +121,7 @@
 </template>
 
 <script>
-import { differenceWith } from 'lodash'
+import { differenceWith, isEmpty } from 'lodash'
 import firebase from 'firebase/app'
 import 'firebase/database'
 
@@ -202,7 +202,7 @@ export default {
       return false
     },
     offensePlayers () {
-      return this.roster.filter(player => player.attributes.role === 'offense')
+      return this.roster.filter(player => this.playersObject[player].attributes.role === 'offense')
     },
     placeholders () {
       let remaining = 12 - this.roster.length
@@ -215,6 +215,12 @@ export default {
     players () {
       return Object.values(this.$store.getters.getPlayers)
     },
+    playersLoaded () {
+      return !isEmpty(this.players)
+    },
+    playersObject () {
+      return this.$store.getters.getPlayers
+    },
     remaining () {
       const remaining = {}
       remaining.offense = this.requiredOffense - this.offensePlayers.length > 0 ? this.requiredOffense - this.offensePlayers.length : 0
@@ -223,7 +229,7 @@ export default {
       return remaining
     },
     roster () {
-      const tmp = this.picks[this.userId] || []
+      return this.picks[this.userId] || []
     },
     selectedPlayers () {
       let selected = []
@@ -232,14 +238,11 @@ export default {
       })
       return selected
     },
-    stats () {
-      return this.$store.getters.getStats
-    },
     supportPlayers () {
-      return this.roster.filter(player => player.attributes.role === 'support')
+      return this.roster.filter(player => this.playersObject[player].attributes.role === 'support')
     },
     tankPlayers () {
-      return this.roster.filter(player => player.attributes.role === 'tank')
+      return this.roster.filter(player => this.playersObject[player].attributes.role === 'tank')
     },
     teams () {
       return this.$store.getters.getTeams
@@ -424,10 +427,6 @@ export default {
           this.autoMode = tmp.autoMode
         }
       })
-    },
-    getScore (player) {
-      const match = this.stats.filter(stat => stat.playerId === player)
-      return match[0] ? match[0].fantasyScore : 0
     },
     getUserName (id) {
       return this.users.find(user => user.userId === id).displayName
