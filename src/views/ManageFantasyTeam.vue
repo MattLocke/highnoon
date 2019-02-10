@@ -18,6 +18,7 @@
       .column(v-if="playersLoaded")
         section
           h1 Manage Your Fantasy Team
+          h3 {{ this.leagueUsers.find(user => user.userId === userData.id).teamName }}
           p The captain role is (for now) just a flex role so you can have a player outside of the 2/2/2 we're enforcing.  Their points will count the same as any other role, so it's safe to feature your favorite DPS as your captain!
         .columns.is-multiline.is-hidden-mobile.is-gapless(v-if="myAvailablePicks.length")
           .column
