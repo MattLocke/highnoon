@@ -12,16 +12,17 @@
           option(v-for="member in leagueUsers" :value="member" v-if="member.userId !== userId") {{ member.displayName }}
       b-field(label="Which Player?" v-if="selectedUser.userId")
         b-select(placeholder="Player" v-model="theirPlayer")
-          option(v-for="player in theirPlayers" :value="player.id") {{ player.name }}
+          option(v-for="player in theirPlayers" :value="player") {{ playersObject[player].name }}
       b-field(label="Your Players")
         b-select(placeholder="Select a Category" v-model="yourPlayer")
-          option(v-for="player in myPlayers" :value="player.id") {{ player.name }}
+          option(v-for="player in myPlayers" :value="player") {{ playersObject[player].name }}
       b-field
         button.button.is-primary(v-if="canCreate" @click="createTrade") Request Trade
         button.button.is-primary(v-else disabled) Request Trade
 </template>
 
 <script>
+import { isEmpty } from 'lodash'
 import firebase from 'firebase/app'
 import 'firebase/database'
 
@@ -56,7 +57,7 @@ export default {
   },
   computed: {
     canCreate () {
-      return (this.userId && this.yourPlayer.id && this.leagueId && this.selectedUser.userId && this.theirPlayer.id)
+      return (this.userId && this.yourPlayer && this.leagueId && this.selectedUser.userId && this.theirPlayer)
     },
     draftPicks () {
       return this.$store.getters.getDraftPicks
@@ -73,6 +74,12 @@ export default {
     myTrades () {
       if (this.trades) return this.trades.filter(trade => trade.askerId === this.userId || trade.responderId === this.userId)
       return []
+    },
+    playersLoaded () {
+      return !isEmpty(this.playersObject)
+    },
+    playersObject () {
+      return this.$store.getters.getPlayers
     },
     theirPlayers () {
       if (this.selectedUser.userId) return this.draftPicks[this.selectedUser.userId]
@@ -110,15 +117,17 @@ export default {
     createTrade () {
       this.$store.dispatch('setLoading', true)
       const trade = {
-        requestDate: Date.now(),
         askerId: this.userId,
         askerName: this.userData.displayName,
         askerPlayer: this.yourPlayer,
         leagueId: this.leagueId,
+        requestDate: Date.now(),
         responderId: this.selectedUser.userId,
         responderName: this.selectedUser.displayName,
         responderPlayer: this.theirPlayer,
-        status: 'pending'
+        status: 'pending',
+        votesFor: 0,
+        votesAgains: 0
       }
 
       TradeService.createTrade(trade)

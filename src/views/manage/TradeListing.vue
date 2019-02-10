@@ -3,15 +3,15 @@
     .columns.is-mobile
       .column
         h2
-          img(:src="`images/roles/${trade.askerPlayer.attributes.role || 'flex'}-white.svg`" width="22" height="22")
-          | {{ trade.askerPlayer.name }}
+          img(:src="`images/roles/${playersObject[trade.askerPlayer].attributes.role || 'flex'}-white.svg`" width="22" height="22")
+          | {{ playersObject[trade.askerPlayer].name }}
       .column.is-narrow
         h2
           span.orange for
       .column
         h2.is-pulled-right
-          img(:src="`images/roles/${trade.responderPlayer.attributes.role || 'flex'}-white.svg`" width="22" height="22")
-          | {{ trade.responderPlayer.name }}
+          img(:src="`images/roles/${playersObject[trade.responderPlayer].attributes.role || 'flex'}-white.svg`" width="22" height="22")
+          | {{ playersObject[trade.responderPlayer].name }}
     span.request-date.is-pulled-right {{ trade.requestDate | formatJSDate }}
     .columns
       .column.is-narrow(v-if="trade.responderId === userId && trade.status === 'pending'")
@@ -23,6 +23,7 @@
 </template>
 
 <script>
+import { isEmpty } from 'lodash'
 import TradeService from '@/services/trades'
 
 export default {
@@ -34,6 +35,12 @@ export default {
     }
   },
   computed: {
+    playersLoaded () {
+      return !isEmpty(this.playersObject)
+    },
+    playersObject () {
+      return this.$store.getters.getPlayers
+    },
     userId () {
       return this.$store.getters.getUserId
     }
