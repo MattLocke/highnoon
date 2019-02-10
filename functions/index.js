@@ -57,15 +57,15 @@ exports.tryAutomatedPick = functions.database.ref('/draft/{leagueId}')
         })
         .then((thePlayer) => {
           selectedPlayer = thePlayer
-          console.log(`We have a selected player value of: ${selectedPlayer ? selectedPlayer.name : 'nobody!'}`)
+          console.log(`We have a selected player value of: ${selectedPlayer ? selectedPlayer : 'nobody!'}`)
           return selectedPlayer ? admin.database().ref(`/draftPicks/${leagueId}/${userId}`).once('value') : null
         })
         .then((userPicks) => {
           if (userPicks) {
             var tmpPicks = userPicks.val() || null
-            if (tmpPicks) tmpPicks.push(selectedPlayer.id)
-            else tmpPicks = [selectedPlayer.id]
-            console.log(`Setting a pick at : /draftPicks/${leagueId}/${userId} of ${selectedPlayer.name}`)
+            if (tmpPicks) tmpPicks.push(selectedPlayer)
+            else tmpPicks = [selectedPlayer]
+            console.log(`Setting a pick at : /draftPicks/${leagueId}/${userId} of ${selectedPlayer}`)
             return admin.database().ref(`/draftPicks/${leagueId}/${userId}`).set(tmpPicks)
           }
           console.log('Not setting anything.  Moving on!')
@@ -181,23 +181,26 @@ function processPreferenceList (preferenceList, league, leagueId) {
         // remove array from preferenceList
         unclaimedPlayers = _.differenceWith(players, lumpedPicks, (a, b) => a.id === b)
         console.log(`We have ${players.length} players total.`)
-        unclaimedPreference = preferenceList ? unclaimedPlayers.filter(o1 => preferenceList.some(o2 => o1.id === o2)) : [];
-        const missingType = findMissing(rawPicks, userId, indexedPlayers)
-        // if we have a preference list left, take the top player.
-        if (unclaimedPreference && unclaimedPreference.length) {
-          // figure out what the best option is for them (hard)
-          if (missingType && rawPicks[userId] > 6) {
-            let tP = unclaimedPreference.find(up => up.attributes.role === missingType)
-            if (tP) return tP
-          }
-          return unclaimedPreference[0]
-        }
-        // if the preference list is gone, take the first available player
-        if (missingType) {
-          tP = unclaimedPlayers.find(up => up.attributes.role === missingType)
-          if (tP) return tP
-        }
-        return unclaimedPlayers[0]
+        console.log(`PreferenceList: ${JSON.stringify(preferenceList)}`)
+        console.log(`Unclaimed: ${JSON.stringify(unclaimedPlayers)}`)
+        unclaimedPreference = preferenceList.filter(p => unclaimedPlayers.find(u => u.id === p))
+        
+        // const missingType = findMissing(rawPicks, userId, indexedPlayers)
+        // // if we have a preference list left, take the top player.
+        // if (unclaimedPreference && unclaimedPreference.length) {
+        //   // figure out what the best option is for them (hard)
+        //   if (missingType && (rawPicks[userId] && rawPicks[userId].length > 6)) {
+        //     let tP = unclaimedPreference.find(up => indexedPlayers[up].attributes.role === missingType)
+        //     if (tP) return tP
+        //   }
+        //   return unclaimedPreference[0]
+        // }
+        // // if the preference list is gone, take the first available player
+        // if (missingType) {
+        //   tP = unclaimedPlayers.find(up => indexedPlayers[up].attributes.role === missingType)
+        //   if (tP) return tP
+        // }
+        return unclaimedPreference[0] || unclaimedPlayers[0].id
       }).catch((error) => {
         console.log(error)
       })
@@ -260,18 +263,22 @@ function performTradeFirebase (trade) {
 
     var updateRoster = rostersRef.get().then(doc => {
       var fullRoster = doc.data()
-      if (fullRoster && fullRoster[trade.responderId]) {
-        var askerRoster = cleanRoster(fullRoster[trade.askerId].roster, trade.askerPlayer)
-        var responderRoster = cleanRoster(fullRoster[trade.responderId].roster, trade.responderPlayer)
+      if (fullRoster && (fullRoster[trade.responderId] || fullRoster[trade.askerId]))  {
+        var askerRoster = fullRoster[trade.askerId] ? cleanRoster(fullRoster[trade.askerId].roster, trade.askerPlayer) : {}
+        var responderRoster = fullRoster[trade.responderId] ? cleanRoster(fullRoster[trade.responderId].roster, trade.responderPlayer) : {}
         fancyLog('Updating Roster')
         var newRoster = { ...fullRoster }
-        if (!_.isEqual(askerRoster, fullRoster[trade.askerId].roster) || !_.isEqual(responderRoster, fullRoster[trade.responderId].roster)) {
+        if ((fullRoster[trade.askerId] && !_.isEqual(askerRoster, fullRoster[trade.askerId].roster)) || (fullRoster[trade.responderId] && !_.isEqual(responderRoster, fullRoster[trade.responderId].roster))) {
           // this means someone traded someone out of their roster, so we have to do stuff :(
           newRoster[trade.askerId].roster = askerRoster
           newRoster[trade.responderId].roster = responderRoster
+          console.log('We had to update the rosters because a traded player was found on the roster.')
         }
+        console.log('Saving rosters...')
         return rostersRef.set(newRoster)
       }
+      console.log(JSON.stringify(fullRoster))
+      console.log('No valid rosters found.')
       return null
     })
 
