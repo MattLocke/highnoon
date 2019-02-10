@@ -1,22 +1,35 @@
 <template lang="pug">
-  .draft-drawer.has-text-centered
+  .draft-drawer.has-text-centered(v-if="playersLoaded")
     .columns.is-mobile.is-multiline.is-marginless
       .column
       .column.is-narrow
         h4.orange.ow-font Your Picks - {{ roster.length }} of 12
       .column.is-narrow(v-for="player in roster")
-        img.role-image(:src="`images/roles/${player.attributes.role || 'flex'}-white.svg`")
-        span.ow-font {{ player.name }}
+        img.role-image(:src="`images/roles/${playersObject[player].attributes.role || 'flex'}-white.svg`")
+        span.ow-font {{ playersObject[player].name }}
       .column
 </template>
 
 <script>
+import { isEmpty } from 'lodash'
+
 export default {
   name: 'draftDrawer',
   props: {
     roster: {
       type: Array,
       required: true
+    }
+  },
+  computed: {
+    players () {
+      return Object.values(this.$store.getters.getPlayers)
+    },
+    playersLoaded () {
+      return !isEmpty(this.players)
+    },
+    playersObject () {
+      return this.$store.getters.getPlayers
     }
   }
 }

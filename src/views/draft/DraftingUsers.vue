@@ -1,13 +1,15 @@
 <template lang="pug">
-  .drafting-users
+  .drafting-users(v-if="playersLoaded")
     .columns.is-multiline.is-mobile(v-if="users")
       .column.is-one-fifth-desktop.is-half-mobile(v-for="(theUser, index) in users")
         h3.hide-overflow.underlined(:class="{'orange': theUser.userId == users[draft.activeDrafter].userId && !draftComplete}") {{ theUser.displayName }}
           span.is-pulled-right(v-if="theUser.userId == users[draft.activeDrafter].userId && !draftComplete") {{ draft.direction == 'forward' ? '>' : '<' }}
-        player-card(v-for="pick in getUserPicks(theUser.userId)" :key="pick.id" :player="pick" :showRemove="false" :primaryColor="getColor(pick)" :score="pick.stats.fantasyScore || 0" :hidePhoto="true") {{ pick.name }}
+        player-card(v-for="pick in getUserPicks(theUser.userId)" :key="playersObject[pick].id" :player="playersObject[pick]" :showRemove="false" :primaryColor="getColor(playersObject[pick])" :score="playersObject[pick].stats.fantasyScore || 0" :hidePhoto="true") {{ playersObject[pick].name }}
 </template>
 
 <script>
+import { isEmpty } from 'lodash'
+
 import PlayerCard from '@/components/PlayerCard'
 
 export default {
@@ -39,6 +41,15 @@ export default {
     },
     draftComplete () {
       return this.draft.status === 'completed'
+    },
+    players () {
+      return Object.values(this.$store.getters.getPlayers)
+    },
+    playersLoaded () {
+      return !isEmpty(this.players)
+    },
+    playersObject () {
+      return this.$store.getters.getPlayers
     },
     user () {
       return this.$store.getters.getUserData

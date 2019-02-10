@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Buefy from 'buefy'
 import EvaIcons from 'vue-eva-icons'
 import VueClipboard from 'vue-clipboard2'
+import VueTooltip from 'v-tooltip'
 import firebase from 'firebase/app'
 import moment from 'moment-timezone'
 import 'firebase/auth'
@@ -23,6 +24,7 @@ Vue.use(Buefy)
 Vue.use(EvaIcons)
 Vue.use(VueClipboard)
 Vue.use(AsyncComputed)
+Vue.use(VueTooltip)
 
 Vue.config.productionTip = false
 

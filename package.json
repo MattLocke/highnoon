@@ -16,6 +16,8 @@
     "lodash": "^4.17.11",
     "material-design-icons": "^3.0.1",
     "moment-timezone": "^0.5.23",
+    "sortablejs": "^1.8.1",
+    "v-tooltip": "^2.0.0-rc.33",
     "vue": "^2.5.17",
     "vue-apexcharts": "^1.2.2",
     "vue-async-computed": "^3.5.0",

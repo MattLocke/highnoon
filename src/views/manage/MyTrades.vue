@@ -12,10 +12,10 @@
           option(v-for="member in leagueUsers" :value="member" v-if="member.userId !== userId") {{ member.displayName }}
       b-field(label="Which Player?" v-if="selectedUser.userId")
         b-select(placeholder="Player" v-model="theirPlayer")
-          option(v-for="player in theirPlayers" :value="player") {{ player.name }}
+          option(v-for="player in theirPlayers" :value="player.id") {{ player.name }}
       b-field(label="Your Players")
         b-select(placeholder="Select a Category" v-model="yourPlayer")
-          option(v-for="player in myPlayers" :value="player") {{ player.name }}
+          option(v-for="player in myPlayers" :value="player.id") {{ player.name }}
       b-field
         button.button.is-primary(v-if="canCreate" @click="createTrade") Request Trade
         button.button.is-primary(v-else disabled) Request Trade
