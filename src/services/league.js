@@ -9,7 +9,6 @@ fireInit()
 
 var db = firebase.firestore()
 var rdb = firebase.database()
-db.settings({ timestampsInSnapshots: true })
 
 export default {
   cancelWaiver (leagueId, waiverId) {

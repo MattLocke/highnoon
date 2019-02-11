@@ -6,7 +6,6 @@ import { fireInit } from '@/fireLogin'
 fireInit()
 
 var db = firebase.firestore()
-db.settings({ timestampsInSnapshots: true })
 
 export default {
   state: {
