@@ -12,6 +12,9 @@ var rdb = firebase.database()
 db.settings({ timestampsInSnapshots: true })
 
 export default {
+  cancelWaiver (leagueId, waiverId) {
+    return rdb.ref(`/pendingWaivers/${leagueId}/${waiverId}`).set(null)
+  },
   changeOwner (leagueId, leagueType, ownerId) {
     return db.collection(`${leagueType}Leagues`).doc(leagueId)
       .set({ ownerId }, { merge: true })
@@ -69,6 +72,9 @@ export default {
     return batch.commit()
       .then(() => leagueId)
       .catch((error) => Promise.reject(error))
+  },
+  requestWaiver (waiver) {
+    return rdb.ref(`/pendingWaivers/${waiver.leagueId}`).push(waiver)
   },
   deleteLeague (leagueId, leagueType = 'standard') {
     // set up the batch
@@ -139,6 +145,11 @@ export default {
     return db.collection(`${leagueType}LeagueUsers`).doc(leagueId)
       .get()
       .then(users => users.data())
+  },
+  getPendingWaiverWires (leagueId) {
+    console.log(`Getting pending waivers for: ${leagueId}`)
+    return rdb.ref(`/pendingWaivers/${leagueId}`).once('value')
+      .then(snapshot => snapshot.val())
   },
   getSchedule (leagueId) {
     return db.collection('leagueSchedule').doc(leagueId)
