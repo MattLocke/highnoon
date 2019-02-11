@@ -110,7 +110,7 @@
                     .wrap(v-if="!isCompleted")
                       h3.orange.ow-font {{ users[draft.activeDrafter].displayName }}
                       hr
-                    drafting-users(:users="users" :draft="draft" :picks="picks")
+                    drafting-users(:users="users" :draft="draft" :picks="picks" :ownerId="league.ownerId")
               b-tab-item(label="Preference List" v-if="isInLeague")
                 section
                   collapsible(title-text="Draft Preference / Remaining")

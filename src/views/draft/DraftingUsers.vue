@@ -2,7 +2,9 @@
   .drafting-users(v-if="playersLoaded")
     .columns.is-multiline.is-mobile(v-if="users")
       .column.is-one-fifth-desktop.is-half-mobile(v-for="(theUser, index) in users")
-        h3.hide-overflow.underlined(:class="{'orange': theUser.userId == users[draft.activeDrafter].userId && !draftComplete}") {{ theUser.displayName }}
+        h3.hide-overflow.underlined(:class="{'orange': theUser.userId == users[draft.activeDrafter].userId && !draftComplete}")
+          eva-icon(name="star" fill="white" width="16" height="16" v-if="theUser.userId == ownerId" v-tooltip="'League Owner'")
+          | {{ theUser.displayName }}
           span.is-pulled-right(v-if="theUser.userId == users[draft.activeDrafter].userId && !draftComplete") {{ draft.direction == 'forward' ? '>' : '<' }}
         player-card(v-for="pick in getUserPicks(theUser.userId)" :key="playersObject[pick].id" :player="playersObject[pick]" :showRemove="false" :primaryColor="getColor(playersObject[pick])" :score="playersObject[pick].stats.fantasyScore || 0" :hidePhoto="true") {{ playersObject[pick].name }}
 </template>
@@ -21,6 +23,10 @@ export default {
     draft: {
       type: Object,
       required: true
+    },
+    ownerId: {
+      type: String,
+      default: ''
     },
     picks: {
       type: [Array, Object],
