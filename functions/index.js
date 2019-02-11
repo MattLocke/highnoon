@@ -183,7 +183,7 @@ function processPreferenceList (preferenceList, league, leagueId) {
         console.log(`We have ${players.length} players total.`)
         console.log(`PreferenceList: ${JSON.stringify(preferenceList)}`)
         console.log(`Unclaimed: ${JSON.stringify(unclaimedPlayers)}`)
-        unclaimedPreference = preferenceList.filter(p => unclaimedPlayers.find(u => u.id === p))
+        unclaimedPreference = (preferenceList && preferenceList.length) ? preferenceList.filter(p => unclaimedPlayers.find(u => u.id === p)) : []
         
         // const missingType = findMissing(rawPicks, userId, indexedPlayers)
         // // if we have a preference list left, take the top player.
