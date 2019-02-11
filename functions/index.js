@@ -270,8 +270,8 @@ function performTradeFirebase (trade) {
         var newRoster = { ...fullRoster }
         if ((fullRoster[trade.askerId] && !_.isEqual(askerRoster, fullRoster[trade.askerId].roster)) || (fullRoster[trade.responderId] && !_.isEqual(responderRoster, fullRoster[trade.responderId].roster))) {
           // this means someone traded someone out of their roster, so we have to do stuff :(
-          newRoster[trade.askerId].roster = askerRoster
-          newRoster[trade.responderId].roster = responderRoster
+          if (newRoster[trade.askerId]) newRoster[trade.askerId] = { roster: askerRoster }
+          if (newRoster[trade.responderId]) newRoster[trade.responderId] = { roster: responderRoster }
           console.log('We had to update the rosters because a traded player was found on the roster.')
         }
         console.log('Saving rosters...')

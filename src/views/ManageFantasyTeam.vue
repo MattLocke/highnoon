@@ -2,11 +2,6 @@
   .manage-fantasy-team
     .columns.is-marginless
       left-bar
-        section(v-if="liveConfig.canTrade")
-          collapsible(title-text="Manage Trades" :start-collapsed="true")
-            my-trades(:myPlayers="myPicks" :otherPlayers="otherPicks")
-        section(v-else)
-          span {{ liveConfig.featureDownMessage }}
         section
           collapsible(title-text="Unclaimed Players" :start-collapsed="true")
             .left-bar-item Coming Soon
@@ -19,103 +14,116 @@
         section
           h1 Manage Your Fantasy Team
           p The captain role is (for now) just a flex role so you can have a player outside of the 2/2/2 we're enforcing.  Their points will count the same as any other role, so it's safe to feature your favorite DPS as your captain!
-        .columns.is-multiline.is-hidden-mobile.is-gapless(v-if="myAvailablePicks.length")
-          .column
-            section.roster-view.has-text-centered
-              player-card(:player="lineUp.captain ? players[lineUp.captain] : null" :showRemove="false")
-              h2.has-text-centered Captain
-                button.button.is-secondary.is-small.is-remove(@click="lineUp.captain = ''" v-if="lineUp.captain" v-tooltip="'Remove'") X
-          .column.roster-view
+        b-tabs(v-model="activeContentTab")
+          b-tab-item(label="ManageRoster")
+            .columns.is-multiline.is-hidden-mobile.is-gapless(v-if="myAvailablePicks.length")
+              .column
+                section.roster-view.has-text-centered
+                  player-card(:player="lineUp.captain ? players[lineUp.captain] : null" :showRemove="false")
+                  h2.has-text-centered Captain
+                    button.button.is-secondary.is-small.is-remove(@click="lineUp.captain = ''" v-if="lineUp.captain" v-tooltip="'Remove'") X
+              .column.roster-view
+                section
+                  player-card(:player="lineUp.offense1 ? players[lineUp.offense1] : null" :showRemove="false")
+                  h2.has-text-centered Offense 1
+                    button.button.is-secondary.is-small.is-remove(@click="lineUp.offense1 = ''" v-if="lineUp.offense1" v-tooltip="'Remove'") X
+              .column.roster-view
+                section
+                  player-card(:player="lineUp.offense2 ? players[lineUp.offense2] : null" :showRemove="false")
+                  h2.has-text-centered Offense 2
+                    button.button.is-secondary.is-small.is-remove(@click="lineUp.offense2 = ''" v-if="lineUp.offense2" v-tooltip="'Remove'") X
+              .column.roster-view
+                section
+                  player-card(:player="lineUp.support1 ? players[lineUp.support1] : null" :showRemove="false")
+                  h2.has-text-centered Support 1
+                    button.button.is-secondary.is-small.is-remove(@click="lineUp.support1 = ''" v-if="lineUp.support1" v-tooltip="'Remove'") X
+              .column.roster-view
+                section
+                  player-card(:player="lineUp.support2 ? players[lineUp.support2] : null" :showRemove="false")
+                  h2.has-text-centered Support 2
+                    button.button.is-secondary.is-small.is-remove(@click="lineUp.support2 = ''" v-if="lineUp.support2" v-tooltip="'Remove'") X
+              .column.roster-view
+                section
+                  player-card(:player="lineUp.tank1 ? players[lineUp.tank1] : null" :showRemove="false")
+                  h2.has-text-centered Tank 1
+                    button.button.is-secondary.is-small.is-remove(@click="lineUp.tank1 = ''" v-if="lineUp.tank1" v-tooltip="'Remove'") X
+              .column.roster-view
+                section
+                  player-card(:player="lineUp.tank2 ? players[lineUp.tank2] : null" :showRemove="false")
+                  h2.has-text-centered Tank 2
+                    button.button.is-secondary.is-small.is-remove(@click="lineUp.tank2 = ''" v-if="lineUp.tank2" v-tooltip="'Remove'") X
+            section.is-hidden-mobile
+              button.button.is-primary(@click="saveRoster" v-if="canSaveRoster") Save Roster And Return To League
+              button.button.is-primary(disabled v-else) Save Roster And Return To League
+            section.is-hidden-desktop
+              p The captain role is (for now) just a flex role so you can have a player outside of the 2/2/2 we're enforcing.  Their points will count the same as any other role, so it's safe to feature your favorite DPS as your captain!
+              h2.ow-font.mobile-roster
+                img(src="images/roles/captain-white.svg" width="20" height="20")
+                img(v-if="lineUp.captain" :src="getTeamImage(lineUp.captain)" width="20" height="20")
+                span {{ getPlayerName(lineUp.captain) }}
+                  button.button.is-secondary.is-small.is-remove(@click="lineUp.captain = ''" v-if="lineUp.captain") X
+              h2.ow-font
+                img(src="images/roles/offense-white.svg" width="20" height="20")
+                img(:src="getTeamImage(lineUp.offense1)" width="20" height="20" v-if="lineUp.offense1")
+                span {{ getPlayerName(lineUp.offense1) }}
+                  button.button.is-secondary.is-small.is-remove(@click="lineUp.offense1 = ''" v-if="lineUp.offense1") X
+              h2.ow-font
+                img(src="images/roles/offense-white.svg" width="20" height="20")
+                img(:src="getTeamImage(lineUp.offense2)" width="20" height="20" v-if="lineUp.offense2")
+                span {{ getPlayerName(lineUp.offense2) }}
+                  button.button.is-secondary.is-small.is-remove(@click="lineUp.offense2 = ''" v-if="lineUp.offense2") X
+              h2.ow-font
+                img(src="images/roles/support-white.svg" width="20" height="20")
+                img(:src="getTeamImage(lineUp.support1)" width="20" height="20" v-if="lineUp.support1")
+                span {{ getPlayerName(lineUp.support1) }}
+                  button.button.is-secondary.is-small.is-remove(@click="lineUp.support1 = ''" v-if="lineUp.support1") X
+              h2.ow-font
+                img(src="images/roles/support-white.svg" width="20" height="20")
+                img(:src="getTeamImage(lineUp.support2)" width="20" height="20" v-if="lineUp.support2")
+                span {{ getPlayerName(lineUp.support2) }}
+                  button.button.is-secondary.is-small.is-remove(@click="lineUp.support2 = ''" v-if="lineUp.support2") X
+              h2.ow-font
+                img(src="images/roles/tank-white.svg" width="20" height="20")
+                img(:src="getTeamImage(lineUp.tank1)" width="20" height="20" v-if="lineUp.tank1")
+                span {{ getPlayerName(lineUp.tank1) }}
+                  button.button.is-secondary.is-small.is-remove(@click="lineUp.tank1 = ''" v-if="lineUp.tank1") X
+              h2.ow-font
+                img(src="images/roles/tank-white.svg" width="20" height="20")
+                img(:src="getTeamImage(lineUp.tank2)" width="20" height="20" v-if="lineUp.tank2")
+                span {{ getPlayerName(lineUp.tank2) }}
+                  button.button.is-secondary.is-small.is-remove(@click="lineUp.tank2 = ''" v-if="lineUp.tank2") X
+              section.has-text-centered
+                button.button.is-primary(@click="saveRoster" v-if="canSaveRoster") Save Roster And Return To League
+                button.button.is-primary(v-else disabled) Save Roster And Return To League
             section
-              player-card(:player="lineUp.offense1 ? players[lineUp.offense1] : null" :showRemove="false")
-              h2.has-text-centered Offense 1
-                button.button.is-secondary.is-small.is-remove(@click="lineUp.offense1 = ''" v-if="lineUp.offense1" v-tooltip="'Remove'") X
-          .column.roster-view
+              collapsible(title-text="My Bench")
+                b-table(
+                  :data="myAvailablePicks")
+                  template(slot-scope="props")
+                    b-table-column(label="Role" width="30" field="attributes.role" sortable)
+                      img(:src="`images/roles/${props.row.attributes.role || 'flex'}-white.svg`" width="22" height="22")
+                    b-table-column(label="Team" width="30" field="team" sortable)
+                      img(:src="`images/teams/${props.row.team}.svg`" width="22" height="22")
+                    b-table-column(label="Player Name" field="name" sortable)
+                      span {{ props.row.name }}
+                    b-table-column(label="Assign")
+                      role-buttons(:player="props.row" @setRole="setRole" :lineUp="lineUp")
+                    b-table-column(label="Rating" width="40" field="stats.fantasyScore" sortable)
+                      span {{ props.row.stats.fantasyScore || 'N/A' }}
             section
-              player-card(:player="lineUp.offense2 ? players[lineUp.offense2] : null" :showRemove="false")
-              h2.has-text-centered Offense 2
-                button.button.is-secondary.is-small.is-remove(@click="lineUp.offense2 = ''" v-if="lineUp.offense2" v-tooltip="'Remove'") X
-          .column.roster-view
-            section
-              player-card(:player="lineUp.support1 ? players[lineUp.support1] : null" :showRemove="false")
-              h2.has-text-centered Support 1
-                button.button.is-secondary.is-small.is-remove(@click="lineUp.support1 = ''" v-if="lineUp.support1" v-tooltip="'Remove'") X
-          .column.roster-view
-            section
-              player-card(:player="lineUp.support2 ? players[lineUp.support2] : null" :showRemove="false")
-              h2.has-text-centered Support 2
-                button.button.is-secondary.is-small.is-remove(@click="lineUp.support2 = ''" v-if="lineUp.support2" v-tooltip="'Remove'") X
-          .column.roster-view
-            section
-              player-card(:player="lineUp.tank1 ? players[lineUp.tank1] : null" :showRemove="false")
-              h2.has-text-centered Tank 1
-                button.button.is-secondary.is-small.is-remove(@click="lineUp.tank1 = ''" v-if="lineUp.tank1" v-tooltip="'Remove'") X
-          .column.roster-view
-            section
-              player-card(:player="lineUp.tank2 ? players[lineUp.tank2] : null" :showRemove="false")
-              h2.has-text-centered Tank 2
-                button.button.is-secondary.is-small.is-remove(@click="lineUp.tank2 = ''" v-if="lineUp.tank2" v-tooltip="'Remove'") X
-        section.is-hidden-mobile
-          button.button.is-primary(@click="saveRoster" v-if="canSaveRoster") Save Roster And Return To League
-          button.button.is-primary(disabled v-else) Save Roster And Return To League
-        section.is-hidden-desktop
-          p The captain role is (for now) just a flex role so you can have a player outside of the 2/2/2 we're enforcing.  Their points will count the same as any other role, so it's safe to feature your favorite DPS as your captain!
-          h2.ow-font.mobile-roster
-            img(src="images/roles/captain-white.svg" width="20" height="20")
-            img(v-if="lineUp.captain" :src="getTeamImage(lineUp.captain)" width="20" height="20")
-            span {{ getPlayerName(lineUp.captain) }}
-              button.button.is-secondary.is-small.is-remove(@click="lineUp.captain = ''" v-if="lineUp.captain") X
-          h2.ow-font
-            img(src="images/roles/offense-white.svg" width="20" height="20")
-            img(:src="getTeamImage(lineUp.offense1)" width="20" height="20" v-if="lineUp.offense1")
-            span {{ getPlayerName(lineUp.offense1) }}
-              button.button.is-secondary.is-small.is-remove(@click="lineUp.offense1 = ''" v-if="lineUp.offense1") X
-          h2.ow-font
-            img(src="images/roles/offense-white.svg" width="20" height="20")
-            img(:src="getTeamImage(lineUp.offense2)" width="20" height="20" v-if="lineUp.offense2")
-            span {{ getPlayerName(lineUp.offense2) }}
-              button.button.is-secondary.is-small.is-remove(@click="lineUp.offense2 = ''" v-if="lineUp.offense2") X
-          h2.ow-font
-            img(src="images/roles/support-white.svg" width="20" height="20")
-            img(:src="getTeamImage(lineUp.support1)" width="20" height="20" v-if="lineUp.support1")
-            span {{ getPlayerName(lineUp.support1) }}
-              button.button.is-secondary.is-small.is-remove(@click="lineUp.support1 = ''" v-if="lineUp.support1") X
-          h2.ow-font
-            img(src="images/roles/support-white.svg" width="20" height="20")
-            img(:src="getTeamImage(lineUp.support2)" width="20" height="20" v-if="lineUp.support2")
-            span {{ getPlayerName(lineUp.support2) }}
-              button.button.is-secondary.is-small.is-remove(@click="lineUp.support2 = ''" v-if="lineUp.support2") X
-          h2.ow-font
-            img(src="images/roles/tank-white.svg" width="20" height="20")
-            img(:src="getTeamImage(lineUp.tank1)" width="20" height="20" v-if="lineUp.tank1")
-            span {{ getPlayerName(lineUp.tank1) }}
-              button.button.is-secondary.is-small.is-remove(@click="lineUp.tank1 = ''" v-if="lineUp.tank1") X
-          h2.ow-font
-            img(src="images/roles/tank-white.svg" width="20" height="20")
-            img(:src="getTeamImage(lineUp.tank2)" width="20" height="20" v-if="lineUp.tank2")
-            span {{ getPlayerName(lineUp.tank2) }}
-              button.button.is-secondary.is-small.is-remove(@click="lineUp.tank2 = ''" v-if="lineUp.tank2") X
-          section.has-text-centered
-            button.button.is-primary(@click="saveRoster" v-if="canSaveRoster") Save Roster And Return To League
-            button.button.is-primary(v-else disabled) Save Roster And Return To League
-        section
-          collapsible(title-text="My Bench")
-            b-table(
-              :data="myAvailablePicks")
-              template(slot-scope="props")
-                b-table-column(label="Role" width="30" field="attributes.role" sortable)
-                  img(:src="`images/roles/${props.row.attributes.role || 'flex'}-white.svg`" width="22" height="22")
-                b-table-column(label="Team" width="30" field="team" sortable)
-                  img(:src="`images/teams/${props.row.team}.svg`" width="22" height="22")
-                b-table-column(label="Player Name" field="name" sortable)
-                  span {{ props.row.name }}
-                b-table-column(label="Assign")
-                  role-buttons(:player="props.row" @setRole="setRole" :lineUp="lineUp")
-                b-table-column(label="Rating" width="40" field="stats.fantasyScore" sortable)
-                  span {{ props.row.stats.fantasyScore || 'N/A' }}
-        section
-          collapsible(title-text="League Rosters" :start-collapsed="true")
-            drafting-users(:users="leagueUsers" :draft="draft" :picks="draftPicks")
+              collapsible(title-text="League Rosters" :start-collapsed="true")
+                drafting-users(:users="leagueUsers" :draft="draft" :picks="draftPicks")
+          b-tab-item(label="Trades")
+            .wrap(v-if="liveConfig.canTrade")
+              h2 Manage Trades
+              my-trades(:myPlayers="myPicks" :otherPlayers="otherPicks")
+            section(v-else)
+              span {{ liveConfig.featureDownMessage }}
+          b-tab-item(label="Waiver Wire")
+            .wrap(v-if="liveConfig.canWaiverWire")
+              h2 Waiver Wire
+            section(v-else)
+              span This feature is currently being worked on.
 </template>
 
 <script>
@@ -142,6 +150,7 @@ export default {
   },
   data () {
     return {
+      activeContentTab: null,
       availablePicks: [],
       lineUp: {
         captain: null,
