@@ -143,7 +143,7 @@ export default {
       return this.$route.params.leagueId
     },
     offensePlayers () {
-      if (this.playersLoaded) return this.roster ? this.roster.filter(player => this.playerObjects[player].attributes.role === 'offense') : []
+      if (this.playersLoaded) return this.roster ? this.roster.filter(player => (this.playerObjects[player] && this.playerObjects[player].attributes.role === 'offense')) : []
       return []
     },
     playerObjects () {
