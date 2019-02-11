@@ -21,7 +21,7 @@
           h2 Your Picks
           span {{ liveConfig.featureDownMessage }}
         section(v-if="leagueUsers && leagueUsers.length")
-          collapsible(title-text="League Users" :start-collapsed="true")
+          collapsible(:title-text="`League Users (${leagueUsers.length})`" :start-collapsed="true")
             .left-bar-item(v-for="user in leagueUsers") {{ user.displayName }}
         section(v-if="isOwner")
           collapsible(title-text="Delete League" :start-collapsed="true")

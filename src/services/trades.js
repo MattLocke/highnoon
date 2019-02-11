@@ -7,9 +7,7 @@ import logger from '@/services/logger'
 
 fireInit()
 
-var db = firebase.firestore()
 var rdb = firebase.database()
-db.settings({ timestampsInSnapshots: true })
 
 export default {
   acceptTrade (trade) {

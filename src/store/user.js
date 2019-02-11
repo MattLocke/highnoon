@@ -6,7 +6,6 @@ import { fireInit } from '@/fireLogin'
 fireInit()
 
 var db = firebase.firestore()
-db.settings({ timestampsInSnapshots: true })
 
 export default {
   state: {
@@ -76,6 +75,7 @@ export default {
     getUserData: state => state.userData,
     getFBUserData: state => state.fireUserData,
     getUserId: state => get(state.fireUserData, 'uid', 0),
-    getUserPicks: state => state.picks
+    getUserPicks: state => state.picks,
+    getEmailAddress: state => get(state.fireUserData, 'email', null)
   }
 }
