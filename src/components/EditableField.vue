@@ -43,6 +43,13 @@ export default {
       this.value = this.newValue
       this.handleDisableEditing()
     }
+  },
+  created () {
+    window.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        this.handleDisableEditing()
+      }
+    })
   }
 }
 </script>
@@ -66,11 +73,11 @@ export default {
       }
     }
     .eva-hover {
-        &:hover {
-          svg {
-            fill: #f99e1a;
-          }
+      &:hover {
+        svg {
+          fill: #f99e1a;
         }
       }
+    }
   }
 </style>
