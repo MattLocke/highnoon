@@ -13,7 +13,7 @@
         .columns.is-multiline.is-hidden-mobile.is-gapless(v-if="myAvailablePicks.length")
           .column.is-full
             section
-              editable-field(:initial-value="teamName")
+              editable-field(:initial-value="teamName" @updated-value="setTeamName")
           .column
             section.roster-view.has-text-centered
               player-card(:player="lineUp.captain ? players[lineUp.captain] : null" :showRemove="false")
@@ -254,6 +254,9 @@ export default {
     },
     setRole (eventData) {
       if (this.lineUp !== undefined) this.lineUp[eventData.role] = eventData.player.id
+    },
+    setTeamName (name) {
+      console.log(name)
     }
   },
   mounted () {
