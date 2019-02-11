@@ -151,7 +151,7 @@ export default {
               theLeagueRoster = leagueRoster.data()
             }
             commit('SET_LEAGUE_ID', payload.leagueId)
-            if (!isEmpty(theLeagueRoster)) commit('SET_LEAGUE_ROSTER', theLeagueRoster)
+            commit('SET_LEAGUE_ROSTER', theLeagueRoster)
           })
       }
     }
