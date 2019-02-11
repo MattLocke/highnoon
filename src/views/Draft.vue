@@ -261,6 +261,11 @@ export default {
     }
   },
   watch: {
+    activeTab (val) {
+      this.filterText = ''
+      this.filterTeam = ''
+      this.filterRole = ''
+    },
     autoMode (val) {
       firebase.database().ref(`draftPreference/${this.leagueId}/${this.userId}`).update({ autoMode: val })
     },
