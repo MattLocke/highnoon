@@ -40,7 +40,10 @@ export default {
       this.isEditable = false
     },
     handleSave: function () {
-      this.value = this.newValue
+      if (this.newValue !== this.value) {
+        this.value = this.newValue
+        this.$emit('updated-value', this.newValue)
+      }
       this.handleDisableEditing()
     }
   },
@@ -48,6 +51,9 @@ export default {
     window.addEventListener('keydown', (event) => {
       if (event.key === 'Escape') {
         this.handleDisableEditing()
+      }
+      if (event.key === 'Enter') {
+        this.handleSave()
       }
     })
   }
