@@ -61,6 +61,9 @@ export default {
       this.liveConfig = snapshot.val() || {}
       this.$store.dispatch('saveLiveConfig', snapshot.val())
     })
+    db.ref('/lockedPlayers').on('value', (snapshot) => {
+      this.$store.dispatch('setLockedPlayers', snapshot.val() ? Object.values(snapshot.val()) : [])
+    })
   }
 }
 </script>
