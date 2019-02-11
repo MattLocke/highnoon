@@ -65,19 +65,23 @@ export default {
         discord: null,
         instagram: null,
         reddit: null,
-        twitter: null
+        twitter: null,
+        weekCreated: 0
       }
     }
   },
   computed: {
+    canCreateLeague () {
+      return this.league.leagueName
+    },
+    config () {
+      return this.$store.getters.getConfig
+    },
     numLeagues () {
       return 0
     },
     ownerId () {
       return this.$store.getters.getUserId
-    },
-    canCreateLeague () {
-      return this.league.leagueName
     },
     userData () {
       return this.$store.getters.getUserData
@@ -104,7 +108,8 @@ export default {
           requiredSupport: 2,
           requiredTank: 2,
           status: 'unDrafted',
-          ...leagueData
+          ...leagueData,
+          weekCreated: this.config.currentWeek || 0
         }
       }
 
