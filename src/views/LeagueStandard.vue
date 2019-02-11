@@ -10,7 +10,7 @@
             hr
             button.button.is-primary(@click="draftPreference") Draft Preference List
         section(v-if="leagueUsers && leagueUsers.length")
-          collapsible(title-text="League Users")
+          collapsible(:title-text="`League Users (${leagueUsers.length})`")
             h3
               span.orange {{ leagueUsers.length }}
               |  of
