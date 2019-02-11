@@ -112,7 +112,7 @@
                       span {{ props.row.stats.fantasyScore || 'N/A' }}
             section
               collapsible(title-text="League Rosters" :start-collapsed="true")
-                drafting-users(:users="leagueUsers" :draft="draft" :picks="draftPicks")
+                drafting-users(:users="leagueUsers" :draft="draft" :picks="draftPicks" :ownerId="league.ownerId")
           b-tab-item(label="Trades")
             .wrap(v-if="liveConfig.canTrade")
               h2 Manage Trades
