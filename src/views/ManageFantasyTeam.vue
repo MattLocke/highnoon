@@ -6,7 +6,7 @@
           collapsible(title-text="Unclaimed Players" :start-collapsed="true")
             .left-bar-item Coming Soon
         section
-          scoring-info
+          scoring-info(:league="league")
         section
           collapsible(title-text="Your Next Match")
             my-schedule(:leagueId="leagueId")

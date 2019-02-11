@@ -82,6 +82,12 @@
               li(v-for="team in draftOrder") {{ team.displayName }}
           b-tab-item(label="Trash Talk")
             trash-talk
+          b-tab-item(v-if="isOwner" label="League Options")
+            h2 League Options
+            p We will be adding to this page to allow league owners more control over how their league is ran.  Stay tuned!
+            section(v-if="canChangeScoringMode")
+              b-field(label="Raw Scoring")
+                b-switch(v-model="league.rawScoring")
         section(v-if="canJoinLeague")
           b-field(label="password" v-if="league.password")
             b-input(type="password" v-model="localPassword")
@@ -220,6 +226,14 @@ export default {
           this.$store.dispatch('fetchLeagueUsers', { leagueId: val, leagueType: 'standard' })
           this.$store.dispatch('fetchDraftOrder', val)
           this.getLeague(val)
+        }
+      }
+    },
+    league: {
+      deep: true,
+      handler (val) {
+        if (val && this.isOwner) {
+          this.updateLeague()
         }
       }
     },

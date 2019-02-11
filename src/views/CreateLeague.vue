@@ -35,6 +35,9 @@
           .column.is-three-quarters-desktop
             b-field(label="League Name")
               b-input(placeholder="league name" v-model="league.leagueName")
+          .column.is-narrow(v-if="league.leagueType == 'standard'")
+            b-field(label="Raw Scoring" v-tooltip="'If a player plays more than once in a week, ALL matches count towards points.'")
+              b-switch(v-model="rawScoring")
           .column
             b-field(label="Password (optional)")
               b-input(placeholder="password" v-model="league.password")
@@ -67,7 +70,8 @@ export default {
         reddit: null,
         twitter: null,
         weekCreated: 0
-      }
+      },
+      rawScoring: false
     }
   },
   computed: {
@@ -104,6 +108,7 @@ export default {
       // no point in having useless nodes for an object
       if (leagueData.leagueType === 'standard') {
         leagueData = {
+          rawScoring: this.rawScoring,
           requiredOffense: 2,
           requiredSupport: 2,
           requiredTank: 2,
