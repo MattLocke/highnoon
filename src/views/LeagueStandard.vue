@@ -143,6 +143,10 @@ export default {
     }
   },
   computed: {
+    canChangeScoringMode () {
+      // we'll want to find out if they have points, if they do, disable it.
+      return true
+    },
     canJoinLeague () {
       // Needs to check league type, number of users, league status, etc.
       if (this.league.leagueType === 'standard' && this.leagueUsers.length && this.leagueUsers.length > 11) return false
