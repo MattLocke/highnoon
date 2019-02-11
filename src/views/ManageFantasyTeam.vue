@@ -13,7 +13,7 @@
       .column(v-if="playersLoaded")
         section
           h1 Manage Your Fantasy Team
-          editable-field(:initial-value="this.leagueUsers.find(user => user.userId === userData.id).teamName")
+          editable-field(:initial-value="teamName")
           p The captain role is (for now) just a flex role so you can have a player outside of the 2/2/2 we're enforcing.  Their points will count the same as any other role, so it's safe to feature your favorite DPS as your captain!
         b-tabs(v-model="activeContentTab")
           b-tab-item(label="ManageRoster")
@@ -240,6 +240,9 @@ export default {
     },
     userData () {
       return this.$store.getters.getUserData
+    },
+    teamName () {
+      return this.leagueUsers.find(user => user.userId === this.userData.id).teamName
     }
   },
   watch: {

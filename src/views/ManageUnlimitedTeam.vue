@@ -13,7 +13,7 @@
         .columns.is-multiline.is-hidden-mobile.is-gapless(v-if="myAvailablePicks.length")
           .column.is-full
             section
-              editable-field(:initial-value="this.leagueUsers.find(user => user.userId === userData.id).teamName")
+              editable-field(:initial-value="teamName")
           .column
             section.roster-view.has-text-centered
               player-card(:player="lineUp.captain ? players[lineUp.captain] : null" :showRemove="false")
@@ -211,6 +211,9 @@ export default {
     },
     userData () {
       return this.$store.getters.getUserData
+    },
+    teamName () {
+      return this.leagueUsers.find(user => user.userId === this.userData.id).teamName
     }
   },
   watch: {
