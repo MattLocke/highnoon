@@ -68,7 +68,6 @@
         section
           b-table(
             :data="filteredPlayers"
-            :loading="!(filteredPlayers.length)"
             ref="table"
             :paginated="filteredPlayers && filteredPlayers.length > 20"
             :per-page="20"
