@@ -2,11 +2,17 @@
   .editable-field
     b-field(v-if="isEditable")
       b-input(v-model="newValue")
-      eva-icon(name="save" fill="white" @click="handleSave")
-      eva-icon(name="close-circle" fill="white" @click="handleDisableEditing")
-    div(v-else)
-      p.is-inline {{ value }}
-      eva-icon(name="edit" fill="white" @click="handleEnableEditing")
+      p.control
+        button.button.is-primary(@click="handleSave")
+          eva-icon(name="save" fill="white")
+          span Save
+        button.button.is-primary(@click="handleDisableEditing")
+          eva-icon(name="close-circle" fill="white")
+          span Cancel
+    div.columns(v-else)
+      h2.is-inline.column.is-narrow {{ value }}
+      .column(@click="handleEnableEditing")
+        eva-icon(name="edit" fill="white")
 </template>
 
 <script>
