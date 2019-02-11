@@ -84,7 +84,7 @@
 </template>
 
 <script>
-import { differenceWith, get } from 'lodash'
+import { differenceWith } from 'lodash'
 import firebase from 'firebase/app'
 import 'firebase/database'
 
@@ -127,7 +127,7 @@ export default {
   },
   computed: {
     canRequest () {
-      return (get(this.myPlayer.id) && get(this.selectedPlayer.id))
+      return (this.myPlayer && this.myPlayer.id) && (this.selectedPlayer && this.selectedPlayer.id)
     },
     filteredPlayers () {
       const tmpPlayers = this.players ? Object.values(this.players) : []
@@ -217,7 +217,6 @@ export default {
             type: 'is-success',
             position: 'is-bottom'
           })
-          this.getWaivers()
         })
         .catch(() => {
           this.$toast.open({

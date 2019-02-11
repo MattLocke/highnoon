@@ -5,10 +5,36 @@ admin.initializeApp()
 
 const firestore = admin.firestore()
 
+var API_KEY = 'key-102f8fa0ccfb9ff66ace58ea7807e559';
+var DOMAIN = 'mg.highnoon.gg';
+var mailgun = require('mailgun-js')({apiKey: API_KEY, domain: DOMAIN});
+
 // Add this magical line of code:
 firestore.settings({ timestampsInSnapshots: true })
 
 exports.matchlock = null
+
+exports.sendEmail = functions.database.ref('/email/{emailId}')
+  .onCreate((snapshot, context) => {
+    const emailId = context.params.leagueId
+    const emailData = snapshot.val()
+    const data = {
+      from: 'High Noon Fantasy <admin@highnoon.gg>',
+      to: emailData.to,
+      subject: emailData.subject,
+      text: emailData.textBody
+    }
+    
+    mailgun.messages().send(data, (error, body) => {
+      console.log(body)
+      console.error(error)
+      // we've sent it, just delete it for now.
+    })
+    functions.database.ref(`/emails/${emailId}`).set(null)
+    .catch((e) => {
+      console.log(e)
+    })
+  })
 
 exports.facilitateDraftPick = functions.database.ref('/draftPicks/{leagueId}')
   .onUpdate((change, context) => {
