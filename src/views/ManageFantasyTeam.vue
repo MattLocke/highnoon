@@ -152,6 +152,7 @@ export default {
     return {
       activeContentTab: null,
       availablePicks: [],
+      league: {},
       lineUp: {
         captain: null,
         offense1: null,
@@ -246,11 +247,14 @@ export default {
       immediate: true,
       handler (val) {
         if (val) {
-          this.$store.dispatch('fetchDraft', val)
-          this.$store.dispatch('fetchDraftPicks', val)
-          this.$store.dispatch('fetchLeagueSchedule', val)
-          this.$store.dispatch('fetchLeagueUsers', { leagueId: val, leagueType: 'standard' })
-          this.$store.dispatch('fetchRoster', { leagueId: val, leagueType: 'standard' })
+          LeagueService.getLeague(val).then((league) => {
+            this.league = league
+            this.$store.dispatch('fetchDraft', val)
+            this.$store.dispatch('fetchDraftPicks', val)
+            this.$store.dispatch('fetchLeagueSchedule', val)
+            this.$store.dispatch('fetchLeagueUsers', { leagueId: val, leagueType: 'standard' })
+            this.$store.dispatch('fetchRoster', { leagueId: val, leagueType: 'standard' })
+          })
         }
       }
     },
