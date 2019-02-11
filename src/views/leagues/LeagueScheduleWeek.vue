@@ -2,7 +2,9 @@
   .league-schedule-week
     h3 Week {{ index }}
     div(v-for="match in week")
-      span {{ match.home.displayName }} vs {{ match.away.displayName }}
+      span(:class="{'orange': match.home.userId == userId}") {{ match.home.displayName }}
+      span  vs
+      span(:class="{'orange': match.away.userId == userId}")  {{ match.away.displayName }}
 </template>
 
 <script>
@@ -15,6 +17,11 @@ export default {
     week: {
       type: Array,
       required: true
+    }
+  },
+  computed: {
+    userId () {
+      return this.$store.getters.getUserId
     }
   }
 }
