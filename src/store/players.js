@@ -9,14 +9,21 @@ db.settings({ timestampsInSnapshots: true })
 
 export default {
   state: {
-    players: []
+    players: [],
+    lockedPlayers: []
   },
   mutations: {
     SET_PLAYERS: (state, payload) => {
-      state.players = payload
+      state.players = payload || []
+    },
+    SET_LOCKED_PLAYERS: (state, payload) => {
+      state.lockedPlayers = payload || []
     }
   },
   actions: {
+    setLockedPlayers ({ commit }, payload) {
+      commit('SET_LOCKED_PLAYERS', payload)
+    },
     getPlayers: ({ state, commit, dispatch }) => {
       if (!state.players.length) {
         dispatch('setLoading', true)
@@ -51,6 +58,7 @@ export default {
     }
   },
   getters: {
+    getLockedPlayers: state => state.lockedPlayers,
     getPlayers: state => state.players
   }
 }

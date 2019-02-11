@@ -1,11 +1,12 @@
 <template lang="pug">
   .my-trades
-    .wrap(v-if="myTrades.length")
-      trade-listing(v-for="trade in myTrades" :key="trade.requestDate" :trade="trade")
-    .left-bar-item(v-else) You Have No Pending Trades
-    hr
-    b-field
-      button.button.is-primary.is-small(@click="createTradeMode = !createTradeMode" :class="{'is-pulled-right': createTradeMode}") {{ createTradeMode ? 'Cancel' : 'Create New Trade' }}
+    .columns
+      .column
+        p Trades will be receiving many updates over the next day or two.  We'll also be releasing an article explaining how they work and why.  Please let me know if you have any issues!
+        p After you accept or cancel a trade, the screen will refresh.  This is normal!  I will update it to not require that in the coming days.  :)
+      .column.is-narrow
+        b-field
+          button.button.is-primary.is-small(@click="createTradeMode = !createTradeMode") {{ createTradeMode ? 'Cancel' : 'Create New Trade' }}
     .initiate-trade(v-if="createTradeMode")
       b-field(label="Choose League Member")
         b-select(placeholder="Select a Member" v-model="selectedUser")
@@ -15,14 +16,18 @@
           option(v-for="player in theirPlayers" :value="player") {{ playersObject[player].name }}
       b-field(label="Your Players")
         b-select(placeholder="Select a Category" v-model="yourPlayer")
-          option(v-for="player in myPlayers" :value="player") {{ playersObject[player].name }}
+          option(v-for="player in myAvailableTrades" :value="player") {{ playersObject[player].name }}
       b-field
         button.button.is-primary(v-if="canCreate" @click="createTrade") Request Trade
         button.button.is-primary(v-else disabled) Request Trade
+      hr
+    .wrap(v-if="myTrades.length")
+      trade-listing(v-for="trade in myTrades" :key="trade.requestDate" :trade="trade")
+    .left-bar-item(v-else) You Have No Pending Trades
 </template>
 
 <script>
-import { isEmpty } from 'lodash'
+import { differenceWith, isEmpty } from 'lodash'
 import firebase from 'firebase/app'
 import 'firebase/database'
 
@@ -72,7 +77,22 @@ export default {
       return this.$store.getters.getLeagueUsers
     },
     myTrades () {
-      if (this.trades) return this.trades.filter(trade => trade.askerId === this.userId || trade.responderId === this.userId)
+      if (this.trades) {
+        return this.trades.filter(trade => trade.askerId === this.userId || trade.responderId === this.userId)
+      }
+      return []
+    },
+    myAvailableTrades () {
+      if (this.trades) {
+        const ownTrades = this.trades.filter(trade => trade.askerId === this.userId || trade.responderId === this.userId)
+        // make sure they're not trying to trade multiples of the same player
+        const usedPlayers = []
+        ownTrades.forEach(trade => {
+          usedPlayers.push(trade.askerPlayer)
+          usedPlayers.push(trade.responderPlayer)
+        })
+        return differenceWith(this.myPlayers, usedPlayers, (a, b) => a === b)
+      }
       return []
     },
     playersLoaded () {
