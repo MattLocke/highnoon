@@ -41,6 +41,9 @@ Vue.filter('formatJSDate', function (value) {
 Vue.filter('formatJSTime', function (value) {
   if (value) return moment(value).format('h:mm a')
 })
+Vue.filter('capFirst', function (value) {
+  if (value) return `${value.charAt(0).toUpperCase()}${value.slice(1)}`
+})
 
 Vue.component('leftBar', leftBar)
 Vue.component('topBar', topBar)

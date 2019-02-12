@@ -3,7 +3,6 @@
     .columns.is-marginless
       left-bar
         transfer-ownership(leagueType="standard" v-if="userData.isAdmin")
-        remove-user(v-if="(isOwner && !draftComplete) || userData.isAdmin" leagueType="standard")
         your-leagues(:userId="userId")
         section(v-if="league.leagueType == 'standard' && !draftComplete && isInLeague")
           collapsible(title-text="Draft Preference List" :start-collapsed="true")
@@ -11,7 +10,7 @@
             hr
             button.button.is-primary(@click="draftPreference") Draft Preference List
         section(v-if="leagueUsers && leagueUsers.length")
-          collapsible(title-text="League Users")
+          collapsible(:title-text="`League Users (${leagueUsers.length})`")
             h3
               span.orange {{ leagueUsers.length }}
               |  of
@@ -26,13 +25,6 @@
             b-field
               button.button.is-primary(@click="updateLeague") Update Password
             p To remove the password, simply update with no password in the field.
-        section(v-if="isOwner")
-          collapsible(title-text="Delete League" :start-collapsed="true")
-            confirm-button(button-text="Delete League" confirm-text="Are You Sure?" extra-text="This action can not be undone, and all users will lose their points and picks associated with this league." @confirm-it="deleteLeague")
-        section(v-if="draftComplete && isOwner")
-          collapsible(title-text="Reset Draft" :start-collapsed="true")
-            p This will reset the draft for all players in the league.  You may want to do this between stages, or there may have been an issue during the draft, whatever the reason, this is your key to resetting it!
-            confirm-button(button-text="Reset Draft" confirm-text="Are You Sure?" @confirm-it="resetDraft")
         section
           router-link.button.is-primary.is-small(:to="`/manageTeam/${leagueId}`" v-if="draftComplete") Manage Team
           button.button.is-primary.is-small(disabled v-else) Manage Team
@@ -82,6 +74,24 @@
               li(v-for="team in draftOrder") {{ team.displayName }}
           b-tab-item(label="Trash Talk")
             trash-talk
+          b-tab-item(v-if="isOwner || userData.isAdmin" label="League Options")
+            h2 League Options
+            p We will be adding to this page to allow league owners more control over how their league is ran.  Stay tuned!
+            remove-user(v-if="(isOwner && !draftComplete) || userData.isAdmin" leagueType="standard")
+            section(v-if="canChangeScoringMode")
+              collapsible(title-text="Raw Scoring")
+                p This lets ALL scores a player accumulates during a week count, not just the best-of.  This is a more traditional scoring method and makes things more interesting!
+                hr
+                b-field(label="Raw Scoring")
+                  b-switch(v-model="league.rawScoring")
+            section(v-if="draftComplete")
+              collapsible(title-text="Reset Draft")
+                p This will reset the draft for all players in the league.  You may want to do this between stages, or there may have been an issue during the draft, whatever the reason, this is your key to resetting it!
+                hr
+                confirm-button(button-text="Reset Draft" confirm-text="Are You Sure?" @confirm-it="resetDraft")
+            section(v-if="isOwner")
+              collapsible(title-text="Delete League" :start-collapsed="true")
+                confirm-button(button-text="Delete League" confirm-text="Are You Sure?" extra-text="This action can not be undone, and all users will lose their points and picks associated with this league." @confirm-it="deleteLeague")
         section(v-if="canJoinLeague")
           b-field(label="password" v-if="league.password")
             b-input(type="password" v-model="localPassword")
@@ -137,6 +147,10 @@ export default {
     }
   },
   computed: {
+    canChangeScoringMode () {
+      // we'll want to find out if they have points, if they do, disable it.
+      return true
+    },
     canJoinLeague () {
       // Needs to check league type, number of users, league status, etc.
       if (this.league.leagueType === 'standard' && this.leagueUsers.length && this.leagueUsers.length > 11) return false
@@ -220,6 +234,14 @@ export default {
           this.$store.dispatch('fetchLeagueUsers', { leagueId: val, leagueType: 'standard' })
           this.$store.dispatch('fetchDraftOrder', val)
           this.getLeague(val)
+        }
+      }
+    },
+    league: {
+      deep: true,
+      handler (val) {
+        if (val && this.isOwner) {
+          this.updateLeague()
         }
       }
     },

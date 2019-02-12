@@ -118,6 +118,9 @@ export default {
       .from {
         font-size: .7rem;
       }
+      .content {
+        word-break: break-word;
+      }
       margin-bottom: .25rem;
     }
   }

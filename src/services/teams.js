@@ -6,7 +6,6 @@ import logger from '@/services/logger'
 fireInit()
 
 var db = firebase.firestore()
-db.settings({ timestampsInSnapshots: true })
 
 export default {
   getAllTeams () {

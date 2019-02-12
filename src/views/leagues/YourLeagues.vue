@@ -3,9 +3,9 @@
     collapsible(title-text="Leagues" :start-collapsed="false")
       h3 You are in
         span.orange  {{ userLeagues.length }}
-        |  of
-        span.orange  8
-        |  leagues
+        span(v-if="!userData.isAdmin && !userData.isPremier")  of
+        span.orange(v-if="!userData.isAdmin && !userData.isPremier")  8
+        span  leagues
       .left-bar-item(v-if="!userLeagues.length") You currently have no Fantasy leagues.
       .left-bar-item.has-pointer(:class="{'active-item': $route.params.leagueId == league.leagueId}" v-for="league in userLeagues" :key="league.leagueId" @click="setLeague(league)")
         .columns.is-mobile

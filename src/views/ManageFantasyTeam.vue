@@ -6,7 +6,7 @@
           collapsible(title-text="Unclaimed Players" :start-collapsed="true")
             .left-bar-item Coming Soon
         section
-          scoring-info
+          scoring-info(:league="league")
         section
           collapsible(title-text="Your Next Match")
             my-schedule(:leagueId="leagueId")
@@ -113,7 +113,7 @@
                       span {{ props.row.stats.fantasyScore || 'N/A' }}
             section
               collapsible(title-text="League Rosters" :start-collapsed="true")
-                drafting-users(:users="leagueUsers" :draft="draft" :picks="draftPicks")
+                drafting-users(:users="leagueUsers" :draft="draft" :picks="draftPicks" :ownerId="league.ownerId")
           b-tab-item(label="Trades")
             .wrap(v-if="liveConfig.canTrade")
               h2 Manage Trades
@@ -122,7 +122,7 @@
               span {{ liveConfig.featureDownMessage }}
           b-tab-item(label="Waiver Wire")
             .wrap(v-if="liveConfig.canWaiverWire")
-              h2 Waiver Wire
+              waiver-wire(:players="players" :myPicks="myPicks" :otherPicks="otherPicks" :leagueRoster="leagueRoster")
             section(v-else)
               span This feature is currently being worked on.
 </template>
@@ -138,6 +138,7 @@ import MyTrades from '@/views/manage/MyTrades'
 import PlayerCard from '@/components/PlayerCard'
 import RoleButtons from '@/views/manage/RoleButtons'
 import ScoringInfo from '@/views/leagues/ScoringInfo'
+import WaiverWire from '@/views/manage/MyWaiverWire'
 
 export default {
   name: 'ManageTeam',
@@ -147,12 +148,14 @@ export default {
     MyTrades,
     PlayerCard,
     RoleButtons,
-    ScoringInfo
+    ScoringInfo,
+    WaiverWire
   },
   data () {
     return {
       activeContentTab: null,
       availablePicks: [],
+      league: {},
       lineUp: {
         captain: null,
         offense1: null,
@@ -250,11 +253,14 @@ export default {
       immediate: true,
       handler (val) {
         if (val) {
-          this.$store.dispatch('fetchDraft', val)
-          this.$store.dispatch('fetchDraftPicks', val)
-          this.$store.dispatch('fetchLeagueSchedule', val)
-          this.$store.dispatch('fetchLeagueUsers', { leagueId: val, leagueType: 'standard' })
-          this.$store.dispatch('fetchRoster', { leagueId: val, leagueType: 'standard' })
+          LeagueService.getLeague(val).then((league) => {
+            this.league = league
+            this.$store.dispatch('fetchDraft', val)
+            this.$store.dispatch('fetchDraftPicks', val)
+            this.$store.dispatch('fetchLeagueSchedule', val)
+            this.$store.dispatch('fetchLeagueUsers', { leagueId: val, leagueType: 'standard' })
+            this.$store.dispatch('fetchRoster', { leagueId: val, leagueType: 'standard' })
+          })
         }
       }
     },
