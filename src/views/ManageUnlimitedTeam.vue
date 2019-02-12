@@ -255,8 +255,15 @@ export default {
     setRole (eventData) {
       if (this.lineUp !== undefined) this.lineUp[eventData.role] = eventData.player.id
     },
-    setTeamName (name) {
-      console.log(name)
+    setTeamName (newTeamName) {
+      const leagueUser = this.leagueUsers.find(user => user.userId === this.userData.id)
+      const updatedLeagueUser = {
+        [leagueUser.userId]: {
+          ...leagueUser,
+          teamName: newTeamName
+        }
+      }
+      LeagueService.updateDraftTeamUser(updatedLeagueUser, this.leagueId, 'unlimited')
     }
   },
   mounted () {

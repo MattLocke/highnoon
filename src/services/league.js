@@ -256,5 +256,10 @@ export default {
     return db.collection(`${leagueType}Leagues`).doc(league.id)
       .set(league, { merge: true })
       .then(l => l)
+  },
+  updateDraftTeamUser (updatedUserObject, leagueId, leagueType) {
+    // leagueUsers Array [Objects { userID: String, displayName: String, teamName: String }]
+    // NOTE: leagueUsers array should contain all users, including the updated one
+    return db.collection(`${leagueType}LeagueUsers`).doc(leagueId).set(updatedUserObject, { merge: true })
   }
 }
