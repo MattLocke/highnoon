@@ -76,7 +76,7 @@ export default {
   methods: {
     savePick () {
       // make sure we don't fire a save for something that already exists
-      if (!this.userPicks[this.match.id]) {
+      if (!this.userPicks[this.match.id] || this.userPicks[this.match.id].winner !== this.matchWinner) {
         this.$store.dispatch('setLoading', true)
         const pick = {
           matchId: this.match.id,
