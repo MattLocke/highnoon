@@ -94,9 +94,10 @@ exports.facilitateDraftPick = functions.database.ref('/draftPicks/{leagueId}')
     const leagueId = context.params.leagueId
     const picks = change.after.val()
     // make sure the draft is active before wasting processing time
-    return admin.database().ref(`/draft/${leagueId}`).once('value', snapshot => {
-      const draft = snapshot.val()
-      if (draft && draft.status === 'active') return workDraftPick (leagueId, picks)
+    return admin.database().ref(`/draft/${leagueId}/status`).once('value', snapshot => {
+      const status = snapshot.val()
+      console.log(`We have a draft status of: ${status}`)
+      if (status === 'active') return workDraftPick (leagueId, picks)
       return Promise.resolve(true)
     })
   })
