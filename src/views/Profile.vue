@@ -84,7 +84,7 @@ export default {
   },
   data () {
     return {
-      activeContentTab: '',
+      activeContentTab: null,
       profileImage: '',
       localProfile: {
         primaryRole: '',

@@ -36,13 +36,69 @@ exports.sendEmail = functions.database.ref('/email/{emailId}')
     })
   })
 
+exports.waiverWireApprove = functions.database.ref('/approvedWaivers/{leagueId}/{userId}/{gainsId}')
+  .onCreate((snapshot, context) => {
+    const leagueId = context.params.leagueId
+    const userId = context.params.userId
+    const choice = snapshot.val()
+    const newPlayerId = choice.gains
+    const oldPlayerId = choice.loses
+
+    // get the players roster
+    var userDraftPicks = admin.database().ref(`/draftPicks/${leagueId}/${userId}`).once('value', (snapshot) => {
+      var thePicks = snapshot.val()
+      var cleanPicks = thePicks ? thePicks.filter(pick => pick !== oldPlayerId) : []
+      if (cleanPicks.length !== 11) {
+        console.error(`(${leagueId} / ${userId}) We had an invalid roster length when removing the old player.  Roster length: ${cleanPicks.length}`)
+        console.log(`Old Player: ${oldPlayerId}`)
+        console.log(`New Player: ${newPlayerId}`)
+        console.log(`Roster: ${JSON.stringify(cleanPicks)}`)
+        return null
+      } else {
+        console.log(`Successfully cleaned the roster of ${userId} in ${leagueId}`)
+      }
+      cleanPicks.push(newPlayerId)
+      return admin.database().ref(`/draftPicks/${leagueId}/${userId}`).set(cleanPicks)
+    })
+    .then(ref => {
+      if (ref) return admin.database().ref(`/approvedWaivers/${leagueId}/${userId}/${newPlayerId}`).set(null)
+      return null
+    })
+
+    var userRoster = admin.firestore().collection(`standardLeagueRoster`).doc(leagueId).get().then(doc => {
+      var fullRoster = doc.data()
+      if (fullRoster && fullRoster[userId])  {
+        var theRoster = fullRoster[userId] ? cleanRoster(fullRoster[userId].roster, oldPlayerId) : {}
+        fancyLog('Updating Roster')
+        var newRoster = { ...fullRoster }
+        newRoster[userId] = theRoster
+        return admin.firestore().collection(`standardLeagueRoster`).doc(leagueId).set(newRoster)
+      }
+      return null
+    })
+    
+    return Promise.all([userDraftPicks, userRoster])
+      .then(() => {
+        console.log('Roster exchange complete.')
+        return admin.database().ref(`/liveConfig`).update({ waiverWireDisabled: true })
+      })
+      .catch(e => {
+        console.log(e)
+      })
+
+  })
+
 exports.facilitateDraftPick = functions.database.ref('/draftPicks/{leagueId}')
   .onUpdate((change, context) => {
     // get the draft users, and set the correct one to active
     const leagueId = context.params.leagueId
     const picks = change.after.val()
-    
-    return workDraftPick (leagueId, picks)
+    // make sure the draft is active before wasting processing time
+    return admin.database().ref(`/draft/${leagueId}`).once('value', snapshot => {
+      const draft = snapshot.val()
+      if (draft && draft.status === 'active') return workDraftPick (leagueId, picks)
+      return Promise.resolve(true)
+    })
   })
 
 exports.facilitateDraftPickCreate = functions.database.ref('/draftPicks/{leagueId}')

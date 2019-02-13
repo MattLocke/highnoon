@@ -59,6 +59,13 @@ export default {
     // set up live db listeners
     db.ref('/liveConfig').on('value', (snapshot) => {
       this.liveConfig = snapshot.val() || {}
+      if (this.liveConfig.restart) {
+        const lastUpdated = localStorage.getItem('lastRefresh')
+        if (Number(lastUpdated < this.liveConfig.restart)) {
+          localStorage.setItem('lastRefresh', this.liveConfig.restart)
+          window.location.reload()
+        }
+      }
       this.$store.dispatch('saveLiveConfig', snapshot.val())
     })
     db.ref('/lockedPlayers').on('value', (snapshot) => {
