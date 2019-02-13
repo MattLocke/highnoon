@@ -102,6 +102,11 @@ exports.tryAutomatedPick = functions.database.ref('/draft/{leagueId}')
     }
   })
 
+exports.updateTeam = functions.firestore.document('unlimitedLeagueUsers/{leagueId}').onUpdate((change, context) => {
+    const leagueId = context.params.leagueId;
+    return admin.firestore().collection('leagueSchedule').doc(leagueId).get().then(doc => console.log(doc));
+})
+
 exports.tradePlayer = functions.database.ref('/trades/{leagueId}/{tradeId}')
   .onUpdate((change, context) => {
     const trade = change.after.val()
