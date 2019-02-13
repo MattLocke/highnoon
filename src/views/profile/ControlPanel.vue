@@ -24,9 +24,24 @@
         span Can Trade Players
     .columns.is-mobile
       .column.is-narrow
-        b-switch(v-model="liveConfigCopy.canUseSite")
+        b-switch(v-model="liveConfigCopy.canTrade")
+      .column
+        span Can Use Waiver Wire
+    .columns.is-mobile
+      .column.is-narrow
+        b-switch(v-model="liveConfigCopy.waiverWireDisabled")
+      .column
+        span Waiver Wire Active
+    .columns.is-mobile
+      .column.is-narrow
+        b-switch(v-model="liveConfigCopy.canWaiverWire")
       .column
         span Can Use High Noon
+    .columns.is-mobile
+      .column.is-narrow
+        button.button.is-small.is-primary(@click="forceRefresh") Force Refresh
+      .column
+        span Force Refresh
 </template>
 
 <script>
@@ -65,6 +80,10 @@ export default {
     }
   },
   methods: {
+    forceRefresh () {
+      console.log('forcing refresh...')
+      this.liveConfigCopy.restart = Date.now()
+    },
     saveConfig () {
       firebase.database().ref('liveConfig').update(this.liveConfigCopy)
     }

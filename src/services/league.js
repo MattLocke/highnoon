@@ -72,8 +72,9 @@ export default {
       .then(() => leagueId)
       .catch((error) => Promise.reject(error))
   },
-  requestWaiver (waiver) {
-    return rdb.ref(`/pendingWaivers/${waiver.leagueId}`).push(waiver)
+  requestWaiver (waiver, instant) {
+    const where = instant ? `approvedWaivers/${waiver.leagueId}/${waiver.requesterId}/${waiver.gains}` : 'pendingWaivers'
+    return instant ? rdb.ref(`/${where}`).set(waiver) : rdb.ref(`/${where}/${waiver.leagueId}`).push(waiver)
   },
   deleteLeague (leagueId, leagueType = 'standard') {
     // set up the batch

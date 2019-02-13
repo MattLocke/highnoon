@@ -149,6 +149,9 @@ export default {
     leagueId () {
       return this.$route.params.leagueId
     },
+    liveConfig () {
+      return this.$store.getters.getLiveConfig
+    },
     lockedPlayers () {
       return this.$store.getters.getLockedPlayers
     },
@@ -208,7 +211,9 @@ export default {
         status: 'pending'
       }
 
-      LeagueService.requestWaiver(waiver)
+      const instant = this.liveConfig.waiverWireDisabled
+
+      LeagueService.requestWaiver(waiver, instant)
         .then(() => {
           this.myPlayer = {}
           this.selectedPlayer = {}
