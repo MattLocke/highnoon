@@ -312,11 +312,11 @@ function processPreferenceList (preferenceList, league, leagueId) {
 
         if (lumpedPicks) console.log(`We have ${lumpedPicks.length} picks so far.`)
         // remove array from preferenceList
-        unclaimedPlayers = _.differenceWith(players, lumpedPicks, (a, b) => a === b)
+        unclaimedPlayers = _.differenceWith(players, lumpedPicks, (a, b) => Number(a) === Number(b))
         // console.log(`We have ${players.length} players total.`)
         // console.log(`PreferenceList: ${JSON.stringify(preferenceList)}`)
         // console.log(`Unclaimed: ${JSON.stringify(unclaimedPlayers)}`)
-        unclaimedPreference = (preferenceList && preferenceList.length) ? preferenceList.filter(p => unclaimedPlayers.find(u => u === p)) : []
+        unclaimedPreference = (preferenceList && preferenceList.length) ? preferenceList.filter(p => unclaimedPlayers.find(u => Number(u) === Number(p))) : []
         
         // const missingType = findMissing(rawPicks, userId, indexedPlayers)
         // // if we have a preference list left, take the top player.
