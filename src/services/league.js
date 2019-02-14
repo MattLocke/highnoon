@@ -257,5 +257,8 @@ export default {
     return db.collection(`${leagueType}Leagues`).doc(league.id)
       .set(league, { merge: true })
       .then(l => l)
+  },
+  updateDraftTeamUser (updatedUserObject, leagueId, leagueType) {
+    return db.collection(`${leagueType}LeagueUsers`).doc(leagueId).set(updatedUserObject, { merge: true })
   }
 }

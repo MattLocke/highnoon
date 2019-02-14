@@ -11,6 +11,9 @@
           h1 Manage Your Fantasy Team
           p The captain role is (for now) just a flex role so you can have a player outside of the 2/2/2 we're enforcing.  Their points will count the same as any other role, so it's safe to feature your favorite DPS as your captain!
         .columns.is-multiline.is-hidden-mobile.is-gapless(v-if="myAvailablePicks.length")
+          .column.is-full
+            section
+              editable-field(:initial-value="teamName" @updated-value="setTeamName")
           .column
             section.roster-view.has-text-centered
               player-card(:player="lineUp.captain ? players[lineUp.captain] : null" :showRemove="false")
@@ -208,6 +211,9 @@ export default {
     },
     userData () {
       return this.$store.getters.getUserData
+    },
+    teamName () {
+      return this.leagueUsers.find(user => user.userId === this.userData.id).teamName
     }
   },
   watch: {
@@ -248,6 +254,16 @@ export default {
     },
     setRole (eventData) {
       if (this.lineUp !== undefined) this.lineUp[eventData.role] = eventData.player.id
+    },
+    setTeamName (newTeamName) {
+      const leagueUser = this.leagueUsers.find(user => user.userId === this.userData.id)
+      const updatedLeagueUser = {
+        [leagueUser.userId]: {
+          ...leagueUser,
+          teamName: newTeamName
+        }
+      }
+      LeagueService.updateDraftTeamUser(updatedLeagueUser, this.leagueId, 'unlimited')
     }
   },
   mounted () {
