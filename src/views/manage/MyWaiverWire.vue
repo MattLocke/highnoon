@@ -3,6 +3,9 @@
     collapsible(title-text="The Waiver Wire" :start-collapsed="true")
       p This is where you can exchange players you have for players that are unclaimed in the draft.  To prevent unfair advantages in release dates vs. a user's schedule, there's a system called Waiver Wire.  What this does is creates a period of time where people can say which players they'd like to swap for.  Then at the end of the period, whoever has the worst record will get first dibs on player X, if more than one person wanted that player.  This helps keeps things interesting and is a long-proven good idea!  Good luck all!
     hr
+    section(v-if="this.liveConfig.waiverWireDisabled")
+      h2.orange Waiver Wire has passed for this week!
+      p That means you can swap players from the pool, first come first serve.  Players lock as their match begins, so be weary of that!  The waiver wire will be active again at 12:00am PST Monday morning every week, and will unlock for free trade after assigning waiver wire picks on Tuesdays at 11:00am PST.  Thank you!
     b-field(label="Player I'd Like To Exchange")
       b-select(v-model="myPlayer")
         option(v-for="player in myPicksFiltered" :value="players[player]") {{ players[player].name }} ({{ players[player].attributes.role | capFirst }})

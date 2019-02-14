@@ -188,6 +188,9 @@ export default {
     leagueUsers () {
       return this.$store.getters.getLeagueUsers || []
     },
+    leanPlayers () {
+      return Object.keys(this.players)
+    },
     liveConfig () {
       return this.$store.getters.getLiveConfig
     },
@@ -393,7 +396,7 @@ export default {
 
       const draft = {
         leagueName: this.league.leagueName,
-        players: Object.values(this.players),
+        players: this.leanPlayers,
         activeDrafter: 0,
         direction: 'forward',
         status: 'active',
