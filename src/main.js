@@ -19,6 +19,7 @@ import topBar from './components/TopBar'
 import confirmButton from './components/ConfirmButton'
 import arrow from './components/Arrow'
 import collapsible from './components/Collapsible'
+import editableField from './components/EditableField'
 
 Vue.use(Buefy)
 Vue.use(EvaIcons)
@@ -49,6 +50,7 @@ Vue.component('topBar', topBar)
 Vue.component('confirmButton', confirmButton)
 Vue.component('arrow', arrow)
 Vue.component('collapsible', collapsible)
+Vue.component('editableField', editableField)
 
 fireInit()
 

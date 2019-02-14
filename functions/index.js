@@ -175,6 +175,35 @@ exports.tryAutomatedPick = functions.database.ref('/draft/{leagueId}')
     }
   })
 
+exports.updateStandardSchedule = functions.firestore.document('standardLeagueUsers/{leagueId}').onUpdate((change, context) => {
+  const leagueId = context.params.leagueId; // Grab our leagueId
+
+  // UPDATE TEAM NAMES OF ALL USERS
+  const leagueUsers = change.after.data(); // Grab a list of league users
+  const leagueScheduleCollection = admin.firestore().collection('leagueSchedule').doc(leagueId);
+  return leagueScheduleCollection.get().then(doc => { // Grab the leagueSchedule collection of our league
+    const leagueSchedule = doc.data();
+    const leagueUsersArray = Object.values(leagueUsers); // Turn Users into Array so we can easily loop through them
+    Object.keys(leagueSchedule).forEach(weekKey => { // Start looping through each week
+      leagueSchedule[weekKey].forEach((match, index) => { // Loop through each match and grab index for reference later
+        // Set teams for cleaner if conditionals later
+        const awayTeam = leagueSchedule[weekKey][index].away;
+        const homeTeam = leagueSchedule[weekKey][index].home;
+        // Loop through each user to update team names
+        leagueUsersArray.forEach(user => {
+          if (awayTeam.userId === user.userId) {
+            awayTeam.teamName = user.teamName;
+          }
+          if (homeTeam.userId === user.userId) {
+            homeTeam.teamName = user.teamName;
+          }
+        })
+      })
+    })
+    return leagueScheduleCollection.set(leagueSchedule); // Set our modified league schedule
+  });
+})
+
 exports.tradePlayer = functions.database.ref('/trades/{leagueId}/{tradeId}')
   .onUpdate((change, context) => {
     const trade = change.after.val()

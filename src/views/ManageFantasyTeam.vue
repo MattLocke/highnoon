@@ -17,6 +17,9 @@
         b-tabs(v-model="activeContentTab")
           b-tab-item(label="ManageRoster")
             .columns.is-multiline.is-hidden-mobile.is-gapless(v-if="myAvailablePicks.length")
+              .column.is-full
+                section
+                  editable-field(:initial-value="teamName" @updated-value="setTeamName")
               .column
                 section.roster-view.has-text-centered
                   player-card(:player="lineUp.captain ? players[lineUp.captain] : null" :showRemove="false")
@@ -242,6 +245,9 @@ export default {
     },
     userData () {
       return this.$store.getters.getUserData
+    },
+    teamName () {
+      return this.leagueUsers.find(user => user.userId === this.userData.id).teamName
     }
   },
   watch: {
@@ -289,6 +295,16 @@ export default {
     setRole (eventData) {
       console.table(eventData)
       this.lineUp[eventData.role] = eventData.player.id
+    },
+    setTeamName (newTeamName) {
+      const leagueUser = this.leagueUsers.find(user => user.userId === this.userData.id)
+      const updatedLeagueUser = {
+        [leagueUser.userId]: {
+          ...leagueUser,
+          teamName: newTeamName
+        }
+      }
+      LeagueService.updateDraftTeamUser(updatedLeagueUser, this.leagueId, 'standard')
     }
   }
 }
