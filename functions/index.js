@@ -36,13 +36,73 @@ exports.sendEmail = functions.database.ref('/email/{emailId}')
     })
   })
 
+exports.waiverWireApprove = functions.database.ref('/approvedWaivers/{leagueId}/{userId}/{gainsId}')
+  .onCreate((snapshot, context) => {
+    const leagueId = context.params.leagueId
+    const userId = context.params.userId
+    const choice = snapshot.val()
+    const newPlayerId = choice.gains
+    const oldPlayerId = choice.loses
+
+    // get the players roster
+    var userDraftPicks = admin.database().ref(`/draftPicks/${leagueId}/${userId}`).once('value', (snapshot) => {
+      var thePicks = snapshot.val()
+      var cleanPicks = thePicks ? thePicks.filter(pick => pick !== oldPlayerId) : []
+      if (cleanPicks.length !== 11) {
+        console.error(`(${leagueId} / ${userId}) We had an invalid roster length when removing the old player.  Roster length: ${cleanPicks.length}`)
+        console.log(`Old Player: ${oldPlayerId}`)
+        console.log(`New Player: ${newPlayerId}`)
+        console.log(`Roster: ${JSON.stringify(cleanPicks)}`)
+        return null
+      } else {
+        console.log(`Successfully cleaned the roster of ${userId} in ${leagueId}`)
+      }
+      cleanPicks.push(newPlayerId)
+      return admin.database().ref(`/draftPicks/${leagueId}/${userId}`).set(cleanPicks)
+    })
+    .then(ref => {
+      if (ref) return admin.database().ref(`/approvedWaivers/${leagueId}/${userId}/${newPlayerId}`).set(null)
+      return null
+    })
+
+    var userRoster = admin.firestore().collection(`standardLeagueRoster`).doc(leagueId).get().then(doc => {
+      var fullRoster = doc.data()
+      if (fullRoster && fullRoster[userId])  {
+        var theRoster = fullRoster[userId] ? cleanRoster(fullRoster[userId].roster, oldPlayerId) : {}
+        fancyLog('Updating Roster')
+        var newRoster = { ...fullRoster }
+        newRoster[userId] = theRoster
+        return admin.firestore().collection(`standardLeagueRoster`).doc(leagueId).set(newRoster)
+      }
+      return null
+    })
+    
+    return Promise.all([userDraftPicks, userRoster])
+      .then(() => {
+        console.log('Roster exchange complete.')
+        return admin.database().ref(`/liveConfig`).update({ waiverWireDisabled: true })
+      })
+      .catch(e => {
+        console.log(e)
+      })
+
+  })
+
 exports.facilitateDraftPick = functions.database.ref('/draftPicks/{leagueId}')
   .onUpdate((change, context) => {
     // get the draft users, and set the correct one to active
     const leagueId = context.params.leagueId
     const picks = change.after.val()
-    
-    return workDraftPick (leagueId, picks)
+    // make sure the draft is active before wasting processing time
+    return admin.database().ref(`/draft/${leagueId}/status`).once('value', snapshot => {
+      const status = snapshot.val()
+      console.log(`We have a draft status of: ${status}`)
+      if (status === 'active') return workDraftPick (leagueId, picks)
+      else {
+        console.log(`Inactive status, exiting.`)
+        return null
+      }
+    })
   })
 
 exports.facilitateDraftPickCreate = functions.database.ref('/draftPicks/{leagueId}')
@@ -51,7 +111,15 @@ exports.facilitateDraftPickCreate = functions.database.ref('/draftPicks/{leagueI
     const leagueId = context.params.leagueId
     const picks = snapshot.val()
     
-    return workDraftPick (leagueId, picks)
+    return admin.database().ref(`/draft/${leagueId}/status`).once('value', snapshot => {
+      const status = snapshot.val()
+      console.log(`We have a draft status of: ${status}`)
+      if (status === 'active') return workDraftPick (leagueId, picks)
+      else {
+        console.log(`Inactive status, exiting.`)
+        return null
+      }
+    })
   })
 
 exports.tryAutomatedPick = functions.database.ref('/draft/{leagueId}')
@@ -71,6 +139,7 @@ exports.tryAutomatedPick = functions.database.ref('/draft/{leagueId}')
         })
         .then((user) => {
           userId = user.userId
+          console.log('Getting draft preference list.')
           return admin.database().ref(`/draftPreference/${leagueId}/${user.userId}`).once('value')
         })
         .then((preferenceList) => {
@@ -89,7 +158,10 @@ exports.tryAutomatedPick = functions.database.ref('/draft/{leagueId}')
         .then((userPicks) => {
           if (userPicks) {
             var tmpPicks = userPicks.val() || null
-            if (tmpPicks) tmpPicks.push(selectedPlayer)
+            if (tmpPicks) {
+              if (tmpPicks.length < 12) tmpPicks.push(selectedPlayer)
+              else return workDraftPick(leagueId, []) // we do this to just skip over the player.
+            }
             else tmpPicks = [selectedPlayer]
             console.log(`Setting a pick at : /draftPicks/${leagueId}/${userId} of ${selectedPlayer}`)
             return admin.database().ref(`/draftPicks/${leagueId}/${userId}`).set(tmpPicks)
@@ -98,6 +170,7 @@ exports.tryAutomatedPick = functions.database.ref('/draft/{leagueId}')
           return null
         })
     } else {
+      console.log(`Invalid status detected, exiting. (${after.status})`)
       return null
     }
   })
@@ -117,28 +190,33 @@ exports.tradePlayer = functions.database.ref('/trades/{leagueId}/{tradeId}')
 function workDraftPick (leagueId, picks) {
   let draftOrder = []
   let draft = {}
-
+  console.log('Working the draft pick.')
   return admin.database().ref(`/draft/${leagueId}`).once('value')
     .then((snapshot) => {
-      // console.log(`-----Setting the draft for league: ${leagueId}`)
+      console.log(`-----Setting the draft for league: ${leagueId}`)
       draft = snapshot.val()
       return null
     })
     // get the draftOrder
     .then(() => {
+      console.log('Getting the draft order...')
       return admin.database().ref(`/draftOrder/${leagueId}`).once('value')
     })
     .then((snapshot) => {
-      // console.log(`Getting the draft order for league: ${leagueId}`)
+      console.log(`Getting the draft order for league: ${leagueId}`)
       draftOrder = snapshot.val()
       return null
     })
     // snaking the draft
     .then(() => {
+      console.log('Snaking the draft.')
       let draftPosition = draft.activeDrafter
       let totalPicks = 0
-      const localDraft = draft
-      localDraft.doneProcessing = true
+      const localDraft = {
+        direction: draft.direction,
+        activeDrafter: draft.activeDrafter,
+        doneProcessing: true
+      }
 
       // console.log(`Draft position is currently: ${draftPosition}`)
 
@@ -170,11 +248,11 @@ function workDraftPick (leagueId, picks) {
 
       // If we're maxed on picks, just end the draft
       if (totalPicks >= (draftOrder.length * 12)) {
-        console.log(`------Ending the draft for league: ${leagueId} because total picks (${totalPicks}) was greater than or equal to the max of: ${draftOrder.length * 9}.`)
+        console.log(`------Ending the draft for league: ${leagueId} because total picks (${totalPicks}) was greater than or equal to the max of: ${draftOrder.length * 12}.`)
         return admin.database().ref(`/draft/${leagueId}`).update({ status: 'completed', players: null })
       }
-      console.log(`------Setting the draft position to ${draftPosition} for league: ${leagueId} with a doneProcessing value of: ${localDraft.doneProcessing}`)
-      return admin.database().ref(`/draft/${leagueId}`).set(localDraft)
+      console.log(`------Setting the draft position to ${draftPosition} for league: ${leagueId}.`)
+      return admin.database().ref(`/draft/${leagueId}`).update(localDraft)
     })
     .catch((error) => {
       console.log(`There was an error! ${error}`)
@@ -184,12 +262,12 @@ function workDraftPick (leagueId, picks) {
 function processPreferenceList (preferenceList, league, leagueId) {
   console.log(`We found a preference list.  Checking for available players in ${leagueId}`)
   let players = [...league.players]
-  let indexedPlayers = players.reduce((map, obj) => (map[obj.id] = obj, map), {});
+  // let indexedPlayers = players.reduce((map, obj) => (map[obj.id] = obj, map), {});
   let lumpedPicks = []
-  let rawPicks = []
+  // let rawPicks = []
   let unclaimedPlayers = []
   let unclaimedPreference = []
-  let userId = ''
+  // let userId = ''
   // get users to get an id
   return admin.database().ref(`/draftOrder/${leagueId}`).once('value')
       .then((users) => {
@@ -210,11 +288,11 @@ function processPreferenceList (preferenceList, league, leagueId) {
 
         if (lumpedPicks) console.log(`We have ${lumpedPicks.length} picks so far.`)
         // remove array from preferenceList
-        unclaimedPlayers = _.differenceWith(players, lumpedPicks, (a, b) => a.id === b)
-        console.log(`We have ${players.length} players total.`)
-        console.log(`PreferenceList: ${JSON.stringify(preferenceList)}`)
-        console.log(`Unclaimed: ${JSON.stringify(unclaimedPlayers)}`)
-        unclaimedPreference = (preferenceList && preferenceList.length) ? preferenceList.filter(p => unclaimedPlayers.find(u => u.id === p)) : []
+        unclaimedPlayers = _.differenceWith(players, lumpedPicks, (a, b) => a === b)
+        // console.log(`We have ${players.length} players total.`)
+        // console.log(`PreferenceList: ${JSON.stringify(preferenceList)}`)
+        // console.log(`Unclaimed: ${JSON.stringify(unclaimedPlayers)}`)
+        unclaimedPreference = (preferenceList && preferenceList.length) ? preferenceList.filter(p => unclaimedPlayers.find(u => u === p)) : []
         
         // const missingType = findMissing(rawPicks, userId, indexedPlayers)
         // // if we have a preference list left, take the top player.
@@ -231,7 +309,7 @@ function processPreferenceList (preferenceList, league, leagueId) {
         //   tP = unclaimedPlayers.find(up => indexedPlayers[up].attributes.role === missingType)
         //   if (tP) return tP
         // }
-        return unclaimedPreference[0] || unclaimedPlayers[0].id
+        return unclaimedPreference.length ? unclaimedPreference[0] : unclaimedPlayers[0]
       }).catch((error) => {
         console.log(error)
       })
