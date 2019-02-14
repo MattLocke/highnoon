@@ -20,6 +20,8 @@
         .from {{ message.userDisplayName }}
           span.is-pulled-right {{ formatWhen(message.when) }}
         .content {{ message.message }}
+        hamburger-menu
+          button.button(v-if="user.displayName === message.userDisplayName" @click="deleteMessage(message)") Delete
 </template>
 
 <script>
@@ -86,6 +88,24 @@ export default {
             this.newMessage = ''
           })
       }
+    },
+    deleteMessage (message) {
+      const db = firebase.database()
+      let messageKey = null
+      // Remove the Message in State
+      const allLocalMessages = this.messages
+      const compiledMessage = `${message.userDisplayName}${message.when}${message.message}`
+      const messageIndex = allLocalMessages.map(localMessage => `${localMessage.userDisplayName}${localMessage.when}${localMessage.message}`).indexOf(compiledMessage)
+      this.messages = this.messages.filter((msg, index) => index !== messageIndex)
+      db.ref(`/draftMessages/${this.leagueId}`).once('value').then(snapshot => {
+        const allMessages = snapshot.val()
+        Object.keys(allMessages).forEach(key => {
+          if (message.userDisplayName === allMessages[key].userDisplayName) {
+            messageKey = key
+          }
+        })
+      })
+      .then(() => db.ref(`/draftMessages/${this.leagueId}/${messageKey}`).remove())
     },
     cleanMessage () {
       this.newMessage = this.newMessage.replace(/[\n\r]/g, '')
