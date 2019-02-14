@@ -3,11 +3,11 @@
     .matchup.left-bar-item(v-if="myNextMatch")
       .columns.is-mobile
         .column
-          span {{ myNextMatch.home.displayName }}
+          span {{ myNextMatch.home.teamName }}
         .column.is-narrow
           span vs
         .column
-          span.is-pulled-right {{ myNextMatch.away.displayName }}
+          span.is-pulled-right {{ myNextMatch.away.teamName }}
     p(v-else) No upcoming matches!
 </template>
 
