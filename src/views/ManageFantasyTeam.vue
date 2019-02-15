@@ -223,7 +223,7 @@ export default {
         this.lineUp.tank1,
         this.lineUp.tank2
       ]
-      available = differenceWith(this.myPicks, usedPicks, (a, b) => a === b)
+      available = differenceWith(this.myPicks, usedPicks, (a, b) => Number(a) === Number(b))
       const tmp = []
       available.forEach(a => {
         tmp.push(this.players[a])
@@ -311,7 +311,7 @@ export default {
       return true
     },
     setRole (eventData) {
-      console.table(eventData)
+      // console.table(eventData)
       this.lineUp[eventData.role] = eventData.player.id
     },
     setTeamName (newTeamName) {

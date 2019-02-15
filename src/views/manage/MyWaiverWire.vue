@@ -135,9 +135,9 @@ export default {
     filteredPlayers () {
       const tmpPlayers = this.players ? Object.values(this.players) : []
       const selectedPlayers = this.myPicks.concat(this.otherPicks)
-      const availablePlayers = differenceWith(tmpPlayers, selectedPlayers, (a, b) => a.id === b)
-      const afterTrades = differenceWith(availablePlayers, this.trades, (a, b) => a.id === b.askerPlayer || a.id === b.responderPlayer)
-      return differenceWith(afterTrades, this.lockedPlayers, (a, b) => a.id === b)
+      const availablePlayers = differenceWith(tmpPlayers, selectedPlayers, (a, b) => Number(a.id) === (b))
+      const afterTrades = differenceWith(availablePlayers, this.trades, (a, b) => Number(a.id) === Number(b.askerPlayer) || Number(a.id) === Number(b.responderPlayer))
+      return differenceWith(afterTrades, this.lockedPlayers, (a, b) => Number(a.id) === Number(b))
     },
     superFilteredPlayers () {
       let fPlayers = [...this.filteredPlayers]
@@ -145,7 +145,7 @@ export default {
       if (this.filterText) fPlayers = fPlayers.filter(player => player.name.toLowerCase().includes(this.filterText.toLowerCase()))
       if (this.filterRole) fPlayers = fPlayers.filter(player => player.attributes.role === this.filterRole)
       if (this.filterTeam) fPlayers = fPlayers.filter(player => player.team === this.filterTeam)
-      fPlayers = differenceWith(fPlayers, Object.values(this.pendingWaiverWires), (a, b) => (a.id === b.loses && b.requesterId === this.userData.id) || (a.id === b.gains && b.requesterId === this.userData.id))
+      fPlayers = differenceWith(fPlayers, Object.values(this.pendingWaiverWires), (a, b) => (Number(a.id) === Number(b.loses) && b.requesterId === this.userData.id) || (Number(a.id) === Number(b.gains) && b.requesterId === this.userData.id))
 
       return fPlayers
     },
@@ -159,8 +159,8 @@ export default {
       return this.$store.getters.getLockedPlayers
     },
     myPicksFiltered () {
-      const tmpPicks = differenceWith(this.myPicks, this.trades, (a, b) => a === b.askerPlayer || a === b.responderPlayer)
-      const afterWires = differenceWith(tmpPicks, Object.values(this.pendingWaiverWires), (a, b) => (a === b.loses && b.requesterId === this.userData.id) || (a === b.gains && b.requesterId === this.userData.id))
+      const tmpPicks = differenceWith(this.myPicks, this.trades, (a, b) => Number(a) === Number(b.askerPlayer) || Number(a) === Number(b.responderPlayer))
+      const afterWires = differenceWith(tmpPicks, Object.values(this.pendingWaiverWires), (a, b) => (Number(a) === Number(b.loses) && b.requesterId === this.userData.id) || (Number(a) === Number(b.gains) && b.requesterId === this.userData.id))
       return differenceWith(afterWires, this.lockedPlayers, (a, b) => Number(a) === Number(b))
     },
     teams () {
