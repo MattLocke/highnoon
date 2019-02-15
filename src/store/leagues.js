@@ -1,4 +1,3 @@
-import { isEmpty } from 'lodash'
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 import { fireInit } from '@/fireLogin'
@@ -22,6 +21,7 @@ export default {
       tank1: {},
       tank2: {}
     },
+    leagueScores: {},
     leagueUsers: [],
     leagueSchedule: []
   },
@@ -54,6 +54,9 @@ export default {
           tank2: {}
         }
       }
+    },
+    SET_LEAGUE_ROSTER_SCORES: (state, payload) => {
+      state.leagueScores = payload || {}
     },
     SET_LEAGUE_USERS: (state, payload) => {
       if (payload) state.leagueUsers = payload
@@ -132,27 +135,45 @@ export default {
           })
       }
     },
-    fetchRoster: ({ state, commit }, payload) => {
-      if (payload.leagueId !== state.leagueId || isEmpty(state.leagueRoster.length)) {
-        db.collection(`${payload.leagueType}LeagueRoster`).doc(payload.leagueId)
-          .get()
-          .then((leagueRoster) => {
-            let theLeagueRoster = {
-              captain: {},
-              offense1: {},
-              offense2: {},
-              support1: {},
-              support2: {},
-              tank1: {},
-              tank2: {}
-            }
-            if (leagueRoster.exists) {
-              theLeagueRoster = leagueRoster.data()
-            }
-            commit('SET_LEAGUE_ID', payload.leagueId)
-            commit('SET_LEAGUE_ROSTER', theLeagueRoster)
-          })
-      }
+    fetchRoster: ({ commit }, payload) => {
+      db.collection(`${payload.leagueType}LeagueRoster`).doc(payload.leagueId)
+        .get()
+        .then((leagueRoster) => {
+          console.log('getting roster...')
+          let theLeagueRoster = {
+            captain: {},
+            offense1: {},
+            offense2: {},
+            support1: {},
+            support2: {},
+            tank1: {},
+            tank2: {}
+          }
+          if (leagueRoster.exists) {
+            theLeagueRoster = leagueRoster.data()
+          }
+          commit('SET_LEAGUE_ID', payload.leagueId)
+          commit('SET_LEAGUE_ROSTER', theLeagueRoster)
+        })
+    },
+    fetchRosterPoints: ({ state, commit }, payload) => {
+      db.collection(`${payload.leagueType}LeagueScores`).doc(payload.leagueId)
+        .get()
+        .then((leagueScores) => {
+          let theLeagueScores = {
+            captain: {},
+            offense1: {},
+            offense2: {},
+            support1: {},
+            support2: {},
+            tank1: {},
+            tank2: {}
+          }
+          if (leagueScores.exists) {
+            theLeagueScores = leagueScores.data()
+          }
+          commit('SET_LEAGUE_ROSTER_SCORES', theLeagueScores)
+        })
     }
   },
   getters: {
