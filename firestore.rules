@@ -58,7 +58,7 @@ service cloud.firestore {
 
     match /standardLeagueRoster/{leagueId} {
     	allow read;
-    	allow write: if request.auth.uid != null && if request.resource.data.size < 11
+    	allow write: if request.auth.uid != null;
     }
 
     match /standardLeagueTrades/{leagueId} {

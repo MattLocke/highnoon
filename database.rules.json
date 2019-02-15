@@ -1,6 +1,53 @@
 {
   "rules": {
-    ".read": "auth != null",
-    ".write": "auth != null"
+    "draft": {
+      ".read": true,
+      ".write": "auth != null"
+    },
+    "draftMessages": {
+      ".read": true,
+      ".write": "auth != null"
+    },
+    "draftOrder": {
+      ".read": true,
+      ".write": "auth != null"
+    },
+    "draftPicks": {
+      ".read": true,
+      ".write": "auth != null"
+    },
+    "draftPreference": {
+      ".read": true,
+      ".write": "auth != null"
+    },
+    "email": {
+      ".read": true,
+      ".write": "auth != null"
+    },
+    "liveConfig": {
+      ".read": true,
+      ".write": "auth != null"
+    },
+    "lockedPlayers": {
+      ".read": true,
+      ".write": "auth != null"
+    },
+    "notification": {
+      ".read": true,
+      ".write": "auth != null"
+    },
+    "trades": {
+      ".read": true,
+      "$leagueId": {
+        "$docId": {
+          "responderPlayer": {
+            ".validate": "!root.child('lockedPlayers/'+newData.val()).exists()"
+          },
+          "askerPlayer": {
+            ".validate": "!root.child('lockedPlayers/'+newData.val()).exists()"
+          }
+        }
+      }
+    }
   }
 }

@@ -76,6 +76,9 @@ export default {
     leagueUsers () {
       return this.$store.getters.getLeagueUsers
     },
+    lockedPlayers () {
+      return this.$store.getters.getLockedPlayers
+    },
     myTrades () {
       if (this.trades) {
         return this.trades.filter(trade => trade.askerId === this.userId || trade.responderId === this.userId)
@@ -86,12 +89,12 @@ export default {
       if (this.trades) {
         const ownTrades = this.trades.filter(trade => trade.askerId === this.userId || trade.responderId === this.userId)
         // make sure they're not trying to trade multiples of the same player
-        const usedPlayers = []
+        const usedPlayers = [...this.lockedPlayers]
         ownTrades.forEach(trade => {
           usedPlayers.push(trade.askerPlayer)
           usedPlayers.push(trade.responderPlayer)
         })
-        return differenceWith(this.myPlayers, usedPlayers, (a, b) => a === b)
+        return differenceWith(this.myPlayers, usedPlayers, (a, b) => Number(a) === Number(b))
       }
       return []
     },

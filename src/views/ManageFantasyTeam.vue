@@ -24,37 +24,37 @@
                 section.roster-view.has-text-centered
                   player-card(:player="lineUp.captain ? players[lineUp.captain] : null" :showRemove="false")
                   h2.has-text-centered Captain
-                    button.button.is-secondary.is-small.is-remove(@click="lineUp.captain = ''" v-if="lineUp.captain" v-tooltip="'Remove'") X
+                    button.button.is-secondary.is-small.is-remove(@click="lineUp.captain = ''" v-if="lineUp.captain && notLocked(lineUp.captain)" v-tooltip="'Remove'") X
               .column.roster-view
                 section
                   player-card(:player="lineUp.offense1 ? players[lineUp.offense1] : null" :showRemove="false")
                   h2.has-text-centered Offense 1
-                    button.button.is-secondary.is-small.is-remove(@click="lineUp.offense1 = ''" v-if="lineUp.offense1" v-tooltip="'Remove'") X
+                    button.button.is-secondary.is-small.is-remove(@click="lineUp.offense1 = ''" v-if="lineUp.offense1 && notLocked(lineUp.offense1)" v-tooltip="'Remove'") X
               .column.roster-view
                 section
                   player-card(:player="lineUp.offense2 ? players[lineUp.offense2] : null" :showRemove="false")
                   h2.has-text-centered Offense 2
-                    button.button.is-secondary.is-small.is-remove(@click="lineUp.offense2 = ''" v-if="lineUp.offense2" v-tooltip="'Remove'") X
+                    button.button.is-secondary.is-small.is-remove(@click="lineUp.offense2 = ''" v-if="lineUp.offense2 && notLocked(lineUp.offense2)" v-tooltip="'Remove'") X
               .column.roster-view
                 section
                   player-card(:player="lineUp.support1 ? players[lineUp.support1] : null" :showRemove="false")
                   h2.has-text-centered Support 1
-                    button.button.is-secondary.is-small.is-remove(@click="lineUp.support1 = ''" v-if="lineUp.support1" v-tooltip="'Remove'") X
+                    button.button.is-secondary.is-small.is-remove(@click="lineUp.support1 = ''" v-if="lineUp.support1 && notLocked(lineUp.support1)" v-tooltip="'Remove'") X
               .column.roster-view
                 section
                   player-card(:player="lineUp.support2 ? players[lineUp.support2] : null" :showRemove="false")
                   h2.has-text-centered Support 2
-                    button.button.is-secondary.is-small.is-remove(@click="lineUp.support2 = ''" v-if="lineUp.support2" v-tooltip="'Remove'") X
+                    button.button.is-secondary.is-small.is-remove(@click="lineUp.support2 = ''" v-if="lineUp.support2 && notLocked(lineUp.support2)" v-tooltip="'Remove'") X
               .column.roster-view
                 section
                   player-card(:player="lineUp.tank1 ? players[lineUp.tank1] : null" :showRemove="false")
                   h2.has-text-centered Tank 1
-                    button.button.is-secondary.is-small.is-remove(@click="lineUp.tank1 = ''" v-if="lineUp.tank1" v-tooltip="'Remove'") X
+                    button.button.is-secondary.is-small.is-remove(@click="lineUp.tank1 = ''" v-if="lineUp.tank1 && notLocked(lineUp.tank1)" v-tooltip="'Remove'") X
               .column.roster-view
                 section
                   player-card(:player="lineUp.tank2 ? players[lineUp.tank2] : null" :showRemove="false")
                   h2.has-text-centered Tank 2
-                    button.button.is-secondary.is-small.is-remove(@click="lineUp.tank2 = ''" v-if="lineUp.tank2" v-tooltip="'Remove'") X
+                    button.button.is-secondary.is-small.is-remove(@click="lineUp.tank2 = ''" v-if="lineUp.tank2 && notLocked(lineUp.tank2)" v-tooltip="'Remove'") X
             section.is-hidden-mobile
               button.button.is-primary(@click="saveRoster" v-if="canSaveRoster") Save Roster And Return To League
               button.button.is-primary(disabled v-else) Save Roster And Return To League
@@ -64,37 +64,37 @@
                 img(src="images/roles/captain-white.svg" width="20" height="20")
                 img(v-if="lineUp.captain" :src="getTeamImage(lineUp.captain)" width="20" height="20")
                 span {{ getPlayerName(lineUp.captain) }}
-                  button.button.is-secondary.is-small.is-remove(@click="lineUp.captain = ''" v-if="lineUp.captain") X
+                  button.button.is-secondary.is-small.is-remove(@click="lineUp.captain = ''" v-if="lineUp.captain && notLocked(lineUp.captain)") X
               h2.ow-font
                 img(src="images/roles/offense-white.svg" width="20" height="20")
                 img(:src="getTeamImage(lineUp.offense1)" width="20" height="20" v-if="lineUp.offense1")
                 span {{ getPlayerName(lineUp.offense1) }}
-                  button.button.is-secondary.is-small.is-remove(@click="lineUp.offense1 = ''" v-if="lineUp.offense1") X
+                  button.button.is-secondary.is-small.is-remove(@click="lineUp.offense1 = ''" v-if="lineUp.offense1 && notLocked(lineUp.offense1)") X
               h2.ow-font
                 img(src="images/roles/offense-white.svg" width="20" height="20")
                 img(:src="getTeamImage(lineUp.offense2)" width="20" height="20" v-if="lineUp.offense2")
                 span {{ getPlayerName(lineUp.offense2) }}
-                  button.button.is-secondary.is-small.is-remove(@click="lineUp.offense2 = ''" v-if="lineUp.offense2") X
+                  button.button.is-secondary.is-small.is-remove(@click="lineUp.offense2 = ''" v-if="lineUp.offense2 && notLocked(lineUp.offense2)") X
               h2.ow-font
                 img(src="images/roles/support-white.svg" width="20" height="20")
                 img(:src="getTeamImage(lineUp.support1)" width="20" height="20" v-if="lineUp.support1")
                 span {{ getPlayerName(lineUp.support1) }}
-                  button.button.is-secondary.is-small.is-remove(@click="lineUp.support1 = ''" v-if="lineUp.support1") X
+                  button.button.is-secondary.is-small.is-remove(@click="lineUp.support1 = ''" v-if="lineUp.support1 && notLocked(lineUp.support1)") X
               h2.ow-font
                 img(src="images/roles/support-white.svg" width="20" height="20")
                 img(:src="getTeamImage(lineUp.support2)" width="20" height="20" v-if="lineUp.support2")
                 span {{ getPlayerName(lineUp.support2) }}
-                  button.button.is-secondary.is-small.is-remove(@click="lineUp.support2 = ''" v-if="lineUp.support2") X
+                  button.button.is-secondary.is-small.is-remove(@click="lineUp.support2 = ''" v-if="lineUp.support2 && notLocked(lineUp.support2)") X
               h2.ow-font
                 img(src="images/roles/tank-white.svg" width="20" height="20")
                 img(:src="getTeamImage(lineUp.tank1)" width="20" height="20" v-if="lineUp.tank1")
                 span {{ getPlayerName(lineUp.tank1) }}
-                  button.button.is-secondary.is-small.is-remove(@click="lineUp.tank1 = ''" v-if="lineUp.tank1") X
+                  button.button.is-secondary.is-small.is-remove(@click="lineUp.tank1 = ''" v-if="lineUp.tank1 && notLocked(lineUp.tank1)") X
               h2.ow-font
                 img(src="images/roles/tank-white.svg" width="20" height="20")
                 img(:src="getTeamImage(lineUp.tank2)" width="20" height="20" v-if="lineUp.tank2")
                 span {{ getPlayerName(lineUp.tank2) }}
-                  button.button.is-secondary.is-small.is-remove(@click="lineUp.tank2 = ''" v-if="lineUp.tank2") X
+                  button.button.is-secondary.is-small.is-remove(@click="lineUp.tank2 = ''" v-if="lineUp.tank2 && notLocked(lineUp.tank2)") X
               section.has-text-centered
                 button.button.is-primary(@click="saveRoster" v-if="canSaveRoster") Save Roster And Return To League
                 button.button.is-primary(v-else disabled) Save Roster And Return To League
@@ -110,7 +110,7 @@
                     b-table-column(label="Player Name" field="name" sortable)
                       span {{ props.row.name }}
                     b-table-column(label="Assign")
-                      role-buttons(:player="props.row" @setRole="setRole" :lineUp="lineUp")
+                      role-buttons(:player="props.row" @setRole="setRole" :lineUp="lineUp" :lockedRoles="lockedRoles" :isLocked="!notLocked(props.row.id)")
                     b-table-column(label="Rating" width="40" field="stats.fantasyScore" sortable)
                       span {{ props.row.stats.fantasyScore || 'N/A' }}
             section
@@ -194,6 +194,21 @@ export default {
     liveConfig () {
       return this.$store.getters.getLiveConfig
     },
+    lockedPlayers () {
+      return this.$store.getters.getLockedPlayers
+    },
+    lockedRoles () {
+      const locked = []
+      if (this.lockedPlayers.includes(this.lineUp.captain)) locked.push('captain')
+      if (this.lockedPlayers.includes(this.lineUp.offense1)) locked.push('offense1')
+      if (this.lockedPlayers.includes(this.lineUp.offense2)) locked.push('offense2')
+      if (this.lockedPlayers.includes(this.lineUp.support1)) locked.push('support1')
+      if (this.lockedPlayers.includes(this.lineUp.support2)) locked.push('support2')
+      if (this.lockedPlayers.includes(this.lineUp.tank1)) locked.push('tank1')
+      if (this.lockedPlayers.includes(this.lineUp.tank2)) locked.push('tank2')
+
+      return locked
+    },
     myLeagueSchedule () {
       return []
     },
@@ -247,7 +262,7 @@ export default {
       return this.$store.getters.getUserData
     },
     teamName () {
-      return this.leagueUsers.find(user => user.userId === this.userData.id).teamName
+      return this.leagueUsers.find(user => user.userId === this.userData.id) ? this.leagueUsers.find(user => user.userId === this.userData.id).teamName : ''
     }
   },
   watch: {
@@ -281,6 +296,9 @@ export default {
     },
     getTeamImage (id) {
       return id && this.players[id] ? `images/teams/${this.players[id].team}.svg` : ''
+    },
+    notLocked (player) {
+      return !(this.lockedPlayers.some(l => l === player))
     },
     saveRoster () {
       // save it to the db

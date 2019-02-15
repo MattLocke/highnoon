@@ -161,7 +161,7 @@ export default {
     myPicksFiltered () {
       const tmpPicks = differenceWith(this.myPicks, this.trades, (a, b) => a === b.askerPlayer || a === b.responderPlayer)
       const afterWires = differenceWith(tmpPicks, Object.values(this.pendingWaiverWires), (a, b) => (a === b.loses && b.requesterId === this.userData.id) || (a === b.gains && b.requesterId === this.userData.id))
-      return differenceWith(afterWires, this.lockedPlayers, (a, b) => a === b)
+      return differenceWith(afterWires, this.lockedPlayers, (a, b) => Number(a) === Number(b))
     },
     teams () {
       return this.$store.getters.getTeams
