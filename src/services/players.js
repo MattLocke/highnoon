@@ -31,6 +31,6 @@ export default {
 
   },
   buildAPlayer (players, playerId) {
-    return players.find(player => player.id === playerId)
+    return players.find(player => Number(player.id) === Number(playerId))
   }
 }

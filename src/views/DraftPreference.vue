@@ -132,7 +132,7 @@ export default {
       if (this.filterText) fPlayers = fPlayers.filter(player => player.name.toLowerCase().includes(this.filterText.toLowerCase()))
       if (this.filterRole) fPlayers = fPlayers.filter(player => player.attributes.role === this.filterRole)
       if (this.filterTeam) fPlayers = fPlayers.filter(player => player.team === this.filterTeam)
-      fPlayers = differenceWith(fPlayers, this.roster, (a, b) => a.id === b)
+      fPlayers = differenceWith(fPlayers, this.roster, (a, b) => Number(a.id) === (b))
 
       return fPlayers
     },

@@ -212,7 +212,7 @@ export default {
         this.lineUp.tank1,
         this.lineUp.tank2
       ]
-      available = differenceWith(Object.values(this.players), usedPicks, (a, b) => a.id === b)
+      available = differenceWith(Object.values(this.players), usedPicks, (a, b) => Number(a.id) === Number(b))
       return [ ...available ]
     },
     players () {
@@ -258,7 +258,7 @@ export default {
       return id && this.players[id] ? `images/teams/${this.players[id].team}.svg` : ''
     },
     notLocked (player) {
-      return !(this.lockedPlayers.some(l => l === player))
+      return !(this.lockedPlayers.some(l => Number(l) === Number(player)))
     },
     saveRoster () {
       // save it to the db
