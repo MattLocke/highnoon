@@ -51,7 +51,7 @@ export default {
       return this.lineUp[parsedRole] ? { 'is-secondary': true } : { 'is-primary': true }
     },
     locked (pos) {
-      return (!isEmpty(this.lineUp) && this.isLocked) || this.lockedRoles.includes(pos)
+      return (!isEmpty(this.lineUp[pos]) && this.isLocked) || this.lockedRoles.includes(pos)
     },
     roleData (pos) {
       const parsedRole = pos === 'captain' ? pos : `${this.player.attributes.role}${pos}`
