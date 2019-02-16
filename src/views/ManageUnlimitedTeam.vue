@@ -172,7 +172,7 @@ export default {
       if (this.filterRole) fPlayers = fPlayers.filter(player => player.attributes.role === this.filterRole)
       if (this.filterTeam) fPlayers = fPlayers.filter(player => player.team === this.filterTeam)
 
-      return fPlayers
+      return differenceWith(fPlayers, this.lockedPlayers, (a, b) => Number(a.id) === Number(b))
     },
     leagueId () {
       return this.$route.params.leagueId
