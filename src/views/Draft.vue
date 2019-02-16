@@ -24,7 +24,7 @@
             p This will let the system draft for you in case you can't make it to the live draft.  While active, picks will be placed on your behalf automatically, so be sure you want to enable this!
             .columns.is-multiline.is-mobile
               .column.is-one-third-desktop.is-half-mobile(v-for="player in roster")
-                player-card(:player="playersObject[player]" :showRemove="false" :primaryColor="getColor(playersObject[player])" :score="playersObject[player].stats ? playersObject[player].stats.fantasyScore : 0")
+                player-card(:player="playersObject[player]" :showRemove="false" :primaryColor="getColor(playersObject[player])")
               .column.is-one-third-desktop.is-half-mobile(v-for="placeholder in placeholders")
                 player-card(:showRemove="false")
         section(v-if="isInLeague")
@@ -179,9 +179,9 @@ export default {
     filteredPlayers () {
       let fPlayers = [...this.players]
 
-      if (this.filterText) fPlayers = fPlayers.filter(player => player.name.toLowerCase().includes(this.filterText.toLowerCase()))
-      if (this.filterRole) fPlayers = fPlayers.filter(player => player.attributes.role === this.filterRole)
-      if (this.filterTeam) fPlayers = fPlayers.filter(player => player.team === this.filterTeam)
+      if (this.filterText) fPlayers = fPlayers.filter(player => player.name && player.name.toLowerCase().includes(this.filterText.toLowerCase()))
+      if (this.filterRole) fPlayers = fPlayers.filter(player => player.attributes && player.attributes.role === this.filterRole)
+      if (this.filterTeam) fPlayers = fPlayers.filter(player => player.team && player.team === this.filterTeam)
       fPlayers = differenceWith(fPlayers, this.selectedPlayers, (a, b) => a.id === Number(b))
       return fPlayers
     },

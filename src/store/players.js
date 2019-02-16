@@ -40,21 +40,19 @@ export default {
             })
             return null
           })
-          .then(() => {
-            return db.collection(`playerStats`).get()
-          })
+          .then(() => db.collection(`playerStats`).get())
           .then((stats) => {
             stats.docs.forEach(stat => {
               const s = stat.data()
               thePlayers[s.id] = { ...thePlayers[s.id], stats: s }
             })
-            commit('SET_PLAYERS', thePlayers)
           })
           .catch((error) => {
             // TODO: update with proper error msg
             console.error(error)
           })
           .finally(() => {
+            commit('SET_PLAYERS', thePlayers)
             dispatch('setLoading', false)
           })
       }
