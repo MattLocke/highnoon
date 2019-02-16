@@ -9,7 +9,8 @@
         b-radio.is-pulled-right.winner-radio(v-model="matchWinner" size="is-medium" :native-value="match.competitors[0].id")
       .column.is-narrow(v-else)
         b-radio.is-pulled-right.winner-radio.correct-radio(selected size="is-medium" v-if="finishedMatchWinner && matchWinner == match.competitors[0].id")
-        b-radio.is-pulled-right.winner-radio.incorrect-radio(selected size="is-medium" v-else)
+        b-radio.is-pulled-right.winner-radio.incorrect-radio(selected size="is-medium" v-else-if="matchWinner == match.competitors[0].id")
+        b-radio.is-pulled-right.winner-radio.neutral-radio(selected size="is-medium" v-else)
       .column.has-text-centered
         .match-date {{ match.startDateTS | formatJSDate }}
         .match-time {{ match.startDateTS | formatJSTime }}
@@ -17,7 +18,8 @@
         b-radio.is-pulled-right.winner-radio(v-model="matchWinner" size="is-medium" :native-value="match.competitors[1].id")
       .column.is-narrow(v-else)
         b-radio.is-pulled-right.winner-radio.correct-radio(selected size="is-medium" v-if="finishedMatchWinner && matchWinner == match.competitors[1].id")
-        b-radio.is-pulled-right.winner-radio.incorrect-radio(selected size="is-medium" v-else)
+        b-radio.is-pulled-right.winner-radio.incorrect-radio(selected size="is-medium" v-else-if="matchWinner == match.competitors[1].id")
+        b-radio.is-pulled-right.winner-radio.neutral-radio(selected size="is-medium" v-else)
       .column.is-narrow
         .ow-font.team-name.is-pulled-right {{ match.competitors[1].abbreviatedName }}
       .column.is-narrow
@@ -147,6 +149,12 @@ export default {
   }
   .b-radio.radio.correct-radio input[type=radio] + .check:before {
     background-color: #21a431;
+  }
+  .b-radio.radio.neutral-radio input[type=radio]:checked + .check {
+    border-color: #222;
+  }
+  .b-radio.radio.neutral-radio input[type=radio] + .check:before {
+    background-color: #222;
   }
 }
 </style>
