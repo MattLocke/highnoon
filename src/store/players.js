@@ -9,7 +9,8 @@ var db = firebase.firestore()
 export default {
   state: {
     players: [],
-    lockedPlayers: []
+    lockedPlayers: [],
+    playerScores: {}
   },
   mutations: {
     SET_PLAYERS: (state, payload) => {
@@ -17,6 +18,9 @@ export default {
     },
     SET_LOCKED_PLAYERS: (state, payload) => {
       state.lockedPlayers = payload || []
+    },
+    SET_PLAYER_SCORES: (state, payload) => {
+      state.playerScores = payload || {}
     }
   },
   actions: {
@@ -54,10 +58,23 @@ export default {
             dispatch('setLoading', false)
           })
       }
+    },
+    getPlayerScores ({ commit }) {
+      let thePlayers = {}
+      db.collection(`playerScores`)
+        .get()
+        .then((weeks) => {
+          weeks.docs.forEach(week => {
+            const p = week.data()
+            thePlayers = { thePlayers, ...p }
+          })
+          commit('SET_PLAYER_SCORES', thePlayers)
+        })
     }
   },
   getters: {
     getLockedPlayers: state => state.lockedPlayers,
-    getPlayers: state => state.players
+    getPlayers: state => state.players,
+    getPlayerScores: state => state.playerScores
   }
 }

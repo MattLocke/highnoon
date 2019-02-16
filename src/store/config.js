@@ -33,6 +33,7 @@ export default {
   },
   getters: {
     getConfig: state => state.config,
-    getLiveConfig: state => state.liveConfig
+    getLiveConfig: state => state.liveConfig,
+    getCurrentWeek: state => state.config.currentWeek
   }
 }

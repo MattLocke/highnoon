@@ -39,6 +39,7 @@ export default {
     this.$store.dispatch('saveFireData', firebase.auth().currentUser)
     this.$store.dispatch('loadConfig')
     this.$store.dispatch('getPlayers')
+    this.$store.dispatch('getPlayerScores')
     this.$store.dispatch('getTeams')
     this.$store.dispatch('setLoading', true)
 

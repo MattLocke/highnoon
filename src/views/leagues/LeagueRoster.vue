@@ -3,82 +3,82 @@
     .columns.is-multiline.is-hidden-mobile.is-gapless(v-if="hasRoster")
       .column
         section
-          player-card(:player="roster.captain ? players[roster.captain] : null" :showRemove="false" :score="weeklyPoints['captainScore']")
+          player-card(:player="roster.captain ? players[roster.captain] : null" :showRemove="false")
           h2.has-text-centered Captain
       .column
         section
-          player-card(:player="roster.offense1 ? players[roster.offense1] : null" :showRemove="false" :score="weeklyPoints['offense1Score']")
+          player-card(:player="roster.offense1 ? players[roster.offense1] : null" :showRemove="false")
           h2.has-text-centered Offense 1
       .column
         section
-          player-card(:player="roster.offense2 ? players[roster.offense2] : null" :showRemove="false" :score="weeklyPoints['offense2Score']")
+          player-card(:player="roster.offense2 ? players[roster.offense2] : null" :showRemove="false")
           h2.has-text-centered Offense 2
       .column
         section
-          player-card(:player="roster.support1 ? players[roster.support1] : null" :showRemove="false" :score="weeklyPoints['support1Score']")
+          player-card(:player="roster.support1 ? players[roster.support1] : null" :showRemove="false")
           h2.has-text-centered Support 1
       .column
         section
-          player-card(:player="roster.support2 ? players[roster.support2] : null" :showRemove="false" :score="weeklyPoints['support2Score']")
+          player-card(:player="roster.support2 ? players[roster.support2] : null" :showRemove="false")
           h2.has-text-centered Support 2
       .column
         section
-          player-card(:player="roster.tank1 ? players[roster.tank1] : null" :showRemove="false" :score="weeklyPoints['tank1Score']")
+          player-card(:player="roster.tank1 ? players[roster.tank1] : null" :showRemove="false")
           h2.has-text-centered Tank 1
       .column
         section
-          player-card(:player="roster.tank2 ? players[roster.tank2] : null" :showRemove="false" :score="weeklyPoints['tank2Score']")
+          player-card(:player="roster.tank2 ? players[roster.tank2] : null" :showRemove="false")
           h2.has-text-centered Tank 2
     section.is-hidden-desktop(v-if="hasRoster && players")
       h2.ow-font.mobile-roster
         img(src="images/roles/captain-white.svg" width="20" height="20")
         img(:src="getTeamImage(roster.captain)" width="20" height="20" v-if="roster.captain")
         | {{ players[roster.captain].name || 'Empty' }} -
-        span.orange {{ weeklyPoints['captainScore'] | playerScore }}
+        span.orange {{ playerScores[roster.captain] | playerScore }}
       h2.ow-font
         img(src="images/roles/offense-white.svg" width="20" height="20")
         img(:src="getTeamImage(roster.offense1)" width="20" height="20" v-if="roster.offense1")
         | {{ players[roster.offense1].name || 'Empty' }} -
-        span.orange {{ weeklyPoints['offense1Score'] | playerScore }}
+        span.orange {{ playerScores[roster.offense1] | playerScore }}
       h2.ow-font
         img(src="images/roles/offense-white.svg" width="20" height="20")
         img(:src="getTeamImage(roster.offense2)" width="20" height="20" v-if="roster.offense2")
         | {{ players[roster.offense2].name || 'Empty' }} -
-        span.orange {{ weeklyPoints['offense2Score'] | playerScore }}
+        span.orange {{ playerScores[roster.offense2] | playerScore }}
       h2.ow-font
         img(src="images/roles/support-white.svg" width="20" height="20")
         img(:src="getTeamImage(roster.support1)" width="20" height="20" v-if="roster.support1")
         | {{ players[roster.support1].name || 'Empty' }} -
-        span.orange {{ weeklyPoints['support1Score'] | playerScore }}
+        span.orange {{ playerScores[roster.support1] | playerScore }}
       h2.ow-font
         img(src="images/roles/support-white.svg" width="20" height="20")
         img(:src="getTeamImage(roster.support2)" width="20" height="20" v-if="roster.support2")
         | {{ players[roster.support2].name || 'Empty' }} -
-        span.orange {{ weeklyPoints['support2Score'] | playerScore }}
+        span.orange {{ playerScores[roster.support2] | playerScore }}
       h2.ow-font
         img(src="images/roles/tank-white.svg" width="20" height="20")
         img(:src="getTeamImage(roster.tank1)" width="20" height="20" v-if="roster.tank1")
         | {{ players[roster.tank1].name || 'Empty' }} -
-        span.orange {{ weeklyPoints['tank1Score'] | playerScore }}
+        span.orange {{ playerScores[roster.tank] | playerScore }}
       h2.ow-font
         img(src="images/roles/tank-white.svg" width="20" height="20")
         img(:src="getTeamImage(roster.tank2)" width="20" height="20" v-if="roster.tank2")
         | {{ players[roster.tank2].name || 'Empty' }} -
-        span.orange {{ weeklyPoints['tank2Score'] | playerScore }}
+        span.orange {{ playerScores[roster.tank2] | playerScore }}
     section(v-else)
       p Your roster is empty!
     section
       .columns
         .column
           h3 Your Roster Total:
-            span.orange  {{ rosterTotal }}
+            span.orange  {{ rosterTotal | playerScore }}
         .column.is-narrow
           router-link.button.is-primary.is-small(:to="`/manageTeam/${league.id}`" v-if="league.leagueType === 'standard'") Manage Team
           router-link.button.is-primary.is-small(:to="`/manageUnlimitedTeam/${league.id}`" v-else) Manage Team
 </template>
 
 <script>
-import { isEmpty, get } from 'lodash'
+import { isEmpty, forEach, get } from 'lodash'
 
 import PlayerCard from '@/components/PlayerCard'
 
@@ -106,6 +106,9 @@ export default {
     players () {
       return this.$store.getters.getPlayers
     },
+    playerScores () {
+      return this.$store.getters.getPlayerScores || {}
+    },
     playersLoaded () {
       return !isEmpty(this.players)
     },
@@ -116,8 +119,13 @@ export default {
       return this.$store.getters.getLeagueRosterPoints || {}
     },
     rosterTotal () {
-      const w = this.weeklyPoints
-      return Number(w.captainScore + w.offense1Score + w.offense2Score + w.support1Score + w.support2Score + w.tank1Score + w.tank2Score).toFixed(2)
+      const s = this.playerScores
+      let total = 0
+
+      forEach(this.roster, (playerId, position) => {
+        total = total + (s[playerId] || 0)
+      })
+      return total
     },
     userId () {
       return this.$store.getters.getUserId
@@ -156,6 +164,9 @@ export default {
     }
   },
   methods: {
+    getScore (playerId) {
+      return Number(this.playerScores[playerId]) || 0
+    },
     getTeamImage (id) {
       if (this.playersLoaded && id && this.players[id]) {
         // console.log(this.playersLoaded)

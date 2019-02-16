@@ -111,8 +111,8 @@
                       span {{ props.row.name }}
                     b-table-column(label="Assign")
                       role-buttons(:player="props.row" @setRole="setRole" :lineUp="lineUp" :lockedRoles="lockedRoles" :isLocked="!notLocked(props.row.id)")
-                    b-table-column(label="Rating" width="40" field="stats.fantasyScore" sortable)
-                      span {{ props.row.stats.fantasyScore || 'N/A' }}
+                    b-table-column(label="Score" width="40" field="stats.fantasyScore" sortable)
+                      span {{ getScore(props.row.id) | playerScore }}
             section
               collapsible(title-text="League Rosters" :start-collapsed="true")
                 drafting-users(:users="leagueUsers" :draft="draft" :picks="draftPicks" :ownerId="league.ownerId")
@@ -246,6 +246,9 @@ export default {
     players () {
       return this.$store.getters.getPlayers
     },
+    playerScores () {
+      return this.$store.getters.getPlayerScores || {}
+    },
     playersLoaded () {
       return !isEmpty(this.players)
     },
@@ -271,7 +274,7 @@ export default {
       handler (val) {
         if (val) {
           LeagueService.getLeague(val).then((league) => {
-            this.league = league
+            this.league = league || {}
             this.$store.dispatch('fetchDraft', val)
             this.$store.dispatch('fetchDraftPicks', val)
             this.$store.dispatch('fetchLeagueSchedule', val)
@@ -293,6 +296,9 @@ export default {
   methods: {
     getPlayerName (id) {
       return id && this.players[id] ? this.players[id].name : 'Empty'
+    },
+    getScore (playerId) {
+      return Number(this.playerScores[playerId]) || 0
     },
     getTeamImage (id) {
       return id && this.players[id] ? `images/teams/${this.players[id].team}.svg` : ''

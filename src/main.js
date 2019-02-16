@@ -45,7 +45,7 @@ Vue.filter('capFirst', function (value) {
   if (value) return `${value.charAt(0).toUpperCase()}${value.slice(1)}`
 })
 Vue.filter('playerScore', function (value) {
-  return Number(value.toFixed(2))
+  return value ? Number(value).toFixed(2) : 0
 })
 
 Vue.component('leftBar', leftBar)

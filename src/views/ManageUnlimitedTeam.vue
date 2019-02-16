@@ -124,8 +124,8 @@
                   span {{ props.row.name }}
                 b-table-column(label="Assign")
                   role-buttons(:lineUp="lineUp" :player="props.row" @setRole="setRole" :lockedRoles="lockedRoles" :isLocked="!notLocked(props.row.id)")
-                b-table-column(label="Rating" width="40" field="stats.fantasyScore" sortable)
-                  span {{ props.row.stats.fantasyScore || 'N/A' }}
+                b-table-column(label="Score" width="40" field="stats.fantasyScore" sortable)
+                  span {{ getScore(props.row.id) | playerScore }}
 </template>
 
 <script>
@@ -221,6 +221,9 @@ export default {
     playersLoaded () {
       return !isEmpty(this.players)
     },
+    playerScores () {
+      return this.$store.getters.getPlayerScores || {}
+    },
     teams () {
       return this.$store.getters.getTeams
     },
@@ -253,6 +256,9 @@ export default {
   methods: {
     getPlayerName (id) {
       return id && this.players[id] ? this.players[id].name : 'Empty'
+    },
+    getScore (playerId) {
+      return Number(this.playerScores[playerId]) || 0
     },
     getTeamImage (id) {
       return id && this.players[id] ? `images/teams/${this.players[id].team}.svg` : ''

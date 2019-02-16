@@ -19,7 +19,7 @@ export default {
   props: {
     league: {
       type: Object,
-      required: true
+      default: () => ({})
     }
   }
 }

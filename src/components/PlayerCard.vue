@@ -14,7 +14,7 @@
         img.role-image(:src="`images/roles/${player.attributes.role || 'flex'}-white.svg`")
     div.is-hidden-mobile(v-if="!seeStats && player && !hidePhoto")
       img.img(:src="player.headshot")
-      span.fantasy-points.has-text-centered.ow-font.orange {{ score | playerScore }}
+      span.fantasy-points.has-text-centered.ow-font.orange {{ getScore(player.id) | playerScore }}
     .stats(v-if="seeStats && player")
       span.is-proper Role: {{ player.attributes.role }}
       .heroes(v-if="hasHeroes(player)")
@@ -66,7 +66,18 @@ export default {
       seeStats: false
     }
   },
+  computed: {
+    currentWeek () {
+      return this.$store.getters.getCurrentWeek
+    },
+    playerScores () {
+      return this.$store.getters.getPlayerScores || {}
+    }
+  },
   methods: {
+    getScore (playerId) {
+      return Number(this.playerScores[playerId]) || 0
+    },
     hasHeroes (player) {
       if (player && player.attributes) return !isEmpty(player.attributes.heroes)
       return false

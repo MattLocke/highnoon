@@ -18,8 +18,6 @@
 </template>
 
 <script>
-import { isEmpty } from 'lodash'
-
 export default {
   name: 'RoleAssigner',
   props: {
@@ -51,7 +49,8 @@ export default {
       return this.lineUp[parsedRole] ? { 'is-secondary': true } : { 'is-primary': true }
     },
     locked (pos) {
-      return (!isEmpty(this.lineUp[pos]) && this.isLocked) || this.lockedRoles.includes(pos)
+      // Bugfix edtion return (!isEmpty(this.lineUp[pos]) && this.isLocked) || this.lockedRoles.includes(pos)
+      return this.isLocked || this.lockedRoles.includes(pos)
     },
     roleData (pos) {
       const parsedRole = pos === 'captain' ? pos : `${this.player.attributes.role}${pos}`
