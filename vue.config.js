@@ -1,4 +1,5 @@
 module.exports = {
+  productionSourceMap: false,
   configureWebpack: {
     module: {
       // loaders will get concatenated!

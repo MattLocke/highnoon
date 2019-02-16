@@ -168,9 +168,9 @@ export default {
     filteredPlayers () {
       let fPlayers = [...this.myAvailablePicks]
 
-      if (this.filterText) fPlayers = fPlayers.filter(player => player.name.toLowerCase().includes(this.filterText.toLowerCase()))
-      if (this.filterRole) fPlayers = fPlayers.filter(player => player.attributes.role === this.filterRole)
-      if (this.filterTeam) fPlayers = fPlayers.filter(player => player.team === this.filterTeam)
+      if (this.filterText) fPlayers = fPlayers.filter(player => player.name && player.name.toLowerCase().includes(this.filterText.toLowerCase()))
+      if (this.filterRole) fPlayers = fPlayers.filter(player => player.attributes && player.attributes.role === this.filterRole)
+      if (this.filterTeam) fPlayers = fPlayers.filter(player => player.team && player.team === this.filterTeam)
 
       return differenceWith(fPlayers, this.lockedPlayers, (a, b) => Number(a.id) === Number(b))
     },
@@ -231,7 +231,8 @@ export default {
       return this.$store.getters.getUserData
     },
     teamName () {
-      return this.leagueUsers.find(user => user.userId === this.userData.id).teamName
+      const userLeagueInfo = this.leagueUsers.find(user => user.userId === this.userData.id)
+      return userLeagueInfo ? userLeagueInfo.teamName : ''
     }
   },
   watch: {

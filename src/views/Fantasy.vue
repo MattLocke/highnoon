@@ -65,7 +65,7 @@ export default {
   },
   computed: {
     filteredPlayers () {
-      return this.players.filter(player => player.name.toLowerCase().includes(this.filterText.toLowerCase()))
+      return this.players.filter(player => player.name && player.name.toLowerCase().includes(this.filterText.toLowerCase()))
     },
     players () {
       return Object.values(this.$store.getters.getPlayers)
