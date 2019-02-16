@@ -151,7 +151,7 @@ export default {
     background-color: #21a431;
   }
   .b-radio.radio.neutral-radio input[type=radio]:checked + .check {
-    border-color: #222;
+    border-color: rgba(0,0,0,0.1);
   }
   .b-radio.radio.neutral-radio input[type=radio] + .check:before {
     background-color: #222;
