@@ -44,7 +44,7 @@ export default {
   },
   actions: {
     fetchPicks: ({ state, commit, dispatch }) => {
-      if (!state.picks.length && state.userData.id) {
+      if (state.userData.id) {
         dispatch('setLoading', true)
         db.collection('picks')
           .doc(state.userData.id)

@@ -14,7 +14,7 @@
         img.role-image(:src="`images/roles/${player.attributes.role || 'flex'}-white.svg`")
     div.is-hidden-mobile(v-if="!seeStats && player && !hidePhoto")
       img.img(:src="player.headshot")
-      span.fantasy-points.has-text-centered {{ score }}
+      span.fantasy-points.has-text-centered.ow-font.orange {{ score | playerScore }}
     .stats(v-if="seeStats && player")
       span.is-proper Role: {{ player.attributes.role }}
       .heroes(v-if="hasHeroes(player)")
@@ -101,11 +101,10 @@ export default {
       width: 100%;
       display: block;
       margin-top: -.5rem;
-      margin-bottom: -.25rem;
       position: relative;
       z-index: 3;
       height: 1.2rem;
-      line-height: .6rem;
+      line-height: 1rem;
     }
     h3 {
       font-size: 1.2rem;

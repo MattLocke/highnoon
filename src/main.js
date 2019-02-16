@@ -44,6 +44,9 @@ Vue.filter('formatJSTime', function (value) {
 Vue.filter('capFirst', function (value) {
   if (value) return `${value.charAt(0).toUpperCase()}${value.slice(1)}`
 })
+Vue.filter('playerScore', function (value) {
+  return Number(value.toFixed(2))
+})
 
 Vue.component('leftBar', leftBar)
 Vue.component('topBar', topBar)

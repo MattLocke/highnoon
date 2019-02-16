@@ -182,6 +182,7 @@ export default {
     getUserLeagues: state => state.leagues,
     getLeagueUsers: state => state.leagueUsers,
     getLeagueSchedule: state => state.leagueSchedule,
-    getLeagueRoster: state => state.leagueRoster
+    getLeagueRoster: state => state.leagueRoster,
+    getLeagueRosterPoints: state => state.leagueScores
   }
 }
