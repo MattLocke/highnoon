@@ -7,11 +7,17 @@
         .ow-font.team-name {{ match.competitors[0].abbreviatedName }}
       .column.is-narrow(v-if="!isDisabled")
         b-radio.is-pulled-right.winner-radio(v-model="matchWinner" size="is-medium" :native-value="match.competitors[0].id")
+      .column.is-narrow(v-else)
+        b-radio.is-pulled-right.winner-radio.correct-radio(selected size="is-medium" v-if="finishedMatchWinner && matchWinner == match.competitors[0].id")
+        b-radio.is-pulled-right.winner-radio.incorrect-radio(selected size="is-medium" v-else)
       .column.has-text-centered
         .match-date {{ match.startDateTS | formatJSDate }}
         .match-time {{ match.startDateTS | formatJSTime }}
       .column.is-narrow(v-if="!isDisabled")
         b-radio.is-pulled-right.winner-radio(v-model="matchWinner" size="is-medium" :native-value="match.competitors[1].id")
+      .column.is-narrow(v-else)
+        b-radio.is-pulled-right.winner-radio.correct-radio(selected size="is-medium" v-if="finishedMatchWinner && matchWinner == match.competitors[1].id")
+        b-radio.is-pulled-right.winner-radio.incorrect-radio(selected size="is-medium" v-else)
       .column.is-narrow
         .ow-font.team-name.is-pulled-right {{ match.competitors[1].abbreviatedName }}
       .column.is-narrow
@@ -48,6 +54,10 @@ export default {
     },
     userPicks () {
       return this.$store.getters.getUserPicks
+    },
+    finishedMatchWinner () {
+      if (this.userPicks[this.match.id] && this.userPicks[this.match.id].points > 0) return true
+      return false
     }
   },
   watch: {
@@ -85,6 +95,7 @@ export default {
         }
         PicksService.savePick(pick)
           .then(() => {
+            this.$store.dispatch('fetchPicks')
             this.$store.dispatch('setLoading', false)
             this.$toast.open({
               message: 'Successfully saved pick!',
@@ -124,6 +135,18 @@ export default {
     .check {
       margin-bottom: -1.8rem;
     }
+  }
+  .b-radio.radio.incorrect-radio input[type=radio]:checked + .check {
+    border-color: #a42621;
+  }
+  .b-radio.radio.incorrect-radio input[type=radio] + .check:before {
+    background-color: #a42621;
+  }
+  .b-radio.radio.correct-radio input[type=radio]:checked + .check {
+    border-color: #21a431;
+  }
+  .b-radio.radio.correct-radio input[type=radio] + .check:before {
+    background-color: #21a431;
   }
 }
 </style>
