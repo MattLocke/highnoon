@@ -37,9 +37,7 @@ export default {
   },
   mounted () {
     this.$store.dispatch('saveFireData', firebase.auth().currentUser)
-    this.$store.dispatch('loadConfig')
     this.$store.dispatch('getPlayers')
-    this.$store.dispatch('getPlayerScores')
     this.$store.dispatch('getTeams')
     this.$store.dispatch('setLoading', true)
 
@@ -51,6 +49,15 @@ export default {
           this.$store.dispatch('setLoading', false)
         })
     } else this.$store.dispatch('setLoading', false)
+
+    // setting config to be loaded here, so certain functions can count on variables being there.
+    firebase.firestore().collection('config')
+      .doc('owl')
+      .onSnapshot((doc) => {
+        const config = doc.data()
+        this.$store.dispatch('loadConfig', config)
+        this.$store.dispatch('getPlayerScores', `${config.currentWeek}`)
+      })
 
     const db = firebase.database()
     db.ref('/notification/system').on('value', (snapshot) => {

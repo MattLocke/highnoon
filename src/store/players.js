@@ -10,7 +10,8 @@ export default {
   state: {
     players: [],
     lockedPlayers: [],
-    playerScores: {}
+    playerScores: {},
+    playerTotalScores: {}
   },
   mutations: {
     SET_PLAYERS: (state, payload) => {
@@ -21,6 +22,9 @@ export default {
     },
     SET_PLAYER_SCORES: (state, payload) => {
       state.playerScores = payload || {}
+    },
+    SET_PLAYER_TOTAL_SCORES: (state, payload) => {
+      state.playerTotalScores = payload || {}
     }
   },
   actions: {
@@ -57,22 +61,36 @@ export default {
           })
       }
     },
-    getPlayerScores ({ commit }) {
-      let thePlayers = {}
-      db.collection(`playerScores`)
+    getPlayerScores ({ commit }, payload) {
+      // console.log(`Getting scores based on ${payload}`)
+      db.collection(`playerBestScores`)
+        .doc(`${payload}`)
         .get()
-        .then((weeks) => {
-          weeks.docs.forEach(week => {
-            const p = week.data()
-            thePlayers = { thePlayers, ...p }
-          })
+        .then((players) => {
+          const thePlayers = players.data()
+          // console.log(`The Players: ${JSON.stringify(thePlayers)}`)
           commit('SET_PLAYER_SCORES', thePlayers)
+          return null
+        })
+        .then(() => db.collection(`playerTotalScores`)
+          .doc(`${payload}`)
+          .get()
+          .then((players) => {
+            const thePlayers = players.data()
+            // console.log(`The Players: ${JSON.stringify(thePlayers)}`)
+            commit('SET_PLAYER_TOTAL_SCORES', thePlayers)
+            return null
+          })
+        )
+        .catch(e => {
+          console.log(e)
         })
     }
   },
   getters: {
     getLockedPlayers: state => state.lockedPlayers,
     getPlayers: state => state.players,
-    getPlayerScores: state => state.playerScores
+    getPlayerScores: state => state.playerScores,
+    getPlayerTotalScores: state => state.playerTotalScores
   }
 }
