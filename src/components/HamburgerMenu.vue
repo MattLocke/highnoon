@@ -1,36 +1,30 @@
 <template lang="pug">
   .wrap.hamburger-menu
-    eva-icon.has-pointer(name="more-horizotnal" fill="white" @click="showContent = !showContent")
-    transition(name="scale")
-      .hamburger-content(v-if="showContent")
-        slot
+    eva-icon.has-pointer(name="more-horizotnal" fill="white" @click="isOpen = !isOpen")
+    .dropdown.is-up(:class="{'is-active': isOpen }")
+      .dropdown-menu(role="menu")
+        .dropdown-content
+          a.dropdown-item(v-for="(menuItem, index) in menuItems" @click="menuItem.linkFn" :key="index") {{ menuItem.linkText }}
 </template>
 
 <script>
 export default {
   name: 'HamburgerMenu',
+  props: {
+    menuItems: {
+      type: Array,
+      required: true
+    }
+  },
   data () {
     return {
-      showContent: false
+      isOpen: false
     }
   }
 }
 </script>
 
 <style lang="scss">
-  .hamburger-menu {
-    position: relative;
-    width: auto;
-  }
-  .hamburger-content {
-    position: absolute;
-    border-radius: 2px;
-    left: 2em;
-    bottom: 2em;
-    padding: 8px;
-    background-color: white;
-    z-index: 2;
-  }
   .scale-enter-active, .scale-leave-active {
     transition: transform .25s;
     transform-origin: bottom left;
