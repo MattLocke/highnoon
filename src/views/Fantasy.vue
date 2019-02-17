@@ -47,6 +47,8 @@
                 label="Team"
                 sortable
               ) {{ props.row.team }}
+              b-table-column(label="Score" width="40")
+                span {{ getScore(props.row.id) | playerScore }}
 </template>
 
 <script>
@@ -69,6 +71,14 @@ export default {
     },
     players () {
       return Object.values(this.$store.getters.getPlayers)
+    },
+    playerScores () {
+      return this.$store.getters.getPlayerScores || {}
+    }
+  },
+  methods: {
+    getScore (playerId) {
+      return Number(this.playerScores[playerId]) || 0
     }
   }
 }

@@ -1,11 +1,3 @@
-import firebase from 'firebase/app'
-import 'firebase/firestore'
-import { fireInit } from '@/fireLogin'
-
-fireInit()
-
-var db = firebase.firestore()
-
 export default {
   state: {
     config: {},
@@ -20,12 +12,8 @@ export default {
     }
   },
   actions: {
-    loadConfig: (context) => {
-      db.collection('config')
-        .doc('owl')
-        .onSnapshot((doc) => {
-          context.commit('SET_CONFIG', doc.data())
-        })
+    loadConfig: (context, payload) => {
+      context.commit('SET_CONFIG', payload)
     },
     saveLiveConfig: (context, payload) => {
       context.commit('SET_LIVE_CONFIG', payload)

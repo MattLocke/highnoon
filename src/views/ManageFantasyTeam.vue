@@ -247,7 +247,7 @@ export default {
       return this.$store.getters.getPlayers
     },
     playerScores () {
-      return this.$store.getters.getPlayerScores || {}
+      return this.league.rawScoring ? this.$store.getters.getPlayerTotalScores : this.$store.getters.getPlayerScores
     },
     playersLoaded () {
       return !isEmpty(this.players)
