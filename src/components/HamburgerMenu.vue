@@ -23,14 +23,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-  .scale-enter-active, .scale-leave-active {
-    transition: transform .25s;
-    transform-origin: bottom left;
-  }
-  .scale-enter, .scale-leave-to /* .fade-leave-active below version 2.1.8 */ {
-    transform: scale(0);
-    transform-origin: bottom left;
-  }
-</style>
