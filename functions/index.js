@@ -425,14 +425,15 @@ function performTradeFirebase (trade) {
 
 function cleanRoster(roster, player) {
   var r = { ...roster }
-
-  if (r.captain === player) r.captain = ''
-  if (r.offense1 === player) r.offense1 = ''
-  if (r.offense2 === player) r.offense2 = ''
-  if (r.support1 === player) r.support1 = ''
-  if (r.support2 === player) r.support2 = ''
-  if (r.tank1 === player) r.tank1 = ''
-  if (r.tank2 === player) r.tank2 = ''
+  if (r && player) {
+    if (r.captain === player) r.captain = ''
+    if (r.offense1 === player) r.offense1 = ''
+    if (r.offense2 === player) r.offense2 = ''
+    if (r.support1 === player) r.support1 = ''
+    if (r.support2 === player) r.support2 = ''
+    if (r.tank1 === player) r.tank1 = ''
+    if (r.tank2 === player) r.tank2 = ''
+  }
   return r
 }
 
