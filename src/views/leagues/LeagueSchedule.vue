@@ -1,9 +1,7 @@
 <template lang="pug">
   .league-schedule
     section
-      h2.has-pointer(@click="showSchedule = !showSchedule") League Schedule
-        arrow(:isLeft="true" v-model="showSchedule")
-      .wrap(v-if="showSchedule")
+      collapsible(title-text="Full Schedule")
         .wrap(v-if="hasSchedule")
           p This is where you can see the week-to-week matchups.  This list is completely randomized, so if you play some people more than once and others not at all, it's just the luck of the draw.
           hr

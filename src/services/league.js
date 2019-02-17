@@ -3,7 +3,7 @@ import 'firebase/firestore'
 import 'firebase/database'
 import { fireInit } from '@/fireLogin'
 import logger from '@/services/logger'
-import { shuffle } from 'lodash'
+import { forEach, shuffle } from 'lodash'
 
 fireInit()
 
@@ -11,6 +11,13 @@ var db = firebase.firestore()
 var rdb = firebase.database()
 
 export default {
+  calculateRosterPoints (scores, roster) {
+    let total = 0
+    forEach(roster, r => {
+      if (scores[r]) total = total + Number(scores[r])
+    })
+    return total
+  },
   cancelWaiver (leagueId, waiverId) {
     return rdb.ref(`/pendingWaivers/${leagueId}/${waiverId}`).set(null)
   },

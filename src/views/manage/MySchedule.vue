@@ -27,7 +27,7 @@ export default {
       return this.$store.getters.getConfig
     },
     myNextMatch () {
-      const actualWeek = this.config.currentWeek + 1
+      const actualWeek = this.config.currentWeek
       if (!isEmpty(this.schedule)) {
         if (this.schedule[actualWeek]) return this.schedule[actualWeek].find(matches => matches.away.userId === this.userData.id || matches.home.userId === this.userData.id)
       }

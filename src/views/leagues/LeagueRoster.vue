@@ -34,37 +34,37 @@
         img(src="images/roles/captain-white.svg" width="20" height="20")
         img(:src="getTeamImage(roster.captain)" width="20" height="20" v-if="roster.captain")
         | {{ players[roster.captain].name || 'Empty' }} -
-        span.orange {{ playerScores[roster.captain] | playerScore }}
+        span.orange  {{ playerScores[roster.captain] | playerScore }}
       h2.ow-font
         img(src="images/roles/offense-white.svg" width="20" height="20")
         img(:src="getTeamImage(roster.offense1)" width="20" height="20" v-if="roster.offense1")
         | {{ players[roster.offense1].name || 'Empty' }} -
-        span.orange {{ playerScores[roster.offense1] | playerScore }}
+        span.orange  {{ playerScores[roster.offense1] | playerScore }}
       h2.ow-font
         img(src="images/roles/offense-white.svg" width="20" height="20")
         img(:src="getTeamImage(roster.offense2)" width="20" height="20" v-if="roster.offense2")
         | {{ players[roster.offense2].name || 'Empty' }} -
-        span.orange {{ playerScores[roster.offense2] | playerScore }}
+        span.orange  {{ playerScores[roster.offense2] | playerScore }}
       h2.ow-font
         img(src="images/roles/support-white.svg" width="20" height="20")
         img(:src="getTeamImage(roster.support1)" width="20" height="20" v-if="roster.support1")
         | {{ players[roster.support1].name || 'Empty' }} -
-        span.orange {{ playerScores[roster.support1] | playerScore }}
+        span.orange  {{ playerScores[roster.support1] | playerScore }}
       h2.ow-font
         img(src="images/roles/support-white.svg" width="20" height="20")
         img(:src="getTeamImage(roster.support2)" width="20" height="20" v-if="roster.support2")
         | {{ players[roster.support2].name || 'Empty' }} -
-        span.orange {{ playerScores[roster.support2] | playerScore }}
+        span.orange  {{ playerScores[roster.support2] | playerScore }}
       h2.ow-font
         img(src="images/roles/tank-white.svg" width="20" height="20")
         img(:src="getTeamImage(roster.tank1)" width="20" height="20" v-if="roster.tank1")
         | {{ players[roster.tank1].name || 'Empty' }} -
-        span.orange {{ playerScores[roster.tank] | playerScore }}
+        span.orange  {{ playerScores[roster.tank] | playerScore }}
       h2.ow-font
         img(src="images/roles/tank-white.svg" width="20" height="20")
         img(:src="getTeamImage(roster.tank2)" width="20" height="20" v-if="roster.tank2")
         | {{ players[roster.tank2].name || 'Empty' }} -
-        span.orange {{ playerScores[roster.tank2] | playerScore }}
+        span.orange  {{ playerScores[roster.tank2] | playerScore }}
     section(v-else)
       p Your roster is empty!
     section

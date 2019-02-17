@@ -48,7 +48,7 @@
           .wrap(v-else)
             p You need an even number of users in your league in order to create a draft order and start the draft!
         b-tabs(v-model="activeContentTab")
-          b-tab-item(label="League Message")
+          b-tab-item(label="League Home")
             section.league-message
               h2 League Message
                 button.button.is-secondary.is-small.is-pulled-right(@click="editingMessage = !editingMessage" v-if="isOwner") {{ editingMessage ? 'cancel' : 'edit' }}
@@ -64,17 +64,28 @@
               .wrap(v-else)
                 img(src="https://firebasestorage.googleapis.com/v0/b/overwatch-pickem.appspot.com/o/images%2Fleagues%2Fwelcome-to-your-league.jpg?alt=media&token=bbf8225c-6bd0-4b1a-b5e0-d864a3047395")
                 p Click on the edit button above to customize your league landing page!  Inform members of the rules you have, the prizes you're giving away - whatever makes sense!
-          b-tab-item(label="Your Roster" v-if="draftComplete && isInLeague")
-            league-roster(:league="league")
-          b-tab-item(label="Draft Order" v-if="draftOrder && draftOrder.length")
-            p This is the order for the draft.  Keep in mind this is a snake draft.  If you have no idea what that means, it's similar to what
-              a(href="https://www.dummies.com/sports/fantasy-sports/fantasy-football/understanding-fantasy-football-snake-and-auction-drafts/" target="_blank")  this page describes
-              | .
-            ol
-              li(v-for="team in draftOrder") {{ team.displayName }}
+            section(v-if="canJoinLeague")
+              b-field(label="password" v-if="league.password")
+                b-input(type="password" v-model="localPassword")
+              button.button.is-primary(@click="joinLeague") Join League
+            section(v-if="isInLeague && !isOwner")
+              confirm-button(buttonText="Leave League" confirmText="Are You Sure?" @confirm-it="leaveLeague")
+          b-tab-item(label="Roster")
+            league-roster(:league="league" v-if="draftComplete && isInLeague")
+            section
+              p This is the order for the draft.  Keep in mind this is a snake draft.  If you have no idea what that means, it's similar to what
+                a(href="https://www.dummies.com/sports/fantasy-sports/fantasy-football/understanding-fantasy-football-snake-and-auction-drafts/" target="_blank")  this page describes
+                | .
+              ol
+                li(v-for="team in draftOrder") {{ team.displayName }}
+          b-tab-item(label="Schedule")
+            matchup
+            league-schedule(v-if="draftComplete")
+            section(v-else)
+              p This will be where you can view your upcoming matchups
           b-tab-item(label="Trash Talk")
             trash-talk
-          b-tab-item(v-if="isOwner || userData.isAdmin" label="League Options")
+          b-tab-item(v-if="isOwner || userData.isAdmin" label="Options")
             h2 League Options
             p We will be adding to this page to allow league owners more control over how their league is ran.  Stay tuned!
             remove-user(v-if="(isOwner && !draftComplete) || userData.isAdmin" leagueType="standard")
@@ -92,13 +103,6 @@
             section(v-if="isOwner")
               collapsible(title-text="Delete League" :start-collapsed="true")
                 confirm-button(button-text="Delete League" confirm-text="Are You Sure?" extra-text="This action can not be undone, and all users will lose their points and picks associated with this league." @confirm-it="deleteLeague")
-        section(v-if="canJoinLeague")
-          b-field(label="password" v-if="league.password")
-            b-input(type="password" v-model="localPassword")
-          button.button.is-primary(@click="joinLeague") Join League
-        section(v-if="isInLeague && !isOwner")
-          confirm-button(buttonText="Leave League" confirmText="Are You Sure?" @confirm-it="leaveLeague")
-        league-schedule(v-if="draftComplete")
       .column(v-else)
         .container
           h1 Please select a league from the menu.
@@ -115,6 +119,7 @@ import LeagueService from '@/services/league'
 
 import LeagueRoster from '@/views/leagues/LeagueRoster'
 import LeagueSchedule from '@/views/leagues/LeagueSchedule'
+import Matchup from '@/views/leagues/Matchup'
 import RemoveUser from '@/views/leagues/RemoveUser'
 import TransferOwnership from '@/views/admin/TransferOwnership'
 import TrashTalk from '@/views/draft/TrashTalk'
@@ -125,6 +130,7 @@ export default {
   components: {
     LeagueRoster,
     LeagueSchedule,
+    Matchup,
     RemoveUser,
     vueMarkdown,
     TransferOwnership,
