@@ -24,7 +24,7 @@
         span Can Trade Players
     .columns.is-mobile
       .column.is-narrow
-        b-switch(v-model="liveConfigCopy.canTrade")
+        b-switch(v-model="liveConfigCopy.canWaiverWire")
       .column
         span Can Use Waiver Wire
     .columns.is-mobile
@@ -34,7 +34,7 @@
         span Waiver Wire Active
     .columns.is-mobile
       .column.is-narrow
-        b-switch(v-model="liveConfigCopy.canWaiverWire")
+        b-switch(v-model="liveConfigCopy.canUseSite")
       .column
         span Can Use High Noon
     .columns.is-mobile

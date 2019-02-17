@@ -34,7 +34,7 @@
           .navbar-dropdown
             a.navbar-item(href="https://discord.gg/wTR5AEu" target="_blank") Discord
             a.navbar-item(href="https://www.reddit.com/r/HighNoonPickem/" target="_blank") Reddit
-            a.navbar-item(href="https://www.patreon.com/highnoonpickem" target="_blank") Patreon
+            a.navbar-item(href="https://www.patreon.com/highnoongg" target="_blank") Patreon
             a.navbar-item(href="https://paypal.me/mattlocke/5" target="_blank") Paypal
 </template>
 
