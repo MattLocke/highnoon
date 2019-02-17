@@ -20,8 +20,7 @@
         .from {{ message.userDisplayName }}
           span.is-pulled-right {{ formatWhen(message.when) }}
         .content {{ message.message }}
-        hamburger-menu
-          button.button(v-if="user.displayName === message.userDisplayName" @click="deleteMessage(message)") Delete
+        hamburger-menu(:menuItems="hamburgerMenuItems(message)")
 </template>
 
 <script>
@@ -74,6 +73,14 @@ export default {
     addEmoji (emoji) {
       this.newMessage = `${this.newMessage}${emoji.native}`
     },
+    hamburgerMenuItems (message) {
+      return [
+        {
+          linkText: 'Delete',
+          linkFn: () => this.deleteMessage(message)
+        }
+      ]
+    },
     addMessage () {
       this.cleanMessage()
       if (this.newMessage.length > 1) {
@@ -105,7 +112,7 @@ export default {
           }
         })
       })
-      .then(() => db.ref(`/draftMessages/${this.leagueId}/${messageKey}`).remove())
+        .then(() => db.ref(`/draftMessages/${this.leagueId}/${messageKey}`).remove())
     },
     cleanMessage () {
       this.newMessage = this.newMessage.replace(/[\n\r]/g, '')
