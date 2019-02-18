@@ -20,6 +20,7 @@
         .from {{ message.userDisplayName }}
           span.is-pulled-right {{ formatWhen(message.when) }}
         .content {{ message.message }}
+        hamburger-menu(:menuItems="hamburgerMenuItems(message)")
 </template>
 
 <script>
@@ -62,15 +63,27 @@ export default {
     }
   },
   mounted () {
+    const db = firebase.database()
     window.addEventListener('keyup', (event) => {
       if (event.keyCode === 13) {
         this.addMessage()
       }
     })
+    db.ref(`/draftMessages/${this.leagueId}`).on('child_removed', snapshot => {
+      this.messages = this.messages.filter(message => message.key !== snapshot.key)
+    })
   },
   methods: {
     addEmoji (emoji) {
       this.newMessage = `${this.newMessage}${emoji.native}`
+    },
+    hamburgerMenuItems (message) {
+      return [
+        {
+          linkText: 'Delete',
+          linkFn: () => this.deleteMessage(message)
+        }
+      ]
     },
     addMessage () {
       this.cleanMessage()
@@ -87,6 +100,10 @@ export default {
           })
       }
     },
+    deleteMessage (message) {
+      const db = firebase.database()
+      db.ref(`/draftMessages/${this.leagueId}/${message.key}`).remove()
+    },
     cleanMessage () {
       this.newMessage = this.newMessage.replace(/[\n\r]/g, '')
     },
@@ -96,7 +113,10 @@ export default {
     getMessages () {
       const db = firebase.database()
       db.ref(`/draftMessages/${this.leagueId}`).on('child_added', (snapshot) => {
-        this.messages.unshift(snapshot.val())
+        this.messages.unshift({
+          ...snapshot.val(),
+          key: snapshot.key
+        })
         // only care about the last 50
         if (this.messages.length > 50) this.messages.length = 50
       })
