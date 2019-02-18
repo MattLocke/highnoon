@@ -1,7 +1,8 @@
 <template lang="pug">
   .waiver-wire
-    collapsible(title-text="The Waiver Wire" :start-collapsed="true")
+    collapsible(title-text="The Waiver Wire")
       p This is where you can exchange players you have for players that are unclaimed in the draft.  To prevent unfair advantages in release dates vs. a user's schedule, there's a system called Waiver Wire.  What this does is creates a period of time where people can say which players they'd like to swap for.  Then at the end of the period, whoever has the worst record will get first dibs on player X, if more than one person wanted that player.  This helps keeps things interesting and is a long-proven good idea!  Good luck all!
+      p.orange Player scores here are per 10/min.  They're meant to be more relative than absolute.  In the future this may change.  <3
     hr
     section(v-if="this.liveConfig.waiverWireDisabled")
       h2.orange Waiver Wire has passed for this week!
@@ -46,7 +47,7 @@
             b-table-column(label="Player Name" field="name" sortable)
               span {{ props.row.name }}
             b-table-column(label="Rating" width="40" field="stats.fantasyScore" sortable)
-              span {{ props.row.stats.fantasyScore || 'N/A' }}
+              span {{ props.row.stats.fantasyScore | playerScore }}
         .columns(v-if="selectedPlayer.id")
           .column.is-narrow
             h3 I would like
