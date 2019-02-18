@@ -31,7 +31,6 @@
                 b-input(type="text" v-model="filterText")
         b-table(
           :data="superFilteredPlayers"
-          :loading="!(filteredPlayers.length)"
           ref="table"
           :paginated="filteredPlayers && filteredPlayers.length > 20"
           :per-page="20"
@@ -66,7 +65,7 @@
               button.button.is-small.is-secondary(@click="selectedPlayer = {}") Select Different Player
       .column.is-one-quarter
         h3 Pending Waiver Wires
-        .waiver-wire-item(v-for="(ww, index) in pendingWaiverWires" v-if="ww" :key="`${ww.gains}${ww.loses}`")
+        .waiver-wire-item(v-for="(ww, index) in pendingWaiverWires" v-if="ww && isMyWaiverWire(ww)" :key="`${ww.gains}${ww.loses}`")
           .requester.columns
             .column
               span.mice {{ ww.requesterDisplayName }} wants
@@ -205,6 +204,9 @@ export default {
         .then(wires => {
           this.pendingWaiverWires = wires || {}
         })
+    },
+    isMyWaiverWire (ww) {
+      return ww.requesterId === this.userData.id
     },
     requestExchange () {
       console.log('Requesting Exchange...')
