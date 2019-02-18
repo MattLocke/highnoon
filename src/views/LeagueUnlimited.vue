@@ -41,6 +41,23 @@
               .wrap(v-else)
                 img(src="https://firebasestorage.googleapis.com/v0/b/overwatch-pickem.appspot.com/o/images%2Fleagues%2Fwelcome-to-your-league.jpg?alt=media&token=bbf8225c-6bd0-4b1a-b5e0-d864a3047395")
                 p Click on the edit button above to customize your league landing page!  Inform members of the rules you have, the prizes you're giving away - whatever makes sense!
+          b-tab-item(label="Leaderboards")
+            h2 League Leaderboard
+            p With the league leaderboard it will only show you if you have a score.  So if you just joined, don't fret!  Once we start the next scores you'll pop up.  Good luck!
+            b-table(
+              :data="sortedScoreboard"
+              :paginated="true"
+              :per-page="30"
+              )
+              template(slot-scope="props")
+                b-table-column(label="Pos" field="pos" width="20" sortable)
+                  span {{ props.row.pos }}
+                b-table-column(label="User" field="displayName" width="180" sortable)
+                  span {{ props.row.displayName || 'vacated' }}
+                b-table-column(label="Team Name" field="teamName" sortable)
+                  span {{ props.row.teamName || 'vacated' }}
+                b-table-column(label="Score" width="30" field="score" sortable)
+                  span {{ props.row.score }}
           b-tab-item(label="Your Roster" v-if="isInLeague")
             league-roster(:league="league" v-if="liveConfig.canCreateUnlimitedRoster")
             span(v-else) {{ liveConfig.featureDownMessage }}
@@ -56,6 +73,7 @@
 </template>
 
 <script>
+import { forEach, merge, keyBy, orderBy } from 'lodash'
 import vueMarkdown from 'vue-markdown'
 
 import LeagueService from '@/services/league'
@@ -125,6 +143,21 @@ export default {
     players () {
       return this.$store.getters.getPlayers
     },
+    scoreboard () {
+      return this.$store.getters.getLeagueScoreboard
+    },
+    sortedScoreboard () {
+      const theUsers = this.leagueUsers
+      const tmpScoreboard = merge(keyBy(theUsers, 'userId'), this.scoreboard)
+      const sorted = orderBy(tmpScoreboard, ['score'], ['desc'])
+      const filtered = sorted.filter(s => s.score > 0)
+      let i = 1
+      const indexed = forEach(filtered, s => {
+        s.pos = i
+        i++
+      })
+      return indexed
+    },
     userId () {
       return this.$store.getters.getUserId
     },
@@ -142,6 +175,7 @@ export default {
         if (val) {
           this.$store.dispatch('fetchLeagueUsers', { leagueId: this.leagueId, leagueType: 'unlimited' })
           this.getLeague(val)
+          this.$store.dispatch('fetchRosterScoresUnlimited', val)
         }
       }
     }

@@ -21,6 +21,7 @@ export default {
       tank1: {},
       tank2: {}
     },
+    leagueScoreboard: {},
     leagueScores: {},
     leagueUsers: [],
     leagueSchedule: []
@@ -54,6 +55,9 @@ export default {
           tank2: {}
         }
       }
+    },
+    SET_LEAGUE_ROSTER_SCOREBOARD: (state, payload) => {
+      state.leagueScoreboard = payload || {}
     },
     SET_LEAGUE_ROSTER_SCORES: (state, payload) => {
       state.leagueScores = payload || {}
@@ -156,6 +160,14 @@ export default {
           commit('SET_LEAGUE_ROSTER', theLeagueRoster)
         })
     },
+    fetchRosterScoresUnlimited: ({ commit }, leagueId) => {
+      db.collection('unlimitedLeagueRosterTotals').doc(leagueId)
+        .get()
+        .then((rosterTotals) => {
+          commit('SET_LEAGUE_ROSTER_SCOREBOARD', rosterTotals.data())
+        })
+        .catch(e => { console.error('Unable to get league roster scores.') })
+    },
     fetchRosterPoints: ({ state, commit }, payload) => {
       db.collection(`${payload.leagueType}LeagueScores`).doc(payload.leagueId)
         .get()
@@ -183,6 +195,7 @@ export default {
     getLeagueUsers: state => state.leagueUsers,
     getLeagueSchedule: state => state.leagueSchedule,
     getLeagueRoster: state => state.leagueRoster,
-    getLeagueRosterPoints: state => state.leagueScores
+    getLeagueRosterPoints: state => state.leagueScores,
+    getLeagueScoreboard: state => state.leagueScoreboard
   }
 }
