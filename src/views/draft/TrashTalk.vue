@@ -70,13 +70,7 @@ export default {
       }
     })
     db.ref(`/draftMessages/${this.leagueId}`).on('child_removed', snapshot => {
-      const removedMessage = {
-        ...snapshot.val(),
-        key: snapshot.key
-      }
-      db.ref(`/draftMessages/${this.leagueId}`).once('value').then(() => {
-        this.messages = this.messages.filter(message => message.key !== removedMessage.key)
-      })
+      this.messages = this.messages.filter(message => message.key !== snapshot.key)
     })
   },
   methods: {
@@ -119,11 +113,10 @@ export default {
     getMessages () {
       const db = firebase.database()
       db.ref(`/draftMessages/${this.leagueId}`).on('child_added', (snapshot) => {
-        const newMessage = {
+        this.messages.unshift({
           ...snapshot.val(),
           key: snapshot.key
-        }
-        this.messages.unshift(newMessage)
+        })
         // only care about the last 50
         if (this.messages.length > 50) this.messages.length = 50
       })
