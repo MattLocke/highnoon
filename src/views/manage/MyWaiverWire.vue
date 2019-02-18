@@ -102,6 +102,10 @@ export default {
     PlayerCard
   },
   props: {
+    isOwner: {
+      type: Boolean,
+      default: false
+    },
     players: {
       type: Object,
       default: () => ({})

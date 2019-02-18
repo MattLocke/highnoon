@@ -124,7 +124,7 @@
               span {{ liveConfig.featureDownMessage }}
           b-tab-item(label="Waiver Wire")
             .wrap(v-if="liveConfig.canWaiverWire")
-              waiver-wire(:players="players" :myPicks="myPicks" :otherPicks="otherPicks" :leagueRoster="leagueRoster")
+              waiver-wire(:players="players" :myPicks="myPicks" :otherPicks="otherPicks" :leagueRoster="leagueRoster" :isOwner="isOwner")
             section(v-else)
               span This feature is currently being worked on.
 </template>
@@ -178,6 +178,9 @@ export default {
     },
     draftPicks () {
       return this.$store.getters.getDraftPicks
+    },
+    isOwner () {
+      return this.userId === this.league.ownerId
     },
     leagueId () {
       return this.$route.params.leagueId
