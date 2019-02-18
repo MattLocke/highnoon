@@ -20,7 +20,7 @@
         .from {{ message.userDisplayName }}
           span.is-pulled-right {{ formatWhen(message.when) }}
         .content {{ message.message }}
-        hamburger-menu(:menuItems="hamburgerMenuItems(message)")
+        hamburger-menu(:menuItems="hamburgerMenuItems(message)" v-if="isOwner")
 </template>
 
 <script>

@@ -1,7 +1,7 @@
 <template lang="pug">
   section.matchup
     h2 Your Matchup
-    .columns
+    .columns(v-if="myNextMatch")
       .column.is-half
         roster-listing(:left="myNextMatch.home" :right="myNextMatch.away")
       .column.is-half

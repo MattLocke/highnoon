@@ -140,7 +140,7 @@ export default {
     filteredPlayers () {
       const tmpPlayers = this.players ? Object.values(this.players) : []
       const selectedPlayers = this.myPicks.concat(this.otherPicks)
-      const availablePlayers = differenceWith(tmpPlayers, selectedPlayers, (a, b) => Number(a.id) === (b))
+      const availablePlayers = differenceWith(tmpPlayers, selectedPlayers, (a, b) => Number(a.id) === Number(b))
       const afterTrades = differenceWith(availablePlayers, this.trades, (a, b) => Number(a.id) === Number(b.askerPlayer) || Number(a.id) === Number(b.responderPlayer))
       return differenceWith(afterTrades, this.lockedPlayers, (a, b) => Number(a.id) === Number(b))
     },
