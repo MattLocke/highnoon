@@ -220,6 +220,7 @@ export default {
         .then(() => {
           this.myPlayer = {}
           this.selectedPlayer = {}
+          this.getWaivers()
           this.$toast.open({
             message: 'Successfully requested!',
             type: 'is-success',
