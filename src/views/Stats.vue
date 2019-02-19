@@ -7,6 +7,8 @@
           :data="playersWithStats"
           ref="table")
           template(slot-scope="props")
+            b-table-column(label="ID" width="30" field="id" sortable)
+              span {{ props.row.id }}
             b-table-column(label="Role" width="30" field="attributes.role" sortable)
               span {{ props.row.attributes.role }}
             b-table-column(label="Team" width="30" field="team" sortable)

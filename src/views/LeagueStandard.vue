@@ -15,7 +15,7 @@
               span.orange {{ leagueUsers.length }}
               |  of
               span.orange  10
-            .left-bar-item(v-for="user in leagueUsers") {{ user.displayName }}
+            .left-bar-item(v-for="user in leagueUsers") {{ user.displayName }} {{ user.winLossString || '(0-0)'}}
         section(v-if="canLeaveLeague")
           confirm-button(buttonText="Leave League" confirmText="Are You Sure?" @confirm-it="leaveLeague")
         section(v-if="isOwner")
@@ -70,6 +70,25 @@
               button.button.is-primary(@click="joinLeague") Join League
             section(v-if="isInLeague && !isOwner")
               confirm-button(buttonText="Leave League" confirmText="Are You Sure?" @confirm-it="leaveLeague")
+          b-tab-item(label="Leaderboard")
+            h2 League Leaderboard
+            p Right now it's only sorted by win/loss.  I will probably add your internal "total points" to make the ranking more accurate soon!
+            b-table(
+              :data="sortedScoreboard"
+              )
+              template(slot-scope="props")
+                b-table-column(label="Pos" field="pos" width="20" sortable)
+                  span {{ props.row.pos }}
+                b-table-column(label="User" field="displayName" width="180" sortable)
+                  span {{ props.row.displayName || 'vacated' }}
+                b-table-column(label="Team Name" field="teamName" sortable)
+                  span {{ props.row.teamName || 'vacated' }}
+                b-table-column(label="Wins" width="30" field="wins" sortable)
+                  span {{ props.row.wins }}
+                b-table-column(label="Losses" width="30" field="losses" sortable)
+                  span {{ props.row.losses }}
+                b-table-column(label="Ties" width="30" field="ties" sortable)
+                  span {{ props.row.ties }}
           b-tab-item(label="Roster")
             league-roster(:league="league" v-if="draftComplete && isInLeague")
             section
@@ -112,7 +131,7 @@
 <script>
 import firebase from 'firebase/app'
 import 'firebase/database'
-import { shuffle } from 'lodash'
+import { forEach, orderBy, shuffle } from 'lodash'
 import vueMarkdown from 'vue-markdown'
 
 import LeagueService from '@/services/league'
@@ -172,6 +191,15 @@ export default {
     },
     canStartDraft () {
       return (this.isOwner && this.unDrafted && this.leagueUsers.length && this.leagueUsers.length % 2 === 0 && this.draftOrder && this.draftOrder.length)
+    },
+    sortedScoreboard () {
+      const ordered = orderBy(this.leagueUsers, ['wins', 'losses'], ['desc', 'asc'])
+      let i = 1
+      const indexed = forEach(ordered, s => {
+        s.pos = i
+        i++
+      })
+      return indexed
     },
     config () {
       return this.$store.getters.getConfig
