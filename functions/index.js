@@ -333,7 +333,7 @@ function processPreferenceList (preferenceList, league, leagueId) {
         //   tP = unclaimedPlayers.find(up => indexedPlayers[up].attributes.role === missingType)
         //   if (tP) return tP
         // }
-        return unclaimedPreference.length ? unclaimedPreference[0] : unclaimedPlayers[0]
+        return unclaimedPreference.length ? Number(unclaimedPreference[0]) : Number(unclaimedPlayers[0])
       }).catch((error) => {
         console.log(error)
       })
@@ -374,9 +374,9 @@ function performTradeFirebase (trade) {
 
       // remove player from askers picks, add player
       console.log(`Asker Picks Length: ${askerPicks.length}`)
-      var askerPicksClean = askerPicks.filter(pick => pick !== trade.askerPlayer)
+      var askerPicksClean = askerPicks.filter(pick => Number(pick) !== Number(trade.askerPlayer))
       console.log(`Asker Picks Length After Removal: ${askerPicksClean.length}`)
-      if (askerPicks.length > askerPicksClean.length) askerPicksClean.push(trade.responderPlayer)
+      if (askerPicks.length > askerPicksClean.length) askerPicksClean.push(Number(trade.responderPlayer))
       console.log(`Asker Picks Length After New Addition: ${askerPicksClean.length}`)
       return askerPicksRef.set(askerPicksClean)
     })
@@ -387,9 +387,9 @@ function performTradeFirebase (trade) {
 
       // remove player from responders picks, add player
       console.log(`Responder Picks Length: ${responderPicks.length}`)
-      var responderPicksClean = responderPicks.filter(pick => pick !== trade.responderPlayer)
+      var responderPicksClean = responderPicks.filter(pick => Number(pick) !== Number(trade.responderPlayer))
       console.log(`Responder Picks Length After Removal: ${responderPicksClean.length}`)
-      responderPicksClean.push(trade.askerPlayer)
+      responderPicksClean.push(Number(trade.askerPlayer))
       console.log(`Responder Picks Length After New Addition: ${responderPicksClean.length}`)
       return responderPicksRef.set(responderPicksClean)
     })
@@ -410,7 +410,7 @@ function performTradeFirebase (trade) {
         console.log('Saving rosters...')
         return rostersRef.set(newRoster)
       }
-      console.log(JSON.stringify(fullRoster))
+      // console.log(JSON.stringify(fullRoster))
       console.log('No valid rosters found.')
       return null
     })
@@ -426,13 +426,13 @@ function performTradeFirebase (trade) {
 function cleanRoster(roster, player) {
   var r = { ...roster }
   if (r && player) {
-    if (r.captain === player) r.captain = ''
-    if (r.offense1 === player) r.offense1 = ''
-    if (r.offense2 === player) r.offense2 = ''
-    if (r.support1 === player) r.support1 = ''
-    if (r.support2 === player) r.support2 = ''
-    if (r.tank1 === player) r.tank1 = ''
-    if (r.tank2 === player) r.tank2 = ''
+    if (Number(r.captain) === (player)) r.captain = 0
+    if (Number(r.offense1) === (player)) r.offense1 = 0
+    if (Number(r.offense2) === (player)) r.offense2 = 0
+    if (Number(r.support1) === (player)) r.support1 = 0
+    if (Number(r.support2) === (player)) r.support2 = 0
+    if (Number(r.tank1) === (player)) r.tank1 = 0
+    if (Number(r.tank2) === (player)) r.tank2 = 0
   }
   return r
 }

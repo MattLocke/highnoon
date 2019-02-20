@@ -4,7 +4,7 @@
       left-bar
         convert-to-featured(:league="league" v-if="userData.isAdmin")
         transfer-ownership(leagueType="pickem" v-if="userData.isAdmin")
-        remove-user(v-if="isOwner || isAdmin" leagueType="pickem")
+        remove-user(v-if="isOwner || userData.isAdmin" leagueType="pickem")
         your-leagues(:userId="userId")
         section(v-if="isOwner")
           collapsible(title-text="League Password" :start-collapsed="true")
@@ -47,6 +47,24 @@
               .wrap(v-else)
                 img(src="https://firebasestorage.googleapis.com/v0/b/overwatch-pickem.appspot.com/o/images%2Fleagues%2Fwelcome-to-your-league.jpg?alt=media&token=bbf8225c-6bd0-4b1a-b5e0-d864a3047395")
                 p Click on the edit button above to customize your league landing page!  Inform members of the rules you have, the prizes you're giving away - whatever makes sense!
+          b-tab-item(label="Leaderboard")
+            h2 League Leaderboard
+            p The picks simply show 1 point per correct guess.  I'll show % / etc coming soon.  Just getting all of these in place before we improve them!
+            hr
+            b-table(
+              :data="sortedScoreboard"
+              :paginated="true"
+              :per-page="30"
+              )
+              template(slot-scope="props")
+                b-table-column(label="Pos" field="pos" width="20" sortable)
+                  span {{ props.row.pos }}
+                b-table-column(label="User" field="displayName" width="180" sortable)
+                  span {{ props.row.displayName || 'vacated' }}
+                b-table-column(label="Team Name" field="teamName" sortable)
+                  span {{ props.row.teamName || 'vacated' }}
+                b-table-column(label="Score" width="30" field="points" sortable)
+                  span {{ props.row.points }}
           b-tab-item(label="Trash Talk" v-if="isInLeague")
             trash-talk
           b-tab-item(label="Pick Stats" v-if="isInLeague")
@@ -57,11 +75,10 @@
           button.button.is-primary(@click="joinLeague") Join League
         section(v-if="isInLeague && !isOwner")
           confirm-button(buttonText="Leave League" confirmText="Are You Sure?" @confirm-it="leaveLeague")
-        pickem-leaderboard
 </template>
 
 <script>
-import { get, sortBy } from 'lodash'
+import { get, forEach, orderBy, sortBy } from 'lodash'
 import vueMarkdown from 'vue-markdown'
 
 import LeagueService from '@/services/league'
@@ -140,6 +157,17 @@ export default {
     },
     matches () {
       return this.$store.getters.getMatches
+    },
+    sortedScoreboard () {
+      const theUsers = this.leagueUsers
+      const sorted = orderBy(theUsers, ['points'], ['desc'])
+      const filtered = sorted.filter(s => s.points > 0)
+      let i = 1
+      const indexed = forEach(filtered, s => {
+        s.pos = i
+        i++
+      })
+      return indexed
     },
     userData () {
       return this.$store.getters.getUserData

@@ -128,7 +128,7 @@ export default {
       let offset = i % half
       let awayTeams = homeTeams.splice(offset, half)
       let week = []
-      const weekNiceName = Number(currentWeek + i + 1)
+      const weekNiceName = Number(currentWeek + i)
 
       for (let j = 0; j < half; j++) {
         let matchup = {
