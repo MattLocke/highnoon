@@ -28,17 +28,17 @@
               confirm-button(buttonText="Delete Roster" confirmText="Are You Sure?" @confirm-it="deleteRoster")
             .column.has-text-right
               span {{ roster ? roster.length : 0 }}/100
-        .list-group#playerList
+        draggable(v-model="roster")
           .left-bar-item.roster-player.list-group-item(v-if="populatedRoster" v-for="(player, index) in roster")
             .columns.is-mobile
               .column.is-narrow
-                img(:src="`images/roles/${playerObjects[player].attributes.role}-white.svg`" height="22" width="22")
+                img(:src="`images/roles/${playerObjects[player] ? playerObjects[player].attributes.role : 'flex'}-white.svg`" height="22" width="22")
               .column.is-narrow
-                img(:src="`/images/teams/${playerObjects[player].team}.svg`" height="22" width="22")
+                img(:src="`/images/teams/${playerObjects[player] ? playerObjects[player].team : 'DAL'}.svg`" height="22" width="22")
               .column
-                span {{ playerObjects[player].name }}
+                span {{ playerObjects[player] ? playerObjects[player].name : 'N/A' }}
               .column.is-narrow
-                span.is-proper {{ playerObjects[player].stats.fantasyScore }}
+                span.is-proper {{ playerObjects[player] ? playerObjects[player].stats.fantasyScore : 0 | playerScore }}
               .column.is-narrow
                 button.button.is-primary.is-small(@click="removePlayer(index)") X
       .column(v-if="roster.length < 100 && playersLoaded")
@@ -82,14 +82,14 @@
               b-table-column(label="Player Name" field="name" sortable)
                 span {{ props.row.name }}
               b-table-column(label="Rating" width="40" field="stats.fantasyScore" sortable)
-                span {{ props.row.stats.fantasyScore || 'N/A' }}
+                span {{ props.row.stats.fantasyScore | playerScore }}
 </template>
 
 <script>
 import { differenceWith, isEmpty } from 'lodash'
 import firebase from 'firebase/app'
 import 'firebase/database'
-import sortable from 'sortablejs'
+import draggable from 'vuedraggable'
 
 import LeagueService from '@/services/league'
 
@@ -108,6 +108,7 @@ export default {
     }
   },
   components: {
+    draggable,
     PlayerLine
   },
   data () {
@@ -190,22 +191,7 @@ export default {
       immediate: true,
       handler (val) {
         this.populatedRoster = this.fillWithPlayers(val)
-        if (val && val.length) this.updateRoster()
-      }
-    },
-    userId: {
-      immediate: true,
-      handler (val) {
-        if (val) {
-          const db = firebase.database()
-          db.ref(`/draftPreference/${this.leagueId}/${this.userId}`).on('value', (snapshot) => {
-            const tmp = snapshot.val()
-            if (tmp) {
-              this.roster = tmp.players || []
-              this.autoMode = tmp.autoMode
-            }
-          })
-        }
+        if (val && val.length) this.updateRoster(val)
       }
     }
   },
@@ -215,12 +201,18 @@ export default {
         this.leagueData = leagueData
       })
 
-    const playerList = document.getElementById('playerList')
-    sortable.create(playerList, {})
+    const db = firebase.database()
+    db.ref(`/draftPreference/${this.leagueId}/${this.userId}`).once('value', (snapshot) => {
+      const tmp = snapshot.val()
+      if (tmp) {
+        this.roster = tmp.players || []
+        this.autoMode = tmp.autoMode
+      }
+    })
   },
   methods: {
     addToRoster (player) {
-      this.roster.push(player.id)
+      this.roster.push(Number(player.id))
     },
     deleteRoster () {
       firebase.database().ref(`/draftPreference/${this.leagueId}/${this.userId}`).set(null)
@@ -239,16 +231,21 @@ export default {
       if (this.roster && this.roster.length > 1) this.roster.splice(index, 1)
       else this.roster = []
     },
-    updateRoster () {
+    updateRoster (val) {
       const db = firebase.database()
       const prefList = {
         autoMode: this.autoMode,
-        players: [ ...this.roster ]
+        players: [ ...val ]
       }
       this.$store.dispatch('setLoading', true)
       db.ref(`/draftPreference/${this.leagueId}/${this.userId}`)
         .set(prefList)
         .then(() => {
+          this.$toast.open({
+            message: 'Successfully updated the roster!',
+            type: 'is-success',
+            position: 'is-bottom'
+          })
           this.$store.dispatch('setLoading', false)
         })
     }
