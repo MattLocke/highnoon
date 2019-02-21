@@ -15,9 +15,12 @@
       .navbar-end
         router-link.navbar-item(
           v-if="currentUser"
-          to="/profile") {{ profile.displayName }}
+          to="/profile")
+          img(src="images/premier.png" v-if="profile.isPremier" v-tooltip="'You are a premier member!'" width="24" height="24")
+          span {{ profile.displayName }}
         router-link.navbar-item(
           v-else to="/login") Log In
+        router-link.navbar-item(to="/stats") Stats
         .navbar-item.has-dropdown.is-hoverable
           a.navbar-link How-To
           .navbar-dropdown
