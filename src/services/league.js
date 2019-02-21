@@ -257,7 +257,7 @@ export default {
     return db.collection(`${type}LeagueRoster`).doc(leagueId).set(rosterObj, { merge: true })
   },
   setSchedule (schedule, leagueId) {
-    return db.collection('leagueSchedule').doc(leagueId).set(schedule)
+    return db.collection('leagueSchedule').doc(leagueId).set(schedule, { merge: true })
   },
   updateLeague (league, leagueType = 'standard') {
     // fantasyLeagues
