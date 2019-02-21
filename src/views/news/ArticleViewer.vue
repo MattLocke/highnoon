@@ -1,5 +1,5 @@
 <template lang="pug">
-  .box.article
+  .article
     section.news-section
       h1 {{ featuredArticle.headline }}
         button.button.is-pulled-right.is-primary.is-small(@click="editArticle" v-if="isEditor") Edit
