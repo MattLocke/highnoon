@@ -22,7 +22,7 @@
             button.button.is-primary.is-small(@click="cancelTrade") Cancel Trade Offer
           .column.has-text-centered(v-else)
             button.button.is-primary.is-small {{ trade.status }}
-        section(v-if="!isLocked")
+        section(v-if="isLocked")
           p One or more players are locked for this trade.  Please wait until Monday!
 </template>
 
