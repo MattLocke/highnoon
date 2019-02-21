@@ -29,6 +29,10 @@
           router-link.button.is-primary.is-small(:to="`/manageTeam/${leagueId}`" v-if="draftComplete") Manage Team
           button.button.is-primary.is-small(disabled v-else) Manage Team
           button.button.is-secondary.is-small.is-pulled-right(@click="copyLink" v-if="isInLeague") Copy Share Link
+        section(v-if="isOwner && canReschedule")
+          p If you created your league this week, you can keep clicking this to generate a new schedule.  If you're showing as only being able to start next week, click this and it will re-generate a schedule for you.  :)
+          hr
+          button.button.is-primary(@click="createNewSchedule") Re-Create Schedule
       .column(v-if="league.leagueName")
         h1 {{ league.leagueName }}
         section(v-if="liveConfig.canStartDraft && canStartDraft")
@@ -189,6 +193,9 @@ export default {
     canLeaveLeague () {
       return (!this.draftComplete && !this.isOwner && this.isInLeague)
     },
+    canReschedule () {
+      return (this.draftComplete && this.league.weekCreated === this.config.currentWeek)
+    },
     canStartDraft () {
       return (this.isOwner && this.unDrafted && this.leagueUsers.length && this.leagueUsers.length % 2 === 0 && this.draftOrder && this.draftOrder.length)
     },
@@ -303,6 +310,38 @@ export default {
             position: 'is-bottom'
           })
         })
+    },
+    createNewSchedule () {
+      this.$store.dispatch('setLoading', true)
+      const schedule = LeagueService.generateSchedule(this.config.currentWeek, this.config.totalWeeks, this.leagueUsers)
+
+      if (!schedule) {
+        this.$toast.open({
+          message: 'Unable to generate schedule.  Try refreshing the page and trying again!',
+          type: 'is-danger',
+          position: 'is-bottom'
+        })
+      } else {
+        LeagueService.setSchedule(schedule, this.leagueId)
+          .then(() => {
+            this.$toast.open({
+              message: 'Successfully created new schedule!',
+              type: 'is-success',
+              position: 'is-bottom'
+            })
+            window.location.reload()
+          })
+          .catch(error => {
+            this.$toast.open({
+              message: error,
+              type: 'is-danger',
+              position: 'is-bottom'
+            })
+          })
+          .finally(() => {
+            this.$store.dispatch('setLoading', false)
+          })
+      }
     },
     createSchedule () {
       this.$store.dispatch('setLoading', true)
