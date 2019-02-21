@@ -16,6 +16,7 @@
         section(v-if="liveConfig.canPick")
           collapsible(title-text="Your Picks")
             p These are your picks for the matches for the upcoming week.  The picks are bound to your profile, so they carry over between leagues.  I may make them on a per-league basis in the future, but the technical debt for that is too much for one man to bear right now with the other league types in the mix.  Sorry for the inconvenience!  :(
+            hr
             match-listing(v-for="match in currentWeeksMatches" :match="match" :key="match.id" :leagueId="leagueId")
         section(v-else)
           h2 Your Picks
@@ -65,6 +66,12 @@
                   span {{ props.row.teamName || 'vacated' }}
                 b-table-column(label="Score" width="30" field="points" sortable)
                   span {{ props.row.points }}
+          b-tab-item(label="Previous Picks")
+            .columns
+              .column.is-one-third-desktop
+              .column.is-one-third-desktop
+                match-listing(v-for="match in previousWeeksMatches" :match="match" :key="match.id" :leagueId="leagueId")
+              .column.is-one-third-desktop
           b-tab-item(label="Trash Talk" v-if="isInLeague")
             trash-talk
           b-tab-item(label="Pick Stats" v-if="isInLeague")
@@ -157,6 +164,10 @@ export default {
     },
     matches () {
       return this.$store.getters.getMatches
+    },
+    previousWeeksMatches () {
+      if (this.currentWeeksTimes) return sortBy(this.matches.filter(match => match.startDateTS < this.currentWeeksTimes.starts), 'startDateTS')
+      return []
     },
     sortedScoreboard () {
       const theUsers = this.leagueUsers

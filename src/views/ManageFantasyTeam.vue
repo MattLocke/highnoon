@@ -122,7 +122,7 @@
               my-trades(:myPlayers="myPicks" :otherPlayers="otherPicks")
             section(v-else)
               span {{ liveConfig.featureDownMessage }}
-          b-tab-item(label="Waiver Wire")
+          b-tab-item(label="Free Agent Trading")
             .wrap(v-if="liveConfig.canWaiverWire")
               waiver-wire(:players="players" :myPicks="myPicks" :otherPicks="otherPicks" :leagueRoster="leagueRoster" :isOwner="isOwner")
             section(v-else)
