@@ -233,6 +233,7 @@ export default {
             type: 'is-success',
             position: 'is-bottom'
           })
+          window.location.reload()
         })
         .catch(() => {
           this.$toast.open({
