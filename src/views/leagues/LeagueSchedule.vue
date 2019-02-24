@@ -3,11 +3,13 @@
     section
       collapsible(title-text="Full Schedule")
         .wrap(v-if="hasSchedule")
-          p This is where you can see the week-to-week matchups.  This list is completely randomized, so if you play some people more than once and others not at all, it's just the luck of the draw.
+          p This is where you can see the week-to-week matchups.
           hr
-          .columns.is-multiline
+          button.button.is-primary(v-if="isOwner" @click="editScheduleMode = !editScheduleMode") {{ editScheduleMode ? 'Cancel' : 'Edit Schedule' }}
+          .columns.is-multiline(v-if="!editScheduleMode")
             .column.is-narrow(v-for="(week, index) in schedule")
               leagueScheduleWeek(:week="week" :index="index")
+          edit-league-schedule(v-else :schedule="schedule")
         .wrap(v-else)
           p The schedule will be created when the draft has started.
 </template>
@@ -16,15 +18,24 @@
 import { isEmpty } from 'lodash'
 import LeagueService from '@/services/league'
 
+import EditLeagueSchedule from '@/views/leagues/EditLeagueSchedule'
 import LeagueScheduleWeek from '@/views/leagues/LeagueScheduleWeek'
 
 export default {
   name: 'LeagueSchedule',
   components: {
+    EditLeagueSchedule,
     LeagueScheduleWeek
+  },
+  props: {
+    isOwner: {
+      type: Boolean,
+      default: false
+    }
   },
   data () {
     return {
+      editScheduleMode: false,
       schedule: [],
       showSchedule: false
     }

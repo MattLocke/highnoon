@@ -103,7 +103,7 @@
                 li(v-for="team in draftOrder") {{ team.displayName }}
           b-tab-item(label="Schedule")
             matchup
-            league-schedule(v-if="draftComplete")
+            league-schedule(v-if="draftComplete" :isOwner="isOwner")
             section(v-else)
               p This will be where you can view your upcoming matchups
           b-tab-item(label="Trash Talk")
