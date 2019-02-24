@@ -71,7 +71,7 @@ exports.waiverWireApprove = functions.database.ref('/approvedWaivers/{leagueId}/
         var theRoster = fullRoster[userId] ? cleanRoster(fullRoster[userId].roster, oldPlayerId) : {}
         fancyLog('Updating Roster')
         var newRoster = { ...fullRoster }
-        newRoster[userId] = theRoster
+        newRoster[userId] = { roster: theRoster }
         return admin.firestore().collection(`standardLeagueRoster`).doc(leagueId).set(newRoster)
       }
       return null
@@ -394,25 +394,25 @@ function performTradeFirebase (trade) {
       return responderPicksRef.set(responderPicksClean)
     })
 
-    var updateRoster = rostersRef.get().then(doc => {
-      var fullRoster = doc.data()
-      if (fullRoster && (fullRoster[trade.responderId] || fullRoster[trade.askerId]))  {
-        var askerRoster = fullRoster[trade.askerId] ? cleanRoster(fullRoster[trade.askerId].roster, trade.askerPlayer) : {}
-        var responderRoster = fullRoster[trade.responderId] ? cleanRoster(fullRoster[trade.responderId].roster, trade.responderPlayer) : {}
-        fancyLog('Updating Roster')
-        var newRoster = { ...fullRoster }
-        if ((fullRoster[trade.askerId] && !_.isEqual(askerRoster, fullRoster[trade.askerId].roster)) || (fullRoster[trade.responderId] && !_.isEqual(responderRoster, fullRoster[trade.responderId].roster))) {
-          // this means someone traded someone out of their roster, so we have to do stuff :(
-          if (newRoster[trade.askerId]) newRoster[trade.askerId] = { roster: askerRoster }
-          if (newRoster[trade.responderId]) newRoster[trade.responderId] = { roster: responderRoster }
-          console.log('We had to update the rosters because a traded player was found on the roster.')
+    var updateRoster = rostersRef.get()
+      .then(doc => {
+        var fullRoster = doc.data()
+        if (fullRoster && (fullRoster[trade.responderId] || fullRoster[trade.askerId]))  {
+          var askerRoster = fullRoster[trade.askerId] ? cleanRoster(fullRoster[trade.askerId].roster, trade.askerPlayer) : {}
+          var responderRoster = fullRoster[trade.responderId] ? cleanRoster(fullRoster[trade.responderId].roster, trade.responderPlayer) : {}
+          fancyLog('Updating Roster')
+          var newRoster = { ...fullRoster }
+          if ((fullRoster[trade.askerId] && !_.isEqual(askerRoster, fullRoster[trade.askerId].roster)) || (fullRoster[trade.responderId] && !_.isEqual(responderRoster, fullRoster[trade.responderId].roster))) {
+            // this means someone traded someone out of their roster, so we have to do stuff :(
+            if (newRoster[trade.askerId]) newRoster[trade.askerId] = { roster: { ...fullRoster[trade.askerId].roster, ...askerRoster } }
+            if (newRoster[trade.responderId]) newRoster[trade.responderId] = { roster: { ...fullRoster[trade.responderId].roster, ...responderRoster } }
+            console.log('We had to update the rosters because a traded player was found on the roster.')
+          }
+          console.log('Saving rosters...')
+          return newRoster ? rostersRef.set(newRoster, { merge: true }) : null
         }
-        console.log('Saving rosters...')
-        return rostersRef.set(newRoster)
-      }
-      // console.log(JSON.stringify(fullRoster))
-      console.log('No valid rosters found.')
-      return null
+        console.log('No valid rosters found.')
+        return null
     })
 
     var updateTrade = tradeRef.update({ status: 'complete' })
