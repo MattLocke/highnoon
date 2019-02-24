@@ -1,6 +1,6 @@
 <template lang="pug">
   .roster-position
-    .columns
+    .columns.is-mobile
       .column.is-narrow(v-if="isRight")
         span.player-score.ow-font {{ score | playerScore }}
       .column(v-if="isRight")
