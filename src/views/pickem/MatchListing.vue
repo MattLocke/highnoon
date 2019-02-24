@@ -49,7 +49,7 @@ export default {
   computed: {
     isDisabled () {
       const now = Date.now()
-      return (this.match.startDateTS < now)
+      return (this.match.startDateTS < (now - 600000))
     },
     userId () {
       return this.$store.getters.getUserId
@@ -95,15 +95,33 @@ export default {
           userId: this.userId,
           winner: this.matchWinner
         }
-        PicksService.savePick(pick)
-          .then(() => {
-            this.$store.dispatch('fetchPicks')
-            this.$store.dispatch('setLoading', false)
-            this.$toast.open({
-              message: 'Successfully saved pick!',
-              type: 'is-success',
-              position: 'is-bottom'
-            })
+        PicksService.canSave(pick)
+          .then((theyCan) => {
+            if (theyCan) {
+              PicksService.savePick(pick)
+                .then(() => {
+                  this.$store.dispatch('fetchPicks')
+                  this.$store.dispatch('setLoading', false)
+                  this.$toast.open({
+                    message: 'Successfully saved pick!',
+                    type: 'is-success',
+                    position: 'is-bottom'
+                  })
+                })
+                .catch((e) => {
+                  this.$toast.open({
+                    message: 'Pick can not be saved!',
+                    type: 'is-danger',
+                    position: 'is-bottom'
+                  })
+                })
+            } else {
+              this.$toast.open({
+                message: 'Pick is locked!',
+                type: 'is-danger',
+                position: 'is-bottom'
+              })
+            }
           })
       }
     }
