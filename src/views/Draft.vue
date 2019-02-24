@@ -11,8 +11,8 @@
                 span.orange  {{ timeRemaining }}
               p(v-if="timeRemaining < 0") The owner may now force the active user to place a pick.
             .column.is-narrow(v-if="isOwner")
-              button.button.is-primary(@click="forcePick" v-if="timeRemaining < 0") Force Pick
-              button.button.is-primary(disabled v-else) Force Pick
+              button.button.is-primary(@click="forcePick") Force Pick
+              //- button.button.is-primary(disabled v-else) Force Pick
         section(v-if="isOwner || userData.isAdmin")
           confirm-button(buttonText="Cancel Draft" confirmText="Are You Sure?" @confirm-it="cancelDraft")
         section(v-if="isInLeague")
@@ -99,7 +99,7 @@
                       b-table-column(label="Player Name" field="name" sortable)
                         span {{ props.row.name }}
                       b-table-column(label="Rating" width="40" field="stats.fantasyScore" sortable)
-                        span {{ props.row.stats ? props.row.stats.fantasyScore : 'N/A' }}
+                        span {{ props.row.stats ? props.row.stats.fantasyScore : 'N/A' | playerScore }}
                 p(v-if="isCompleted") The draft has been completed.
                 p(v-if="isInLeague && isCompleted") You can
                   router-link(:to="`/manageTeam/${leagueId}`")  Manage Your Team
