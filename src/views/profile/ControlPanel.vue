@@ -26,7 +26,7 @@
       .column.is-narrow
         b-switch(v-model="liveConfigCopy.canWaiverWire")
       .column
-        span Can Use Waiver Wire
+        span Free Agent Trading Open
     .columns.is-mobile
       .column.is-narrow
         b-switch(v-model="liveConfigCopy.waiverWireDisabled")
