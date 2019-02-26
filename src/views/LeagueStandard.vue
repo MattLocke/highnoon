@@ -15,7 +15,7 @@
               span.orange {{ leagueUsers.length }}
               |  of
               span.orange  10
-            .left-bar-item(v-for="user in leagueUsers") {{ user.displayName }} {{ user.winLossString || '(0-0)'}}
+            .left-bar-item(v-for="user in sortedScoreboard") {{ user.displayName }} ({{ user.wins }}-{{ user.losses }})
         section(v-if="canLeaveLeague")
           confirm-button(buttonText="Leave League" confirmText="Are You Sure?" @confirm-it="leaveLeague")
         section(v-if="isOwner")
@@ -200,7 +200,12 @@ export default {
       return (this.isOwner && this.unDrafted && this.leagueUsers.length && this.leagueUsers.length % 2 === 0 && this.draftOrder && this.draftOrder.length)
     },
     sortedScoreboard () {
-      const ordered = orderBy(this.leagueUsers, ['wins', 'losses'], ['desc', 'asc'])
+      const ordered = orderBy(this.leagueUsers, lu => lu.win ? Object.values[lu.win].length : 0, ['desc'])
+      ordered.forEach(u => {
+        u.wins = u.win ? Object.values(u.win).length : 0
+        u.ties = u.tie ? Object.values(u.tie).length : 0
+        u.losses = u.loss ? Object.values(u.loss).length : 0
+      })
       let i = 1
       const indexed = forEach(ordered, s => {
         s.pos = i
