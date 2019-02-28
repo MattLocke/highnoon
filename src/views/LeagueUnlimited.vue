@@ -56,8 +56,8 @@
                   span {{ props.row.displayName || 'vacated' }}
                 b-table-column(label="Team Name" field="teamName" sortable)
                   span {{ props.row.teamName || 'vacated' }}
-                b-table-column(label="Score" width="30" field="score" sortable)
-                  span {{ props.row.score }}
+                b-table-column(label="Score" width="30" field="totalScore" sortable)
+                  span {{ props.row.totalScore | playerScore }}
           b-tab-item(label="Your Roster" v-if="isInLeague")
             league-roster(:league="league" v-if="liveConfig.canCreateUnlimitedRoster")
             span(v-else) {{ liveConfig.featureDownMessage }}
@@ -73,7 +73,7 @@
 </template>
 
 <script>
-import { forEach, merge, keyBy, orderBy } from 'lodash'
+import { forEach, orderBy } from 'lodash'
 import vueMarkdown from 'vue-markdown'
 
 import LeagueService from '@/services/league'
@@ -143,14 +143,10 @@ export default {
     players () {
       return this.$store.getters.getPlayers
     },
-    scoreboard () {
-      return this.$store.getters.getLeagueScoreboard
-    },
     sortedScoreboard () {
       const theUsers = this.leagueUsers
-      const tmpScoreboard = merge(keyBy(theUsers, 'userId'), this.scoreboard)
-      const sorted = orderBy(tmpScoreboard, ['score'], ['desc'])
-      const filtered = sorted.filter(s => s.score > 0)
+      const sorted = orderBy(theUsers, ['totalScore'], ['desc'])
+      const filtered = sorted.filter(s => s.totalScore > 0)
       let i = 1
       const indexed = forEach(filtered, s => {
         s.pos = i
@@ -175,7 +171,6 @@ export default {
         if (val) {
           this.$store.dispatch('fetchLeagueUsers', { leagueId: this.leagueId, leagueType: 'unlimited' })
           this.getLeague(val)
-          this.$store.dispatch('fetchRosterScoresUnlimited', val)
         }
       }
     }
