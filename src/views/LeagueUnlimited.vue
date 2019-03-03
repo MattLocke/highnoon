@@ -69,7 +69,6 @@
           button.button.is-primary(@click="joinLeague") Join League
         section(v-if="isInLeague && !isOwner")
           confirm-button(buttonText="Leave League" confirmText="Are You Sure?" @confirm-it="leaveLeague")
-        unlimited-leaderboard
 </template>
 
 <script>
