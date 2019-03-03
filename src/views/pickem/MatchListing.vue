@@ -97,11 +97,11 @@ export default {
         }
         PicksService.canSave(pick)
           .then((theyCan) => {
+            console.table(theyCan)
             if (theyCan) {
               PicksService.savePick(pick)
                 .then(() => {
                   this.$store.dispatch('fetchPicks')
-                  this.$store.dispatch('setLoading', false)
                   this.$toast.open({
                     message: 'Successfully saved pick!',
                     type: 'is-success',
@@ -117,11 +117,14 @@ export default {
                 })
             } else {
               this.$toast.open({
-                message: 'Pick is locked!',
+                message: 'Match is locked, so this pick will not be saved!',
                 type: 'is-danger',
                 position: 'is-bottom'
               })
             }
+          })
+          .finally(() => {
+            this.$store.dispatch('setLoading', false)
           })
       }
     }

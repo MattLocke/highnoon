@@ -10,7 +10,7 @@ var rdb = firebase.database()
 
 export default {
   canSave (pick) {
-    return rdb.ref(`processedMatches/${pick.matchId}`).once('value', snapshot => {
+    return rdb.ref(`processedMatches/${pick.matchId}`).once('value').then(snapshot => {
       if (snapshot.val()) return false
       return true
     })
