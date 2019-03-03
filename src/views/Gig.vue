@@ -1,7 +1,31 @@
 <template lang="pug">
   .gig
     h1.orange GIG STATS
-
+    section(v-if="rosterStats.standard")
+      b-tabs(v-model="activeRosterTab")
+        b-tab-item(v-for="(weekStats, week) in rosterStats.standard" :label="week" :key="week")
+          b-table(:data="arrayOfPlayers")
+            template(slot-scope="props")
+              b-table-column(label="Role" width="30" field="attributes.role" sortable)
+                span {{ props.row.attributes.role }}
+              b-table-column(label="Team" width="30" field="team" sortable)
+                span {{ props.row.team }}
+              b-table-column(label="Player Name" field="name" sortable)
+                span {{ props.row.name }}
+              b-table-column(label="Cap")
+                span {{ numTimes('captain', props.row.id, weekStats) }}
+              b-table-column(label="Off1")
+                span {{ numTimes('offense1', props.row.id, weekStats) }}
+              b-table-column(label="Off2")
+                span {{ numTimes('offense2', props.row.id, weekStats) }}
+              b-table-column(label="Sup1")
+                span {{ numTimes('support1', props.row.id, weekStats) }}
+              b-table-column(label="Sup2")
+                span {{ numTimes('support2', props.row.id, weekStats) }}
+              b-table-column(label="Tnk1")
+                span {{ numTimes('tank1', props.row.id, weekStats) }}
+              b-table-column(label="Tnk2")
+                span {{ numTimes('tank2', props.row.id, weekStats) }}
 </template>
 
 <script>
@@ -21,9 +45,21 @@
   7. Times traded
   8. Hero playtime
 */
+import firebase from 'firebase/app'
+import 'firebase/database'
+
 export default {
   name: 'StatsForGig',
+  data () {
+    return {
+      activeRosterTab: 0,
+      rosterStats: {}
+    }
+  },
   computed: {
+    arrayOfPlayers () {
+      return Object.values(this.players)
+    },
     players () {
       return this.$store.getters.getPlayers
     },
@@ -33,6 +69,16 @@ export default {
     playerTotalScores () {
       return this.$store.getters.getPlayerTotalScores
     }
+  },
+  methods: {
+    numTimes (position, playerId, stats) {
+      return stats[position][playerId] || 0
+    }
+  },
+  mounted () {
+    firebase.database().ref('/rosterStats').once('value').then(snapshot => {
+      this.rosterStats = snapshot.val()
+    })
   }
 }
 </script>
