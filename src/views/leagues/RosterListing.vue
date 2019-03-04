@@ -34,6 +34,10 @@ export default {
     right: {
       type: Object,
       default: () => ({})
+    },
+    raw: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -79,7 +83,7 @@ export default {
       return LeagueService.calculateRosterPoints(this.playerScores, this.playerRoster)
     },
     playerScores () {
-      return this.$store.getters.getPlayerScores || {}
+      return this.raw ? this.$store.getters.getPlayerTotalScores : this.$store.getters.getPlayerScores || {}
     },
     rightLoaded () {
       return !isEmpty(this.right)
