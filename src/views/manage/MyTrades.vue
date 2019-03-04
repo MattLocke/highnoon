@@ -15,8 +15,9 @@
         b-select(placeholder="Player" v-model="theirPlayer")
           option(v-for="player in theirPlayers" :value="player") {{ playersObject[player].name }}
       b-field(label="Your Players")
-        b-select(placeholder="Select a Category" v-model="yourPlayer")
+        b-select(placeholder="Select a Category" v-model="yourPlayer" v-if="myAvailableTrades.length")
           option(v-for="player in myAvailableTrades" :value="player") {{ playersObject[player].name }}
+        p(v-else) You have no available players to trade!  They will unlock Monday at 12:00am PST.
       b-field
         button.button.is-primary(v-if="canCreate" @click="createTrade") Request Trade
         button.button.is-primary(v-else disabled) Request Trade
