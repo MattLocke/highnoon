@@ -1,6 +1,6 @@
 <template lang="pug">
   .league-schedule-week
-    h3 Week {{ index }}
+    h3(:class="{'orange': currentWeek}") Week {{ index }}
     div(v-for="match in week")
       span(:class="{'orange': match.home.userId == userId}") {{ match.home.displayName }}
       span  vs
@@ -17,6 +17,10 @@ export default {
     week: {
       type: Array,
       required: true
+    },
+    currentWeek: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
