@@ -55,7 +55,7 @@ export default {
   mounted () {
     var db = firebase.firestore()
     db.collection(`playerBestScores`)
-      .doc(`2`)
+      .doc(`3`)
       .get()
       .then((players) => {
         const thePlayers = players.data()
@@ -64,7 +64,7 @@ export default {
         return null
       })
       .then(() => db.collection(`playerTotalScores`)
-        .doc(`2`)
+        .doc(`3`)
         .get()
         .then((players) => {
           const thePlayers = players.data()
