@@ -94,7 +94,7 @@
                 b-table-column(label="Ties" width="30" field="ties" sortable)
                   span {{ props.row.ties }}
           b-tab-item(label="Roster")
-            league-roster(:league="league" v-if="draftComplete && isInLeague")
+            league-roster(:league="league" v-if="draftComplete && isInLeague" :raw="league.rawScoring")
             section
               p This is the order for the draft.  Keep in mind this is a snake draft.  If you have no idea what that means, it's similar to what
                 a(href="https://www.dummies.com/sports/fantasy-sports/fantasy-football/understanding-fantasy-football-snake-and-auction-drafts/" target="_blank")  this page describes

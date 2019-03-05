@@ -11,6 +11,7 @@ import Fantasy from './views/Fantasy'
 import Gig from './views/Gig'
 import Home from './views/Home'
 import HowStandardWorks from './views/HowStandardWorks'
+import LeagueMatchups from './views/LeagueMatchups'
 import LeagueStandard from './views/LeagueStandard'
 import LeagueUnlimited from './views/LeagueUnlimited'
 import LeaguePickem from './views/LeaguePickem'
@@ -80,6 +81,14 @@ let router = new Router({
       path: '/howStandardWorks',
       name: 'howStandardWorks',
       component: HowStandardWorks
+    },
+    {
+      path: '/leagueMatchups/:leagueId/:week',
+      name: 'leagueMatchups',
+      component: LeagueMatchups,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/article/:articleId',
