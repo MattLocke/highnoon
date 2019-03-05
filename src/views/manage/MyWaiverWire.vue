@@ -46,7 +46,7 @@
             b-table-column(label="Player Name" field="name" sortable)
               span {{ props.row.name }}
             b-table-column(label="Rating" width="40" field="stats.fantasyScore" sortable)
-              span {{ props.row.stats.fantasyScore | playerScore }}
+              span {{ !props.row.stats ? 0 : props.row.stats.fantasyScore | playerScore }}
         .columns(v-if="selectedPlayer.id")
           .column.is-narrow
             h3 I would like
