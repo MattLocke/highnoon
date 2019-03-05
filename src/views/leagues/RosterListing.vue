@@ -1,5 +1,5 @@
 <template lang="pug">
-  .roster-listing(v-if="playersLoaded")
+  .roster-listing(v-if="playersLoaded && playerRoster")
     h3.orange {{ left.teamName }}
     roster-position(:score="playerScores[playerRoster.captain]" :name="getName(players[playerRoster.captain])" :isRight="isRight" role="captain")
     roster-position(:score="playerScores[playerRoster.offense1]" :name="getName(players[playerRoster.offense1])" :isRight="isRight" role="offense")
@@ -31,13 +31,13 @@ export default {
       type: Object,
       required: true
     },
-    right: {
-      type: Object,
-      default: () => ({})
-    },
     raw: {
       type: Boolean,
       default: false
+    },
+    referenceScores: {
+      type: Object,
+      default: () => ({})
     }
   },
   data () {
@@ -64,13 +64,8 @@ export default {
     leftLoaded () {
       return !isEmpty(this.left)
     },
-    opponentRoster () {
-      return !isEmpty(this.right) ? this.fullRoster[this.right.userId].roster : this.emptyRoster
-    },
-    opponentTotal () {
-      return this.opponentRoster ? LeagueService.calculateRosterPoints(this.playerScores, this.opponentRoster) : 0
-    },
     playerRoster () {
+      if (this.left.captain) return this.left
       return this.fullRoster[this.left.userId] ? this.fullRoster[this.left.userId].roster : this.emptyRoster
     },
     players () {
@@ -79,14 +74,14 @@ export default {
     playersLoaded () {
       return !isEmpty(this.players)
     },
+    playerScores () {
+      return !isEmpty(this.referenceScores) ? this.referenceScores : this.playerStoreScores
+    },
     playerTotal () {
       return LeagueService.calculateRosterPoints(this.playerScores, this.playerRoster)
     },
-    playerScores () {
+    playerStoreScores () {
       return this.raw ? this.$store.getters.getPlayerTotalScores : this.$store.getters.getPlayerScores || {}
-    },
-    rightLoaded () {
-      return !isEmpty(this.right)
     }
   },
   watch: {
@@ -109,6 +104,10 @@ export default {
 
 <style lang="scss">
   .roster-listing {
+    h3 {
+      max-height: 33px;
+      overflow: hidden;
+    }
     .roster-position {
       background-color: #222;
       padding: .25rem;

@@ -8,7 +8,7 @@
           button.button.is-primary(v-if="isOwner" @click="editScheduleMode = !editScheduleMode") {{ editScheduleMode ? 'Cancel' : 'Edit Schedule' }}
           .columns.is-multiline(v-if="!editScheduleMode")
             .column.is-narrow(v-for="(week, index) in schedule")
-              leagueScheduleWeek(:week="week" :index="index" :currentWeek="Number(config.currentWeek) === Number(index)")
+              leagueScheduleWeek(:week="week" :index="index" :currentWeek="Number(config.currentWeek)")
           edit-league-schedule(v-else :schedule="schedule")
         .wrap(v-else)
           p The schedule will be created when the draft has started.

@@ -61,6 +61,7 @@
           b-tab-item(label="Your Roster" v-if="isInLeague")
             league-roster(:league="league" v-if="liveConfig.canCreateUnlimitedRoster")
             span(v-else) {{ liveConfig.featureDownMessage }}
+            roster-history(:league="league")
           b-tab-item(label="Trash Talk" v-if="isInLeague")
             trash-talk
         section(v-if="canJoinLeague")
@@ -80,6 +81,7 @@ import LeagueService from '@/services/league'
 import ConvertToFeatured from '@/views/admin/ConvertToFeatured'
 import LeagueRoster from '@/views/leagues/LeagueRoster'
 import RemoveUser from '@/views/leagues/RemoveUser'
+import RosterHistory from '@/views/leagues/RosterHistory'
 import TransferOwnership from '@/views/admin/TransferOwnership'
 import TrashTalk from '@/views/draft/TrashTalk'
 import UnlimitedLeaderboard from '@/views/leagues/UnlimitedLeaderboard'
@@ -91,6 +93,7 @@ export default {
     ConvertToFeatured,
     LeagueRoster,
     RemoveUser,
+    RosterHistory,
     TransferOwnership,
     TrashTalk,
     UnlimitedLeaderboard,
