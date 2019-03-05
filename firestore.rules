@@ -51,6 +51,18 @@ service cloud.firestore {
     match /playerStats/{playerId} {
       allow read;
     }
+    
+    match /playerBestScores/{playerId} {
+      allow read;
+    }
+    
+    match /playerTotalScores/{playerId} {
+      allow read;
+    }
+    
+    match /playerScores/{playerId} {
+      allow read;
+    }
 
     match /players/{playerId} {
       allow read;
@@ -70,6 +82,11 @@ service cloud.firestore {
     	allow read;
     	allow write: if request.auth.uid != null;
     }
+    
+    match /standardLeagueScores/{leagueId} {
+    	allow read;
+    	allow write: if request.auth.uid != null;
+    }
 
     match /standardLeagues/{leagueId} {
     	allow read;
@@ -84,8 +101,17 @@ service cloud.firestore {
     	allow read;
     	allow write: if request.auth.uid != null;
     }
+    
+    match /unlimitedLeagueRosterTotals/{leagueId} {
+    	allow read;
+    }
 
     match /unlimitedLeagueUsers/{leagueId} {
+    	allow read;
+    	allow write: if request.auth.uid != null;
+    }
+    
+    match /unlimitedLeagueScores/{leagueId} {
     	allow read;
     	allow write: if request.auth.uid != null;
     }
@@ -94,10 +120,15 @@ service cloud.firestore {
     	allow read;
     	allow write: if request.auth.uid != null;
     }
+    
+    match /unlimitedWeeklyTotals/{leagueId}/{week}/{roster} {
+    	allow read;
+      allow write: if request.auth.uid != null;
+    }
 
     match /userLeagues/{userId} {
     	allow read;
-      allow write: if request.auth.uid != null;
+    	allow write: if request.auth.uid != null;
     }
 
     match /users/{userId} {
