@@ -84,16 +84,6 @@ export default {
       return this.raw ? this.$store.getters.getPlayerTotalScores : this.$store.getters.getPlayerScores || {}
     }
   },
-  watch: {
-    leagueId: {
-      immediate: true,
-      handler (val) {
-        if (val) {
-          this.league = LeagueService.getLeague(val)
-        }
-      }
-    }
-  },
   methods: {
     getName (nameObj) {
       return nameObj ? nameObj.name : 'Vacant'

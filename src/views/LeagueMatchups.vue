@@ -9,13 +9,14 @@
         section
           .columns
             .column.is-half
-              roster-listing(:left="matchup.home" :raw="league.rawScoring")
+              roster-listing(:left="matchup.home" :raw="league.rawScoring" :referenceScores="scores")
             .column.is-half
-              roster-listing(:left="matchup.away" :isRight="true" :raw="league.rawScoring")
+              roster-listing(:left="matchup.away" :isRight="true" :raw="league.rawScoring" :referenceScores="scores")
 </template>
 
 <script>
 import LeagueService from '@/services/league'
+import RosterService from '@/services/roster'
 
 import RosterListing from '@/views/leagues/RosterListing'
 
@@ -27,7 +28,8 @@ export default {
   data () {
     return {
       league: {},
-      schedule: []
+      schedule: [],
+      scores: []
     }
   },
   computed: {
@@ -49,7 +51,10 @@ export default {
           this.getSchedule(val)
           this.getLeague(val).then(() => {
             this.$store.dispatch('fetchRoster', { leagueId: this.leagueId, leagueType: this.league.leagueType })
-            this.$store.dispatch('getPlayerScores', this.week)
+            RosterService.getRosterScores(this.week, this.league.rawScoring)
+              .then((scores) => {
+                this.scores = scores
+              })
           })
         }
       }
