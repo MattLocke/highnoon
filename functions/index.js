@@ -307,7 +307,7 @@ function processPreferenceList (preferenceList, league, leagueId) {
         rawPicks = thePicks.val() || []
         var tmp = thePicks.val() ? Object.values(thePicks.val()) : []
         tmp.forEach((child) => {
-          if (child.length) child.forEach(pick => lumpedPicks.push(pick))
+          if (child.length) child.forEach(pick => lumpedPicks.push(Number(pick)))
         })
 
         if (lumpedPicks) console.log(`We have ${lumpedPicks.length} picks so far.`)

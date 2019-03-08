@@ -41,7 +41,7 @@ let router = new Router({
       redirect: 'login'
     },
     {
-      path: '/stats',
+      path: '/stats/:week?',
       name: 'stats',
       component: Stats
     },

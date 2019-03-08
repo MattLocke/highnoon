@@ -1,7 +1,10 @@
 <template lang="pug">
-  .stats
+  .stats(v-if="loaded")
     .container
       h1 Player Stats
+      .columns.is-multiline(v-if="weeks.length > 1")
+        .column.is-narrow(v-for="weekNum in weeks")
+          router-link.button(:to="`/stats/${weekNum}`" :class="{'is-primary': weekNum == week, 'is-secondary': weekNum != week}") Week {{ weekNum }}
       section
         b-table(
           :data="playersWithStats"
@@ -14,7 +17,7 @@
             b-table-column(label="Team" width="30" field="team" sortable)
               span.title-font {{ props.row.team }}
             b-table-column(label="Player Name" field="name" sortable)
-              span.title-font {{ props.row.name }}
+              span.title-font {{ props.row ? props.row.name : '' }}
             b-table-column(label="Heroes")
               span.title-font {{ (props.row.attributes && props.row.attributes.heroes) ? props.row.attributes.heroes.join(' / ') : 'N/A' }}
             b-table-column(label="Combined" width="40" field="totalScore" sortable)
@@ -33,10 +36,20 @@ export default {
   data () {
     return {
       bestScores: {},
-      totalScores: {}
+      totalScores: {},
+      week: this.$route.params.week || 4
     }
   },
   computed: {
+    config () {
+      return this.$store.getters.getConfig
+    },
+    currentWeek () {
+      return this.config.currentWeek || this.week
+    },
+    loaded () {
+      return this.playersWithStats.length && this.currentWeek
+    },
     players () {
       return this.$store.getters.getPlayers
     },
@@ -52,12 +65,19 @@ export default {
       })
 
       return sPlayers
+    },
+    weeks () {
+      const weeks = []
+      for (let i = 1; i < this.currentWeek + 1; i++) {
+        weeks.push(i)
+      }
+      return weeks
     }
   },
   mounted () {
     var db = firebase.firestore()
     db.collection(`playerBestScores`)
-      .doc(`3`)
+      .doc(`${this.week}`)
       .get()
       .then((players) => {
         const thePlayers = players.data()
@@ -66,7 +86,7 @@ export default {
         return null
       })
       .then(() => db.collection(`playerTotalScores`)
-        .doc(`3`)
+        .doc(`${this.week}`)
         .get()
         .then((players) => {
           const thePlayers = players.data()
