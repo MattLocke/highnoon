@@ -97,9 +97,11 @@
                       b-table-column(label="Team" width="30" field="team" sortable)
                         img(:src="`images/teams/${props.row.team}.svg`" width="22" height="22")
                       b-table-column(label="Player Name" field="name" sortable)
-                        span {{ props.row.name }}
+                        span.title-font {{ props.row.name }}
+                      b-table-column(label="Heroes")
+                        span.title-font {{ (props.row.attributes && props.row.attributes.heroes) ? props.row.attributes.heroes.join(' / ') : 'N/A' }}
                       b-table-column(label="Rating" width="40" field="stats.fantasyScore" sortable)
-                        span {{ props.row.stats ? props.row.stats.fantasyScore : 'N/A' | playerScore }}
+                        span.title-font {{ props.row.stats ? props.row.stats.fantasyScore : 'N/A' | playerScore }}
                 p(v-if="isCompleted") The draft has been completed.
                 p(v-if="isInLeague && isCompleted") You can
                   router-link(:to="`/manageTeam/${leagueId}`")  Manage Your Team

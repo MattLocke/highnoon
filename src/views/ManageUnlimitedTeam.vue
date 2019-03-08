@@ -121,11 +121,13 @@
                 b-table-column(label="Team" width="30" field="team" sortable)
                   img(:src="`images/teams/${props.row.team}.svg`" width="22" height="22")
                 b-table-column(label="Player Name" field="name" sortable)
-                  span {{ props.row.name }}
+                  span.title-font {{ props.row.name }}
+                b-table-column(label="Heroes")
+                  span.title-font {{ (props.row.attributes && props.row.attributes.heroes) ? props.row.attributes.heroes.join(' / ') : 'N/A' }}
                 b-table-column(label="Assign")
                   role-buttons(:lineUp="lineUp" :player="props.row" @setRole="setRole" :lockedRoles="lockedRoles" :isLocked="!notLocked(props.row.id)")
                 b-table-column(label="Score" width="40" field="stats.fantasyScore" sortable)
-                  span {{ getScore(props.row.id) | playerScore }}
+                  span.title-font {{ getScore(props.row.id) | playerScore }}
 </template>
 
 <script>
