@@ -54,6 +54,7 @@ export default {
     }
     .left-bar-item.has-pointer:hover {
       border-right: 2px solid #f99e1a;
+      margin-right: -2px;
     }
   }
   .left-bar.is-always-open {
