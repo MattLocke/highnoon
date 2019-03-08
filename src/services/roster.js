@@ -16,8 +16,8 @@ export default {
       })
       .catch(e => Promise.reject(e))
   },
-  getRosterScores (week) {
-    return db.collection(`playerBestScores`)
+  getRosterScores (week, totalMode = false) {
+    return db.collection(`player${totalMode ? 'Total' : 'Best'}Scores`)
       .doc(`${week}`)
       .get()
       .then((players) => players.data())
