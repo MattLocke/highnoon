@@ -178,7 +178,7 @@ export default {
   computed: {
     canChangeScoringMode () {
       // we'll want to find out if they have points, if they do, disable it.
-      return true
+      return (this.config.currentWeek === this.league.weekCreated)
     },
     canJoinLeague () {
       // Needs to check league type, number of users, league status, etc.
