@@ -59,6 +59,8 @@
                     span {{ props.row.teamName || 'vacated' }}
                   b-table-column(label="Score" width="30" field="totalScore" sortable)
                     span {{ props.row.totalScore | playerScore }}
+            .leaderboard(v-else)
+              p The leaderboards are currently being worked on.  Stay tuned!
           b-tab-item(label="Your Roster" v-if="isInLeague")
             league-roster(:league="league" v-if="liveConfig.canCreateUnlimitedRoster")
             span(v-else) {{ liveConfig.featureDownMessage }}
