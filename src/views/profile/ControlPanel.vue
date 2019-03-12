@@ -9,6 +9,11 @@
         span Can Create Unlimited Roster
     .columns.is-mobile
       .column.is-narrow
+        b-switch(v-model="liveConfigCopy.canUseUnlimitedLeaderboards")
+      .column
+        span Can View Unlimited Leaderboards
+    .columns.is-mobile
+      .column.is-narrow
         b-switch(v-model="liveConfigCopy.canPick")
       .column
         span Can Place Pickems
@@ -31,7 +36,7 @@
       .column.is-narrow
         b-switch(v-model="liveConfigCopy.waiverWireDisabled")
       .column
-        span Waiver Wire Active
+        span Waiver Wire Disabled
     .columns.is-mobile
       .column.is-narrow
         b-switch(v-model="liveConfigCopy.canUseSite")
