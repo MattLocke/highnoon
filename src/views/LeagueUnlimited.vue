@@ -27,9 +27,10 @@
         b-tabs(v-model="activeContentTab")
           b-tab-item(label="League Message")
             section.league-message
-              h2 League Message
-                button.button.is-secondary.is-small.is-pulled-right(@click="editingMessage = !editingMessage" v-if="isOwner") {{ editingMessage ? 'cancel' : 'edit' }}
-              hr
+              .columns
+                .column
+                .column.is-narrow
+                  button.button.is-secondary.is-small(@click="editingMessage = !editingMessage" v-if="isOwner") {{ editingMessage ? 'cancel' : 'edit' }}
               .wrap(v-if="editingMessage")
                 b-field(label="League Title")
                   b-input(type="text" v-model="league.leagueName")
