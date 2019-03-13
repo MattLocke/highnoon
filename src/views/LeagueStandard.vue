@@ -34,6 +34,7 @@
           hr
           button.button.is-primary(@click="createNewSchedule") Re-Create Schedule
       .column(v-if="league.leagueName")
+        h2.orange.is-pulled-right(v-tooltip="league.rawScoring ? 'This uses all scores from a player for a given week.' : 'This uses only the best score from a players score for a given week.'") {{ league.rawScoring ? 'Raw Scoring' : 'Best Of Scoring' }}
         h1 {{ league.leagueName }}
         section(v-if="liveConfig.canStartDraft && canStartDraft")
           .columns.is-mobile.is-button-header
@@ -54,9 +55,10 @@
         b-tabs(v-model="activeContentTab")
           b-tab-item(label="League Home")
             section.league-message
-              h2 League Message
-                button.button.is-secondary.is-small.is-pulled-right(@click="editingMessage = !editingMessage" v-if="isOwner") {{ editingMessage ? 'cancel' : 'edit' }}
-              hr
+              .columns
+                .column
+                .column.is-narrow
+                  button.button.is-secondary.is-small(@click="editingMessage = !editingMessage" v-if="isOwner") {{ editingMessage ? 'cancel' : 'edit' }}
               .wrap(v-if="editingMessage")
                 b-field(label="League Title")
                   b-input(type="text" v-model="league.leagueName")
@@ -111,6 +113,7 @@
           b-tab-item(v-if="isOwner || userData.isAdmin" label="Options")
             h2 League Options
             p We will be adding to this page to allow league owners more control over how their league is ran.  Stay tuned!
+            hr
             remove-user(v-if="(isOwner && !draftComplete) || userData.isAdmin" leagueType="standard")
             section(v-if="canChangeScoringMode")
               collapsible(title-text="Raw Scoring")
@@ -118,8 +121,8 @@
                 hr
                 b-field(label="Raw Scoring")
                   b-switch(v-model="league.rawScoring")
-            section(v-if="draftComplete")
-              collapsible(title-text="Reset Draft")
+            section(v-show="draftComplete")
+              collapsible(title-text="Reset Draft" :start-collapsed="true")
                 p This will reset the draft for all players in the league.  You may want to do this between stages, or there may have been an issue during the draft, whatever the reason, this is your key to resetting it!
                 hr
                 confirm-button(button-text="Reset Draft" confirm-text="Are You Sure?" @confirm-it="resetDraft")
