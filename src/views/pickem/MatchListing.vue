@@ -1,10 +1,10 @@
 <template lang="pug">
-  .match-listing
+  .match-listing(v-if="pickStats")
     .columns.is-gapless.is-mobile
       .column.is-narrow
         img(:src="`images/teams/${match.competitors[0].abbreviatedName}.svg`" width="28")
       .column.is-narrow
-        .ow-font.team-name {{ match.competitors[0].abbreviatedName }}
+        .ow-font.team-name(v-tooltip="`${leftPercent}% choose ${match.competitors[0].abbreviatedName}`") {{ match.competitors[0].abbreviatedName }}
       .column.is-narrow(v-if="!isDisabled")
         b-radio.is-pulled-right.winner-radio(v-model="matchWinner" size="is-medium" :native-value="match.competitors[0].id")
       .column.is-narrow(v-else)
@@ -21,12 +21,15 @@
         b-radio.is-pulled-right.winner-radio.incorrect-radio(selected size="is-medium" v-else-if="matchWinner == match.competitors[1].id")
         b-radio.is-pulled-right.winner-radio.neutral-radio(selected size="is-medium" v-else)
       .column.is-narrow
-        .ow-font.team-name.is-pulled-right {{ match.competitors[1].abbreviatedName }}
+        .ow-font.team-name.is-pulled-right(v-tooltip="`${rightPercent}% choose ${match.competitors[1].abbreviatedName}`") {{ match.competitors[1].abbreviatedName }}
       .column.is-narrow
         img(:src="`images/teams/${match.competitors[1].abbreviatedName}.svg`" width="22" height="22")
+    .pick-rates(:style="{'background-color': `#${match.competitors[1].primaryColor}`}")
+      .pick-percentage-bar(:style="pickStyles")
 </template>
 
 <script>
+import { get } from 'lodash'
 import PicksService from '@/services/picks'
 
 export default {
@@ -37,6 +40,10 @@ export default {
       required: true
     },
     match: {
+      type: Object,
+      required: true
+    },
+    pickStats: {
       type: Object,
       required: true
     }
@@ -50,6 +57,23 @@ export default {
     isDisabled () {
       const now = Date.now()
       return (this.match.startDateTS < (now - 600000))
+    },
+    leftPercent () {
+      const leftTotal = get(this.pickStats, `${this.match.id}.${this.match.competitors[0].id}`, 0)
+      return leftTotal ? Math.round(leftTotal / this.totalPicks * 100) : 0
+    },
+    rightPercent () {
+      const rightTotal = get(this.pickStats, `${this.match.id}.${this.match.competitors[1].id}`)
+      return rightTotal ? Math.round(rightTotal / this.totalPicks * 100) : 0
+    },
+    pickStyles () {
+      return { 'width': `${this.leftPercent}%`, 'background-color': `#${this.match.competitors[0].primaryColor}` }
+    },
+    totalPicks () {
+      const left = get(this.pickStats, `${this.match.id}.${this.match.competitors[0].id}`, 0)
+      const right = get(this.pickStats, `${this.match.id}.${this.match.competitors[1].id}`, 0)
+      const totalPicks = (left + right)
+      return totalPicks
     },
     userId () {
       return this.$store.getters.getUserId
@@ -65,12 +89,6 @@ export default {
   watch: {
     matchWinner (val) {
       if (val) this.savePick()
-    },
-    userId: {
-      immediate: true,
-      handler (val) {
-        if (val) this.$store.dispatch('fetchPicks')
-      }
     },
     userPicks: {
       immediate: true,
@@ -137,6 +155,13 @@ export default {
   background-color: rgba(255,255,255,0.1);
   margin-bottom: .25rem;
   padding: .25rem;
+  .pick-rates {
+    height: 8px;
+    margin-top: -1rem;
+  }
+  .pick-percentage-bar {
+    height: 8px;
+  }
   .team-name {
     width: 32px;
   }

@@ -39,6 +39,7 @@ export default {
     this.$store.dispatch('saveFireData', firebase.auth().currentUser)
     this.$store.dispatch('getPlayers')
     this.$store.dispatch('getTeams')
+    this.$store.dispatch('fetchPickStats')
     this.$store.dispatch('setLoading', true)
 
     if (firebase.auth().currentUser) {

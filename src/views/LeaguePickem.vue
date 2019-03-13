@@ -17,7 +17,7 @@
           collapsible(title-text="Your Picks")
             p These are your picks for the matches for the upcoming week.  The picks are bound to your profile, so they carry over between leagues.  I may make them on a per-league basis in the future, but the technical debt for that is too much for one man to bear right now with the other league types in the mix.  Sorry for the inconvenience!  :(
             hr
-            match-listing(v-for="match in currentWeeksMatches" :match="match" :key="match.id" :leagueId="leagueId")
+            match-listing(v-for="match in currentWeeksMatches" :match="match" :key="match.id" :leagueId="leagueId" :pickStats="pickStats")
         section(v-else)
           h2 Your Picks
           span {{ liveConfig.featureDownMessage }}
@@ -66,16 +66,14 @@
                   span {{ props.row.teamName || 'vacated' }}
                 b-table-column(label="Score" width="30" field="points" sortable)
                   span {{ props.row.points }}
-          b-tab-item(label="Previous Picks")
+          //-b-tab-item(label="Previous Picks")
             .columns
               .column.is-one-third-desktop
               .column.is-one-third-desktop
-                match-listing(v-for="match in previousWeeksMatches" :match="match" :key="match.id" :leagueId="leagueId")
+                match-listing(v-for="match in previousWeeksMatches" :match="match" :key="match.id" :leagueId="leagueId" :pickStats="pickStats")
               .column.is-one-third-desktop
           b-tab-item(label="Trash Talk" v-if="isInLeague")
             trash-talk
-          b-tab-item(label="Pick Stats" v-if="isInLeague")
-            p Shortly after launch I will begin populating this with some statistics, as well as information that can help you with your picks!
         section(v-if="canJoinLeague")
           b-field(label="password" v-if="league.password")
             b-input(type="password" v-model="localPassword")
@@ -164,6 +162,9 @@ export default {
     },
     matches () {
       return this.$store.getters.getMatches
+    },
+    pickStats () {
+      return this.$store.getters.getPickStats
     },
     previousWeeksMatches () {
       if (this.currentWeeksTimes) return sortBy(this.matches.filter(match => match.startDateTS < this.currentWeeksTimes.starts), 'startDateTS')

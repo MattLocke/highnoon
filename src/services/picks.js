@@ -15,6 +15,18 @@ export default {
       return true
     })
   },
+  getGlobalPickRates () {
+    return db.collection('picksLean').get()
+      .then((pickDocs) => {
+        const pickStats = {}
+        pickDocs.forEach((pickDoc) => {
+          const pick = pickDoc.data()
+          console.log(`Setting pick for: ${pickDoc.id} with: ${JSON.stringify(pick)}`)
+          pickStats[pickDoc.id] = pick
+        })
+        return pickStats
+      })
+  },
   savePick (pick) {
     return db.collection('picks').doc(String(pick.userId))
       .set({ [pick.matchId]: pick }, { merge: true })

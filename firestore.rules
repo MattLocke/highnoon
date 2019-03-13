@@ -48,6 +48,10 @@ service cloud.firestore {
     	allow write: if request.auth.uid != null;
     }
 
+    match /picksLean/{matchId} {
+      allow read;
+    }
+
     match /playerStats/{playerId} {
       allow read;
     }
