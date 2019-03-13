@@ -173,7 +173,7 @@ export default {
   },
   computed: {
     canSaveRoster () {
-      return !!(this.lineUp && this.lineUp.captain && this.lineUp.offense1 && this.lineUp.offense2 && this.lineUp.support1 && this.lineUp.support2 && this.lineUp.tank1 && this.lineUp.tank2)
+      return !!(this.lineUp && this.lineUp.captain)
     },
     draft () {
       return this.$store.getters.getDraft
