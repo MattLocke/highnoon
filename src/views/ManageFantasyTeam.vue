@@ -3,9 +3,6 @@
     .columns.is-marginless
       left-bar
         section
-          collapsible(title-text="Unclaimed Players" :start-collapsed="true")
-            .left-bar-item Coming Soon
-        section
           scoring-info(:league="league")
         section
           collapsible(title-text="Your Next Match")
