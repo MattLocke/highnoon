@@ -45,6 +45,10 @@
             .leaderboard(v-if="liveConfig.canUseUnlimitedLeaderboards")
               h2 League Leaderboard
               p With the league leaderboard it will only show you if you have a score.  So if you just joined, don't fret!  Once we start the next scores you'll pop up.  Good luck!
+              article.message.is-warning
+                .message-body For unlimited leagues, week 1 is being ommitted. I will be writing a post explaining why shortly.
+              p.ow-font(v-if="isInLeague") Your Place:
+                span.orange  {{ yourPlace }}
               b-table(
                 :data="sortedScoreboard"
                 :paginated="true"
@@ -54,7 +58,7 @@
                   b-table-column(label="Pos" field="pos" width="20" sortable)
                     span {{ props.row.pos }}
                   b-table-column(label="User" field="displayName" width="180" sortable)
-                    span {{ props.row.displayName || 'vacated' }}
+                    span(:class="{'orange': props.row.userId == userId}") {{ props.row.displayName || 'vacated' }}
                   b-table-column(label="Team Name" field="teamName" sortable)
                     span {{ props.row.teamName || 'vacated' }}
                   b-table-column(label="Score" width="30" field="totalScore" sortable)
@@ -167,6 +171,14 @@ export default {
     },
     userLeagues () {
       return this.$store.getters.getUserLeagues
+    },
+    yourPlace () {
+      if (this.isInLeague) {
+        const userPlace = this.sortedScoreboard.find(s => s.userId === this.userId)
+        if (userPlace) return `#${userPlace.pos} - ${Math.round(userPlace.totalScore)} pts`
+        return 0
+      }
+      return 0
     }
   },
   watch: {
