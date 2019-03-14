@@ -2,7 +2,7 @@
   .status.container
     section
       h1 Feedback
-    section.feedback-container(v-for="(feedback, index) in feedbackItems")
+    section.feedback-container(v-for="(feedback, index) in feedbackItems" v-if="feedback.when")
       .columns.is-mobile
         .column.is-narrow
           p.ow-font {{ feedback.userName }}
