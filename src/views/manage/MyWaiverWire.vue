@@ -52,10 +52,10 @@
         .columns(v-if="selectedPlayer.id")
           .column.is-narrow
             h3 I would like
-            player-card(:player="selectedPlayer" :showRemove="false")
+            player-card(:player="selectedPlayer")
           .column.is-narrow(v-if="myPlayer.id")
             h3 in exchange for
-            player-card(:player="myPlayer" :showRemove="false")
+            player-card(:player="myPlayer")
         hr
         .columns
           .column.is-narrow

@@ -3,7 +3,7 @@
     h2 Players
     .columns.is-multiline
       .column.is-one-third(v-for="player in players")
-        player-card(:player="player.player" :showRemove="false" :primaryColor="team.primaryColor == '000000' ? team.secondaryColor : team.primaryColor")
+        player-card(:player="player.player" :primaryColor="team.primaryColor == '000000' ? team.secondaryColor : team.primaryColor")
 </template>
 
 <script>

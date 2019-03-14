@@ -24,7 +24,7 @@
             p This will let the system draft for you in case you can't make it to the live draft.  While active, picks will be placed on your behalf automatically, so be sure you want to enable this!
             .columns.is-multiline.is-mobile
               .column.is-one-third-desktop.is-half-mobile(v-for="player in roster")
-                player-card(:player="playersObject[player]" :showRemove="false" :primaryColor="getColor(playersObject[player])")
+                player-card(:player="playersObject[player]" :primaryColor="getColor(playersObject[player])")
               .column.is-one-third-desktop.is-half-mobile(v-for="placeholder in placeholders")
                 player-card(:showRemove="false")
         section(v-if="isInLeague")

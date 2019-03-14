@@ -11,9 +11,11 @@
         .column.is-narrow(v-if="userData.isAdmin")
           confirm-button(buttonText="Delete" confirmText="Sure?" @confirm-it="deleteFeedback(feedback.id)")
       p.mice {{ feedback.url }}
+      p.mice {{ feedback.when | formatJSDate }}
 </template>
 
 <script>
+import { orderBy } from 'lodash'
 import firebase from 'firebase/app'
 import 'firebase/firestore'
 
@@ -38,7 +40,7 @@ export default {
         .get()
         .then(messages => messages.docs.map(message => ({ id: message.id, ...message.data() })))
         .then(messages => {
-          this.feedbackItems = messages
+          this.feedbackItems = orderBy(messages, ['when'], ['desc'])
         })
     },
     deleteFeedback (id) {

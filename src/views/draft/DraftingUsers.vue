@@ -6,7 +6,7 @@
           eva-icon(name="star" fill="white" width="16" height="16" v-if="theUser.userId == ownerId" v-tooltip="'League Owner'")
           | {{ theUser.displayName }}
           span.is-pulled-right(v-if="users[draft.activeDrafter].userId && theUser.userId == users[draft.activeDrafter].userId && !draftComplete") {{ draft.direction == 'forward' ? '>' : '<' }}
-        player-card(v-for="pick in getUserPicks(theUser.userId)" :key="playersObject[pick].id" :player="playersObject[pick]" :showRemove="false" :primaryColor="getColor(playersObject[pick])" :score="playersObject[pick].stats.fantasyScore || 0" :hidePhoto="true") {{ playersObject[pick].name }}
+        player-card(v-for="pick in getUserPicks(theUser.userId)" :key="playersObject[pick].id" :player="playersObject[pick]" :primaryColor="getColor(playersObject[pick])" :score="playersObject[pick].stats.fantasyScore || 0" :hidePhoto="true") {{ playersObject[pick].name }}
 </template>
 
 <script>

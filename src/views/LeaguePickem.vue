@@ -66,7 +66,7 @@
                   span {{ props.row.teamName || 'vacated' }}
                 b-table-column(label="Score" width="30" field="points" sortable)
                   span {{ props.row.points }}
-          //-b-tab-item(label="Previous Picks")
+          b-tab-item(label="Previous Picks")
             .columns
               .column.is-one-third-desktop
               .column.is-one-third-desktop

@@ -16,37 +16,37 @@
               editable-field(:initial-value="teamName" @updated-value="setTeamName")
           .column
             section.roster-view.has-text-centered
-              player-card(:player="lineUp.captain ? players[lineUp.captain] : null" :showRemove="false")
+              player-card(:player="lineUp.captain ? players[lineUp.captain] : null")
               h2.has-text-centered Captain
                 button.button.is-secondary.is-small.is-remove(@click="lineUp.captain = ''" v-if="lineUp.captain && notLocked(lineUp.captain)" v-tooltip="'Remove'") X
           .column.roster-view
             section
-              player-card(:player="lineUp.offense1 ? players[lineUp.offense1] : null" :showRemove="false")
+              player-card(:player="lineUp.offense1 ? players[lineUp.offense1] : null")
               h2.has-text-centered Offense 1
                 button.button.is-secondary.is-small.is-remove(@click="lineUp.offense1 = ''" v-if="lineUp.offense1 && notLocked(lineUp.offense1)" v-tooltip="'Remove'") X
           .column.roster-view
             section
-              player-card(:player="lineUp.offense2 ? players[lineUp.offense2] : null" :showRemove="false")
+              player-card(:player="lineUp.offense2 ? players[lineUp.offense2] : null")
               h2.has-text-centered Offense 2
                 button.button.is-secondary.is-small.is-remove(@click="lineUp.offense2 = ''" v-if="lineUp.offense2 && notLocked(lineUp.offense2)" v-tooltip="'Remove'") X
           .column.roster-view
             section
-              player-card(:player="lineUp.support1 ? players[lineUp.support1] : null" :showRemove="false")
+              player-card(:player="lineUp.support1 ? players[lineUp.support1] : null")
               h2.has-text-centered Support 1
                 button.button.is-secondary.is-small.is-remove(@click="lineUp.support1 = ''" v-if="lineUp.support1 && notLocked(lineUp.support1)" v-tooltip="'Remove'") X
           .column.roster-view
             section
-              player-card(:player="lineUp.support2 ? players[lineUp.support2] : null" :showRemove="false")
+              player-card(:player="lineUp.support2 ? players[lineUp.support2] : null")
               h2.has-text-centered Support 2
                 button.button.is-secondary.is-small.is-remove(@click="lineUp.support2 = ''" v-if="lineUp.support2 && notLocked(lineUp.support2)" v-tooltip="'Remove'") X
           .column.roster-view
             section
-              player-card(:player="lineUp.tank1 ? players[lineUp.tank1] : null" :showRemove="false")
+              player-card(:player="lineUp.tank1 ? players[lineUp.tank1] : null")
               h2.has-text-centered Tank 1
                 button.button.is-secondary.is-small.is-remove(@click="lineUp.tank1 = ''" v-if="lineUp.tank1 && notLocked(lineUp.tank1)" v-tooltip="'Remove'") X
           .column.roster-view
             section
-              player-card(:player="lineUp.tank2 ? players[lineUp.tank2] : null" :showRemove="false")
+              player-card(:player="lineUp.tank2 ? players[lineUp.tank2] : null")
               h2.has-text-centered Tank 2
                 button.button.is-secondary.is-small.is-remove(@click="lineUp.tank2 = ''" v-if="lineUp.tank2 && notLocked(lineUp.tank2)" v-tooltip="'Remove'") X
         section.is-hidden-mobile

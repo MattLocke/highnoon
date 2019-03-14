@@ -1,5 +1,5 @@
 <template lang="pug">
-  .player-card(:style="{'background-color': `#${primaryColor}`}")
+  .player-card(:style="{'background': backgroundColor}")
     .columns.player-title.is-marginless.is-gapless.is-mobile(v-if="!player")
       .column
         h3.ow-font N/A
@@ -9,21 +9,22 @@
     .columns.player-title.is-marginless.is-gapless.is-mobile(v-else)
       .column
         h3.ow-font(@click="seeStats = !seeStats") {{ player.name }}
-        //- p.ow-font.is-hidden-desktop(@click="seeStats = !seeStats") {{ player.name }}
       .column.is-narrow
         img.role-image(:src="`images/roles/${player.attributes.role || 'flex'}-white.svg`")
-    div.is-hidden-mobile(v-if="!seeStats && player && !hidePhoto")
+    div.headshot.is-hidden-mobile(v-if="!seeStats && player && !hidePhoto")
       img.img(:src="player.headshot")
-      span.fantasy-points.has-text-centered.ow-font.orange {{ getScore(player.id) | playerScore }}
+      div.fantasy-points.ow-font
+        .columns
+          .column
+            span.orange {{ getScore(player.id) | playerScore }}
+          .column.is-narrow
+            img(:src="`images/teams/${player.team}.svg`")
     .stats(v-if="seeStats && player")
       span.is-proper Role: {{ player.attributes.role }}
       .heroes(v-if="hasHeroes(player)")
         span Heroes:
         ul
           li.is-proper(v-for="hero in player.attributes.heroes") {{ hero }}
-    button.button.is-primary.is-small(
-      v-if="showRemove"
-      @click="$emit('remove')") Remove
 </template>
 
 <script>
@@ -48,10 +49,6 @@ export default {
       type: Boolean,
       default: false
     },
-    showRemove: {
-      type: Boolean,
-      default: true
-    },
     primaryColor: {
       type: String,
       default: '222'
@@ -67,11 +64,19 @@ export default {
     }
   },
   computed: {
+    backgroundColor () {
+      const team = this.teams.find(t => t.abbreviatedName === this.player.team)
+      if (team) return `linear-gradient(#${team.primaryColor === '000000' ? team.secondaryColor : team.primaryColor}, #111111)`
+      return 'linear-gradient(#000000, #000000)'
+    },
     currentWeek () {
       return this.$store.getters.getCurrentWeek
     },
     playerScores () {
       return this.$store.getters.getPlayerScores || {}
+    },
+    teams () {
+      return this.$store.getters.getTeams
     }
   },
   methods: {
@@ -98,24 +103,28 @@ export default {
   .player-card {
     border: 1px solid #fff;
     border-radius: 4px;
-    padding-bottom: .25rem;
     position: relative;
     overflow: hidden;
     min-width: 80px;
     max-width: 150px;
+    .headshot {
+      position: relative;
+    }
     .player-title, .fantasy-points {
       background-color: #333;
       padding-top: .25rem;
       padding-left: .25rem;
     }
     .fantasy-points {
-      width: 100%;
-      display: block;
-      margin-top: -.5rem;
-      position: relative;
-      z-index: 3;
-      height: 1.2rem;
-      line-height: 1rem;
+      margin-top: -.35rem;
+      font-size: 1.5rem;
+      line-height: 1.2rem;
+      img {
+        width: 20px;
+        height: 20px;
+        margin-right: .25rem;
+        margin-bottom: .25rem;
+      }
     }
     h3 {
       font-size: 1.2rem;

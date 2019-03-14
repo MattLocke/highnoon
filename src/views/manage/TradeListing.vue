@@ -2,11 +2,11 @@
   section.trade-listing
     .columns
       .column.is-narrow
-        player-card(:player="playersObject[trade.askerPlayer]" :showRemove="false")
+        player-card(:player="playersObject[trade.askerPlayer]")
         span.is-mice Owner:
         span.owner-name {{ trade.askerName }}
       .column.is-narrow
-        player-card(:player="playersObject[trade.responderPlayer]" :showRemove="false")
+        player-card(:player="playersObject[trade.responderPlayer]")
         span.is-mice Owner:
         span.owner-name {{ trade.responderName }}
       .column.is-narrow

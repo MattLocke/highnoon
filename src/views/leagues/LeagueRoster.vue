@@ -3,31 +3,31 @@
     .columns.is-multiline.is-hidden-mobile.is-gapless(v-if="hasRoster && players")
       .column
         section
-          player-card(:player="roster.captain ? players[roster.captain] : null" :showRemove="false")
+          player-card(:player="roster.captain ? players[roster.captain] : null")
           h2.has-text-centered Captain
       .column
         section
-          player-card(:player="roster.offense1 ? players[roster.offense1] : null" :showRemove="false")
+          player-card(:player="roster.offense1 ? players[roster.offense1] : null")
           h2.has-text-centered Offense 1
       .column
         section
-          player-card(:player="roster.offense2 ? players[roster.offense2] : null" :showRemove="false")
+          player-card(:player="roster.offense2 ? players[roster.offense2] : null")
           h2.has-text-centered Offense 2
       .column
         section
-          player-card(:player="roster.support1 ? players[roster.support1] : null" :showRemove="false")
+          player-card(:player="roster.support1 ? players[roster.support1] : null")
           h2.has-text-centered Support 1
       .column
         section
-          player-card(:player="roster.support2 ? players[roster.support2] : null" :showRemove="false")
+          player-card(:player="roster.support2 ? players[roster.support2] : null")
           h2.has-text-centered Support 2
       .column
         section
-          player-card(:player="roster.tank1 ? players[roster.tank1] : null" :showRemove="false")
+          player-card(:player="roster.tank1 ? players[roster.tank1] : null")
           h2.has-text-centered Tank 1
       .column
         section
-          player-card(:player="roster.tank2 ? players[roster.tank2] : null" :showRemove="false")
+          player-card(:player="roster.tank2 ? players[roster.tank2] : null")
           h2.has-text-centered Tank 2
     section.is-hidden-desktop(v-if="hasRoster && players")
       h2.ow-font.mobile-roster
