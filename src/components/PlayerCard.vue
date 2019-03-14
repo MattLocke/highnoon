@@ -65,8 +65,10 @@ export default {
   },
   computed: {
     backgroundColor () {
-      const team = this.teams.find(t => t.abbreviatedName === this.player.team)
-      if (team) return `linear-gradient(#${team.primaryColor === '000000' ? team.secondaryColor : team.primaryColor}, #111111)`
+      if (this.player) {
+        const team = this.teams.find(t => t.abbreviatedName === this.player.team)
+        if (team) return `linear-gradient(#${team.primaryColor === '000000' ? team.secondaryColor : team.primaryColor}, #111111)`
+      }
       return 'linear-gradient(#000000, #000000)'
     },
     currentWeek () {
