@@ -22,6 +22,7 @@ import ManageUnlimitedTeam from './views/ManageUnlimitedTeam'
 import Messages from './views/Messages'
 import Picks from './views/Picks'
 import PlayerProfile from './views/PlayerProfile'
+import Premier from './views/Premier'
 import Profile from './views/Profile'
 import Stats from './views/Stats'
 import Status from './views/Status'
@@ -44,6 +45,14 @@ let router = new Router({
       path: '/stats/:week?',
       name: 'stats',
       component: Stats
+    },
+    {
+      path: '/premier',
+      name: 'premier',
+      component: Premier,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/createLeague',

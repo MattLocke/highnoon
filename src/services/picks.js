@@ -21,7 +21,6 @@ export default {
         const pickStats = {}
         pickDocs.forEach((pickDoc) => {
           const pick = pickDoc.data()
-          console.log(`Setting pick for: ${pickDoc.id} with: ${JSON.stringify(pick)}`)
           pickStats[pickDoc.id] = pick
         })
         return pickStats

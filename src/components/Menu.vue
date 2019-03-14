@@ -21,6 +21,7 @@
           span {{ profile.displayName }}
         router-link.navbar-item(
           v-else to="/login") Log In
+        router-link.navbar-item(to="/premier" v-if="profile.isPremier") Premier
         router-link.navbar-item(to="/stats") Stats
         .navbar-item.has-dropdown.is-hoverable
           a.navbar-link How-To
