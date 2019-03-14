@@ -24,6 +24,7 @@ export default {
   name: 'PremierStats',
   data () {
     return {
+      activeContentTab: '',
       base: 'https://datastudio.google.com/embed/reporting/13M8W4CCiws4PeZSBswdY3y_iC4dgNFjV/page/',
       overview: 'Mmei',
       teams: '8oxi',
