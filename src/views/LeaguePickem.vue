@@ -6,7 +6,7 @@
         transfer-ownership(leagueType="pickem" v-if="userData.isAdmin")
         remove-user(v-if="isOwner || userData.isAdmin" leagueType="pickem")
         your-leagues(:userId="userId")
-        section
+        section(v-if="isInLeague")
           h2 Team Name
           editable-field(:initial-value="teamName" @updated-value="setTeamName")
         section(v-if="isOwner")
