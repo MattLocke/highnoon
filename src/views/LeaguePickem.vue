@@ -6,6 +6,9 @@
         transfer-ownership(leagueType="pickem" v-if="userData.isAdmin")
         remove-user(v-if="isOwner || userData.isAdmin" leagueType="pickem")
         your-leagues(:userId="userId")
+        section
+          h2 Team Name
+          editable-field(:initial-value="teamName" @updated-value="setTeamName")
         section(v-if="isOwner")
           collapsible(title-text="League Password" :start-collapsed="true")
             b-field(label="Password")
@@ -181,6 +184,9 @@ export default {
       })
       return indexed
     },
+    teamName () {
+      return this.leagueUsers.find(user => user.userId === this.userData.id) ? this.leagueUsers.find(user => user.userId === this.userData.id).teamName : ''
+    },
     userData () {
       return this.$store.getters.getUserData
     },
@@ -270,6 +276,16 @@ export default {
           this.$store.dispatch('setLoading', false)
           location.reload()
         })
+    },
+    setTeamName (newTeamName) {
+      const leagueUser = this.leagueUsers.find(user => user.userId === this.userData.id)
+      const updatedLeagueUser = {
+        [leagueUser.userId]: {
+          ...leagueUser,
+          teamName: newTeamName
+        }
+      }
+      LeagueService.updateDraftTeamUser(updatedLeagueUser, this.leagueId, 'pickem')
     },
     updateLeague () {
       this.$store.dispatch('setLoading', true)
