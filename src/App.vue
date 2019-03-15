@@ -6,7 +6,7 @@
     router-view#rv(:key="$route.fullPath" v-if="liveConfig.canUseSite || (userData && userData.isAdmin)")
     .site-down(v-else)
       p {{ liveConfig.siteIsDownMessage || 'Site is currently undergoing maintenance.  If you are seeing this message for a prolonged amount of time, please make sure you have Kaspersky disabled as well as ad-blockers.  (There are no ads on the site)' }}
-    report-issue(v-if="userData")
+    messages(v-if="userData")
 </template>
 
 <script>
@@ -15,13 +15,13 @@ import firebase from 'firebase/app'
 import userService from '@/services/user'
 
 import mainMenu from '@/components/Menu'
-import reportIssue from '@/components/ReportIssue'
+import messages from '@/components/Messages'
 
 export default {
   name: 'HighNoon',
   components: {
     mainMenu,
-    reportIssue
+    messages
   },
   computed: {
     isLoading () {
