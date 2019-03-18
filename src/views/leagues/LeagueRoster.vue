@@ -59,7 +59,7 @@
         img(src="images/roles/tank-white.svg" width="20" height="20")
         img(:src="getTeamImage(roster.tank1)" width="20" height="20" v-if="roster.tank1")
         | {{ players[roster.tank1] ? players[roster.tank1].name : 'Empty' }} -
-        span.orange  {{ playerScores[roster.tank] | playerScore }}
+        span.orange  {{ playerScores[roster.tank1] | playerScore }}
       h2.ow-font
         img(src="images/roles/tank-white.svg" width="20" height="20")
         img(:src="getTeamImage(roster.tank2)" width="20" height="20" v-if="roster.tank2")

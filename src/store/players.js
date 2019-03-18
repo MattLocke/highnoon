@@ -15,15 +15,18 @@ export default {
   },
   mutations: {
     SET_PLAYERS: (state, payload) => {
+      state.players = []
       state.players = payload || []
     },
     SET_LOCKED_PLAYERS: (state, payload) => {
       state.lockedPlayers = payload || []
     },
     SET_PLAYER_SCORES: (state, payload) => {
+      state.playerScores = {}
       state.playerScores = payload || {}
     },
     SET_PLAYER_TOTAL_SCORES: (state, payload) => {
+      state.playerTotalScores = {}
       state.playerTotalScores = payload || {}
     }
   },
