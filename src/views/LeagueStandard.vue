@@ -86,7 +86,7 @@
                 b-table-column(label="Pos" field="pos" width="20" sortable)
                   span {{ props.row.pos }}
                 b-table-column(label="User" field="displayName" width="180" sortable)
-                  span {{ props.row.displayName || 'vacated' }}
+                  router-link(:to="`/publicProfile/${props.row.userId}`") {{ props.row.displayName || 'vacated' }}
                 b-table-column(label="Team Name" field="teamName" sortable)
                   span {{ props.row.teamName || 'vacated' }}
                 b-table-column(label="Wins" width="30" field="wins" sortable)

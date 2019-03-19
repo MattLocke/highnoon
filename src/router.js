@@ -28,6 +28,7 @@ import Stats from './views/Stats'
 import Status from './views/Status'
 import Staff from './views/Staff'
 import Upload from './views/Upload'
+import UserProfile from './views/UserProfile'
 
 Vue.use(Router)
 
@@ -230,6 +231,14 @@ let router = new Router({
       path: '/upload',
       name: 'upload',
       component: Upload,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/publicProfile/:userId',
+      name: 'publicProfile',
+      component: UserProfile,
       meta: {
         requiresAuth: true
       }
