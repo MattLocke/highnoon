@@ -18,9 +18,9 @@
             p To remove the password, simply update with no password in the field.
         section(v-if="liveConfig.canPick")
           collapsible(title-text="Your Picks")
-            p These are your picks for the matches for the upcoming week.  The picks are bound to your profile, so they carry over between leagues.  I may make them on a per-league basis in the future, but the technical debt for that is too much for one man to bear right now with the other league types in the mix.  Sorry for the inconvenience!  :(
+            b-checkbox(v-model="showPickRates") Show Pick Rates
             hr
-            match-listing(v-for="match in currentWeeksMatches" :match="match" :key="match.id" :leagueId="leagueId" :pickStats="pickStats")
+            match-listing(v-for="match in currentWeeksMatches" :showPickRates="showPickRates" :match="match" :key="match.id" :leagueId="leagueId" :pickStats="pickStats")
         section(v-else)
           h2 Your Picks
           span {{ liveConfig.featureDownMessage }}
@@ -119,7 +119,8 @@ export default {
         message: '',
         image: ''
       },
-      localPassword: ''
+      localPassword: '',
+      showPickRates: false
     }
   },
   computed: {

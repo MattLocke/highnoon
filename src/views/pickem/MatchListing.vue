@@ -24,7 +24,7 @@
         .ow-font.team-name.is-pulled-right(v-tooltip="`${rightPercent}% choose ${match.competitors[1].abbreviatedName}`") {{ match.competitors[1].abbreviatedName }}
       .column.is-narrow
         img(:src="`images/teams/${match.competitors[1].abbreviatedName}.svg`" width="22" height="22")
-    .pick-rates(:style="{'background-color': `#${match.competitors[1].primaryColor}`}")
+    .pick-rates(:style="{'background-color': `#${match.competitors[1].primaryColor}`}" v-if="showPickRates")
       .pick-percentage-bar(:style="pickStyles")
 </template>
 
@@ -46,6 +46,10 @@ export default {
     pickStats: {
       type: Object,
       required: true
+    },
+    showPickRates: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
