@@ -245,6 +245,7 @@ export default {
   resetDraft (leagueId) {
     return rdb.ref(`/draft/${leagueId}`).remove()
       .then(() => rdb.ref(`/draftPicks/${leagueId}`).remove())
+      .then(() => rdb.ref(`/draftOrder/${leagueId}`).remove())
       .then(() => db.collection('standardLeagueRoster').doc(leagueId).delete())
   },
   saveRoster (userId, leagueId, roster, type = 'standard') {
