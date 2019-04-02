@@ -19,10 +19,6 @@ export default {
       {
         name: 'Leagues',
         where: '/leagues'
-      },
-      {
-        name: 'Staff',
-        where: '/staff'
       }
       // {
       //   name: 'Players',
