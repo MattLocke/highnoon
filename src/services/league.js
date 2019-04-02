@@ -266,6 +266,9 @@ export default {
       .set(league, { merge: true })
       .then(l => l)
   },
+  updateDraftOrder (draftOrder, leagueId) {
+    return rdb.ref(`/draftOrder/${leagueId}`).update(draftOrder)
+  },
   updateDraftTeamUser (updatedUserObject, leagueId, leagueType) {
     return db.collection(`${leagueType}LeagueUsers`).doc(leagueId).set(updatedUserObject, { merge: true })
   }

@@ -101,7 +101,13 @@
               p This is the order for the draft.  Keep in mind this is a snake draft.  If you have no idea what that means, it's similar to what
                 a(href="https://www.dummies.com/sports/fantasy-sports/fantasy-football/understanding-fantasy-football-snake-and-auction-drafts/" target="_blank")  this page describes
                 | .
-              ol
+              hr
+              draggable(v-model="draftOrderCopy" v-if="canStartDraft")
+                .list-group-item.has-move-cursor(v-for="(player, index) in draftOrderCopy")
+                  .columns
+                    .column.is-narrow {{ Number(index) + 1 }}
+                    .column {{ player.displayName }}
+              ol(v-else)
                 li(v-for="team in draftOrder") {{ team.displayName }}
           b-tab-item(label="Schedule")
             matchup
@@ -143,6 +149,7 @@ import vueMarkdown from 'vue-markdown'
 
 import LeagueService from '@/services/league'
 
+import draggable from 'vuedraggable'
 import LeagueRoster from '@/views/leagues/LeagueRoster'
 import LeagueSchedule from '@/views/leagues/LeagueSchedule'
 import Matchup from '@/views/leagues/Matchup'
@@ -154,6 +161,7 @@ import YourLeagues from '@/views/leagues/YourLeagues'
 export default {
   name: 'StandardLeague',
   components: {
+    draggable,
     LeagueRoster,
     LeagueSchedule,
     Matchup,
@@ -173,6 +181,7 @@ export default {
       localPassword: '',
       editingMessage: false,
       draftStatus: '',
+      draftOrderCopy: [],
       showLeagueUsers: false,
       showDraftPreference: false,
       showMenu: true
@@ -266,6 +275,23 @@ export default {
     }
   },
   watch: {
+    draftOrder: {
+      immediate: true,
+      handler (val) {
+        this.draftOrderCopy = [ ...val ]
+      }
+    },
+    draftOrderCopy (val) {
+      if (val) {
+        LeagueService.updateDraftOrder(val, this.leagueId).then(() => {
+          this.$toast.open({
+            message: 'Successfully save the draft order!',
+            type: 'is-success',
+            position: 'is-bottom'
+          })
+        })
+      }
+    },
     players: {
       immediate: true,
       handler (val) {
