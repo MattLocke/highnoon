@@ -137,8 +137,8 @@ export default {
       return this.$store.getters.getConfig
     },
     currentWeeksTimes () {
-      const currentWeekIndex = this.config.currentWeek === 0 ? 0 : this.config.currentWeek - 1
       const currentStage = this.config.currentStage || 1
+      const currentWeekIndex = this.config.currentWeek === 0 ? 0 : this.config.currentWeek % 5 - 1
       const weekTimes = get(this.config, `stage${currentStage}times`, [])
       return weekTimes[currentWeekIndex]
     },
