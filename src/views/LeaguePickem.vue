@@ -47,7 +47,7 @@
                   b-input(type="textarea" v-model="league.message" rows="10")
                 button.button.is-primary(@click="updateLeague") Save Message
                 hr
-              vue-markdown(v-if="leagueMessage" :source="leagueMessage")
+              vue-markdown(v-if="leagueMessage" :source="leagueMessage" :html="false")
               .wrap(v-else)
                 img(src="https://firebasestorage.googleapis.com/v0/b/overwatch-pickem.appspot.com/o/images%2Fleagues%2Fwelcome-to-your-league.jpg?alt=media&token=bbf8225c-6bd0-4b1a-b5e0-d864a3047395")
                 p Click on the edit button above to customize your league landing page!  Inform members of the rules you have, the prizes you're giving away - whatever makes sense!
