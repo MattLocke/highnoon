@@ -73,32 +73,28 @@ export default {
   },
   actions: {
     fetchFeaturedPickem: ({ state, commit }) => {
-      if (!state.featuredPickem.length) {
-        db.collection('pickemLeagues')
-          .where('isFeatured', '==', true)
-          .get()
-          .then((leagues) => {
-            const theLeagues = leagues.docs.map(league => ({ ...league.data() }))
-            commit('SET_FEATURED_PICKEM', theLeagues)
-          })
-          .catch((error) => {
-            console.table(error)
-          })
-      }
+      db.collection('pickemLeagues')
+        .where('isFeatured', '==', true)
+        .get()
+        .then((leagues) => {
+          const theLeagues = leagues.docs.map(league => ({ ...league.data() }))
+          commit('SET_FEATURED_PICKEM', theLeagues)
+        })
+        .catch((error) => {
+          console.table(error)
+        })
     },
     fetchFeaturedUnlimited: ({ state, commit }) => {
-      if (!state.featuredUnlimited.length) {
-        db.collection('unlimitedLeagues')
-          .where('isFeatured', '==', true)
-          .get()
-          .then((leagues) => {
-            const theLeagues = leagues.docs.map(league => ({ ...league.data() }))
-            commit('SET_FEATURED_UNLIMITED', theLeagues)
-          })
-          .catch((error) => {
-            console.table(error)
-          })
-      }
+      db.collection('unlimitedLeagues')
+        .where('isFeatured', '==', true)
+        .get()
+        .then((leagues) => {
+          const theLeagues = leagues.docs.map(league => ({ ...league.data() }))
+          commit('SET_FEATURED_UNLIMITED', theLeagues)
+        })
+        .catch((error) => {
+          console.table(error)
+        })
     },
     getLeagues: ({ commit }, payload) => {
       if (payload) {

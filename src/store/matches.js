@@ -22,25 +22,21 @@ export default {
   },
   actions: {
     fetchMatches: ({ state, commit, dispatch }) => {
-      if (!state.matches.length) {
-        dispatch('setLoading', true)
-        db.collection('matches')
-          .orderBy('startDateTS')
-          .get()
-          .then((matches) => {
-            const theMatches = matches.docs.map(match => ({ ...match.data() }))
-            commit('SET_MATCHES', theMatches)
-            dispatch('setLoading', false)
-          })
-      }
+      dispatch('setLoading', true)
+      db.collection('matches')
+        .orderBy('startDateTS')
+        .get()
+        .then((matches) => {
+          const theMatches = matches.docs.map(match => ({ ...match.data() }))
+          commit('SET_MATCHES', theMatches)
+          dispatch('setLoading', false)
+        })
     },
     fetchPickStats: ({ state, commit, dispatch }) => {
-      if (!state.globalPickStats.length) {
-        picksService.getGlobalPickRates()
-          .then((thePicks) => {
-            commit('SET_GLOBAL_PICKS', { ...thePicks })
-          })
-      }
+      picksService.getGlobalPickRates()
+        .then((thePicks) => {
+          commit('SET_GLOBAL_PICKS', { ...thePicks })
+        })
     }
   },
   getters: {

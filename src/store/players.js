@@ -35,34 +35,32 @@ export default {
       commit('SET_LOCKED_PLAYERS', payload)
     },
     getPlayers: ({ state, commit, dispatch }) => {
-      if (!state.players.length) {
-        dispatch('setLoading', true)
-        let thePlayers = {}
-        db.collection(`players`)
-          .get()
-          .then((players) => {
-            players.docs.forEach(player => {
-              const p = player.data()
-              thePlayers[p.id] = p
-            })
-            return null
+      dispatch('setLoading', true)
+      let thePlayers = {}
+      db.collection(`players`)
+        .get()
+        .then((players) => {
+          players.docs.forEach(player => {
+            const p = player.data()
+            thePlayers[p.id] = p
           })
-          .then(() => db.collection(`playerStats`).get())
-          .then((stats) => {
-            stats.docs.forEach(stat => {
-              const s = stat.data()
-              thePlayers[s.id] = { ...thePlayers[s.id], stats: s }
-            })
+          return null
+        })
+        .then(() => db.collection(`playerStats`).get())
+        .then((stats) => {
+          stats.docs.forEach(stat => {
+            const s = stat.data()
+            thePlayers[s.id] = { ...thePlayers[s.id], stats: s }
           })
-          .catch((error) => {
-            // TODO: update with proper error msg
-            console.error(error)
-          })
-          .finally(() => {
-            commit('SET_PLAYERS', thePlayers)
-            dispatch('setLoading', false)
-          })
-      }
+        })
+        .catch((error) => {
+          // TODO: update with proper error msg
+          console.error(error)
+        })
+        .finally(() => {
+          commit('SET_PLAYERS', thePlayers)
+          dispatch('setLoading', false)
+        })
     },
     getPlayerScores ({ commit }, payload) {
       // console.log(`Getting scores based on ${payload}`)

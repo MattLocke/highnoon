@@ -17,14 +17,12 @@ export default {
   },
   actions: {
     getTeams: ({ state, commit }) => {
-      if (!state.teams.length) {
-        db.collection('teams')
-          .get()
-          .then((teams) => {
-            const theTeams = teams.docs.map(team => ({ ...team.data() }))
-            commit('SET_TEAMS', theTeams)
-          })
-      }
+      db.collection('teams')
+        .get()
+        .then((teams) => {
+          const theTeams = teams.docs.map(team => ({ ...team.data() }))
+          commit('SET_TEAMS', theTeams)
+        })
     }
   },
   getters: {
