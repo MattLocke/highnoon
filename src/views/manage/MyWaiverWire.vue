@@ -9,7 +9,7 @@
       p That means you can swap players from the pool, first come first serve.  Players lock as their match begins, so be weary of that!  The waiver wire will be active again at 12:00am PST Monday morning every week, and will unlock for free trade after assigning waiver wire picks on Tuesdays at 11:00am PST.  Thank you!
     b-field(label="Player I'd Like To Exchange")
       b-select(v-model="myPlayer")
-        option(v-for="player in myPicksFiltered" :value="players[player]") {{ players[player].name }} ({{ players[player].attributes.role | capFirst }})
+        option(v-for="player in myPicksFiltered" :value="playersWithEmpty[player]") {{ playersWithEmpty[player].name }} ({{ playersWithEmpty[player].attributes.role | capFirst }})
     .columns
       .column.is-three-quarters
         section(v-show="!selectedPlayer.id")
@@ -136,7 +136,22 @@ export default {
   },
   computed: {
     canRequest () {
-      return (this.myPlayer && this.myPlayer.id) && (this.selectedPlayer && this.selectedPlayer.id)
+      return this.myPlayer && (this.selectedPlayer && this.selectedPlayer.id)
+    },
+    emptyPlayers () {
+      const emptyPlayer = {
+        name: 'Empty',
+        attributes: {
+          role: 'None'
+        }
+      }
+      const emptyPlayers = []
+      const max = this.myPicks ? 12 - this.myPicks.length : 0
+      console.log(`Max is: ${max}`)
+      for (let i = 0; i < max; i++) {
+        emptyPlayers.push({ id: i, ...emptyPlayer })
+      }
+      return emptyPlayers
     },
     filteredPlayers () {
       const tmpPlayers = this.players ? Object.values(this.players) : []
@@ -167,7 +182,19 @@ export default {
     myPicksFiltered () {
       const tmpPicks = differenceWith(this.myPicks, this.trades, (a, b) => Number(a) === Number(b.askerPlayer) || Number(a) === Number(b.responderPlayer))
       const afterWires = differenceWith(tmpPicks, Object.values(this.pendingWaiverWires), (a, b) => (Number(a) === Number(b.loses) && b.requesterId === this.userData.id) || (Number(a) === Number(b.gains) && b.requesterId === this.userData.id))
-      return differenceWith(afterWires, this.lockedPlayers, (a, b) => Number(a) === Number(b))
+      const afterLock = differenceWith(afterWires, this.lockedPlayers, (a, b) => Number(a) === Number(b))
+      const filteredPlayers = []
+      for (let i = 0; i < this.emptyPlayers.length; i++) {
+        filteredPlayers.push(i)
+      }
+      return [ ...afterLock, ...filteredPlayers ]
+    },
+    playersWithEmpty () {
+      const tmpMap = {}
+      this.emptyPlayers.map(p => {
+        tmpMap[p.id] = p
+      })
+      return { ...this.players, ...tmpMap }
     },
     teams () {
       return this.$store.getters.getTeams
