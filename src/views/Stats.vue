@@ -37,7 +37,7 @@ export default {
     return {
       bestScores: {},
       totalScores: {},
-      week: this.$route.params.week || 4
+      week: this.$route.params.week || this.currentWeek
     }
   },
   computed: {
