@@ -72,7 +72,7 @@ export default {
         const lastUpdated = localStorage.getItem('lastRefresh')
         if (Number(lastUpdated < this.liveConfig.restart)) {
           localStorage.setItem('lastRefresh', this.liveConfig.restart)
-          window.location.reload()
+          window.location.reload(true)
         }
       }
       this.$store.dispatch('saveLiveConfig', snapshot.val())
