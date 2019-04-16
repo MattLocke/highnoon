@@ -9,6 +9,10 @@ export default {
         name: 'Leagues',
         where: '/leagues',
         requiresAuth: true
+      },
+      {
+        name: 'Stats',
+        where: '/stats',
       }
     ]
     const devMenu = [
@@ -23,6 +27,10 @@ export default {
       {
         name: 'Staff',
         where: '/staff'
+      },
+      {
+        name: 'Stats',
+        where: '/stats',
       }
     ]
     return process.env.VUE_APP_LOADPROD ? prodMenu : devMenu

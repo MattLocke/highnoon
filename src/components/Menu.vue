@@ -21,22 +21,18 @@
           span {{ profile.displayName }}
         router-link.navbar-item(
           v-else to="/login") Log In
-        router-link.navbar-item(to="/premier" v-if="profile.isPremier") Premier
-        router-link.navbar-item(to="/stats") Stats
-        .navbar-item.has-dropdown.is-hoverable
-          a.navbar-link How-To
-          .navbar-dropdown
-            a.navbar-item(href="https://highnoon.gg/#/article/Na1lrkeu2s2Pwi8wbQrp") Standard
-            a.navbar-item(href="https://highnoon.gg/#/article/DUtOLV2iYsTplEgvH3fv") Unlimited
-            a.navbar-item(href="https://highnoon.gg/#/article/Jx3Z8ZbpWlAon6zx9Osd") Pickem
         router-link.navbar-item(
           v-for="(menuItem, index) in menuItems"
           :key="index"
           :to="menuItem.where"
           v-if="canSee(menuItem)") {{ menuItem.name }}
+        router-link.navbar-item(to="/premier" v-if="profile.isPremier") Premier
         .navbar-item.has-dropdown.is-hoverable
           a.navbar-link Other
           .navbar-dropdown
+            a.navbar-item(href="https://highnoon.gg/#/article/Na1lrkeu2s2Pwi8wbQrp") How To Standard
+            a.navbar-item(href="https://highnoon.gg/#/article/DUtOLV2iYsTplEgvH3fv") How To Unlimited
+            a.navbar-item(href="https://highnoon.gg/#/article/Jx3Z8ZbpWlAon6zx9Osd") How To Pickem
             a.navbar-item(href="https://discord.gg/wTR5AEu" target="_blank") Discord
             a.navbar-item(href="https://www.reddit.com/r/HighNoonPickem/" target="_blank") Reddit
             a.navbar-item(href="https://www.patreon.com/highnoongg" target="_blank") Patreon
