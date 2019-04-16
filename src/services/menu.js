@@ -12,7 +12,7 @@ export default {
       },
       {
         name: 'Stats',
-        where: '/stats',
+        where: '/stats'
       }
     ]
     const devMenu = [
@@ -30,7 +30,7 @@ export default {
       },
       {
         name: 'Stats',
-        where: '/stats',
+        where: '/stats'
       }
     ]
     return process.env.VUE_APP_LOADPROD ? prodMenu : devMenu
