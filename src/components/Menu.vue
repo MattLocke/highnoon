@@ -27,7 +27,7 @@
           :to="menuItem.where"
           v-if="canSee(menuItem)") {{ menuItem.name }}
         router-link.navbar-item(to="/premier" v-if="profile.isPremier") Premier
-        .navbar-item.has-dropdown.is-hoverable
+        .navbar-item.has-dropdown.is-hoverable(:class="{'is-active': isActive}")
           a.navbar-link Other
           .navbar-dropdown
             a.navbar-item(href="https://highnoon.gg/#/article/Na1lrkeu2s2Pwi8wbQrp") How To Standard
@@ -101,9 +101,20 @@ export default {
       background-color: #10152f;
       border-bottom: 1px solid #f99e1a;
     }
+    &.has-dropdown {
+      .navbar-dropdown {
+        display: none;
+      }
+      &.is-active {
+        .navbar-dropdown {
+          display: block;
+        }
+      }
+    }
   }
   .router-link-active {
     border-bottom: 1px solid #f99e1a;
+    background-color: rgba(255,255,255,0.1);
   }
   .navbar-brand .navbar-item {
     font-size: 24px;
