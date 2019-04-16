@@ -16,7 +16,7 @@
         router-link.navbar-item(
           v-if="currentUser"
           to="/profile")
-          img(src="images/premier.png" v-if="profile.isPremier" v-tooltip="'You are a premier member!'" width="24" height="24")
+          img(src="images/premier.png" v-if="profile.isPremier && !profile.isUltimate" v-tooltip="'You are a premier member!'" width="24" height="24")
           img(src="images/ultimate.png" v-if="profile.isUltimate" v-tooltip="'You are an ultimate member!'" width="24" height="24")
           span {{ profile.displayName }}
         router-link.navbar-item(
