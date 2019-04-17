@@ -16,27 +16,24 @@
         router-link.navbar-item(
           v-if="currentUser"
           to="/profile")
-          img(src="images/premier.png" v-if="profile.isPremier" v-tooltip="'You are a premier member!'" width="24" height="24")
+          img(src="images/premier.png" v-if="profile.isPremier && !profile.isUltimate" v-tooltip="'You are a premier member!'" width="24" height="24")
           img(src="images/ultimate.png" v-if="profile.isUltimate" v-tooltip="'You are an ultimate member!'" width="24" height="24")
           span {{ profile.displayName }}
         router-link.navbar-item(
           v-else to="/login") Log In
-        router-link.navbar-item(to="/premier" v-if="profile.isPremier") Premier
-        router-link.navbar-item(to="/stats") Stats
-        .navbar-item.has-dropdown.is-hoverable
-          a.navbar-link How-To
-          .navbar-dropdown
-            a.navbar-item(href="https://highnoon.gg/#/article/Na1lrkeu2s2Pwi8wbQrp") Standard
-            a.navbar-item(href="https://highnoon.gg/#/article/DUtOLV2iYsTplEgvH3fv") Unlimited
-            a.navbar-item(href="https://highnoon.gg/#/article/Jx3Z8ZbpWlAon6zx9Osd") Pickem
         router-link.navbar-item(
           v-for="(menuItem, index) in menuItems"
           :key="index"
           :to="menuItem.where"
           v-if="canSee(menuItem)") {{ menuItem.name }}
-        .navbar-item.has-dropdown.is-hoverable
+        router-link.navbar-item(to="/premier" v-if="profile.isPremier") Premier
+        router-link.navbar-item(to="/stats") Stats
+        .navbar-item.has-dropdown.is-hoverable(:class="{'is-active': isActive}")
           a.navbar-link Other
           .navbar-dropdown
+            a.navbar-item(href="https://highnoon.gg/#/article/Na1lrkeu2s2Pwi8wbQrp") How To Standard
+            a.navbar-item(href="https://highnoon.gg/#/article/DUtOLV2iYsTplEgvH3fv") How To Unlimited
+            a.navbar-item(href="https://highnoon.gg/#/article/Jx3Z8ZbpWlAon6zx9Osd") How To Pickem
             a.navbar-item(href="https://discord.gg/wTR5AEu" target="_blank") Discord
             a.navbar-item(href="https://www.reddit.com/r/HighNoonPickem/" target="_blank") Reddit
             a.navbar-item(href="https://www.patreon.com/highnoongg" target="_blank") Patreon
@@ -105,9 +102,20 @@ export default {
       background-color: #10152f;
       border-bottom: 1px solid #f99e1a;
     }
+    &.has-dropdown {
+      .navbar-dropdown {
+        display: none;
+      }
+      &.is-active {
+        .navbar-dropdown {
+          display: block;
+        }
+      }
+    }
   }
   .router-link-active {
     border-bottom: 1px solid #f99e1a;
+    background-color: rgba(255,255,255,0.1);
   }
   .navbar-brand .navbar-item {
     font-size: 24px;
