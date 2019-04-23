@@ -36,8 +36,19 @@
       ".read": true,
       ".write": "auth != null"
     },
+    "pendingWaivers": {
+      ".read": true,
+      ".write": "auth != null"
+    },
+    "processedMatches": {
+      ".read": true
+    },
+    "rosterStats": {
+      ".read": true
+    },
     "trades": {
       ".read": true,
+      ".write": "auth != null",
       "$leagueId": {
         "$docId": {
           "responderPlayer": {
