@@ -160,6 +160,12 @@ $link-focus-border: $primary;
   }
 }
 
+@media screen and (min-width: 1088px) {
+  .navbar-item.has-dropdown.is-active .navbar-link {
+    background-color: $dark-blue;
+  }
+}
+
 /* Tooltip Stuff */
 .tooltip {
   display: block !important;
