@@ -10,8 +10,8 @@
     .initiate-trade(v-if="createTradeMode")
       b-field(label="Choose League Member")
         b-select(placeholder="Select a Member" v-model="selectedUser")
-          option(v-for="member in leagueUsers" :value="member" v-if="member.userId !== userId") {{ member.displayName }}
-      b-field(label="Which Player?" v-if="selectedUser.userId")
+          option(v-for="member in leagueUsers" :value="member" v-if="member && member.userId !== userId") {{ member.displayName }}
+      b-field(label="Which Player?" v-if="selectedUser && selectedUser.userId")
         b-select(placeholder="Player" v-model="theirPlayer")
           option(v-for="player in theirPlayers" :value="player") {{ playersObject[player].name }}
       b-field(label="Your Players")
@@ -63,7 +63,7 @@ export default {
   },
   computed: {
     canCreate () {
-      return (this.userId && this.yourPlayer && this.leagueId && this.selectedUser.userId && this.theirPlayer)
+      return (this.userId && this.yourPlayer && this.leagueId && this.selectedUser && this.selectedUser.userId && this.theirPlayer)
     },
     draftPicks () {
       return this.$store.getters.getDraftPicks
@@ -106,7 +106,7 @@ export default {
       return this.$store.getters.getPlayers
     },
     theirPlayers () {
-      if (this.selectedUser.userId) return this.draftPicks[this.selectedUser.userId]
+      if (this.selectedUser && this.selectedUser.userId) return this.draftPicks[this.selectedUser.userId]
       return []
     },
     userId () {
