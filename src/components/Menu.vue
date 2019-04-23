@@ -27,7 +27,6 @@
           :to="menuItem.where"
           v-if="canSee(menuItem)") {{ menuItem.name }}
         a.navbar-item(href="https://datastudio.google.com/u/0/reporting/13M8W4CCiws4PeZSBswdY3y_iC4dgNFjV/page/Mmei" target="_blank" v-if="profile.isPremier") Premier
-        router-link.navbar-item(to="/stats") Stats
         .navbar-item.has-dropdown.is-hoverable(:class="{'is-active': isActive}")
           a.navbar-link Other
           .navbar-dropdown
@@ -38,6 +37,7 @@
             a.navbar-item(href="https://www.reddit.com/r/HighNoonPickem/" target="_blank") Reddit
             a.navbar-item(href="https://www.patreon.com/highnoongg" target="_blank") Patreon
             a.navbar-item(href="https://paypal.me/mattlocke/5" target="_blank") Donate
+        router-link.navbar-item(to="/stats") Stats
 </template>
 
 <script>
