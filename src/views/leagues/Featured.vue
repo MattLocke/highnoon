@@ -6,33 +6,23 @@
     b-tabs(v-model="activeContentTab")
       b-tab-item(label="Unlimited Leagues")
         h2 Unlimited Leagues
-        hr
-        .columns(v-for="league in featuredUnlimitedLeagues")
-          .column.is-narrow
-            .image.is-128x128
+        .columns.is-multiline
+          .column.is-one-quarter-desktop(v-for="league in featuredUnlimitedLeagues")
+            .image.is-256x256
               img(:src="league.featuredURL")
-          .column.has-text-centered-mobile
             h3
               router-link(:to="`/LeagueUnlimited/${league.id}`") {{ league.leagueName }}
             span {{ league.featuredMessage }}
-          .column.is-narrow.has-text-centered-mobile
-            b-field
-              router-link.button.is-primary.is-small(:to="`/LeagueUnlimited/${league.id}`") Join League
             hr.is-hidden-desktop
       b-tab-item(label="Pick'em Leagues")
         h2 Pick'em Leagues
-        hr
-        .columns(v-for="league in featuredPickemLeagues")
-          .column.is-narrow
-            .image.is-128x128
+        .columns.is-multiline
+          .column.is-one-quarter-desktop(v-for="league in featuredPickemLeagues")
+            .image.is-256x256
               img(:src="league.featuredURL")
-          .column.has-text-centered-mobile
             h3
               router-link(:to="`/LeaguePickem/${league.id}`") {{ league.leagueName }}
             span {{ league.featuredMessage }}
-          .column.is-narrow.has-text-centered-mobile
-            b-field
-              router-link.button.is-primary.is-small(:to="`/LeaguePickem/${league.id}`") Join League
             hr.is-hidden-desktop
 </template>
 
