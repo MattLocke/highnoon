@@ -58,8 +58,8 @@ export default {
       forEach(this.players, player => {
         const tmp = {
           ...player,
-          totalScore: this.totalScores[player.id],
-          bestScore: this.bestScores[player.id]
+          totalScore: this.totalScores ? this.totalScores[player.id] : 0,
+          bestScore: this.bestScores ? this.bestScores[player.id] : 0
         }
         sPlayers.push(tmp)
       })
