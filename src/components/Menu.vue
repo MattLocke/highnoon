@@ -11,7 +11,7 @@
         span
         span
         span
-    #primaryNav.navbar-menu(:class="{'is-active': isActive}" @click="isActive=!isActive")
+    #primaryNav.navbar-menu(:class="{'is-active': isActive}")
       .navbar-end
         router-link.navbar-item(
           v-if="currentUser"
@@ -28,7 +28,7 @@
           v-if="canSee(menuItem)") {{ menuItem.name }}
         a.navbar-item(href="https://datastudio.google.com/u/0/reporting/13M8W4CCiws4PeZSBswdY3y_iC4dgNFjV/page/Mmei" target="_blank" v-if="profile.isPremier") Premier
         .navbar-item.has-dropdown.is-hoverable(:class="{'is-active': isActive}")
-          a.navbar-link Other
+          a.navbar-link(@click="isActive=!isActive") Other
           .navbar-dropdown
             a.navbar-item(href="https://highnoon.gg/#/article/Na1lrkeu2s2Pwi8wbQrp") How To Standard
             a.navbar-item(href="https://highnoon.gg/#/article/DUtOLV2iYsTplEgvH3fv") How To Unlimited
