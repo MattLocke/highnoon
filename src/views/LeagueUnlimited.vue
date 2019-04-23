@@ -46,8 +46,6 @@
             .leaderboard(v-if="liveConfig.canUseUnlimitedLeaderboards")
               h2 League Leaderboard
               p With the league leaderboard it will only show you if you have a score.  So if you just joined, don't fret!  Once we start the next scores you'll pop up.  Good luck!
-              article.message.is-warning
-                .message-body For unlimited leagues, week 1 is being ommitted. I will be writing a post explaining why shortly.
               p.ow-font(v-if="isInLeague") Your Place:
                 span.orange  {{ yourPlace }}
               b-table(
