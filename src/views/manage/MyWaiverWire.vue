@@ -147,7 +147,7 @@ export default {
       }
       const emptyPlayers = []
       const max = this.myPicks ? 12 - this.myPicks.length : 0
-      console.log(`Max is: ${max}`)
+      // console.log(`Max is: ${max}`)
       for (let i = 0; i < max; i++) {
         emptyPlayers.push({ id: i, ...emptyPlayer })
       }
@@ -238,7 +238,7 @@ export default {
       return ww.requesterId === this.userData.id
     },
     requestExchange () {
-      console.log('Requesting Exchange...')
+      // console.log('Requesting Exchange...')
       this.$store.dispatch('setLoading', true)
       const waiver = {
         leagueId: this.leagueId,

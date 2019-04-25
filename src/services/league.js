@@ -154,7 +154,7 @@ export default {
       .then(users => users.data())
   },
   getPendingWaiverWires (leagueId) {
-    console.log(`Getting pending waivers for: ${leagueId}`)
+    // console.log(`Getting pending waivers for: ${leagueId}`)
     return rdb.ref(`/pendingWaivers/${leagueId}`).once('value')
       .then(snapshot => snapshot.val())
   },
