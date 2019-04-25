@@ -20,10 +20,10 @@ import Login from './views/Login'
 import ManageTeam from './views/ManageFantasyTeam'
 import ManageUnlimitedTeam from './views/ManageUnlimitedTeam'
 import Messages from './views/Messages'
-import Picks from './views/Picks'
 import PlayerProfile from './views/PlayerProfile'
 import Premier from './views/Premier'
 import Profile from './views/Profile'
+import PublicProfile from './views/ProfilePublic'
 import Stats from './views/Stats'
 import Status from './views/Status'
 import Staff from './views/Staff'
@@ -187,14 +187,6 @@ let router = new Router({
       }
     },
     {
-      path: '/picks',
-      name: 'picks',
-      component: Picks,
-      meta: {
-        requiresAuth: true
-      }
-    },
-    {
       path: '/player/:handle',
       name: 'playerProfile',
       component: PlayerProfile,
@@ -206,6 +198,14 @@ let router = new Router({
       path: '/profile',
       name: 'profile',
       component: Profile,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/user/:userId',
+      name: 'user',
+      component: PublicProfile,
       meta: {
         requiresAuth: true
       }
