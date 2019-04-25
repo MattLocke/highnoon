@@ -80,6 +80,14 @@ export default {
     db.ref('/lockedPlayers').on('value', (snapshot) => {
       this.$store.dispatch('setLockedPlayers', snapshot.val() ? Object.values(snapshot.val()) : [])
     })
+    window.onerror = function (msg, url, lineNo, columnNo, error) {
+      // ... handle error ...
+      const today = new Date()
+      const date = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
+      const now = Date.now()
+      firebase.firestore().collection('errors').doc(date).update({ [now]: msg })
+      return false
+    }
   }
 }
 </script>
