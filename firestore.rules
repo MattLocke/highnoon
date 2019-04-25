@@ -9,6 +9,10 @@ service cloud.firestore {
       allow read;
     }
 
+    match /errors/{errorId} {
+      allow read, write;
+    }
+
     match /feedback/{feedbackId} {
       allow read;
       allow write: if request.auth.uid != null;
@@ -136,7 +140,8 @@ service cloud.firestore {
     }
 
     match /users/{userId} {
-      allow read, update, delete: if request.auth.uid == userId;
+    	allow read;
+      allow update, delete: if request.auth.uid == userId;
       allow create: if request.auth.uid != null;
     }
   }
