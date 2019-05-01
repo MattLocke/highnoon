@@ -139,8 +139,9 @@ export default {
     },
     currentWeeksTimes () {
       const currentStage = this.config.currentStage || 1
-      const currentWeekIndex = this.config.currentWeek === 0 ? 0 : this.config.currentWeek % 5 - 1
+      const currentWeekIndex = this.config.currentWeek === 0 ? 0 : this.config.currentWeek - ((currentStage - 1) * 5) - 1
       const weekTimes = get(this.config, `stage${currentStage}times`, [])
+      console.log(`Current week index: ${currentWeekIndex}`)
       return weekTimes[currentWeekIndex]
     },
     currentWeeksMatches () {
