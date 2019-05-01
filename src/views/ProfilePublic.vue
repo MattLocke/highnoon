@@ -63,23 +63,7 @@ export default {
       })
   }
 }
-/*
-avatar:"Vq1h1yfQKeeG8RbwLd8ATsK4wgE3.jpg"
-backgroundColor:"#174b97"
-battleNet:"SouldrinK#1362"
-discord:"SouldrinK#9274"
-displayName:"SouldrinK"
-email:"matt@highlevel.io"
-gravatar:"https://www.gravatar.com/avatar/3a21f11c6375e1ff38256f3b16f437b3?s=128"
-id:"Vq1h1yfQKeeG8RbwLd8ATsK4wgE3"
-isAdmin:true
-isEditor:true
-lastActive:1535006555
-lifetimePoints:0
-showChat:true
-signature:"SouldrinK - Owner"
-teamLogo:"uprising.svg"
-*/
+
 </script>
 
 <style lang="scss">
