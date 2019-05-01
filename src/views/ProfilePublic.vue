@@ -17,7 +17,7 @@
                 b-field(label="Battle.Net")
                   span {{ profile.battleNet }}
               .column.is-narrow(v-if="profile.discord")
-                b-field(label="Battle.Net")
+                b-field(label="Discord")
                   span {{ profile.discord }}
               .column.is-narrow(v-if="profile.reddit")
                 b-field(label="Reddit")

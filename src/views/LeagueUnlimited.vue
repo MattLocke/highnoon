@@ -61,6 +61,10 @@
                     span(v-else) Vacated
                   b-table-column(label="Team Name" field="teamName" sortable)
                     span {{ props.row.teamName || 'vacated' }}
+                  b-table-column(label="S1" field="stage1Total" sortable width="100")
+                    span {{ props.row.stage1Total | playerScore }}
+                  b-table-column(label="S2" field="stage2Total" sortable width="100")
+                    span {{ props.row.stage2Total | playerScore }}
                   b-table-column(label="Score" width="30" field="totalScore" sortable)
                     span {{ props.row.totalScore | playerScore }}
             .leaderboard(v-else)

@@ -10,6 +10,8 @@
           picture-input(ref="pictureInput", width="250", height="250", accept="image/jpeg", size=".1", buttonClass="button is-primary", @change="uploadPicture")
           hr
           button.button.is-secondary(@click="updatingAvatar = false") Cancel
+        span Your Id:
+          |  {{ profile.id }}
       .column
         .container
           h1 Profile for {{ localProfile.displayName }}
