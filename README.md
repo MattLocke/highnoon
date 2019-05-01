@@ -1,18 +1,56 @@
 # High Noon
 
-## Messaging
-For messaging I'm thinking I'll set up a listener on firebase, and when a message is sent to a user, the message gets copied to the
-Cloud Firestore, as well as to Firebase.  This will allow us to notify the user live when they have a new message, and correctly
-mark all read in firebase by removing the thread node.  
+## Setup
+High Noon is built using the vue-cli.  You can read about how to set that up here:
 
-1. New message from X gets sent to Y in thread Z
-2. Cloud Firestore will get the message under THREAD/message.
-3. Firebase will get the message under MESSAGES/USERID/Z/message
-4. When user views the message, MESSAGES/USERID/Z will be deleted in Firebase, clearing the notifications.
+[https://cli.vuejs.org/](https://cli.vuejs.org/)
 
-For leagues:
+After vue-cli is installed, create a project on firebase.  Once you create the project, select "web" from the application type and it will show you the information you need to complete the next step.
 
-1. New message is posted to the league in Cloud Firestore under LeagueMessages/LEAGUEID/message.
-2. When getting league data, the user will have a [TIMESTAMP] on the league node for "lastViewedLeague".
-3. There will be a DB call to Cloud Firestore for all league messages after [TIMESTAMP] (only on initial page load).
-4. When a user visits a league page, it will update the [TIMESTAMP] and make the db call again, updating the notification count.
+In /src, create a new file called `fireLogin.js` and populate it with your information, same as the example below:
+
+```
+import firebase from 'firebase/app'
+
+export function fireInit () {
+  /* prod */
+  const configProd = {
+    apiKey: 'YOUR_KEY_HERE',
+    authDomain: 'YOUR_PROJECT_NAME.firebaseapp.com',
+    databaseURL: 'https://YOUR_PROJECT_NAME.firebaseio.com',
+    projectId: 'YOUR_PROJECT_NAME',
+    storageBucket: 'YOUR_PROJECT_NAME.appspot.com',
+    messagingSenderId: 'YOUR_MESSAGE_ID'
+  }
+
+  /* dev */
+  const configDev = {
+    apiKey: 'YOUR_DEV_KEY_HERE',
+    authDomain: 'YOUR_DEV_PROJECT_NAME.firebaseapp.com',
+    databaseURL: 'https://YOUR_DEV_PROJECT_NAME.firebaseio.com',
+    projectId: 'YOUR_DEV_PROJECT_NAME',
+    storageBucket: 'YOUR_DEV_PROJECT_NAME.appspot.com',
+    messagingSenderId: 'YOUR_DEV_MESSAGE_ID'
+  }
+
+  if (!firebase.apps.length) {
+    firebase.initializeApp(process.env.VUE_APP_LOADPROD ? configProd : configDev)
+  }
+}
+```
+Now you can go back to your firebase project and in the "Authentication" section, select email/password as an authentication type.  This will allow user accounts to be created.
+
+Once that file is up, you can type:
+
+```
+npm run serve
+```
+
+and it will load up the dev configure by default.
+
+To run the server in production mode locally, type:
+```
+npm run serveprod
+```
+
+This is only for the web-portion of high noon.  The database and scoring scripts will be released shortly!
