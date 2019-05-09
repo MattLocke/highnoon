@@ -1,5 +1,5 @@
 <template lang="pug">
-  .match-listing(v-if="pickStats")
+  .match-listing(v-if="pickStats && match.competitors[0]")
     .columns.is-gapless.is-mobile
       .column.is-narrow
         img(:src="`images/teams/${match.competitors[0].abbreviatedName}.svg`" width="28")
