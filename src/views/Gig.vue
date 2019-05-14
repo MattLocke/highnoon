@@ -6,8 +6,8 @@
         b-tab-item(v-for="(weekStats, week) in rosterStats.standard" :label="week" :key="week")
           b-table(:data="arrayOfPlayers")
             template(slot-scope="props")
-              b-table-column(label="Role" width="30" field="attributes.role" sortable)
-                span {{ props.row.attributes.role }}
+              b-table-column(label="Role" width="30" field="role" sortable)
+                span {{ props.row.role }}
               b-table-column(label="Team" width="30" field="team" sortable)
                 span {{ props.row.team }}
               b-table-column(label="Player Name" field="name" sortable)

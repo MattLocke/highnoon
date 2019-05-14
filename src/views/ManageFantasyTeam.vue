@@ -100,14 +100,14 @@
                 b-table(
                   :data="myAvailablePicks")
                   template(slot-scope="props")
-                    b-table-column(label="Role" width="30" field="attributes.role" sortable)
-                      img(:src="`images/roles/${props.row.attributes.role || 'flex'}-white.svg`" width="22" height="22")
+                    b-table-column(label="Role" width="30" field="role" sortable)
+                      img(:src="`images/roles/${props.row.role || 'flex'}-white.svg`" width="22" height="22")
                     b-table-column(label="Team" width="30" field="team" sortable)
-                      img(:src="`images/teams/${props.row.team}.svg`" width="22" height="22")
+                      img(:src="`images/teams/${props.row.teamShortName}.svg`" width="22" height="22")
                     b-table-column(label="Player Name" field="name" sortable)
                       span.title-font {{ props.row.name }}
                     b-table-column(label="Heroes")
-                      span.title-font {{ (props.row.attributes && props.row.attributes.heroes) ? props.row.attributes.heroes.join(' / ') : 'N/A' }}
+                      span.title-font {{ (props.row && props.row.heroes) ? props.row.heroes.join(' / ') : 'N/A' }}
                     b-table-column(label="Assign")
                       role-buttons(:player="props.row" @setRole="setRole" :lineUp="lineUp" :lockedRoles="lockedRoles" :isLocked="!notLocked(props.row.id)")
                     b-table-column(label="Score" width="40" field="stats.fantasyScore" sortable)
@@ -255,13 +255,13 @@ export default {
       return !isEmpty(this.players)
     },
     myPlayersOffense () {
-      return this.myAvailablePicks ? this.myAvailablePicks.filter(pick => pick.attributes.role === 'offense') : []
+      return this.myAvailablePicks ? this.myAvailablePicks.filter(pick => pick.role === 'offense') : []
     },
     myPlayersSupport () {
-      return this.myAvailablePicks ? this.myAvailablePicks.filter(pick => pick.attributes.role === 'support') : []
+      return this.myAvailablePicks ? this.myAvailablePicks.filter(pick => pick.role === 'support') : []
     },
     myPlayersTank () {
-      return this.myAvailablePicks ? this.myAvailablePicks.filter(pick => pick.attributes.role === 'tank') : []
+      return this.myAvailablePicks ? this.myAvailablePicks.filter(pick => pick.role === 'tank') : []
     },
     userData () {
       return this.$store.getters.getUserData
@@ -303,7 +303,7 @@ export default {
       return Number(this.playerScores[playerId]) || 0
     },
     getTeamImage (id) {
-      return id && this.players[id] ? `images/teams/${this.players[id].team}.svg` : ''
+      return id && this.players[id] ? `images/teams/${this.players[id].teamShortName}.svg` : ''
     },
     notLocked (player) {
       return !(this.lockedPlayers.some(l => l === player))

@@ -9,7 +9,7 @@
       p That means you can swap players from the pool, first come first serve.  Players lock as their match begins, so be weary of that!  The waiver wire will be active again at 12:00am PST Monday morning every week, and will unlock for free trade after assigning waiver wire picks on Tuesdays at 11:00am PST.  Thank you!
     b-field(label="Player I'd Like To Exchange")
       b-select(v-model="myPlayer")
-        option(v-for="player in myPicksFiltered" :value="playersWithEmpty[player]") {{ playersWithEmpty[player].name }} ({{ playersWithEmpty[player].attributes.role | capFirst }})
+        option(v-for="player in myPicksFiltered" :value="playersWithEmpty[player]") {{ playersWithEmpty[player].name }} ({{ playersWithEmpty[player].role | capFirst }})
     .columns
       .column.is-three-quarters
         section(v-show="!selectedPlayer.id")
@@ -39,16 +39,16 @@
           template(slot-scope="props")
             b-table-column(width="60")
               button.button.is-primary.is-small(@click="selectPlayer(props.row)") Select
-            b-table-column(label="Role" width="30" field="attributes.role" sortable)
-              img(:src="`images/roles/${props.row.attributes.role || 'flex'}-white.svg`" width="22" height="22")
+            b-table-column(label="Role" width="30" field="role" sortable)
+              img(:src="`images/roles/${props.row.role || 'flex'}-white.svg`" width="22" height="22")
             b-table-column(label="Team" width="30" field="team" sortable)
-              img(:src="`images/teams/${props.row.team}.svg`" width="22" height="22")
+              img(:src="`images/teams/${props.row.teamShortName}.svg`" width="22" height="22")
             b-table-column(label="Player Name" field="name" sortable)
               span.title-font {{ props.row.name }}
             b-table-column(label="Heroes")
-              span.title-font {{ (props.row.attributes && props.row.attributes.heroes) ? props.row.attributes.heroes.join(' / ') : 'N/A' }}
+              span.title-font {{ (props.row && props.row.heroes) ? props.row.heroes.join(' / ') : 'N/A' }}
             b-table-column(label="Rating" width="40" field="stats.fantasyScore" sortable)
-              span.title-font {{ !props.row.stats ? 0 : props.row.stats.fantasyScore | playerScore }}
+              span.title-font {{ props.row.fantasyScore | playerScore }}
         .columns(v-if="selectedPlayer.id")
           .column.is-narrow
             h3 I would like
@@ -76,16 +76,16 @@
           .columns
             .column
               span.ow-font.orange
-                img(:src="`images/teams/${players[ww.gains].team}.svg`" width="14" height="14")
-                img(:src="`images/roles/${players[ww.gains].attributes.role || 'flex'}-white.svg`" width="14" height="14")
+                img(:src="`images/teams/${players[ww.gains].teamShortName}.svg`" width="14" height="14")
+                img(:src="`images/roles/${players[ww.gains].role || 'flex'}-white.svg`" width="14" height="14")
                 | {{ players[ww.gains].name }}
             .column.is-narrow
               span.ow-font for
             .column
               span.ow-font.orange.is-pulled-right
                 | {{ players[ww.loses].name }}
-                img(:src="`images/roles/${players[ww.loses].attributes.role || 'flex'}-white.svg`" width="14" height="14")
-                img(:src="`images/teams/${players[ww.loses].team}.svg`" width="14" height="14")
+                img(:src="`images/roles/${players[ww.loses].role || 'flex'}-white.svg`" width="14" height="14")
+                img(:src="`images/teams/${players[ww.loses].teamShortName}.svg`" width="14" height="14")
 </template>
 
 <script>
@@ -164,7 +164,7 @@ export default {
       let fPlayers = [...this.filteredPlayers]
 
       if (this.filterText) fPlayers = fPlayers.filter(player => player.name.toLowerCase().includes(this.filterText.toLowerCase()))
-      if (this.filterRole) fPlayers = fPlayers.filter(player => player.attributes.role === this.filterRole)
+      if (this.filterRole) fPlayers = fPlayers.filter(player => player.role === this.filterRole)
       if (this.filterTeam) fPlayers = fPlayers.filter(player => player.team === this.filterTeam)
       fPlayers = differenceWith(fPlayers, Object.values(this.pendingWaiverWires), (a, b) => (Number(a.id) === Number(b.loses) && b.requesterId === this.userData.id) || (Number(a.id) === Number(b.gains) && b.requesterId === this.userData.id))
 

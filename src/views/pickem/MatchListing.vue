@@ -1,29 +1,29 @@
 <template lang="pug">
-  .match-listing(v-if="pickStats && match.competitors[0]")
+  .match-listing(v-if="pickStats && match.awayId")
     .columns.is-gapless.is-mobile
       .column.is-narrow
-        img(:src="`images/teams/${match.competitors[0].abbreviatedName}.svg`" width="28")
+        img(:src="`images/teams/${match.awayShortName}.svg`" width="28")
       .column.is-narrow
-        .ow-font.team-name(v-tooltip="`${leftPercent}% choose ${match.competitors[0].abbreviatedName}`") {{ match.competitors[0].abbreviatedName }}
+        .ow-font.team-name(v-tooltip="`${leftPercent}% choose ${match.awayShortName}`") {{ match.awayShortName }}
       .column.is-narrow(v-if="!isDisabled")
-        b-radio.is-pulled-right.winner-radio(v-model="matchWinner" size="is-medium" :native-value="match.competitors[0].id")
+        b-radio.is-pulled-right.winner-radio(v-model="matchWinner" size="is-medium" :native-value="match.awayId")
       .column.is-narrow(v-else)
-        b-radio.is-pulled-right.winner-radio.correct-radio(selected size="is-medium" v-if="finishedMatchWinner && matchWinner == match.competitors[0].id")
-        b-radio.is-pulled-right.winner-radio.incorrect-radio(selected size="is-medium" v-else-if="matchWinner == match.competitors[0].id")
+        b-radio.is-pulled-right.winner-radio.correct-radio(selected size="is-medium" v-if="finishedMatchWinner && matchWinner == match.awayId")
+        b-radio.is-pulled-right.winner-radio.incorrect-radio(selected size="is-medium" v-else-if="matchWinner == match.awayId")
         b-radio.is-pulled-right.winner-radio.neutral-radio(selected size="is-medium" v-else)
       .column.has-text-centered
         .match-date {{ match.startDateTS | formatJSDate }}
         .match-time {{ match.startDateTS | formatJSTime }}
       .column.is-narrow(v-if="!isDisabled")
-        b-radio.is-pulled-right.winner-radio(v-model="matchWinner" size="is-medium" :native-value="match.competitors[1].id")
+        b-radio.is-pulled-right.winner-radio(v-model="matchWinner" size="is-medium" :native-value="match.homeId")
       .column.is-narrow(v-else)
-        b-radio.is-pulled-right.winner-radio.correct-radio(selected size="is-medium" v-if="finishedMatchWinner && matchWinner == match.competitors[1].id")
-        b-radio.is-pulled-right.winner-radio.incorrect-radio(selected size="is-medium" v-else-if="matchWinner == match.competitors[1].id")
+        b-radio.is-pulled-right.winner-radio.correct-radio(selected size="is-medium" v-if="finishedMatchWinner && matchWinner == match.homeId")
+        b-radio.is-pulled-right.winner-radio.incorrect-radio(selected size="is-medium" v-else-if="matchWinner == match.homeId")
         b-radio.is-pulled-right.winner-radio.neutral-radio(selected size="is-medium" v-else)
       .column.is-narrow
-        .ow-font.team-name.is-pulled-right(v-tooltip="`${rightPercent}% choose ${match.competitors[1].abbreviatedName}`") {{ match.competitors[1].abbreviatedName }}
+        .ow-font.team-name.is-pulled-right(v-tooltip="`${rightPercent}% choose ${match.homeShortName}`") {{ match.homeShortName }}
       .column.is-narrow
-        img(:src="`images/teams/${match.competitors[1].abbreviatedName}.svg`" width="22" height="22")
+        img(:src="`images/teams/${match.homeShortName}.svg`" width="22" height="22")
     .pick-rates(:style="{'background-color': `#${match.competitors[1].primaryColor}`}" v-if="showPickRates")
       .pick-percentage-bar(:style="pickStyles")
 </template>
@@ -63,19 +63,19 @@ export default {
       return (this.match.startDateTS < (now - 600000))
     },
     leftPercent () {
-      const leftTotal = get(this.pickStats, `${this.match.id}.${this.match.competitors[0].id}`, 0)
+      const leftTotal = get(this.pickStats, `${this.match.id}.${this.match.awayId}`, 0)
       return leftTotal ? Math.round(leftTotal / this.totalPicks * 100) : 0
     },
     rightPercent () {
-      const rightTotal = get(this.pickStats, `${this.match.id}.${this.match.competitors[1].id}`)
+      const rightTotal = get(this.pickStats, `${this.match.id}.${this.match.homeId}`)
       return rightTotal ? Math.round(rightTotal / this.totalPicks * 100) : 0
     },
     pickStyles () {
-      return { 'width': `${this.leftPercent}%`, 'background-color': `#${this.match.competitors[0].primaryColor}` }
+      return { 'width': `${this.leftPercent}%`, 'background-color': `#${this.match.awayPrimaryColor}` }
     },
     totalPicks () {
-      const left = get(this.pickStats, `${this.match.id}.${this.match.competitors[0].id}`, 0)
-      const right = get(this.pickStats, `${this.match.id}.${this.match.competitors[1].id}`, 0)
+      const left = get(this.pickStats, `${this.match.id}.${this.match.awayId}`, 0)
+      const right = get(this.pickStats, `${this.match.id}.${this.match.homeId}`, 0)
       const totalPicks = (left + right)
       return totalPicks
     },

@@ -5,7 +5,7 @@
       .column.is-narrow
         h4.orange.ow-font Your Picks - {{ roster.length }} of 12
       .column.is-narrow(v-for="player in roster")
-        img.role-image(:src="`images/roles/${playersObject[player].attributes.role || 'flex'}-white.svg`")
+        img.role-image(:src="`images/roles/${playersObject[player].role || 'flex'}-white.svg`")
         span.ow-font {{ playersObject[player].name }}
       .column
 </template>

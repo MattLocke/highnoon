@@ -180,7 +180,7 @@ export default {
     getTeamImage (id) {
       if (this.playersLoaded && id && this.players[id]) {
         // console.log(this.playersLoaded)
-        return `images/teams/${this.players[id].team}.svg`
+        return `images/teams/${this.players[id].teamShortName}.svg`
       }
       return ``
     }

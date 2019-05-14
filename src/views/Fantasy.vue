@@ -28,20 +28,10 @@
                 sortable
               ) {{ props.row.name }}
               b-table-column(
-                field="attributes.preferred_slot"
-                label="Slot"
-                sortable
-              ) {{ props.row.attributes.preferred_slot }}
-              b-table-column(
-                field="attributes.player_number"
-                label="Number"
-                sortable
-              ) {{ props.row.attributes.player_number }}
-              b-table-column(
-                field="attributes.role"
+                field="role"
                 label="Role"
                 sortable
-              ) {{ props.row.attributes.role }}
+              ) {{ props.row.role }}
               b-table-column(
                 field="team"
                 label="Team"

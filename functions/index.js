@@ -323,14 +323,14 @@ function processPreferenceList (preferenceList, league, leagueId) {
         // if (unclaimedPreference && unclaimedPreference.length) {
         //   // figure out what the best option is for them (hard)
         //   if (missingType && (rawPicks[userId] && rawPicks[userId].length > 6)) {
-        //     let tP = unclaimedPreference.find(up => indexedPlayers[up].attributes.role === missingType)
+        //     let tP = unclaimedPreference.find(up => indexedPlayers[up].role === missingType)
         //     if (tP) return tP
         //   }
         //   return unclaimedPreference[0]
         // }
         // // if the preference list is gone, take the first available player
         // if (missingType) {
-        //   tP = unclaimedPlayers.find(up => indexedPlayers[up].attributes.role === missingType)
+        //   tP = unclaimedPlayers.find(up => indexedPlayers[up].role === missingType)
         //   if (tP) return tP
         // }
         return unclaimedPreference.length ? Number(unclaimedPreference[0]) : Number(unclaimedPlayers[0])
@@ -351,7 +351,7 @@ function findMissing (allPicks, userId, players) {
     const tmp = [ ...allPicks[userId] ]
     tmp.forEach(pick => {
       console.log(`Trying pick: ${pick}`)
-      roles[players[pick].attributes.role] = roles[players[pick].attributes.role] + 1
+      roles[players[pick].role] = roles[players[pick].role] + 1
     })
   }
   // console.log(`Missing roles check: ${JSON.stringify(roles)}`)

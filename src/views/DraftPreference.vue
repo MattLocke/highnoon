@@ -32,13 +32,13 @@
           .left-bar-item.roster-player.list-group-item(v-if="populatedRoster" v-for="(player, index) in roster")
             .columns.is-mobile
               .column.is-narrow
-                img(:src="`images/roles/${playerObjects[player] ? playerObjects[player].attributes.role : 'flex'}-white.svg`" height="22" width="22")
+                img(:src="`images/roles/${playerObjects[player] ? playerObjects[player].role : 'flex'}-white.svg`" height="22" width="22")
               .column.is-narrow
                 img(:src="`/images/teams/${playerObjects[player] ? playerObjects[player].team : 'DAL'}.svg`" height="22" width="22")
               .column
                 span {{ playerObjects[player] ? playerObjects[player].name : 'N/A' }}
               .column.is-narrow
-                span.is-proper {{ playerObjects[player] ? playerObjects[player].stats.fantasyScore : 0 | playerScore }}
+                span.is-proper {{ playerObjects[player] ? playerObjects[player].fantasyScore : 0 | playerScore }}
               .column.is-narrow
                 button.button.is-primary.is-small(@click="removePlayer(index)") X
       .column(v-if="roster.length < 100 && playersLoaded")
@@ -75,16 +75,16 @@
             template(slot-scope="props")
               b-table-column(width="60")
                 button.button.is-primary.is-small(@click="addToRoster(props.row)") Select
-              b-table-column(label="Role" width="30" field="attributes.role" sortable)
-                img(:src="`images/roles/${props.row.attributes.role || 'flex'}-white.svg`" width="22" height="22")
+              b-table-column(label="Role" width="30" field="role" sortable)
+                img(:src="`images/roles/${props.row.role || 'flex'}-white.svg`" width="22" height="22")
               b-table-column(label="Team" width="30" field="team" sortable)
-                img(:src="`images/teams/${props.row.team}.svg`" width="22" height="22")
+                img(:src="`images/teams/${props.row.teamShortName}.svg`" width="22" height="22")
               b-table-column(label="Player Name" field="name" sortable)
                 span.title-font {{ props.row.name }}
               b-table-column(label="Heroes")
-                span.title-font {{ (props.row.attributes && props.row.attributes.heroes) ? props.row.attributes.heroes.join(' / ') : 'N/A' }}
+                span.title-font {{ (props.row && props.row.heroes) ? props.row.heroes.join(' / ') : 'N/A' }}
               b-table-column(label="Rating" width="40" field="stats.fantasyScore" sortable)
-                span.title-font {{ props.row.stats.fantasyScore | playerScore }}
+                span.title-font {{ props.row.fantasyScore | playerScore }}
 </template>
 
 <script>
@@ -133,7 +133,7 @@ export default {
       let fPlayers = [...this.players]
 
       if (this.filterText) fPlayers = fPlayers.filter(player => player.name.toLowerCase().includes(this.filterText.toLowerCase()))
-      if (this.filterRole) fPlayers = fPlayers.filter(player => player.attributes.role === this.filterRole)
+      if (this.filterRole) fPlayers = fPlayers.filter(player => player.role === this.filterRole)
       if (this.filterTeam) fPlayers = fPlayers.filter(player => player.team === this.filterTeam)
       fPlayers = differenceWith(fPlayers, this.roster, (a, b) => Number(a.id) === (b))
 
@@ -146,7 +146,7 @@ export default {
       return this.$route.params.leagueId
     },
     offensePlayers () {
-      if (this.playersLoaded) return this.roster ? this.roster.filter(player => (this.playerObjects[player] && this.playerObjects[player].attributes.role === 'offense')) : []
+      if (this.playersLoaded) return this.roster ? this.roster.filter(player => (this.playerObjects[player] && this.playerObjects[player].role === 'offense')) : []
       return []
     },
     playerObjects () {
@@ -162,11 +162,11 @@ export default {
       return this.$store.getters.getStats
     },
     supportPlayers () {
-      if (this.playersLoaded) return this.roster ? this.roster.filter(player => this.playerObjects[player].attributes.role === 'support') : []
+      if (this.playersLoaded) return this.roster ? this.roster.filter(player => this.playerObjects[player].role === 'support') : []
       return []
     },
     tankPlayers () {
-      if (this.playersLoaded) return this.roster ? this.roster.filter(player => this.playerObjects[player].attributes.role === 'tank') : []
+      if (this.playersLoaded) return this.roster ? this.roster.filter(player => this.playerObjects[player].role === 'tank') : []
       return []
     },
     teams () {

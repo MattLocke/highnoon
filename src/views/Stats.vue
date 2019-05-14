@@ -12,14 +12,14 @@
           template(slot-scope="props")
             b-table-column(label="ID" width="30" field="id" sortable)
               span.title-font {{ props.row.id }}
-            b-table-column(label="Role" width="30" field="attributes.role" sortable)
-              span.title-font {{ props.row.attributes.role }}
+            b-table-column(label="Role" width="30" field="role" sortable)
+              span.title-font {{ props.row.role }}
             b-table-column(label="Team" width="30" field="team" sortable)
               span.title-font {{ props.row.team }}
             b-table-column(label="Player Name" field="name" sortable)
               span.title-font {{ props.row ? props.row.name : '' }}
             b-table-column(label="Heroes")
-              span.title-font {{ (props.row.attributes && props.row.attributes.heroes) ? props.row.attributes.heroes.join(' / ') : 'N/A' }}
+              span.title-font {{ (props.row && props.row.heroes) ? props.row.heroes.join(' / ') : 'N/A' }}
             b-table-column(label="Combined" width="40" field="totalScore" sortable)
               span.title-font {{ props.row.totalScore | playerScore }}
             b-table-column(label="Best" width="40" field="bestScore" sortable)

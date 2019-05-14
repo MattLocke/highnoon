@@ -92,16 +92,16 @@
                       b-table-column(width="60")
                         button.button.is-primary.is-small(@click="addToRoster(props.row)" v-if="canSelect(props.row)") Select
                         button.button.is-primary.is-small(v-else disabled) Select
-                      b-table-column(label="Role" width="30" field="attributes.role" sortable)
-                        img(:src="`images/roles/${props.row.attributes.role || 'flex'}-white.svg`" width="22" height="22")
+                      b-table-column(label="Role" width="30" field="role" sortable)
+                        img(:src="`images/roles/${props.row.role || 'flex'}-white.svg`" width="22" height="22")
                       b-table-column(label="Team" width="30" field="team" sortable)
-                        img(:src="`images/teams/${props.row.team}.svg`" width="22" height="22")
+                        img(:src="`images/teams/${props.row.teamShortName}.svg`" width="22" height="22")
                       b-table-column(label="Player Name" field="name" sortable)
                         span.title-font {{ props.row.name }}
                       b-table-column(label="Heroes")
-                        span.title-font {{ (props.row.attributes && props.row.attributes.heroes) ? props.row.attributes.heroes.join(' / ') : 'N/A' }}
-                      b-table-column(label="Rating" width="40" field="stats.fantasyScore" sortable)
-                        span.title-font {{ props.row.stats ? props.row.stats.fantasyScore : 'N/A' | playerScore }}
+                        span.title-font {{ props.row.hero1 }} / {{ props.row.hero2 }} / {{ props.row.hero3 }}
+                      b-table-column(label="Rating" width="40" field="fantasyScore" sortable)
+                        span.title-font {{ props.row.fantasyScore || 'N/A' | playerScore }}
                 p(v-if="isCompleted") The draft has been completed.
                 p(v-if="isInLeague && isCompleted") You can
                   router-link(:to="`/manageTeam/${leagueId}`")  Manage Your Team
@@ -182,7 +182,7 @@ export default {
       let fPlayers = [...this.players]
 
       if (this.filterText) fPlayers = fPlayers.filter(player => player.name && player.name.toLowerCase().includes(this.filterText.toLowerCase()))
-      if (this.filterRole) fPlayers = fPlayers.filter(player => player.attributes && player.attributes.role === this.filterRole)
+      if (this.filterRole) fPlayers = fPlayers.filter(player => player.role === this.filterRole)
       if (this.filterTeam) fPlayers = fPlayers.filter(player => player.team && player.team === this.filterTeam)
       fPlayers = differenceWith(fPlayers, this.selectedPlayers, (a, b) => a.id === Number(b))
       return fPlayers
@@ -204,7 +204,7 @@ export default {
       return false
     },
     offensePlayers () {
-      return this.roster.filter(player => this.playersObject[player].attributes.role === 'offense')
+      return this.roster.filter(player => this.playersObject[player].role === 'offense')
     },
     placeholders () {
       let remaining = 12 - this.roster.length
@@ -241,10 +241,10 @@ export default {
       return selected
     },
     supportPlayers () {
-      return this.roster.filter(player => this.playersObject[player].attributes.role === 'support')
+      return this.roster.filter(player => this.playersObject[player].role === 'support')
     },
     tankPlayers () {
-      return this.roster.filter(player => this.playersObject[player].attributes.role === 'tank')
+      return this.roster.filter(player => this.playersObject[player].role === 'tank')
     },
     teams () {
       return this.$store.getters.getTeams
@@ -367,7 +367,7 @@ export default {
       // if there is only enough for roles that need feeling, strict mode!
       const strictMode = !!(this.totalRemaining >= this.placeholders.length)
 
-      switch (player.attributes.role) {
+      switch (player.role) {
         case 'offense': {
           return strictMode ? !!(this.remaining.offense > 0) : true
         }

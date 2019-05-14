@@ -10,7 +10,7 @@
       .column
         h3.ow-font(@click="seeStats = !seeStats") {{ player.name }}
       .column.is-narrow
-        img.role-image(:src="`images/roles/${player.attributes.role || 'flex'}-white.svg`")
+        img.role-image(:src="`images/roles/${player.role || 'flex'}-white.svg`")
     div.headshot.is-hidden-mobile(v-if="!seeStats && player && !hidePhoto")
       img.img(:src="player.headshot")
       div.fantasy-points.ow-font
@@ -18,18 +18,18 @@
           .column
             span.orange {{ getScore(player.id) | playerScore }}
           .column.is-narrow
-            img(:src="`images/teams/${player.team}.svg`")
+            img(:src="`images/teams/${player.teamShortName}.svg`")
     .stats(v-if="seeStats && player")
-      span.is-proper Role: {{ player.attributes.role }}
-      .heroes(v-if="hasHeroes(player)")
+      span.is-proper Role: {{ player.role }}
+      .heroes
         span Heroes:
         ul
-          li.is-proper(v-for="hero in player.attributes.heroes") {{ hero }}
+          li.is-proper {{ hero1 }}
+          li.is-proper {{ hero2 }}
+          li.is-proper {{ hero3 }}
 </template>
 
 <script>
-import { isEmpty } from 'lodash'
-
 export default {
   name: 'PlayerCard',
   props: {
@@ -66,8 +66,7 @@ export default {
   computed: {
     backgroundColor () {
       if (this.player) {
-        const team = this.teams.find(t => t.abbreviatedName === this.player.team)
-        if (team) return `linear-gradient(#${team.primaryColor === '000000' ? team.secondaryColor : team.primaryColor}, #111111)`
+        return `linear-gradient(#${this.player.primaryColor === '000000' ? this.player.secondaryColor : this.player.primaryColor}, #111111)`
       }
       return 'linear-gradient(#000000, #000000)'
     },
@@ -76,18 +75,11 @@ export default {
     },
     playerScores () {
       return this.$store.getters.getPlayerScores || {}
-    },
-    teams () {
-      return this.$store.getters.getTeams
     }
   },
   methods: {
     getScore (playerId) {
       return Number(this.playerScores[playerId]) || 0
-    },
-    hasHeroes (player) {
-      if (player && player.attributes) return !isEmpty(player.attributes.heroes)
-      return false
     }
   },
   watch: {

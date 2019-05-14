@@ -2,13 +2,13 @@
   .player-line(v-if="!existsInRoster")
     .columns.is-gapless.is-mobile
       .column.is-narrow
-        img(:src="`images/roles/${player.attributes.role || 'flex'}-white.svg`" width="22" height="22")
+        img(:src="`images/roles/${player.role || 'flex'}-white.svg`" width="22" height="22")
       .column.is-narrow
         img(:src="getLogo(player)" width="22" height="22")
       .column
         span.has-pointer(@click="showDetails = !showDetails") {{ player.name }}
       .column.is-narrow
-        span.is-proper {{ player.stats.fantasyScore || 'N/A' }}
+        span.is-proper {{ player.fantasyScore || 'N/A' }}
       .column.is-narrow
         button.button.is-primary.is-small(@click="$emit('add-player', player)" v-if="canSelect && !existsInRoster") Select
         button.button.is-primary.is-small(disabled v-else) Select
@@ -18,12 +18,9 @@
         span {{ player.nationality }}
       .column
         label.label Heroes
-        ul(v-if="player.attributes.heroes")
-          li(v-for="hero in player.attributes.heroes") {{ hero }}
+        ul(v-if="player.heroes")
+          li(v-for="hero in player.heroes") {{ hero }}
         span(v-else) ??
-      .column
-        label.label Player #
-        span {{ player.attributes.player_number || '??'}}
 </template>
 
 <script>
@@ -54,7 +51,7 @@ export default {
   },
   methods: {
     getLogo (player) {
-      if (player) return `images/teams/${player.team}.svg`
+      if (player) return `images/teams/${player.teamShortName}.svg`
       return ''
     }
   }

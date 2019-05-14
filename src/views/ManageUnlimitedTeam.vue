@@ -116,14 +116,14 @@
               :per-page="30"
               )
               template(slot-scope="props")
-                b-table-column(label="Role" width="30" field="attributes.role" sortable)
-                  img(:src="`images/roles/${props.row.attributes.role || 'flex'}-white.svg`" width="22" height="22")
+                b-table-column(label="Role" width="30" field="role" sortable)
+                  img(:src="`images/roles/${props.row.role || 'flex'}-white.svg`" width="22" height="22")
                 b-table-column(label="Team" width="30" field="team" sortable)
-                  img(:src="`images/teams/${props.row.team}.svg`" width="22" height="22")
+                  img(:src="`images/teams/${props.row.teamShortName}.svg`" width="22" height="22")
                 b-table-column(label="Player Name" field="name" sortable)
                   span.title-font {{ props.row.name }}
                 b-table-column(label="Heroes")
-                  span.title-font {{ (props.row.attributes && props.row.attributes.heroes) ? props.row.attributes.heroes.join(' / ') : 'N/A' }}
+                  span.title-font {{ (props.row && props.row.heroes) ? props.row.heroes.join(' / ') : 'N/A' }}
                 b-table-column(label="Assign")
                   role-buttons(:lineUp="lineUp" :player="props.row" @setRole="setRole" :lockedRoles="lockedRoles" :isLocked="!notLocked(props.row.id)")
                 b-table-column(label="Score" width="40" field="stats.fantasyScore" sortable)
@@ -171,7 +171,7 @@ export default {
       let fPlayers = [...this.myAvailablePicks]
 
       if (this.filterText) fPlayers = fPlayers.filter(player => player.name && player.name.toLowerCase().includes(this.filterText.toLowerCase()))
-      if (this.filterRole) fPlayers = fPlayers.filter(player => player.attributes && player.attributes.role === this.filterRole)
+      if (this.filterRole) fPlayers = fPlayers.filter(player => player && player.role === this.filterRole)
       if (this.filterTeam) fPlayers = fPlayers.filter(player => player.team && player.team === this.filterTeam)
 
       return differenceWith(fPlayers, this.lockedPlayers, (a, b) => Number(a.id) === Number(b))
@@ -264,7 +264,7 @@ export default {
       return Number(this.playerScores[playerId]) || 0
     },
     getTeamImage (id) {
-      return id && this.players[id] ? `images/teams/${this.players[id].team}.svg` : ''
+      return id && this.players[id] ? `images/teams/${this.players[id].teamShortName}.svg` : ''
     },
     notLocked (player) {
       return !(this.lockedPlayers.some(l => Number(l) === Number(player)))
