@@ -11,7 +11,7 @@
         section
           h1 Manage Your Fantasy Team
           p The captain role is (for now) just a flex role so you can have a player outside of the 2/2/2 we're enforcing.  Their points will count the same as any other role, so it's safe to feature your favorite DPS as your captain!
-        b-tabs(v-model="activeContentTab")
+        b-tabs(v-model="activeContentTab" type="is-boxed")
           b-tab-item(label="ManageRoster")
             .columns.is-multiline.is-hidden-mobile.is-gapless(v-if="myAvailablePicks.length")
               .column.is-full

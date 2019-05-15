@@ -2,7 +2,7 @@
   .premier-stats.container(v-if="isPremier")
     h2 Premier Stats Page
     span If you are having trouble viewing these, please contact Gig on discord.
-    b-tabs(v-model="activeContentTab")
+    b-tabs(v-model="activeContentTab" type="is-boxed")
       b-tab-item(label="Overview")
         iframe.iframe(:src="`${base}${overview}`" width="100%" :height="iframeHeight")
       b-tab-item(label="Teams")

@@ -52,7 +52,7 @@
             button.button.is-primary(@click="saveProfile") Save Profile
             hr
             a(@click="logOut()") Log Out
-          b-tabs(v-model="activeContentTab" v-if="profile.isAdmin")
+          b-tabs(v-model="activeContentTab" v-if="profile.isAdmin" type="is-boxed")
             b-tab-item(label="Upload News Image")
               news-image-uploader
             b-tab-item(label="System Notification")

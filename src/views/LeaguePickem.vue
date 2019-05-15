@@ -34,7 +34,7 @@
           button.button.is-secondary.is-small(@click="copyLink") Copy Share Link
       .column
         h1 {{ league.leagueName }}
-        b-tabs(v-model="activeContentTab")
+        b-tabs(v-model="activeContentTab" type="is-boxed")
           b-tab-item(label="League Message")
             section.league-message
               h2 League Message

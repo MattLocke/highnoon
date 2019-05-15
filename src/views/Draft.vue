@@ -60,7 +60,7 @@
           //- See how the draft is going
           .column(v-if="users && users.length")
             h1 {{ draft.leagueName }} Live Draft
-            b-tabs(v-model="activeTab")
+            b-tabs(v-model="activeTab" type="is-boxed")
               b-tab-item(label="Build Your Team" v-if="isInLeague")
                 section
                   h2 {{ draft.leagueName }} Live Draft

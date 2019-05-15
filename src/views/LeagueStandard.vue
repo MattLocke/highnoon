@@ -52,7 +52,7 @@
               confirm-button(:customClasses="{'is-primary': true,'is-small': true,'is-pulled-right':true}" buttonText="Create Draft Order" confirmText="Are You Sure?" @confirm-it="createSchedule" extraText="This action should be considered only when EVERYONE has joined your league.  This locks in the draft order and allows you to start the draft.")
           .wrap(v-else)
             p You need an even number of users in your league in order to create a draft order and start the draft!
-        b-tabs(v-model="activeContentTab")
+        b-tabs(v-model="activeContentTab" type="is-boxed")
           b-tab-item(label="League Home")
             section.league-message
               .columns

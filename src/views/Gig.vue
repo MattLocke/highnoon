@@ -2,7 +2,7 @@
   .gig
     h1.orange GIG STATS
     section(v-if="rosterStats.standard")
-      b-tabs(v-model="activeRosterTab")
+      b-tabs(v-model="activeRosterTab" type="is-boxed")
         b-tab-item(v-for="(weekStats, week) in rosterStats.standard" :label="week" :key="week")
           b-table(:data="arrayOfPlayers")
             template(slot-scope="props")
