@@ -7,7 +7,7 @@
       b-tab-item(label="Unlimited Leagues")
         h2 Unlimited Leagues
         .columns.is-multiline
-          .column.is-one-quarter-desktop(v-for="league in featuredUnlimitedLeagues")
+          .column.is-one-fifth-desktop(v-for="league in featuredUnlimitedLeagues")
             .image.is-256x256
               img(:src="league.featuredURL")
             h3
@@ -17,7 +17,7 @@
       b-tab-item(label="Pick'em Leagues")
         h2 Pick'em Leagues
         .columns.is-multiline
-          .column.is-one-quarter-desktop(v-for="league in featuredPickemLeagues")
+          .column.is-one-fifth-desktop(v-for="league in featuredPickemLeagues")
             .image.is-256x256
               img(:src="league.featuredURL")
             h3
