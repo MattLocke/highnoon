@@ -437,6 +437,11 @@ hr {
   height: 1px;
 }
 
+.is-light-background {
+  background-color: $slate;
+  color: #fff;
+}
+
 /* overrides */
 #app {
   .button {
