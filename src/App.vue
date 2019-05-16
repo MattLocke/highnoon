@@ -6,7 +6,7 @@
     router-view#rv(:key="$route.fullPath" v-if="liveConfig.canUseSite || (userData && userData.isAdmin)")
     .site-down(v-else)
       p {{ liveConfig.siteIsDownMessage || 'Site is currently undergoing maintenance.  If you are seeing this message for a prolonged amount of time, please make sure you have Kaspersky disabled as well as ad-blockers.  (There are no ads on the site)' }}
-    report-issue(v-if="userData")
+    //- report-issue(v-if="userData")
 </template>
 
 <script>
@@ -102,6 +102,7 @@ $primary-invert: findColorInvert($primary);
 $secondary: #1f5ca1;
 $twitter: #4099FF;
 $dark-blue: #090c1c;
+$slate: #2e3456;
 $twitter-invert: findColorInvert($twitter);
 
 // Setup $colors to use as bulma classes (e.g. 'is-twitter')
@@ -123,9 +124,7 @@ $link: $primary;
 $link-invert: $primary-invert;
 $link-focus-border: $primary;
 
-// Import Bulma and Buefy styles
 @import "~bulma";
 @import "~buefy/src/scss/buefy";
-
 @import "./assets/styles/highnoon";
 </style>
