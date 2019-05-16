@@ -8,8 +8,9 @@
         h2 Unlimited Leagues
         .columns.is-multiline
           .column.is-one-fifth-desktop(v-for="league in featuredUnlimitedLeagues")
-            .image.is-256x256
-              img(:src="league.featuredURL")
+            router-link(:to="`/LeagueUnlimited/${league.id}`")
+              .image.is-256x256
+                img(:src="league.featuredURL")
             h3
               router-link(:to="`/LeagueUnlimited/${league.id}`") {{ league.leagueName }}
             span {{ league.featuredMessage }}
@@ -18,8 +19,9 @@
         h2 Pick'em Leagues
         .columns.is-multiline
           .column.is-one-fifth-desktop(v-for="league in featuredPickemLeagues")
-            .image.is-256x256
-              img(:src="league.featuredURL")
+            router-link(:to="`/LeaguePickem/${league.id}`")
+              .image.is-256x256
+                img(:src="league.featuredURL")
             h3
               router-link(:to="`/LeaguePickem/${league.id}`") {{ league.leagueName }}
             span {{ league.featuredMessage }}
