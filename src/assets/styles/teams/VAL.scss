@@ -1,0 +1,78 @@
+$valPrimary: #004438;
+$valSecondary: #e5d456;
+
+#app.VAL {
+  background-color: $valPrimary;
+  background-image: radial-gradient(lighten($valSecondary, 20%), $valSecondary);
+
+  section {
+    background-color: $valPrimary;
+    border: 1px solid $valSecondary;
+    border-radius: 4px;
+  }
+
+  a {
+    color: $valSecondary;
+  }
+
+  a:hover {
+    color: $valSecondary;
+    border-bottom: 1px dotted $valSecondary;
+  }
+
+  hr {
+    opacity: 1;
+    height: 1px;
+    border-bottom-color: $valSecondary;
+  }
+
+  table.table {
+    td {
+      border-color: $valSecondary;
+    }
+  }
+
+  .button.is-primary {
+    background-color: $valSecondary;
+    color: #fff;
+  }
+
+  .button.is-secondary {
+    background-color: $valPrimary;
+  }
+
+  .column {
+    section {
+      border: none;
+    }
+  }
+
+  .is-button-header {
+    .column.is-narrow {
+      background-color: $valSecondary;
+    }
+  }
+
+  .orange {
+    color: $valSecondary;
+  }
+
+  .pagination-next, .pagination-previous {
+    background-color: $valPrimary;
+  }
+
+  .pagination-link.is-current {
+    background-color: $valSecondary;
+    border-color: $valPrimary;
+  }
+
+  .tabs.is-boxed li a {
+    color: $valPrimary;
+  }
+
+  .tabs.is-boxed li.is-active a, .tabs.is-boxed a:hover {
+    background-color: $valPrimary;
+    border: 1px solid $valPrimary;
+    color: #fff;
+  }
+}

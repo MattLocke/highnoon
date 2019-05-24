@@ -12,7 +12,8 @@ export default {
     loggedIn: false,
     userData: {
       username: 'MrNotLoggedIn',
-      isAdmin: false
+      isAdmin: false,
+      teamTheme: ''
     },
     fireUserData: {
       uid: 0,
@@ -24,7 +25,7 @@ export default {
   },
   mutations: {
     LOGIN: (state, payload) => {
-      state.userData = payload || {}
+      state.userData = { ...payload } || {}
       state.loggedIn = true
     },
     LOGOUT: (state) => {
@@ -40,6 +41,9 @@ export default {
     },
     SET_PICKS: (state, payload) => {
       if (payload) state.picks = payload
+    },
+    SET_THEME: (state, payload) => {
+      state.userData.teamTheme = payload
     }
   },
   actions: {
@@ -67,6 +71,9 @@ export default {
     },
     saveProfileAvatar: (context, payload) => {
       context.commit('SAVE_AVATAR', payload)
+    },
+    setTheme: (context, payload) => {
+      context.commit('SET_THEME', payload)
     }
   },
   getters: {

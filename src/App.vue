@@ -1,12 +1,14 @@
 <template lang="pug">
-  #app
-    main-menu
-    b-notification(type="is-warning" v-if="notification.message") {{ notification.message }}
-    b-loading(:is-full-page="true" :active.sync="isLoading" :can-cancel="false")
-    router-view#rv(:key="$route.fullPath" v-if="liveConfig.canUseSite || (userData && userData.isAdmin)")
-    .site-down(v-else)
-      p {{ liveConfig.siteIsDownMessage || 'Site is currently undergoing maintenance.  If you are seeing this message for a prolonged amount of time, please make sure you have Kaspersky disabled as well as ad-blockers.  (There are no ads on the site)' }}
-    //- report-issue(v-if="userData")
+  #app(:class="customTheme")
+    img.team-background(:src="`/images/teams/${userData.teamTheme}.svg`" v-if="userData && (userData.isPremier || userData.isUltimate) && userData.teamTheme")
+    .site-wrapper
+      main-menu
+      b-notification(type="is-warning" v-if="notification.message") {{ notification.message }}
+      b-loading(:is-full-page="true" :active.sync="isLoading" :can-cancel="false")
+      router-view#rv(:key="$route.fullPath" v-if="liveConfig.canUseSite || (userData && userData.isAdmin)")
+      .site-down(v-else)
+        p {{ liveConfig.siteIsDownMessage || 'Site is currently undergoing maintenance.  If you are seeing this message for a prolonged amount of time, please make sure you have Kaspersky disabled as well as ad-blockers.  (There are no ads on the site)' }}
+      //- report-issue(v-if="userData")
 </template>
 
 <script>
@@ -24,15 +26,24 @@ export default {
     reportIssue
   },
   computed: {
+    customTheme () {
+      if (!this.userData.id || !this.userData.teamTheme) return {}
+      const teamTheme = { 'custom': true }
+      teamTheme[`${this.userData.teamTheme}`] = true
+
+      return teamTheme
+    },
     isLoading () {
       return this.$store.getters.loading
+    },
+    userData () {
+      return this.$store.getters.getUserData || { teamTheme: '' }
     }
   },
   data () {
     return {
       notification: {},
-      liveConfig: {},
-      userData: null
+      liveConfig: {}
     }
   },
   mounted () {
@@ -80,14 +91,6 @@ export default {
     db.ref('/lockedPlayers').on('value', (snapshot) => {
       this.$store.dispatch('setLockedPlayers', snapshot.val() ? Object.values(snapshot.val()) : [])
     })
-    window.onerror = function (msg, url, lineNo, columnNo, error) {
-      // ... handle error ...
-      const today = new Date()
-      const date = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
-      const now = Date.now()
-      firebase.firestore().collection('errors').doc(date).update({ [now]: msg })
-      return false
-    }
   }
 }
 </script>
@@ -127,4 +130,5 @@ $link-focus-border: $primary;
 @import "~bulma";
 @import "~buefy/src/scss/buefy";
 @import "./assets/styles/highnoon";
+@import "./assets/styles/teams";
 </style>

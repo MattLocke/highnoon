@@ -10,8 +10,16 @@
           picture-input(ref="pictureInput", width="250", height="250", accept="image/jpeg", size=".1", buttonClass="button is-primary", @change="uploadPicture")
           hr
           button.button.is-secondary(@click="updatingAvatar = false") Cancel
-        span Your Id:
+        section
+          h2 Your User Id
           |  {{ profile.id }}
+        section
+          h2 Choose Your Theme
+          b-field(label="Choose Your Team")
+            b-select(placeholder="Select Role" v-model="localProfile.teamTheme")
+              option(v-for="team in teams" :value="team.shortName") {{ team.name }}
+              option(value="") None
+          p.is-size-7 (The themes only work for Premium members)
       .column
         .container
           h1 Profile for {{ localProfile.displayName }}
@@ -95,7 +103,8 @@ export default {
         battleNet: '',
         discord: '',
         psn: '',
-        xbox: ''
+        xbox: '',
+        teamTheme: ''
       },
       notificationMessage: '',
       updatingAvatar: false
@@ -104,10 +113,14 @@ export default {
   computed: {
     profile () {
       return this.$store.getters.getUserData
+    },
+    teams () {
+      return this.$store.getters.getTeams
     }
   },
   watch: {
     profile: {
+      deep: true,
       immediate: true,
       handler () {
         if (!this.profile.profileImageUrl && this.profile.id) {
@@ -118,6 +131,11 @@ export default {
           })
         } else this.profileImage = this.profile.profileImageUrl
         this.localProfile = { ...this.localProfile, ...this.profile }
+      }
+    },
+    'localProfile.teamTheme': {
+      handler (newVal, oldVal) {
+        if (newVal !== oldVal) this.$store.dispatch('setTheme', newVal)
       }
     }
   },
@@ -142,6 +160,7 @@ export default {
               UserService.updateProfile(this.localProfile, this.localProfile.id)
                 .then(() => {
                   this.$store.dispatch('setLoading', false)
+                  this.$store.dispatch('setTheme', this.localProfile.teamTheme)
                   this.$toast.open({
                     message: 'Profile successfully updated!',
                     type: 'is-success',
@@ -161,6 +180,8 @@ export default {
         UserService.updateProfile(this.localProfile, this.localProfile.id)
           .then(() => {
             this.$store.dispatch('setLoading', false)
+            console.log('Setting profile theme...')
+            this.$store.dispatch('setTheme', this.localProfile.teamTheme)
             this.$toast.open({
               message: 'Profile successfully updated!',
               type: 'is-success',

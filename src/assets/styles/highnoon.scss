@@ -177,10 +177,6 @@
   color: #fff;
 }
 
-#app .tabs ul li.is-active a {
-  color: $primary;
-}
-
 #app .site-down {
   position: absolute;
   top: 50%;
@@ -442,9 +438,23 @@ hr {
   color: #fff;
 }
 
+.tabs.is-boxed li.is-active a, .tabs.is-boxed a:hover {
+  background-color: $secondary;
+  border-color: lighten($secondary, 10%);
+}
+
+.tabs ul {
+  border-bottom-color: lighten($secondary, 10%);
+}
+
 /* overrides */
 #app {
   .button {
     border-radius: 0;
   }
+}
+
+#app.custom {
+  width: 100vw;
+  min-height: 100vh;
 }

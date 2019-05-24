@@ -1,0 +1,81 @@
+$wasPrimary: #003768;
+$wasSecondary: #990034;
+
+#app.WAS {
+  background-color: $wasPrimary;
+  background-image: radial-gradient(lighten($wasSecondary, 20%), $wasSecondary);
+
+  section {
+    background-color: $wasPrimary;
+    border: 1px solid $wasSecondary;
+    border-radius: 4px;
+  }
+
+  a {
+    color: $wasSecondary;
+  }
+
+  #rv a {
+    background-color: #fff;
+  }
+
+  a:hover {
+    color: $wasSecondary;
+    border-bottom: 1px dotted $wasSecondary;
+  }
+
+  hr {
+    opacity: 1;
+    height: 1px;
+    border-bottom-color: $wasSecondary;
+  }
+
+  table.table {
+    td {
+      border-color: $wasSecondary;
+    }
+  }
+
+  .button.is-primary {
+    background-color: $wasSecondary!important;
+    color: #fff;
+  }
+
+  .button.is-secondary {
+    background-color: $wasPrimary!important;
+  }
+
+  .column {
+    section {
+      border: none;
+    }
+  }
+
+  .is-button-header {
+    .column.is-narrow {
+      background-color: $wasSecondary;
+    }
+  }
+
+  .orange {
+    color: $wasSecondary;
+  }
+
+  .pagination-next, .pagination-previous {
+    background-color: $wasPrimary;
+  }
+
+  .pagination-link.is-current {
+    background-color: $wasSecondary!important;
+    border-color: $wasPrimary;
+  }
+
+  .tabs.is-boxed li a {
+    background: none!important;
+  }
+
+  .tabs.is-boxed li.is-active a, .tabs.is-boxed a:hover {
+    background-color: $wasPrimary!important;
+    border: 1px solid $wasPrimary;
+  }
+}

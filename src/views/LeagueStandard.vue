@@ -34,7 +34,7 @@
           hr
           button.button.is-primary(@click="createNewSchedule") Re-Create Schedule
       .column(v-if="league.leagueName")
-        h2.orange.is-pulled-right(v-tooltip="league.rawScoring ? 'This uses all scores from a player for a given week.' : 'This uses only the best score from a players score for a given week.'") {{ league.rawScoring ? 'Raw Scoring' : 'Best Of Scoring' }}
+        h2.orange.is-pulled-right.league-scoring-type(v-tooltip="league.rawScoring ? 'This uses all scores from a player for a given week.' : 'This uses only the best score from a players score for a given week.'") {{ league.rawScoring ? 'Raw Scoring' : 'Best Of Scoring' }}
         h1 {{ league.leagueName }}
         section(v-if="liveConfig.canStartDraft && canStartDraft")
           .columns.is-mobile.is-button-header
@@ -52,7 +52,7 @@
               confirm-button(:customClasses="{'is-primary': true,'is-small': true,'is-pulled-right':true}" buttonText="Create Draft Order" confirmText="Are You Sure?" @confirm-it="createSchedule" extraText="This action should be considered only when EVERYONE has joined your league.  This locks in the draft order and allows you to start the draft.")
           .wrap(v-else)
             p You need an even number of users in your league in order to create a draft order and start the draft!
-        b-tabs(v-model="activeContentTab" type="is-boxed")
+        b-tabs(v-model="activeContentTab" type="is-boxed" :animated="false")
           b-tab-item(label="League Home")
             section.league-message
               .columns
@@ -115,9 +115,7 @@
             league-schedule(v-if="draftComplete" :isOwner="isOwner")
             section(v-else)
               p This will be where you can view your upcoming matchups
-          b-tab-item(label="Trash Talk")
-            trash-talk
-          b-tab-item(v-if="isOwner || userData.isAdmin" label="Options")
+          b-tab-item(v-if="isOwner || userData.isAdmin" label="Admin")
             h2 League Options
             p We will be adding to this page to allow league owners more control over how their league is ran.  Stay tuned!
             hr
@@ -136,6 +134,7 @@
             section(v-if="isOwner")
               collapsible(title-text="Delete League" :start-collapsed="true")
                 confirm-button(button-text="Delete League" confirm-text="Are You Sure?" extra-text="This action can not be undone, and all users will lose their points and picks associated with this league." @confirm-it="deleteLeague")
+        trash-talk(v-if="isInLeague")
       .column(v-else)
         .container
           h1 Please select a league from the menu.
@@ -530,5 +529,8 @@ export default {
   .team-owner {
     font-size: .8rem;
     line-height: .6rem;
+  }
+  .league-scoring-type {
+    margin-right: 2vw;
   }
 </style>

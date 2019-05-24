@@ -1,0 +1,81 @@
+$sfsPrimary: #fc4c02;
+$sfsSecondary: #75787b;
+
+#app.SFS {
+  background-color: $sfsPrimary;
+  background-image: radial-gradient(lighten($sfsSecondary, 20%), $sfsSecondary);
+
+  section {
+    background-color: $sfsPrimary;
+    border: 1px solid $sfsSecondary;
+    border-radius: 4px;
+  }
+
+  a {
+    color: $sfsSecondary;
+  }
+
+  #rv a {
+    background-color: #fff;
+  }
+
+  a:hover {
+    color: $sfsSecondary;
+    border-bottom: 1px dotted $sfsSecondary;
+  }
+
+  hr {
+    opacity: 1;
+    height: 1px;
+    border-bottom-color: $sfsSecondary;
+  }
+
+  table.table {
+    td {
+      border-color: $sfsSecondary;
+    }
+  }
+
+  .button.is-primary {
+    background-color: $sfsSecondary;
+    color: #fff;
+  }
+
+  .button.is-secondary {
+    background-color: $sfsPrimary;
+  }
+
+  .column {
+    section {
+      border: none;
+    }
+  }
+
+  .is-button-header {
+    .column.is-narrow {
+      background-color: $sfsSecondary;
+    }
+  }
+
+  .orange {
+    color: $sfsSecondary;
+  }
+
+  .pagination-next, .pagination-previous {
+    background-color: $sfsPrimary;
+  }
+
+  .pagination-link.is-current {
+    background-color: $sfsSecondary!important;
+    border-color: $sfsPrimary;
+  }
+
+  .tabs.is-boxed li a {
+    background: none!important;
+  }
+
+  .tabs.is-boxed li.is-active a, .tabs.is-boxed a:hover {
+    background-color: $sfsPrimary!important;
+    border: 1px solid $sfsPrimary;
+  }
+}

@@ -1,0 +1,85 @@
+$glaPrimary: #222;
+$glaSecondary: #3c1053;
+
+#app.GLA {
+  background-color: $glaPrimary;
+  background-image: radial-gradient($glaPrimary, $glaSecondary);
+
+  section {
+    background-color: $glaPrimary;
+    border: 1px solid $glaSecondary;
+    border-radius: 4px;
+  }
+
+  a {
+    color: $glaSecondary;
+  }
+
+  #rv a {
+    background-color: #fff;
+
+    &:hover {
+      background-color: $glaSecondary;
+    }
+  }
+
+  a:hover {
+    color: #fff;
+    border-bottom: 1px dotted $glaSecondary;
+  }
+
+  hr {
+    opacity: 1;
+    height: 1px;
+    border-bottom-color: $glaSecondary;
+  }
+
+  table.table {
+    td {
+      border-color: $glaSecondary;
+    }
+  }
+
+  .button.is-primary {
+    background-color: $glaSecondary!important;
+    color: #fff;
+  }
+
+  .button.is-secondary {
+    background-color: $glaPrimary;
+  }
+
+  .column {
+    section {
+      border: none;
+    }
+  }
+
+  .is-button-header {
+    .column.is-narrow {
+      background-color: $glaSecondary;
+    }
+  }
+
+  .fantasy-points .orange, .orange {
+    color: lighten($glaSecondary, 40%);
+  }
+
+  .pagination-next, .pagination-previous {
+    background-color: $glaPrimary;
+  }
+
+  .pagination-link.is-current {
+    background-color: $glaSecondary!important;
+    border-color: $glaPrimary;
+  }
+
+  .tabs.is-boxed li a {
+    background: none!important;
+  }
+
+  .tabs.is-boxed li.is-active a, .tabs.is-boxed a:hover {
+    background-color: $glaPrimary!important;
+    border: 1px solid $glaPrimary;
+  }
+}

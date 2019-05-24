@@ -1,0 +1,81 @@
+$parPrimary: #303d56;
+$parSecondary: #8d042d;
+
+#app.PAR {
+  background-color: $parPrimary;
+  background-image: radial-gradient($parPrimary, $parSecondary);
+
+  section {
+    background-color: $parPrimary;
+    border: 1px solid $parSecondary;
+    border-radius: 4px;
+  }
+
+  a {
+    color: $parSecondary;
+  }
+
+  #rv a {
+    background-color: #222;
+  }
+
+  a:hover {
+    color: $parSecondary;
+    border-bottom: 1px dotted $parSecondary;
+  }
+
+  hr {
+    opacity: 1;
+    height: 1px;
+    border-bottom-color: $parSecondary;
+  }
+
+  table.table {
+    td {
+      border-color: $parSecondary;
+    }
+  }
+
+  .button.is-primary {
+    background-color: $parSecondary;
+    color: #fff;
+  }
+
+  .button.is-secondary {
+    background-color: $parPrimary;
+  }
+
+  .column {
+    section {
+      border: none;
+    }
+  }
+
+  .is-button-header {
+    .column.is-narrow {
+      background-color: $parSecondary;
+    }
+  }
+
+  .orange {
+    color: $parSecondary;
+  }
+
+  .pagination-next, .pagination-previous {
+    background-color: $parPrimary;
+  }
+
+  .pagination-link.is-current {
+    background-color: $parSecondary!important;
+    border-color: $parPrimary;
+  }
+
+  .tabs.is-boxed li a {
+    background: none!important;
+  }
+
+  .tabs.is-boxed li.is-active a, .tabs.is-boxed a:hover {
+    background-color: $parPrimary!important;
+    border: 1px solid $parPrimary;
+  }
+}

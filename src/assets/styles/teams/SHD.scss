@@ -1,0 +1,73 @@
+$shdPrimary: #222222;
+$shdSecondary: #d22630;
+
+#app.SHD {
+  background-color: darken($shdSecondary, 20%);
+  background-image: radial-gradient($shdPrimary, $shdSecondary);
+
+  section {
+    background-color: $shdPrimary;
+    border: 1px solid $shdSecondary;
+    border-radius: 4px;
+  }
+
+  a {
+    color: $shdSecondary;
+  }
+
+  a:hover {
+    color: $shdSecondary;
+    border-bottom: 1px dotted $shdSecondary;
+  }
+
+  hr {
+    opacity: 1;
+    height: 1px;
+    border-bottom-color: $shdSecondary;
+  }
+
+  table.table {
+    td {
+      border-color: $shdSecondary;
+    }
+  }
+
+  .button.is-primary {
+    background-color: $shdSecondary;
+    color: #fff;
+  }
+
+  .button.is-secondary {
+    background-color: $shdPrimary;
+  }
+
+  .column {
+    section {
+      border: none;
+    }
+  }
+
+  .is-button-header {
+    .column.is-narrow {
+      background-color: $shdSecondary;
+    }
+  }
+
+  .orange {
+    color: $shdSecondary;
+  }
+
+  .pagination-next, .pagination-previous {
+    background-color: $shdPrimary;
+  }
+
+  .pagination-link.is-current {
+    background-color: $shdSecondary;
+    border-color: $shdPrimary;
+  }
+
+  .tabs.is-boxed li.is-active a, .tabs.is-boxed a:hover {
+    background-color: $shdPrimary;
+    border: 1px solid $shdPrimary;
+  }
+}

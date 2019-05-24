@@ -1,30 +1,38 @@
 <template lang="pug">
   .match-listing(v-if="pickStats && match.awayId")
     .columns.is-gapless.is-mobile
-      .column.is-narrow
-        img(:src="`images/teams/${match.awayShortName}.svg`" width="28")
-      .column.is-narrow
-        .ow-font.team-name(v-tooltip="`${leftPercent}% choose ${match.awayShortName}`") {{ match.awayShortName }}
-      .column.is-narrow(v-if="!isDisabled")
+      .column.is-narrow.has-text-centered(v-if="match.winner")
+        span.is-size-5.ow-font {{ match.winner == match.awayId ? 'WON' : 'LOSS' }}
+      .column.is-narrow.has-text-centered
+        img(:src="`images/teams/${match.awayShortName}.svg`" width="28" height="28")
+      .column.is-narrow.has-text-centered
+        .ow-font.team-name.is-size-5(v-tooltip="`${leftPercent}% choose ${match.awayShortName}`") {{ match.awayShortName }}
+      .column.is-narrow.has-text-centered.select-column-left(v-if="!isDisabled")
         b-radio.is-pulled-right.winner-radio(v-model="matchWinner" size="is-medium" :native-value="match.awayId")
-      .column.is-narrow(v-else)
+      .column.is-narrow.has-text-centered.select-column-left(v-else)
         b-radio.is-pulled-right.winner-radio.correct-radio(selected size="is-medium" v-if="finishedMatchWinner && matchWinner == match.awayId")
         b-radio.is-pulled-right.winner-radio.incorrect-radio(selected size="is-medium" v-else-if="matchWinner == match.awayId")
         b-radio.is-pulled-right.winner-radio.neutral-radio(selected size="is-medium" v-else)
+      .column.is-narrow.has-text-centered(v-if="showPickRates")
+        span.ow-font.is-size-5 {{ leftPercent }}%
       .column.has-text-centered
         .match-date {{ match.startDateTS | formatJSDate }}
         .match-time {{ match.startDateTS | formatJSTime }}
-      .column.is-narrow(v-if="!isDisabled")
-        b-radio.is-pulled-right.winner-radio(v-model="matchWinner" size="is-medium" :native-value="match.homeId")
-      .column.is-narrow(v-else)
-        b-radio.is-pulled-right.winner-radio.correct-radio(selected size="is-medium" v-if="finishedMatchWinner && matchWinner == match.homeId")
-        b-radio.is-pulled-right.winner-radio.incorrect-radio(selected size="is-medium" v-else-if="matchWinner == match.homeId")
-        b-radio.is-pulled-right.winner-radio.neutral-radio(selected size="is-medium" v-else)
-      .column.is-narrow
-        .ow-font.team-name.is-pulled-right(v-tooltip="`${rightPercent}% choose ${match.homeShortName}`") {{ match.homeShortName }}
-      .column.is-narrow
-        img(:src="`images/teams/${match.homeShortName}.svg`" width="22" height="22")
-    .pick-rates(:style="{'background-color': `#${match.homePrimaryColor}`}" v-if="showPickRates")
+      .column.is-narrow.has-text-centered(v-if="showPickRates")
+        span.ow-font.is-size-5 {{ rightPercent }}%
+      .column.is-narrow.has-text-centered.select-column-right(v-if="!isDisabled")
+        b-radio.winner-radio(v-model="matchWinner" size="is-medium" :native-value="match.homeId")
+      .column.is-narrow.has-text-centered.select-column-right(v-else)
+        b-radio.winner-radio.correct-radio(selected size="is-medium" v-if="finishedMatchWinner && matchWinner == match.homeId")
+        b-radio.winner-radio.incorrect-radio(selected size="is-medium" v-else-if="matchWinner == match.homeId")
+        b-radio.winner-radio.neutral-radio(selected size="is-medium" v-else)
+      .column.is-narrow.has-text-centered
+        .ow-font.team-name.is-size-5(v-tooltip="`${rightPercent}% choose ${match.homeShortName}`") {{ match.homeShortName }}
+      .column.is-narrow.has-text-centered
+        img(:src="`images/teams/${match.homeShortName}.svg`" width="28" height="28")
+      .column.is-narrow.has-text-centered(v-if="match.winner")
+        span.is-size-5.ow-font {{ match.winner == match.homeId ? 'WON' : 'LOSS' }}
+    .pick-rates(:style="{'background-color': `#${match.homePrimaryColor == '000000' ? match.homeSecondaryColor : match.homePrimaryColor}`}" v-if="showPickRates")
       .pick-percentage-bar(:style="pickStyles")
 </template>
 
@@ -71,7 +79,7 @@ export default {
       return rightTotal ? Math.round(rightTotal / this.totalPicks * 100) : 0
     },
     pickStyles () {
-      return { 'width': `${this.leftPercent}%`, 'background-color': `#${this.match.awayPrimaryColor}` }
+      return { 'width': `${this.leftPercent}%`, 'background-color': `#${this.match.awayPrimaryColor === '000000' ? this.match.awaySecondaryColor : this.match.awayPrimaryColor}` }
     },
     totalPicks () {
       const left = get(this.pickStats, `${this.match.id}.${this.match.awayId}`, 0)
@@ -92,7 +100,7 @@ export default {
   },
   watch: {
     matchWinner (val) {
-      if (val) this.savePick()
+      if (val && (this.match && !this.match.winner)) this.savePick()
     },
     userPicks: {
       immediate: true,
@@ -103,12 +111,9 @@ export default {
       }
     }
   },
-  mounted () {
-    // firefox doesn't get triggered by the one in the watcher for some reason
-    this.$store.dispatch('fetchPicks')
-  },
   methods: {
     savePick () {
+      console.log('Saving Picks...')
       // make sure we don't fire a save for something that already exists
       if (!this.userPicks[this.match.id] || this.userPicks[this.match.id].winner !== this.matchWinner) {
         this.$store.dispatch('setLoading', true)
@@ -119,7 +124,6 @@ export default {
         }
         PicksService.canSave(pick)
           .then((theyCan) => {
-            console.table(theyCan)
             if (theyCan) {
               PicksService.savePick(pick)
                 .then(() => {
@@ -166,6 +170,16 @@ export default {
   .pick-percentage-bar {
     height: 8px;
   }
+
+  .select-column-left .check {
+    margin-left: 2px;
+  }
+
+  .select-column-right .check {
+    margin-left: 8px!important;
+    margin-right: -8px;
+  }
+
   .team-name {
     width: 32px;
   }

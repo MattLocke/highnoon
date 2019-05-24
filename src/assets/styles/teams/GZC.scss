@@ -1,0 +1,73 @@
+$gzcPrimary: #122c42;
+$gzcSecondary: #67a2b2;
+
+#app.GZC {
+  background-color: $gzcPrimary;
+  background-image: radial-gradient($gzcPrimary, $gzcSecondary);
+
+  section {
+    background-color: $gzcPrimary;
+    border: 1px solid $gzcSecondary;
+    border-radius: 4px;
+  }
+
+  a {
+    color: $gzcSecondary;
+  }
+
+  a:hover {
+    color: $gzcSecondary;
+    border-bottom: 1px dotted $gzcSecondary;
+  }
+
+  hr {
+    opacity: 1;
+    height: 1px;
+    border-bottom-color: $gzcSecondary;
+  }
+
+  table.table {
+    td {
+      border-color: $gzcSecondary;
+    }
+  }
+
+  .button.is-primary {
+    background-color: $gzcSecondary;
+    color: #fff;
+  }
+
+  .button.is-secondary {
+    background-color: $gzcPrimary;
+  }
+
+  .column {
+    section {
+      border: none;
+    }
+  }
+
+  .is-button-header {
+    .column.is-narrow {
+      background-color: $gzcSecondary;
+    }
+  }
+
+  .orange {
+    color: $gzcSecondary;
+  }
+
+  .pagination-next, .pagination-previous {
+    background-color: $gzcPrimary;
+  }
+
+  .pagination-link.is-current {
+    background-color: $gzcSecondary;
+    border-color: $gzcPrimary;
+  }
+
+  .tabs.is-boxed li.is-active a, .tabs.is-boxed a:hover {
+    background-color: $gzcPrimary;
+    border: 1px solid $gzcPrimary;
+  }
+}

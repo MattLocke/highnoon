@@ -1,0 +1,55 @@
+@import "./teams/ATL";
+@import "./teams/BOS";
+@import "./teams/CDH";
+@import "./teams/DAL";
+@import "./teams/FLA";
+@import "./teams/GLA";
+@import "./teams/GZC";
+@import "./teams/HOU";
+@import "./teams/HZS";
+@import "./teams/LDN";
+@import "./teams/NYE";
+@import "./teams/PAR";
+@import "./teams/PHI";
+@import "./teams/SEO";
+@import "./teams/SFS";
+@import "./teams/SHD";
+@import "./teams/TOR";
+@import "./teams/VAL";
+@import "./teams/VAN";
+@import "./teams/WAS";
+
+#app.custom {
+  padding-bottom: 40px;
+  .tabs {
+    padding-left: 4px;
+  }
+  .tabs.is-boxed a:hover {
+    opacity: 0.8;
+  }
+
+  .tabs.is-boxed li.is-active a:hover {
+    opacity: 1;
+  }
+
+  .tabs ul {
+    border-bottom: none;
+  }
+
+  .pagination-list li a {
+    color: #000;
+  }
+
+  .team-background {
+    position: fixed;
+    top: 0;
+    right: -20%;
+    width: 100%;
+    opacity: 0.4;
+    z-index: 1;
+  }
+  .site-wrapper {
+    position: relative;
+    z-index: 10;
+  }
+}

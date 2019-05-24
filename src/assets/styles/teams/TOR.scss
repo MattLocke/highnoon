@@ -1,0 +1,73 @@
+$torPrimary: #222222;
+$torSecondary: #c10021;
+
+#app.TOR {
+  background-color: $torPrimary;
+  background-image: radial-gradient($torPrimary, $torSecondary);
+
+  section {
+    background-color: $torPrimary;
+    border: 1px solid $torSecondary;
+    border-radius: 4px;
+  }
+
+  a {
+    color: $torSecondary;
+  }
+
+  a:hover {
+    color: $torSecondary;
+    border-bottom: 1px dotted $torSecondary;
+  }
+
+  hr {
+    opacity: 1;
+    height: 1px;
+    border-bottom-color: $torSecondary;
+  }
+
+  table.table {
+    td {
+      border-color: $torSecondary;
+    }
+  }
+
+  .button.is-primary {
+    background-color: $torSecondary;
+    color: #fff;
+  }
+
+  .button.is-secondary {
+    background-color: $torPrimary;
+  }
+
+  .column {
+    section {
+      border: none;
+    }
+  }
+
+  .is-button-header {
+    .column.is-narrow {
+      background-color: $torSecondary;
+    }
+  }
+
+  .orange {
+    color: $torSecondary;
+  }
+
+  .pagination-next, .pagination-previous {
+    background-color: $torPrimary;
+  }
+
+  .pagination-link.is-current {
+    background-color: $torSecondary;
+    border-color: $torPrimary;
+  }
+
+  .tabs.is-boxed li.is-active a, .tabs.is-boxed a:hover {
+    background-color: $torPrimary;
+    border: 1px solid $torPrimary;
+  }
+}

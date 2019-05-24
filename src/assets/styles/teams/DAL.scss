@@ -1,0 +1,73 @@
+$dalPrimary: #0c2340;
+$dalSecondary: #0072ce;
+
+#app.DAL {
+  background-color: $dalPrimary;
+  background-image: radial-gradient($dalPrimary, $dalSecondary);
+
+  section {
+    background-color: $dalPrimary;
+    border: 1px solid $dalSecondary;
+    border-radius: 4px;
+  }
+
+  a {
+    color: $dalSecondary;
+  }
+
+  a:hover {
+    color: $dalSecondary;
+    border-bottom: 1px dotted $dalSecondary;
+  }
+
+  hr {
+    opacity: 1;
+    height: 1px;
+    border-bottom-color: $dalSecondary;
+  }
+
+  table.table {
+    td {
+      border-color: $dalSecondary;
+    }
+  }
+
+  .button.is-primary {
+    background-color: $dalSecondary;
+    color: #fff;
+  }
+
+  .button.is-secondary {
+    background-color: $dalPrimary;
+  }
+
+  .column {
+    section {
+      border: none;
+    }
+  }
+
+  .is-button-header {
+    .column.is-narrow {
+      background-color: $dalSecondary;
+    }
+  }
+
+  .orange {
+    color: $dalSecondary;
+  }
+
+  .pagination-next, .pagination-previous {
+    background-color: $dalPrimary;
+  }
+
+  .pagination-link.is-current {
+    background-color: $dalSecondary;
+    border-color: $dalPrimary;
+  }
+
+  .tabs.is-boxed li.is-active a, .tabs.is-boxed a:hover {
+    background-color: $dalPrimary;
+    border: 1px solid $dalPrimary;
+  }
+}

@@ -1,0 +1,81 @@
+$atlPrimary: #222;
+$atlSecondary: #910f1b;
+
+#app.ATL {
+  background-color: $atlPrimary;
+  background-image: radial-gradient($atlPrimary, $atlSecondary);
+
+  section {
+    background-color: $atlPrimary;
+    border: 1px solid $atlSecondary;
+    border-radius: 4px;
+  }
+
+  a {
+    color: $atlSecondary;
+  }
+
+  #rv a {
+    background-color: #fff;
+  }
+
+  a:hover {
+    color: $atlSecondary;
+    border-bottom: 1px dotted $atlSecondary;
+  }
+
+  hr {
+    opacity: 1;
+    height: 1px;
+    border-bottom-color: $atlSecondary;
+  }
+
+  table.table {
+    td {
+      border-color: $atlSecondary;
+    }
+  }
+
+  .button.is-primary {
+    background-color: $atlSecondary;
+    color: #fff;
+  }
+
+  .button.is-secondary {
+    background-color: $atlPrimary;
+  }
+
+  .column {
+    section {
+      border: none;
+    }
+  }
+
+  .is-button-header {
+    .column.is-narrow {
+      background-color: $atlSecondary;
+    }
+  }
+
+  .orange {
+    color: $atlSecondary;
+  }
+
+  .pagination-next, .pagination-previous {
+    background-color: $atlPrimary;
+  }
+
+  .pagination-link.is-current {
+    background-color: $atlSecondary!important;
+    border-color: $atlPrimary;
+  }
+
+  .tabs.is-boxed li a {
+    background: none!important;
+  }
+
+  .tabs.is-boxed li.is-active a, .tabs.is-boxed a:hover {
+    background-color: $atlPrimary!important;
+    border: 1px solid $atlPrimary;
+  }
+}

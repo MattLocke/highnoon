@@ -1,0 +1,73 @@
+$vanPrimary: #09226b;
+$vanSecondary: #2fb228;
+
+#app.VAN {
+  background-color: $vanPrimary;
+  background-image: radial-gradient($vanPrimary, $vanSecondary);
+
+  section {
+    background-color: $vanPrimary;
+    border: 1px solid $vanSecondary;
+    border-radius: 4px;
+  }
+
+  a {
+    color: $vanSecondary;
+  }
+
+  a:hover {
+    color: $vanSecondary;
+    border-bottom: 1px dotted $vanSecondary;
+  }
+
+  hr {
+    opacity: 1;
+    height: 1px;
+    border-bottom-color: $vanSecondary;
+  }
+
+  table.table {
+    td {
+      border-color: $vanSecondary;
+    }
+  }
+
+  .button.is-primary {
+    background-color: $vanSecondary;
+    color: #fff;
+  }
+
+  .button.is-secondary {
+    background-color: $vanPrimary;
+  }
+
+  .column {
+    section {
+      border: none;
+    }
+  }
+
+  .is-button-header {
+    .column.is-narrow {
+      background-color: $vanSecondary;
+    }
+  }
+
+  .orange {
+    color: $vanSecondary;
+  }
+
+  .pagination-next, .pagination-previous {
+    background-color: $vanPrimary;
+  }
+
+  .pagination-link.is-current {
+    background-color: $vanSecondary;
+    border-color: $vanPrimary;
+  }
+
+  .tabs.is-boxed li.is-active a, .tabs.is-boxed a:hover {
+    background-color: $vanPrimary;
+    border: 1px solid $vanPrimary;
+  }
+}

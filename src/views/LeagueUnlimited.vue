@@ -1,86 +1,77 @@
 <template lang="pug">
   .leagues
-    .columns.is-marginless
-      left-bar
-        convert-to-featured(:league="league" v-if="userData.isAdmin")
-        transfer-ownership(leagueType="unlimited" v-if="userData.isAdmin")
-        remove-user(v-if="isOwner || userData.isAdmin" leagueType="unlimited")
-        your-leagues(:userId="userId")
-        section(v-if="isOwner")
-          collapsible(title-text="League Password" :start-collapsed="true")
-            b-field(label="Password")
-              b-input(v-model="league.password")
-            b-field
-              button.button.is-primary(@click="updateLeague") Update Password
+    .container(v-if="league.leagueName")
+      h1 {{ league.leagueName }}
+      button.button.is-secondary.is-small.is-pulled-right(@click="copyLink" v-if="isInLeague") Copy Share Link
+      b-tabs(v-model="activeContentTab" type="is-boxed" :animated="false")
+        b-tab-item(label="League Message")
+          .league-message
+            .columns
+              .column
+              .column.is-narrow
+                button.button.is-secondary.is-small(@click="editingMessage = !editingMessage" v-if="isOwner") {{ editingMessage ? 'cancel' : 'edit' }}
+            .wrap(v-if="editingMessage")
+              b-field(label="League Title")
+                b-input(type="text" v-model="league.leagueName")
+              b-field(label="League Message")
+                b-input(type="textarea" v-model="league.message" rows="10")
+              button.button.is-primary(@click="updateLeague") Save Message
+              hr
+            vue-markdown(v-if="leagueMessage" :source="leagueMessage" :html="false")
+            .wrap(v-else)
+              img(src="https://firebasestorage.googleapis.com/v0/b/overwatch-pickem.appspot.com/o/images%2Fleagues%2Fwelcome-to-your-league.jpg?alt=media&token=bbf8225c-6bd0-4b1a-b5e0-d864a3047395")
+              p Click on the edit button above to customize your league landing page!  Inform members of the rules you have, the prizes you're giving away - whatever makes sense!
+        b-tab-item(label="Leaderboards")
+          .leaderboard(v-if="liveConfig.canUseUnlimitedLeaderboards")
+            h2 League Leaderboard
+            p With the league leaderboard it will only show you if you have a score.  So if you just joined, don't fret!  Once we start the next scores you'll pop up.  Good luck!
+            p.ow-font(v-if="isInLeague") Your Place:
+              span.orange  {{ yourPlace }}
+            b-table(
+              :data="sortedScoreboard"
+              :paginated="true"
+              :per-page="30"
+              )
+              template(slot-scope="props")
+                b-table-column(label="Pos" field="pos" width="20" sortable)
+                  span {{ props.row.pos }}
+                b-table-column(label="User" field="displayName" width="180" sortable)
+                  router-link(:to="`/user/${props.row.userId}`" v-if="props.row.displayName") {{ props.row.displayName }}
+                  span(v-else) Vacated
+                b-table-column(label="Team Name" field="teamName" sortable)
+                  span {{ props.row.teamName || 'vacated' }}
+                b-table-column(label="S1" field="stage1Total" sortable width="100")
+                  span {{ props.row.stage1Total | playerScore }}
+                b-table-column(label="S2" field="stage2Total" sortable width="100")
+                  span {{ props.row.stage2Total | playerScore }}
+                b-table-column(label="Score" width="30" field="totalScore" sortable)
+                  span {{ props.row.totalScore | playerScore }}
+          .leaderboard(v-else)
+            p The leaderboards are currently being worked on.  Stay tuned!
+        b-tab-item(label="Your Roster" v-if="isInLeague")
+          league-roster(:league="league" v-if="liveConfig.canCreateUnlimitedRoster")
+          span(v-else) {{ liveConfig.featureDownMessage }}
+          roster-history(:league="league")
+        b-tab-item(label="Options")
+          convert-to-featured(:league="league" v-if="userData.isAdmin")
+          transfer-ownership(leagueType="unlimited" v-if="userData.isAdmin")
+          remove-user(v-if="isOwner || userData.isAdmin" leagueType="unlimited")
+          section(v-if="isOwner")
+            collapsible(title-text="League Password" :start-collapsed="true")
+              b-field(label="Password")
+                b-input(v-model="league.password")
+              b-field
+                button.button.is-primary(@click="updateLeague") Update Password
             p To remove the password, simply update with no password in the field.
-        section(v-if="isOwner")
-          collapsible(title-text="Delete League" :start-collapsed="true")
-            confirm-button(button-text="Delete League" confirm-text="Are You Sure?" extra-text="This action can not be undone, and all users will lose their points and picks associated with this league." @confirm-it="deleteLeague")
-        section(v-if="leagueUsers && leagueUsers.length")
-          collapsible(:title-text="`League Users (${leagueUsers.length})`" :start-collapsed="true")
-            .left-bar-item(v-for="user in leagueUsers") {{ user.displayName }}
-        section(v-if="isInLeague")
-          router-link.button.is-primary.is-small(:to="`/manageUnlimitedTeam/${leagueId}`") Manage Team
-          button.button.is-secondary.is-small.is-pulled-right(@click="copyLink" v-if="isInLeague") Copy Share Link
-      .column(v-if="league.leagueName")
-        h1 {{ league.leagueName }}
-        b-tabs(v-model="activeContentTab" type="is-boxed")
-          b-tab-item(label="League Message")
-            section.league-message
-              .columns
-                .column
-                .column.is-narrow
-                  button.button.is-secondary.is-small(@click="editingMessage = !editingMessage" v-if="isOwner") {{ editingMessage ? 'cancel' : 'edit' }}
-              .wrap(v-if="editingMessage")
-                b-field(label="League Title")
-                  b-input(type="text" v-model="league.leagueName")
-                b-field(label="League Message")
-                  b-input(type="textarea" v-model="league.message" rows="10")
-                button.button.is-primary(@click="updateLeague") Save Message
-                hr
-              vue-markdown(v-if="leagueMessage" :source="leagueMessage" :html="false")
-              .wrap(v-else)
-                img(src="https://firebasestorage.googleapis.com/v0/b/overwatch-pickem.appspot.com/o/images%2Fleagues%2Fwelcome-to-your-league.jpg?alt=media&token=bbf8225c-6bd0-4b1a-b5e0-d864a3047395")
-                p Click on the edit button above to customize your league landing page!  Inform members of the rules you have, the prizes you're giving away - whatever makes sense!
-          b-tab-item(label="Leaderboards")
-            .leaderboard(v-if="liveConfig.canUseUnlimitedLeaderboards")
-              h2 League Leaderboard
-              p With the league leaderboard it will only show you if you have a score.  So if you just joined, don't fret!  Once we start the next scores you'll pop up.  Good luck!
-              p.ow-font(v-if="isInLeague") Your Place:
-                span.orange  {{ yourPlace }}
-              b-table(
-                :data="sortedScoreboard"
-                :paginated="true"
-                :per-page="30"
-                )
-                template(slot-scope="props")
-                  b-table-column(label="Pos" field="pos" width="20" sortable)
-                    span {{ props.row.pos }}
-                  b-table-column(label="User" field="displayName" width="180" sortable)
-                    router-link(:to="`/user/${props.row.userId}`" v-if="props.row.displayName") {{ props.row.displayName }}
-                    span(v-else) Vacated
-                  b-table-column(label="Team Name" field="teamName" sortable)
-                    span {{ props.row.teamName || 'vacated' }}
-                  b-table-column(label="S1" field="stage1Total" sortable width="100")
-                    span {{ props.row.stage1Total | playerScore }}
-                  b-table-column(label="S2" field="stage2Total" sortable width="100")
-                    span {{ props.row.stage2Total | playerScore }}
-                  b-table-column(label="Score" width="30" field="totalScore" sortable)
-                    span {{ props.row.totalScore | playerScore }}
-            .leaderboard(v-else)
-              p The leaderboards are currently being worked on.  Stay tuned!
-          b-tab-item(label="Your Roster" v-if="isInLeague")
-            league-roster(:league="league" v-if="liveConfig.canCreateUnlimitedRoster")
-            span(v-else) {{ liveConfig.featureDownMessage }}
-            roster-history(:league="league")
-          b-tab-item(label="Trash Talk" v-if="isInLeague")
-            trash-talk
-        section(v-if="canJoinLeague")
-          b-field(label="password" v-if="league.password")
-            b-input(type="password" v-model="localPassword")
-          button.button.is-primary(@click="joinLeague") Join League
-        section(v-if="isInLeague && !isOwner")
-          confirm-button(buttonText="Leave League" confirmText="Are You Sure?" @confirm-it="leaveLeague")
+          section(v-if="isInLeague && !isOwner")
+            confirm-button(buttonText="Leave League" confirmText="Are You Sure?" @confirm-it="leaveLeague")
+        b-tab-item(label="Your Leagues")
+          your-leagues(:userId="userId")
+      trash-talk(v-if="isInLeague")
+      section(v-if="canJoinLeague")
+        b-field(label="password" v-if="league.password")
+          b-input(type="password" v-model="localPassword")
+        button.button.is-primary(@click="joinLeague") Join League
 </template>
 
 <script>
@@ -93,6 +84,7 @@ import ConvertToFeatured from '@/views/admin/ConvertToFeatured'
 import LeagueRoster from '@/views/leagues/LeagueRoster'
 import RemoveUser from '@/views/leagues/RemoveUser'
 import RosterHistory from '@/views/leagues/RosterHistory'
+import SubMenu from '@/components/SubMenu'
 import TransferOwnership from '@/views/admin/TransferOwnership'
 import TrashTalk from '@/views/draft/TrashTalk'
 import UnlimitedLeaderboard from '@/views/leagues/UnlimitedLeaderboard'
@@ -105,6 +97,7 @@ export default {
     LeagueRoster,
     RemoveUser,
     RosterHistory,
+    SubMenu,
     TransferOwnership,
     TrashTalk,
     UnlimitedLeaderboard,

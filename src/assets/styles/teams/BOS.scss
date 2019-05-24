@@ -1,0 +1,73 @@
+$bosPrimary: #174b97;
+$bosSecondary: #f2df00;
+
+#app.BOS {
+  background-color: $bosSecondary;
+  background-image: radial-gradient(#222, $bosSecondary);
+
+  section {
+    background-color: $bosPrimary;
+    border: 1px solid $bosSecondary;
+    border-radius: 4px;
+  }
+
+  a {
+    color: $bosSecondary;
+  }
+
+  a:hover {
+    color: $bosSecondary;
+    border-bottom: 1px dotted $bosSecondary;
+  }
+
+  hr {
+    opacity: 1;
+    height: 1px;
+    border-bottom-color: $bosSecondary;
+  }
+
+  table.table {
+    td {
+      border-color: $bosSecondary;
+    }
+  }
+
+  .button.is-primary {
+    background-color: $bosSecondary;
+    color: #fff;
+  }
+
+  .button.is-secondary {
+    background-color: $bosPrimary;
+  }
+
+  .column {
+    section {
+      border: none;
+    }
+  }
+
+  .is-button-header {
+    .column.is-narrow {
+      background-color: $bosSecondary;
+    }
+  }
+
+  .orange {
+    color: $bosSecondary;
+  }
+
+  .pagination-next, .pagination-previous {
+    background-color: $bosPrimary;
+  }
+
+  .pagination-link.is-current {
+    background-color: $bosSecondary;
+    border-color: $bosPrimary;
+  }
+
+  .tabs.is-boxed li.is-active a, .tabs.is-boxed a:hover {
+    background-color: $bosPrimary;
+    border: 1px solid $bosPrimary;
+  }
+}

@@ -1,0 +1,73 @@
+$houPrimary: #222222;
+$houSecondary: #97d700;
+
+#app.HOU {
+  background-color: $houPrimary;
+  background-image: radial-gradient($houPrimary, $houSecondary);
+
+  section {
+    background-color: $houPrimary;
+    border: 1px solid $houSecondary;
+    border-radius: 4px;
+  }
+
+  a {
+    color: $houSecondary;
+  }
+
+  a:hover {
+    color: $houSecondary;
+    border-bottom: 1px dotted $houSecondary;
+  }
+
+  hr {
+    opacity: 1;
+    height: 1px;
+    border-bottom-color: $houSecondary;
+  }
+
+  table.table {
+    td {
+      border-color: $houSecondary;
+    }
+  }
+
+  .button.is-primary {
+    background-color: $houSecondary;
+    color: #fff;
+  }
+
+  .button.is-secondary {
+    background-color: $houPrimary;
+  }
+
+  .column {
+    section {
+      border: none;
+    }
+  }
+
+  .is-button-header {
+    .column.is-narrow {
+      background-color: $houSecondary;
+    }
+  }
+
+  .orange {
+    color: $houSecondary;
+  }
+
+  .pagination-next, .pagination-previous {
+    background-color: $houPrimary;
+  }
+
+  .pagination-link.is-current {
+    background-color: $houSecondary;
+    border-color: $houPrimary;
+  }
+
+  .tabs.is-boxed li.is-active a, .tabs.is-boxed a:hover {
+    background-color: $houPrimary;
+    border: 1px solid $houPrimary;
+  }
+}

@@ -15,11 +15,11 @@
             b-table-column(label="Role" width="30" field="role" sortable)
               span.title-font {{ props.row.role }}
             b-table-column(label="Team" width="30" field="team" sortable)
-              span.title-font {{ props.row.team }}
+              span.title-font {{ props.row.teamShortName }}
             b-table-column(label="Player Name" field="name" sortable)
               span.title-font {{ props.row ? props.row.name : '' }}
             b-table-column(label="Heroes")
-              span.title-font {{ (props.row && props.row.heroes) ? props.row.heroes.join(' / ') : 'N/A' }}
+              span.title-font {{ (props.row && props.row.hero1) ? `${props.row.hero1} / ${props.row.hero2 || '--'} / ${props.row.hero3 || '--'}` : 'N/A' }}
             b-table-column(label="Combined" width="40" field="totalScore" sortable)
               span.title-font {{ props.row.totalScore | playerScore }}
             b-table-column(label="Best" width="40" field="bestScore" sortable)

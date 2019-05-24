@@ -26,9 +26,13 @@
               router-link(:to="`/LeaguePickem/${league.id}`") {{ league.leagueName }}
             span {{ league.featuredMessage }}
             hr.is-hidden-desktop
+      b-tab-item(label="Your Leagues")
+        your-leagues(:userId="userId")
 </template>
 
 <script>
+import YourLeagues from '@/views/leagues/YourLeagues'
+
 export default {
   name: 'FeaturedLeagues',
   data () {
@@ -36,12 +40,18 @@ export default {
       activeContentTab: null
     }
   },
+  components: {
+    YourLeagues
+  },
   computed: {
     featuredPickemLeagues () {
       return this.$store.getters.getFeaturedPickem
     },
     featuredUnlimitedLeagues () {
       return this.$store.getters.getFeaturedUnlimited
+    },
+    userId () {
+      return this.$store.getters.getUserId
     }
   },
   mounted () {

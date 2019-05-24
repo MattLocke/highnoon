@@ -1,0 +1,81 @@
+$hzsPrimary: #fb7299;
+$hzsSecondary: #5788ce;
+
+#app.HZS {
+  background-color: $hzsPrimary;
+  background-image: radial-gradient($hzsPrimary, $hzsSecondary);
+
+  section {
+    background-color: $hzsPrimary;
+    border: 1px solid $hzsSecondary;
+    border-radius: 4px;
+  }
+
+  a {
+    color: $hzsSecondary;
+  }
+
+  #rv a {
+    background-color: #fff;
+  }
+
+  a:hover {
+    color: $hzsSecondary;
+    border-bottom: 1px dotted $hzsSecondary;
+  }
+
+  hr {
+    opacity: 1;
+    height: 1px;
+    border-bottom-color: $hzsSecondary;
+  }
+
+  table.table {
+    td {
+      border-color: $hzsSecondary;
+    }
+  }
+
+  .button.is-primary {
+    background-color: $hzsSecondary!important;
+    color: #fff;
+  }
+
+  .button.is-secondary {
+    background-color: $hzsPrimary;
+  }
+
+  .column {
+    section {
+      border: none;
+    }
+  }
+
+  .is-button-header {
+    .column.is-narrow {
+      background-color: $hzsSecondary;
+    }
+  }
+
+  .orange {
+    color: $hzsSecondary;
+  }
+
+  .pagination-next, .pagination-previous {
+    background-color: $hzsPrimary;
+  }
+
+  .pagination-link.is-current {
+    background-color: $hzsSecondary!important;
+    border-color: $hzsPrimary;
+  }
+
+  .tabs.is-boxed li a {
+    background: none!important;
+  }
+
+  .tabs.is-boxed li.is-active a, .tabs.is-boxed a:hover {
+    background-color: $hzsPrimary!important;
+    border: 1px solid $hzsPrimary;
+  }
+}

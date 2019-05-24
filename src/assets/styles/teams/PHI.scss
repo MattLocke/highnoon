@@ -1,0 +1,73 @@
+$phiPrimary: #222222;
+$phiSecondary: #f99f29;
+
+#app.PHI {
+  background-color: $phiPrimary;
+  background-image: radial-gradient($phiPrimary, $phiSecondary);
+
+  section {
+    background-color: $phiPrimary;
+    border: 1px solid $phiSecondary;
+    border-radius: 4px;
+  }
+
+  a {
+    color: $phiSecondary;
+  }
+
+  a:hover {
+    color: $phiSecondary;
+    border-bottom: 1px dotted $phiSecondary;
+  }
+
+  hr {
+    opacity: 1;
+    height: 1px;
+    border-bottom-color: $phiSecondary;
+  }
+
+  table.table {
+    td {
+      border-color: $phiSecondary;
+    }
+  }
+
+  .button.is-primary {
+    background-color: $phiSecondary;
+    color: #fff;
+  }
+
+  .button.is-secondary {
+    background-color: $phiPrimary;
+  }
+
+  .column {
+    section {
+      border: none;
+    }
+  }
+
+  .is-button-header {
+    .column.is-narrow {
+      background-color: $phiSecondary;
+    }
+  }
+
+  .orange {
+    color: $phiSecondary;
+  }
+
+  .pagination-next, .pagination-previous {
+    background-color: $phiPrimary;
+  }
+
+  .pagination-link.is-current {
+    background-color: $phiSecondary;
+    border-color: $phiPrimary;
+  }
+
+  .tabs.is-boxed li.is-active a, .tabs.is-boxed a:hover {
+    background-color: $phiPrimary;
+    border: 1px solid $phiPrimary;
+  }
+}

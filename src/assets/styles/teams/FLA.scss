@@ -1,0 +1,73 @@
+$flaPrimary: #af272f;
+$flaSecondary: #feda00;
+
+#app.FLA {
+  background-color: $flaPrimary;
+  background-image: radial-gradient($flaPrimary, $flaSecondary);
+
+  section {
+    background-color: $flaPrimary;
+    border: 1px solid $flaSecondary;
+    border-radius: 4px;
+  }
+
+  a {
+    color: $flaSecondary;
+  }
+
+  a:hover {
+    color: $flaSecondary;
+    border-bottom: 1px dotted $flaSecondary;
+  }
+
+  hr {
+    opacity: 1;
+    height: 1px;
+    border-bottom-color: $flaSecondary;
+  }
+
+  table.table {
+    td {
+      border-color: $flaSecondary;
+    }
+  }
+
+  .button.is-primary {
+    background-color: $flaSecondary;
+    color: #fff;
+  }
+
+  .button.is-secondary {
+    background-color: $flaPrimary;
+  }
+
+  .column {
+    section {
+      border: none;
+    }
+  }
+
+  .is-button-header {
+    .column.is-narrow {
+      background-color: $flaSecondary;
+    }
+  }
+
+  .orange {
+    color: $flaSecondary;
+  }
+
+  .pagination-next, .pagination-previous {
+    background-color: $flaPrimary;
+  }
+
+  .pagination-link.is-current {
+    background-color: $flaSecondary;
+    border-color: $flaPrimary;
+  }
+
+  .tabs.is-boxed li.is-active a, .tabs.is-boxed a:hover {
+    background-color: $flaPrimary;
+    border: 1px solid $flaPrimary;
+  }
+}
