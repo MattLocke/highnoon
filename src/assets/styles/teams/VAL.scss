@@ -1,9 +1,9 @@
 $valPrimary: #004438;
-$valSecondary: #e5d456;
+$valSecondary: darken(#e5d456, 20%);
 
 #app.VAL {
   background-color: $valPrimary;
-  background-image: radial-gradient(lighten($valSecondary, 20%), $valSecondary);
+  background-image: radial-gradient(darken($valSecondary, 40%), $valSecondary);
 
   section {
     background-color: $valPrimary;

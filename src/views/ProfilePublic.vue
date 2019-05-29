@@ -33,7 +33,22 @@
         p Player stats are coming soon!
       section
         h2 Trophies
-        p Trophies are coming soon!
+        .columns
+          .column.is-one-fifth
+            figure.image.is-128x128
+              img(src="https://bulma.io/images/placeholders/128x128.png")
+          .column.is-one-fifth
+            figure.image.is-128x128
+              img(src="https://bulma.io/images/placeholders/128x128.png")
+          .column.is-one-fifth
+            figure.image.is-128x128
+              img(src="https://bulma.io/images/placeholders/128x128.png")
+          .column.is-one-fifth
+            figure.image.is-128x128
+              img(src="https://bulma.io/images/placeholders/128x128.png")
+          .column.is-one-fifth
+            figure.image.is-128x128
+              img(src="https://bulma.io/images/placeholders/128x128.png")
 </template>
 
 <script>

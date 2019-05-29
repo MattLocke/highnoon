@@ -18,6 +18,7 @@
           b-field(label="Choose Your Team")
             b-select(placeholder="Select Role" v-model="localProfile.teamTheme")
               option(v-for="team in teams" :value="team.shortName") {{ team.name }}
+              option(value="light") Light
               option(value="") None
           p.is-size-7 (The themes only work for Premium members)
       .column

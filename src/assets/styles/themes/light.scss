@@ -1,0 +1,98 @@
+$lightPrimary: #fff;
+$lightSecondary: #333;
+
+#app.light {
+  background-color: $lightPrimary;
+  background-image: radial-gradient(darken($lightPrimary, 40%), $lightPrimary);
+
+  .navbar a span {
+    color: $lightPrimary;
+  }
+
+  section {
+    background-color: $lightPrimary;
+    border: 1px solid $lightSecondary;
+    border-radius: 4px;
+  }
+
+  a {
+    color: $lightPrimary;
+  }
+
+  #rv a {
+    background-color: $lightSecondary;
+  }
+
+  #rv a:hover {
+    color: $lightPrimary;
+  }
+
+  #rv, #rv .wrap, #rv span, #rv p, #rv .label, #rv h1, #rv h2, #rv h3, #rv h4, #rv h5 {
+    color: $lightSecondary;
+  }
+
+  a:hover {
+    color: $lightSecondary;
+    border-bottom: 1px dotted $lightSecondary;
+  }
+
+  hr {
+    opacity: 1;
+    height: 1px;
+    border-bottom-color: $lightSecondary;
+  }
+
+  table.table {
+    td {
+      border-color: $lightSecondary;
+    }
+  }
+
+  .button.is-primary {
+    background-color: $lightSecondary!important;
+    color: #fff;
+  }
+
+  .button.is-secondary {
+    background-color: $lightPrimary;
+  }
+
+  .column {
+    section {
+      border: none;
+    }
+  }
+
+  .is-button-header {
+    .column.is-narrow {
+      background-color: $lightSecondary;
+    }
+  }
+
+  .orange {
+    color: $lightSecondary;
+  }
+
+  .pagination-next, .pagination-previous {
+    background-color: $lightPrimary;
+  }
+
+  .pagination-link.is-current {
+    background-color: $lightSecondary!important;
+    border-color: $lightPrimary;
+  }
+
+  .tabs.is-boxed li a {
+    background: none!important;
+    color: $lightSecondary;
+  }
+
+  #rv .tabs.is-boxed li.is-active a span, #rv .tabs.is-boxed li a:hover span {
+    color: $lightPrimary;
+  }
+
+  #rv .tabs.is-boxed li.is-active a, #rv .tabs.is-boxed a:hover {
+    background-color: $lightSecondary!important;
+    border: 1px solid $lightSecondary;
+  }
+}
