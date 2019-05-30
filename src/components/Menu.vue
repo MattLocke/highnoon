@@ -21,6 +21,7 @@
           span {{ profile.displayName }}
         router-link.navbar-item(
           v-else to="/login") Log In
+        router-link.navbar-item(to="/LeaderboardPickem") Pick'Em Leaders
         router-link.navbar-item(
           v-for="(menuItem, index) in menuItems"
           :key="index"

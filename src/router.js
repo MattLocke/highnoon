@@ -11,6 +11,7 @@ import Fantasy from './views/Fantasy'
 import Gig from './views/Gig'
 import Home from './views/Home'
 import HowStandardWorks from './views/HowStandardWorks'
+import LeaderboardPickem from './views/GlobalPickem'
 import LeagueMatchups from './views/LeagueMatchups'
 import LeagueStandard from './views/LeagueStandard'
 import LeagueUnlimited from './views/LeagueUnlimited'
@@ -144,6 +145,14 @@ let router = new Router({
       component: Fantasy,
       meta: {
         requiresAuth: true
+      }
+    },
+    {
+      path: '/LeaderboardPickem',
+      name: 'LeaderboardPickem',
+      component: LeaderboardPickem,
+      meta: {
+        requiresAuth: false
       }
     },
     {

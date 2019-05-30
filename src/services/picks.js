@@ -15,6 +15,18 @@ export default {
       return true
     })
   },
+  getGlobalLeaderboards () {
+    return db.collection('leaderboardPicks')
+      .orderBy('points', 'desc')
+      .get()
+      .then((pickDocs) => {
+        const leaders = []
+        pickDocs.forEach((pickDoc) => {
+          leaders.push(pickDoc.data())
+        })
+        return leaders
+      })
+  },
   getGlobalPickRates () {
     return db.collection('picksLean').get()
       .then((pickDocs) => {
