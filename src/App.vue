@@ -56,7 +56,6 @@ export default {
     if (firebase.auth().currentUser) {
       userService.getProfile(firebase.auth().currentUser.uid)
         .then(userData => {
-          this.userData = userData
           this.$store.dispatch('logIn', userData)
           this.$store.dispatch('setLoading', false)
         })
