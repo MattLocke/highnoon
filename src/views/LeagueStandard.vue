@@ -28,7 +28,7 @@
         section
           router-link.button.is-primary.is-small(:to="`/manageTeam/${leagueId}`" v-if="draftComplete") Manage Team
           button.button.is-primary.is-small(disabled v-else) Manage Team
-          button.button.is-secondary.is-small.is-pulled-right(@click="copyLink" v-if="isInLeague") Copy Share Link
+          button.button.is-secondary.is-small.is-pulled-right.is-hidden-mobile(@click="copyLink" v-if="isInLeague") Copy Share Link
         section(v-if="isOwner && canReschedule")
           p If you created your league this week, you can keep clicking this to generate a new schedule.  If you're showing as only being able to start next week, click this and it will re-generate a schedule for you.  :)
           hr

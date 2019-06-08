@@ -2,7 +2,7 @@
   .league-pickem
     .container
       h1 {{ league.leagueName }}
-      button.button.is-secondary.is-small.is-pulled-right(@click="copyLink") Copy Share Link
+      button.button.is-secondary.is-small.is-pulled-right.is-hidden-mobile(@click="copyLink") Copy Share Link
       b-tabs(v-model="activeContentTab" type="is-boxed" :animated="false")
         b-tab-item(label="League Message")
           .league-message
