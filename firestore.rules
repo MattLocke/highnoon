@@ -109,6 +109,10 @@ service cloud.firestore {
       allow read;
     }
 
+    match /unlimitedGlobalLeaderboards/{userId} {
+      allow read;
+    }
+
     match /unlimitedLeagueRoster/{leagueId} {
     	allow read;
     	allow write: if request.auth.uid != null;

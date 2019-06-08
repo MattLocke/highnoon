@@ -163,6 +163,18 @@ export default {
       .get()
       .then(schedule => schedule.data())
   },
+  getUnlimitedLeaderboards () {
+    return db.collection('unlimitedGlobalLeaderboards')
+      .orderBy('totalScore', 'desc')
+      .get()
+      .then((users) => {
+        const leaders = []
+        users.forEach((user) => {
+          leaders.push(user.data())
+        })
+        return leaders
+      })
+  },
   joinLeague (user, league, leagueType = 'standard') {
     // foundation Ids
     const leagueId = league.id

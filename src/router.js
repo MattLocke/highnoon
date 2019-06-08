@@ -12,6 +12,7 @@ import Gig from './views/Gig'
 import Home from './views/Home'
 import HowStandardWorks from './views/HowStandardWorks'
 import LeaderboardPickem from './views/GlobalPickem'
+import LeaderboardUnlimited from './views/GlobalUnlimited'
 import LeagueMatchups from './views/LeagueMatchups'
 import LeagueStandard from './views/LeagueStandard'
 import LeagueUnlimited from './views/LeagueUnlimited'
@@ -154,6 +155,11 @@ let router = new Router({
       meta: {
         requiresAuth: false
       }
+    },
+    {
+      path: '/LeaderboardUnlmited',
+      name: 'LeaderboardUnlimited',
+      component: LeaderboardUnlimited
     },
     {
       path: '/LeaguePickem/:leagueId',
