@@ -4,6 +4,8 @@
     section
       span These leagues are advertised publicly.  Often times they are leagues that give away prizes, have established communities, or contribute to the OWL community in a positive way.  If you think your league is worthy of being featured, please hit us up on discord!
     b-tabs(v-model="activeContentTab" type="is-boxed")
+      b-tab-item(label="Your Leagues")
+        your-leagues(:userId="userId")
       b-tab-item(label="Unlimited Leagues")
         h2 Unlimited Leagues
         .columns.is-multiline
@@ -26,8 +28,6 @@
               router-link(:to="`/LeaguePickem/${league.id}`") {{ league.leagueName }}
             span {{ league.featuredMessage }}
             hr.is-hidden-desktop
-      b-tab-item(label="Your Leagues")
-        your-leagues(:userId="userId")
 </template>
 
 <script>

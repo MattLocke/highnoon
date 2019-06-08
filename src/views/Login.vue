@@ -69,7 +69,7 @@ export default {
       immediate: true,
       handler () {
         // TODO: Fix this redirect to handle various league types
-        if (this.loggedIn) this.$router.push({ path: this.leagueId ? `/leagues/${this.leagueId}` : '/home' })
+        if (this.loggedIn) this.$router.push({ path: this.leagueId ? `/leagues/${this.leagueId}` : '/leagues' })
       }
     }
   },
@@ -89,7 +89,7 @@ export default {
           this.$store.dispatch('logIn', userData)
           this.$store.dispatch('setLoading', false)
           if (this.leagueId) this.$router.push({ path: '/ViewLeague/' + this.leagueId })
-          else this.$router.push({ path: '/home' })
+          else this.$router.push({ path: '/leagues' })
         })
         .catch((error) => {
           this.$store.dispatch('setLoading', false)
@@ -133,7 +133,7 @@ export default {
           if (this.leagueId) this.$router.push({ path: '/ViewLeague/' + this.leagueId })
           else {
             this.$store.dispatch('logIn', userData)
-            this.$router.push({ path: '/home' })
+            this.$router.push({ path: '/leagues' })
           }
         })
     },
