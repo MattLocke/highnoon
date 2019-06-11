@@ -44,14 +44,14 @@ let router = new Router({
       redirect: 'login'
     },
     {
-      path: '/stats/:week?',
-      name: 'stats',
-      component: Stats
+      path: '/article/:articleId',
+      name: 'article',
+      component: Article
     },
     {
-      path: '/premier',
-      name: 'premier',
-      component: Premier,
+      path: '/createNews/:articleId?',
+      name: 'createNews',
+      component: CreateNews,
       meta: {
         requiresAuth: true
       }
@@ -81,56 +81,17 @@ let router = new Router({
       }
     },
     {
+      path: '/fantasy',
+      name: 'fantasy',
+      component: Fantasy,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
       path: '/gig',
       name: 'gig',
       component: Gig,
-      meta: {
-        requiresAuth: true
-      }
-    },
-    {
-      path: '/howStandardWorks',
-      name: 'howStandardWorks',
-      component: HowStandardWorks
-    },
-    {
-      path: '/leagueMatchups/:leagueId/:week',
-      name: 'leagueMatchups',
-      component: LeagueMatchups,
-      meta: {
-        requiresAuth: true
-      }
-    },
-    {
-      path: '/article/:articleId',
-      name: 'article',
-      component: Article
-    },
-    {
-      path: '/createNews/:articleId?',
-      name: 'createNews',
-      component: CreateNews,
-      meta: {
-        requiresAuth: true
-      }
-    },
-    {
-      path: '/login',
-      name: 'login',
-      component: Login
-    },
-    {
-      path: '/manageTeam/:leagueId',
-      name: 'manageTeam',
-      component: ManageTeam,
-      meta: {
-        requiresAuth: true
-      }
-    },
-    {
-      path: '/manageUnlimitedTeam/:leagueId',
-      name: 'manageUnlimitedTeam',
-      component: ManageUnlimitedTeam,
       meta: {
         requiresAuth: true
       }
@@ -141,12 +102,9 @@ let router = new Router({
       component: Home
     },
     {
-      path: '/fantasy',
-      name: 'fantasy',
-      component: Fantasy,
-      meta: {
-        requiresAuth: true
-      }
+      path: '/howStandardWorks',
+      name: 'howStandardWorks',
+      component: HowStandardWorks
     },
     {
       path: '/LeaderboardPickem',
@@ -160,6 +118,14 @@ let router = new Router({
       path: '/LeaderboardUnlmited',
       name: 'LeaderboardUnlimited',
       component: LeaderboardUnlimited
+    },
+    {
+      path: '/leagueMatchups/:leagueId/:week',
+      name: 'leagueMatchups',
+      component: LeagueMatchups,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/LeaguePickem/:leagueId',
@@ -194,6 +160,27 @@ let router = new Router({
       }
     },
     {
+      path: '/login',
+      name: 'login',
+      component: Login
+    },
+    {
+      path: '/manageTeam/:leagueId',
+      name: 'manageTeam',
+      component: ManageTeam,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/manageUnlimitedTeam/:leagueId',
+      name: 'manageUnlimitedTeam',
+      component: ManageUnlimitedTeam,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
       path: '/messages',
       name: 'messages',
       component: Messages,
@@ -210,17 +197,17 @@ let router = new Router({
       }
     },
     {
-      path: '/profile',
-      name: 'profile',
-      component: Profile,
+      path: '/premier',
+      name: 'premier',
+      component: Premier,
       meta: {
         requiresAuth: true
       }
     },
     {
-      path: '/user/:userId',
-      name: 'user',
-      component: PublicProfile,
+      path: '/profile',
+      name: 'profile',
+      component: Profile,
       meta: {
         requiresAuth: true
       }
@@ -234,6 +221,11 @@ let router = new Router({
       }
     },
     {
+      path: '/stats/:week?',
+      name: 'stats',
+      component: Stats
+    },
+    {
       path: '/status',
       name: 'status',
       component: Status,
@@ -245,6 +237,14 @@ let router = new Router({
       path: '/upload',
       name: 'upload',
       component: Upload,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/user/:userId',
+      name: 'user',
+      component: PublicProfile,
       meta: {
         requiresAuth: true
       }
