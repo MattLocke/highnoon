@@ -94,7 +94,7 @@
                   span {{ props.row.wins }}
                 b-table-column(label="Losses" width="30" field="losses" sortable)
                   span {{ props.row.losses }}
-                b-table-column(label="Ties" width="30" field="ties" sortable)
+                //- b-table-column(label="Ties" width="30" field="ties" sortable)
                   span {{ props.row.ties }}
           b-tab-item(label="Roster")
             league-roster(:league="league" v-if="draftComplete && isInLeague" :raw="league.rawScoring")
