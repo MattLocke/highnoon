@@ -21,5 +21,13 @@ export default {
       .doc(`${week}`)
       .get()
       .then((players) => players.data())
+  },
+  getRosterTotals (leagueId, week) {
+    return db.collection('standardLeagueRosterTotals').doc(`week${week}`).collection(leagueId).doc('rosters').get()
+      .then(doc => doc.data())
+  },
+  getUnlimitedRosterTotals (leagueId, week) {
+    return db.collection('unlimitedWeeklyTotals').doc(leagueId).collection(`week${week}`).doc('rosters').get()
+      .then(doc => doc.data())
   }
 }
