@@ -1,6 +1,6 @@
 <template lang="pug">
   .roster-listing(v-if="playersLoaded && playerRoster")
-    h3.orange {{ left.teamName }}
+    h3.orange {{ team.teamName }}
     roster-position(:score="playerScores[playerRoster.captain]" :name="getName(players[playerRoster.captain])" :isRight="isRight" role="captain")
     roster-position(:score="playerScores[playerRoster.offense1]" :name="getName(players[playerRoster.offense1])" :isRight="isRight" role="offense")
     roster-position(:score="playerScores[playerRoster.offense2]" :name="getName(players[playerRoster.offense2])" :isRight="isRight" role="offense")
@@ -8,12 +8,14 @@
     roster-position(:score="playerScores[playerRoster.support2]" :name="getName(players[playerRoster.support2])" :isRight="isRight" role="support")
     roster-position(:score="playerScores[playerRoster.tank1]" :name="getName(players[playerRoster.tank1])" :isRight="isRight" role="tank")
     roster-position(:score="playerScores[playerRoster.tank2]" :name="getName(players[playerRoster.tank2])" :isRight="isRight" role="tank")
-    h3.orange(:class="{'is-pulled-right': !isRight}")  {{ playerTotal | playerScore }}
+    h3(:class="{'is-pulled-right': !isRight}")
+      span(:class="{'orange': !raw, 'faded': raw}") {{ playerBest }}
+      span(v-if="playerTotal > 0")  /
+      span(v-if="playerTotal > 0" :class="{'orange': raw, 'faded': !raw}")  {{ playerTotal }}
 </template>
 
 <script>
 import { isEmpty } from 'lodash'
-import LeagueService from '@/services/league'
 
 import RosterPosition from '@/views/leagues/RosterPosition'
 
@@ -23,11 +25,15 @@ export default {
     RosterPosition
   },
   props: {
+    fullRoster: {
+      type: Object,
+      required: true
+    },
     isRight: {
       type: Boolean,
       default: false
     },
-    left: {
+    team: {
       type: Object,
       required: true
     },
@@ -55,18 +61,18 @@ export default {
     }
   },
   computed: {
-    fullRoster () {
-      return this.$store.getters.getLeagueRoster
-    },
     leagueId () {
       return this.$route.params.leagueId
     },
-    leftLoaded () {
-      return !isEmpty(this.left)
+    playerBest () {
+      return this.fullRoster && this.fullRoster[this.team.userId] ? this.fullRoster[this.team.userId].scoreBest : 0
+    },
+    playerTotal () {
+      return this.fullRoster && this.fullRoster[this.team.userId] ? this.fullRoster[this.team.userId].scoreTotal : 0
     },
     playerRoster () {
-      if (this.left.captain) return this.left
-      return this.fullRoster[this.left.userId] ? this.fullRoster[this.left.userId].roster : this.emptyRoster
+      if (this.team.captain) return this.team
+      return this.fullRoster[this.team.userId] ? this.fullRoster[this.team.userId].roster : this.emptyRoster
     },
     players () {
       return this.$store.getters.getPlayers
@@ -76,9 +82,6 @@ export default {
     },
     playerScores () {
       return !isEmpty(this.referenceScores) ? this.referenceScores : this.playerStoreScores
-    },
-    playerTotal () {
-      return LeagueService.calculateRosterPoints(this.playerScores, this.playerRoster)
     },
     playerStoreScores () {
       return this.raw ? this.$store.getters.getPlayerTotalScores : this.$store.getters.getPlayerScores || {}
@@ -105,6 +108,9 @@ export default {
       .player-score {
         font-size: 1.2rem;
       }
+    }
+    .faded {
+      opacity: 0.6;
     }
   }
 </style>
