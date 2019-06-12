@@ -1,6 +1,6 @@
 <template lang="pug">
   .roster-history-week
-    roster-listing(:left="roster" :referenceScores="scores")
+    roster-listing(:fullRoster="fullRoster" :team="roster" :referenceScores="scores" v-if="fullRoster")
 </template>
 
 <script>
@@ -25,6 +25,7 @@ export default {
   },
   data () {
     return {
+      fullRoster: {},
       roster: {},
       scores: {}
     }
@@ -32,9 +33,6 @@ export default {
   computed: {
     userId () {
       return this.$store.getters.getUserId
-    },
-    weekScores () {
-      return this.$store.getters.getPlayerScores
     }
   },
   watch: {
@@ -42,15 +40,19 @@ export default {
       immediate: true,
       handler (val) {
         if (val) {
-          this.$store.dispatch('getPlayerScores', this.week)
           RosterService.getRosterByWeek(this.leagueId, this.week, this.userId)
             .then((roster) => {
-              this.roster = roster
+              this.roster = { ...roster, userId: this.userId }
             })
-          RosterService.getRosterScores(this.week)
+            .then(() => RosterService.getRosterScores(this.week))
             .then((scores) => {
               this.scores = scores
             })
+            .then(() => RosterService.getUnlimitedRosterTotals(this.leagueId, this.week))
+            .then((fullRoster) => {
+              this.fullRoster = fullRoster
+            })
+            .catch(e => console.error(e))
         }
       }
     }
