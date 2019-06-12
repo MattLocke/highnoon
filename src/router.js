@@ -115,7 +115,7 @@ let router = new Router({
       }
     },
     {
-      path: '/LeaderboardUnlmited',
+      path: '/LeaderboardUnlimited',
       name: 'LeaderboardUnlimited',
       component: LeaderboardUnlimited
     },
