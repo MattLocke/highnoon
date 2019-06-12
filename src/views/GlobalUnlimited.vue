@@ -2,10 +2,12 @@
   .global-pickem.container
     h1 Global Unlimited Leaderboard
     section
+      b-field(label="Filter Names")
+        b-input(v-model="searchText")
       h2 Your Position:
         span.orange  {{ yourPosition.pos }}
       b-table(
-        :data="withPlaces"
+        :data="withPlacesFiltered"
         ref="table"
         paginated)
         template(slot-scope="props")
@@ -33,6 +35,7 @@ export default {
   data () {
     return {
       leaders: [],
+      searchText: '',
       withPlaces: [],
       yourPosition: {}
     }
@@ -40,6 +43,9 @@ export default {
   computed: {
     userData () {
       return this.$store.getters.getUserData
+    },
+    withPlacesFiltered () {
+      return this.withPlaces.filter(u => u.displayName.toLowerCase().includes(this.searchText.toLowerCase()))
     }
   },
   watch: {
