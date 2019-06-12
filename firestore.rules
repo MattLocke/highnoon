@@ -85,6 +85,10 @@ service cloud.firestore {
     	allow write: if request.auth.uid != null;
     }
 
+    match /standardLeagueRosterTotals/{week}/{leagueId}/{roster} {
+      allow read;
+    }
+
     match /standardLeagueTrades/{leagueId} {
       allow read;
       allow write: if request.auth.uid != null;
@@ -118,8 +122,8 @@ service cloud.firestore {
     	allow write: if request.auth.uid != null;
     }
     
-    match /unlimitedLeagueRosterTotals/{leagueId} {
-    	allow read;
+    match /unlimitedLeagueRosterTotals/{week}/{leagueId}/{roster} {
+      allow read;
     }
 
     match /unlimitedLeagueUsers/{leagueId} {
