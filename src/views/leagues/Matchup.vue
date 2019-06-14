@@ -3,9 +3,9 @@
     h2 Your Matchup
     .columns(v-if="myNextMatch")
       .column.is-half
-        roster-listing(:left="myNextMatch.home" :right="myNextMatch.away")
+        roster-listing(v-if="fullRosterLeft" :fullRoster="leagueRoster" :team="myNextMatch.home" :right="myNextMatch.away")
       .column.is-half
-        roster-listing(:left="myNextMatch.away" :right="myNextMatch.home" :isRight="true")
+        roster-listing(v-if="fullRosterRight" :fullRoster="leagueRoster" :team="myNextMatch.away" :right="myNextMatch.home" :isRight="true")
 </template>
 
 <script>
@@ -27,6 +27,15 @@ export default {
     config () {
       return this.$store.getters.getConfig
     },
+    fullRosterLeft () {
+      return this.myNextMatch && !isEmpty(this.leagueRoster) ? this.leagueRoster[this.myNextMatch.home.userId] : {}
+    },
+    fullRosterRight () {
+      return this.myNextMatch && !isEmpty(this.leagueRoster) ? this.leagueRoster[this.myNextMatch.away.userId] : {}
+    },
+    leagueRoster () {
+      return this.$store.getters.getLeagueRoster
+    },
     myNextMatch () {
       const actualWeek = this.config.currentWeek
       if (!isEmpty(this.schedule)) {
@@ -40,6 +49,7 @@ export default {
   },
   mounted () {
     this.$store.dispatch('fetchLeagueSchedule', this.leagueId)
+    this.$store.dispatch('getPlayerScores', this.config.currentWeek)
   }
 }
 </script>
