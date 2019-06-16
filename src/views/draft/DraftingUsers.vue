@@ -66,7 +66,7 @@ export default {
       return this.picks[userId] || []
     },
     getColor (player) {
-      const team = this.teams ? this.teams.filter(team => team.abbreviatedName === player.team)[0] : null
+      const team = this.teams ? this.teams.filter(team => team.shortName === player.teamShortName)[0] : null
       if (team) return team.primaryColor === '000000' ? team.secondaryColor : team.primaryColor
       return '222'
     }

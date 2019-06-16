@@ -56,7 +56,7 @@
               button.button.is-primary(disabled v-else) Save Roster And Return To League
             .column
               .field
-                b-checkbox(v-model="lineUp.applyToAll" :disabled="lockedPlayers.length" v-tooltip="'This feature locks once the first match of the week has started to prevent abuse.'") Apply this roster to all of my unlimited leagues
+                b-checkbox(v-model="lineUp.applyToAll" :disabled="!!(lockedPlayers.length)" v-tooltip="'This feature locks once the first match of the week has started to prevent abuse.'") Apply this roster to all of my unlimited leagues
         section.is-hidden-desktop
           p The captain role is (for now) just a flex role so you can have a player outside of the 2/2/2 we're enforcing.  Their points will count the same as any other role, so it's safe to feature your favorite DPS as your captain!
           h2.ow-font.mobile-roster
@@ -96,7 +96,7 @@
               button.button.is-secondary.is-small.is-remove(@click="lineUp.tank2 = ''" v-if="lineUp.tank2 && notLocked(lineUp.tank2)") X
           section.has-text-centered
             .field
-              b-checkbox(v-model="lineUp.applyToAll" :disabled="lockedPlayers.length" v-tooltip="'This feature locks once the first match of the week has started to prevent abuse.'") Apply to all unlimited leagues
+              b-checkbox(v-model="lineUp.applyToAll" :disabled="!!(lockedPlayers.length)" v-tooltip="'This feature locks once the first match of the week has started to prevent abuse.'") Apply to all unlimited leagues
           section.has-text-centered
             .field
               button.button.is-primary(@click="saveRoster" v-if="canSaveRoster") Save Roster And Return To League
@@ -107,7 +107,7 @@
               b-field(label="Filter Team")
                 b-select(placeholder="Filter By Team" v-model="filterTeam")
                   option(value="") All
-                  option(v-for="team in teams" :value="team.abbreviatedName") {{ team.name }}
+                  option(v-for="team in teams" :value="team.shortName") {{ team.name }}
             .column.is-narrow
               b-field(label="Filter Role")
                 b-select(placeholder="Filter By Role" v-model="filterRole")
@@ -182,7 +182,7 @@ export default {
 
       if (this.filterText) fPlayers = fPlayers.filter(player => player.name && player.name.toLowerCase().includes(this.filterText.toLowerCase()))
       if (this.filterRole) fPlayers = fPlayers.filter(player => player && player.role === this.filterRole)
-      if (this.filterTeam) fPlayers = fPlayers.filter(player => player.team && player.team === this.filterTeam)
+      if (this.filterTeam) fPlayers = fPlayers.filter(player => player.teamShortName && player.teamShortName === this.filterTeam)
 
       return differenceWith(fPlayers, this.lockedPlayers, (a, b) => Number(a.id) === Number(b))
     },

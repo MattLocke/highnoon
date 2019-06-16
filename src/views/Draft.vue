@@ -70,7 +70,7 @@
                       b-field(label="Filter Team")
                         b-select(placeholder="Filter By Team" v-model="filterTeam")
                           option(value="") All
-                          option(v-for="team in teams" :value="team.abbreviatedName") {{ team.name }}
+                          option(v-for="team in teams" :value="team.shortName") {{ team.name }}
                     .column.is-narrow
                       b-field(label="Filter Role")
                         b-select(placeholder="Filter By Role" v-model="filterRole")
@@ -183,7 +183,7 @@ export default {
 
       if (this.filterText) fPlayers = fPlayers.filter(player => player.name && player.name.toLowerCase().includes(this.filterText.toLowerCase()))
       if (this.filterRole) fPlayers = fPlayers.filter(player => player.role === this.filterRole)
-      if (this.filterTeam) fPlayers = fPlayers.filter(player => player.team && player.team === this.filterTeam)
+      if (this.filterTeam) fPlayers = fPlayers.filter(player => player.teamShortName && player.teamShortName === this.filterTeam)
       fPlayers = differenceWith(fPlayers, this.selectedPlayers, (a, b) => a.id === Number(b))
       return fPlayers
     },
@@ -393,7 +393,7 @@ export default {
         })
     },
     getColor (player) {
-      const team = this.teams.filter(team => team.abbreviatedName === player.team)[0]
+      const team = this.teams.filter(team => team.shortName === player.teamShortName)[0]
       if (team) return team.primaryColor === '000000' ? team.secondaryColor : team.primaryColor
       return '222'
     },
