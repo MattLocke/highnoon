@@ -50,8 +50,13 @@
               h2.has-text-centered Tank 2
                 button.button.is-secondary.is-small.is-remove(@click="lineUp.tank2 = ''" v-if="lineUp.tank2 && notLocked(lineUp.tank2)" v-tooltip="'Remove'") X
         section.is-hidden-mobile
-          button.button.is-primary(@click="saveRoster" v-if="canSaveRoster") Save Roster And Return To League
-          button.button.is-primary(disabled v-else) Save Roster And Return To League
+          .columns
+            .column.is-narrow
+              button.button.is-primary(@click="saveRoster" v-if="canSaveRoster") Save Roster And Return To League
+              button.button.is-primary(disabled v-else) Save Roster And Return To League
+            .column
+              .field
+                b-checkbox(v-model="lineUp.applyToAll" :disabled="lockedPlayers.length" v-tooltip="'This feature locks once the first match of the week has started to prevent abuse.'") Apply this roster to all of my unlimited leagues
         section.is-hidden-desktop
           p The captain role is (for now) just a flex role so you can have a player outside of the 2/2/2 we're enforcing.  Their points will count the same as any other role, so it's safe to feature your favorite DPS as your captain!
           h2.ow-font.mobile-roster
@@ -90,8 +95,12 @@
             span {{ getPlayerName(lineUp.tank2) }}
               button.button.is-secondary.is-small.is-remove(@click="lineUp.tank2 = ''" v-if="lineUp.tank2 && notLocked(lineUp.tank2)") X
           section.has-text-centered
-            button.button.is-primary(@click="saveRoster" v-if="canSaveRoster") Save Roster And Return To League
-            button.button.is-primary(v-else disabled) Save Roster And Return To League
+            .field
+              b-checkbox(v-model="lineUp.applyToAll" :disabled="lockedPlayers.length" v-tooltip="'This feature locks once the first match of the week has started to prevent abuse.'") Apply to all unlimited leagues
+          section.has-text-centered
+            .field
+              button.button.is-primary(@click="saveRoster" v-if="canSaveRoster") Save Roster And Return To League
+              button.button.is-primary(v-else disabled) Save Roster And Return To League
         section
           .columns
             .column.is-narrow
@@ -153,6 +162,7 @@ export default {
       filterTeam: '',
       filterRole: '',
       lineUp: {
+        applyToAll: false,
         captain: '',
         offense1: '',
         offense2: '',

@@ -175,6 +175,20 @@ exports.tryAutomatedPick = functions.database.ref('/draft/{leagueId}')
     }
   })
 
+exports.applyToAllLeagues = functions.firestore.document('unlimitedLeagueRoster/{leagueId}').onUpdate((change, context) => {
+  const leagueRosters = change.after.data();
+  _.forEach(leagueRosters, async (roster, userId) => {
+    if (roster.applyToAll) {
+      // we have a roster that needs to update all other rosters.
+      roster.applyToAll = false; // set it to false so we don't cause an infinite loop
+      // get this user's unlimited leagues, and update them with this roster's info
+      return await updateUnlimitedRosters(userId, roster);
+    }
+    return Promise.resolve(true)
+  })
+  return null
+})
+
 exports.updateStandardSchedule = functions.firestore.document('standardLeagueUsers/{leagueId}').onUpdate((change, context) => {
   const leagueId = context.params.leagueId; // Grab our leagueId
 
@@ -441,4 +455,20 @@ function fancyLog(message) {
   console.log(`--------------------`)
   console.log(message)
   console.log(`--------------------`)
+}
+
+function updateUnlimitedRosters(userId, roster) {
+  return admin.firestore().collection('userLeagues').doc(userId).get()
+    .then((leaguesDoc) => {
+      const leagues = leaguesDoc.data()
+      const unlimitedLeagues = _.filter(leagues, l => l.leagueType === 'unlimited')
+      const batch = admin.firestore().batch()
+      _.forEach(unlimitedLeagues, u => {
+        const ref = admin.firestore().collection('unlimitedLeagueRoster').doc(u.leagueId)
+        const tmp = {}
+        tmp[userId] = roster
+        batch.update(ref, tmp, { create: true })
+      })
+      return batch.commit()
+    })
 }

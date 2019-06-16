@@ -261,8 +261,14 @@ export default {
       .then(() => db.collection('standardLeagueRoster').doc(leagueId).delete())
   },
   saveRoster (userId, leagueId, roster, type = 'standard') {
+    let applyToAll = false
+    if (roster.applyToAll) {
+      applyToAll = roster.applyToAll
+      delete roster.applyToAll
+    }
     const rosterObj = {
       [userId]: {
+        applyToAll,
         roster,
         lastValid: Date.now()
       }
