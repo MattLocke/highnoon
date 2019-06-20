@@ -4,6 +4,11 @@
     p Use this only when something bad is happening.  It should be obvious when that is.
     .columns.is-mobile
       .column.is-narrow
+        b-switch(v-model="liveConfigCopy.canSeeMatchups")
+      .column
+        span Can See Matchups
+    .columns.is-mobile
+      .column.is-narrow
         b-switch(v-model="liveConfigCopy.canCreateUnlimitedRoster")
       .column
         span Can Create Unlimited Roster
@@ -58,6 +63,7 @@ export default {
   data () {
     return {
       liveConfigCopy: {
+        canSeeMatchups: false,
         canPick: false
       }
     }
