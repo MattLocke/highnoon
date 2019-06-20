@@ -1,6 +1,6 @@
 <template lang="pug">
   .league-matchups
-    div(v-if="!liveConfig.canSeeMatchups")
+    div(v-if="liveConfig.canSeeMatchups")
       router-link.button.is-primary.is-pulled-right(:to="`/leagueStandard/${leagueId}`") Back To League
       h1 {{ league.leagueName }} -
         span.orange  Week {{ week }}
