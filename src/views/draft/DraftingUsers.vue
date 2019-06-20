@@ -2,10 +2,10 @@
   .drafting-users(v-if="playersLoaded")
     .columns.is-multiline.is-mobile(v-if="users")
       .column.is-one-fifth-desktop.is-half-mobile(v-for="(theUser, index) in users")
-        h3.hide-overflow.underlined(:class="{'orange': users[draft.activeDrafter] && theUser.userId == users[draft.activeDrafter].userId && !draftComplete}")
+        h3.hide-overflow.underlined(:class="{'orange': users[draft.activeDrafter] && users[draft.activeDrafter] && theUser.userId == users[draft.activeDrafter].userId && !draftComplete}")
           eva-icon(name="star" fill="white" width="16" height="16" v-if="theUser.userId == ownerId" v-tooltip="'League Owner'")
           | {{ theUser.displayName }}
-          span.is-pulled-right(v-if="users[draft.activeDrafter].userId && theUser.userId == users[draft.activeDrafter].userId && !draftComplete") {{ draft.direction == 'forward' ? '>' : '<' }}
+          span.is-pulled-right(v-if="users[draft.activeDrafter] && users[draft.activeDrafter].userId && theUser.userId == users[draft.activeDrafter].userId && !draftComplete") {{ draft.direction == 'forward' ? '>' : '<' }}
         player-card(v-for="pick in getUserPicks(theUser.userId)" :key="playersObject[pick].id" :player="playersObject[pick]" :primaryColor="getColor(playersObject[pick])" :score="playersObject[pick].fantasyScore || 0" :hidePhoto="true") {{ playersObject[pick].name }}
 </template>
 
