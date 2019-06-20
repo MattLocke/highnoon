@@ -1,6 +1,7 @@
 <template lang="pug">
   .roster-listing(v-if="playersLoaded && playerRoster")
-    h3.orange {{ team.teamName }}
+    h3.orange
+      span(:class="{'is-pulled-right': isRight}") {{ team.teamName }}
     roster-position(:score="playerScores[playerRoster.captain]" :name="getName(players[playerRoster.captain])" :isRight="isRight" role="captain")
     roster-position(:score="playerScores[playerRoster.offense1]" :name="getName(players[playerRoster.offense1])" :isRight="isRight" role="offense")
     roster-position(:score="playerScores[playerRoster.offense2]" :name="getName(players[playerRoster.offense2])" :isRight="isRight" role="offense")
@@ -9,7 +10,7 @@
     roster-position(:score="playerScores[playerRoster.tank1]" :name="getName(players[playerRoster.tank1])" :isRight="isRight" role="tank")
     roster-position(:score="playerScores[playerRoster.tank2]" :name="getName(players[playerRoster.tank2])" :isRight="isRight" role="tank")
     h3(:class="{'is-pulled-right': !isRight}")
-      span(:class="{'orange': !raw, 'faded': raw}") {{ playerBest }}
+      span(:class="{'orange': !raw, 'faded': raw}") {{ playerBest || 0 }}
       span(v-if="playerTotal > 0")  /
       span(v-if="playerTotal > 0" :class="{'orange': raw, 'faded': !raw}")  {{ playerTotal }}
 </template>
@@ -110,7 +111,7 @@ export default {
       }
     }
     .faded {
-      opacity: 0.6;
+      opacity: 0.5;
     }
   }
 </style>

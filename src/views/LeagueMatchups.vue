@@ -1,18 +1,24 @@
 <template lang="pug">
   .league-matchups
-    router-link.button.is-primary.is-pulled-right(:to="`/leagueStandard/${leagueId}`") Back To League
-    h1 {{ league.leagueName }} -
-      span.orange  Week {{ week }}
-    p Colored scores are the ones being used in your league!
-    hr
-    .columns.is-multiline
-      .column.is-one-quarter-desktop.is-one-third-tablet(v-for="matchup in matchups")
-        section
-          .columns
-            .column.is-half
-              roster-listing(:fullRoster="fullRoster" :team="matchup.home" :raw="league.rawScoring" :referenceScores="scores")
-            .column.is-half
-              roster-listing(:fullRoster="fullRoster" :team="matchup.away" :isRight="true" :raw="league.rawScoring" :referenceScores="scores")
+    div(v-if="!liveConfig.canSeeMatchups")
+      router-link.button.is-primary.is-pulled-right(:to="`/leagueStandard/${leagueId}`") Back To League
+      h1 {{ league.leagueName }} -
+        span.orange  Week {{ week }}
+      p Colored scores are the ones being used in your league!
+      hr
+      .columns.is-multiline
+        .column.is-one-quarter-desktop.is-one-third-tablet(v-for="matchup in matchups")
+          section
+            .columns
+              .column.is-half
+                roster-listing(v-if="fullRoster" :fullRoster="fullRoster" :team="matchup.home" :raw="league.rawScoring" :referenceScores="scores")
+              .column.is-half
+                roster-listing(v-if="fullRoster" :fullRoster="fullRoster" :team="matchup.away" :isRight="true" :raw="league.rawScoring" :referenceScores="scores")
+    .container(v-else)
+      section.section
+        h1 Matchups
+        p This section is currently down for maintenance
+        router-link.button.is-primary(:to="`/leagueStandard/${leagueId}`") Back To League
 </template>
 
 <script>
@@ -35,8 +41,14 @@ export default {
     }
   },
   computed: {
+    config () {
+      return this.$store.getters.getConfig
+    },
     leagueId () {
       return this.$route.params.leagueId
+    },
+    liveConfig () {
+      return this.$store.getters.getLiveConfig
     },
     matchups () {
       return this.schedule[this.week] || []
@@ -63,7 +75,7 @@ export default {
         .then((league) => {
           this.league = { ...this.league, ...league }
         })
-        .then(() => RosterService.getRosterTotals(this.leagueId, this.week))
+        .then(() => RosterService.getRosterTotals(this.leagueId, this.week, this.config.currentWeek))
         .then((rosterMap) => {
           this.fullRoster = rosterMap
         })

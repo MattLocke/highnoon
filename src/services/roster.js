@@ -22,8 +22,12 @@ export default {
       .get()
       .then((players) => players.data())
   },
-  getRosterTotals (leagueId, week) {
-    return db.collection('standardLeagueRosterTotals').doc(`week${week}`).collection(leagueId).doc('rosters').get()
+  getRosterTotals (leagueId, week, currentWeek) {
+    if (Number(week) !== Number(currentWeek)) {
+      return db.collection('standardLeagueRosterTotals').doc(`week${week}`).collection(leagueId).doc('rosters').get()
+        .then(doc => doc.data())
+    }
+    return db.collection('standardLeagueRoster').doc(leagueId).get()
       .then(doc => doc.data())
   },
   getUnlimitedRosterTotals (leagueId, week) {
