@@ -1,6 +1,8 @@
 const _ = require('lodash')
 const functions = require('firebase-functions')
 const admin = require('firebase-admin')
+const fetch = require('node-fetch')
+
 admin.initializeApp()
 
 const firestore = admin.firestore()
@@ -8,11 +10,24 @@ const firestore = admin.firestore()
 var API_KEY = 'key-102f8fa0ccfb9ff66ace58ea7807e559';
 var DOMAIN = 'mg.highnoon.gg';
 var mailgun = require('mailgun-js')({apiKey: API_KEY, domain: DOMAIN});
+const DISCORD_URL = functions.config().discord.general;
 
 // Add this magical line of code:
 firestore.settings({ timestampsInSnapshots: true })
 
 exports.matchlock = null
+
+exports.broadcastToDiscord = functions.firestore.document('/discordUpdates/{updateId}')
+  .onCreate((snapshot, context) => {
+    const document = snapshot.data()
+    return fetch(DISCORD_URL, {
+      method: 'post',
+      body:    JSON.stringify(document),
+      headers: { 'Content-Type': 'application/json' },
+    })
+    .then(res => res.json())
+    .then(json => console.log(json));
+  })
 
 exports.sendEmail = functions.database.ref('/email/{emailId}')
   .onCreate((snapshot, context) => {
@@ -175,7 +190,8 @@ exports.tryAutomatedPick = functions.database.ref('/draft/{leagueId}')
     }
   })
 
-exports.applyToAllLeagues = functions.firestore.document('unlimitedLeagueRoster/{leagueId}').onUpdate((change, context) => {
+exports.applyToAllLeagues = functions.firestore.document('unlimitedLeagueRoster/{leagueId}')
+  .onUpdate((change, context) => {
   const leagueRosters = change.after.data();
   _.forEach(leagueRosters, async (roster, userId) => {
     if (roster.applyToAll) {
@@ -189,7 +205,8 @@ exports.applyToAllLeagues = functions.firestore.document('unlimitedLeagueRoster/
   return null
 })
 
-exports.updateStandardSchedule = functions.firestore.document('standardLeagueUsers/{leagueId}').onUpdate((change, context) => {
+exports.updateStandardSchedule = functions.firestore.document('standardLeagueUsers/{leagueId}')
+  .onUpdate((change, context) => {
   const leagueId = context.params.leagueId; // Grab our leagueId
 
   // UPDATE TEAM NAMES OF ALL USERS
