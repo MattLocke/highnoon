@@ -39,8 +39,8 @@ export default {
       })
   },
   savePick (pick) {
-    return db.collection('picks').doc(String(pick.userId))
-      .set({ [pick.matchId]: pick }, { merge: true })
+    return db.collection('matchPicks').doc(`${pick.userId}-${pick.matchId}`)
+      .set({ ...pick }, { merge: true })
       .then(pickRef => pickRef.id)
       .catch((error) => {
         console.error(error)
