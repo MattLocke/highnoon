@@ -260,7 +260,7 @@ export default {
       .then(() => rdb.ref(`/draftOrder/${leagueId}`).remove())
       .then(() => db.collection('standardLeagueRoster').doc(leagueId).delete())
   },
-  saveRoster (userId, leagueId, roster, type = 'standard') {
+  saveRoster (userId, leagueId, roster, week, type = 'standard') {
     let applyToAll = false
     if (roster.applyToAll) {
       applyToAll = roster.applyToAll
@@ -274,6 +274,7 @@ export default {
       }
     }
     return db.collection(`${type}LeagueRoster`).doc(leagueId).set(rosterObj, { merge: true })
+      .then(() => db.collection(`${type}RostersFlat`).doc(`${leagueId}-${userId}-${week}`).set({ userId, leagueId, ...roster }))
   },
   setSchedule (schedule, leagueId) {
     return db.collection('leagueSchedule').doc(leagueId).set(schedule, { merge: true })
@@ -283,6 +284,9 @@ export default {
     return db.collection(`${leagueType}Leagues`).doc(league.id)
       .set(league, { merge: true })
       .then(l => l)
+  },
+  updateLeagueUser (leagueId, user) {
+    return db.collection('standardLeagueUsers').doc(leagueId).set(user, { merge: true })
   },
   updateDraftOrder (draftOrder, leagueId) {
     return rdb.ref(`/draftOrder/${leagueId}`).update(draftOrder)

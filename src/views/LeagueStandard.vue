@@ -81,6 +81,10 @@
             p Right now it's only sorted by win/loss.  I will probably add your internal "total points" to make the ranking more accurate soon!
             b-table(
               :data="sortedScoreboard"
+              :detailed="isOwner"
+              detail-key="userId"
+              :show-detail-icon="showDetailIcon"
+              ref="leaderboard"
               )
               template(slot-scope="props")
                 b-table-column(label="Pos" field="pos" width="20" sortable)
@@ -89,13 +93,35 @@
                   router-link(:to="`/user/${props.row.userId}`" v-if="props.row.displayName") {{ props.row.displayName }}
                   span(v-else) Vacated
                 b-table-column(label="Team Name" field="teamName" sortable)
-                  span {{ props.row.teamName || 'vacated' }}
+                  span(v-if="showDetailIcon || !isOwner") {{ props.row.teamName || 'vacated' }}
+                  span(v-else)
+                    a(@click="toggle(props.row)") {{ props.row.teamName || 'vacated' }}
                 b-table-column(label="Wins" width="30" field="wins" sortable)
                   span {{ props.row.wins }}
                 b-table-column(label="Losses" width="30" field="losses" sortable)
                   span {{ props.row.losses }}
                 //- b-table-column(label="Ties" width="30" field="ties" sortable)
                   span {{ props.row.ties }}
+              template(slot="detail" slot-scope="props")
+                .columns
+                  .column
+                    b-field(label="Wins")
+                    .control
+                      button.button.is-small.is-success(@click="modify('win', 'add', props.row)") +
+                      button.button.is-small.is-danger(@click="modify('win', 'subtract', props.row)") -
+                    span {{ props.row.winModifier }}
+                  .column
+                    b-field(label="Losses")
+                    .control
+                      button.button.is-small.is-success(@click="modify('loss', 'add', props.row)") +
+                      button.button.is-small.is-danger(@click="modify('loss', 'subtract', props.row)") -
+                    span {{ props.row.lossModifier }}
+                  .column
+                    b-field(label="Ties")
+                    .control
+                      button.button.is-small.is-success(@click="modify('tie', 'add', props.row)") +
+                      button.button.is-small.is-danger(@click="modify('tie', 'subtract', props.row)") -
+                    span {{ props.row.tieModifier }}
           b-tab-item(label="Roster")
             league-roster(:league="league" v-if="draftComplete && isInLeague" :raw="league.rawScoring")
             section
@@ -134,6 +160,14 @@
             section(v-if="isOwner")
               collapsible(title-text="Delete League" :start-collapsed="true")
                 confirm-button(button-text="Delete League" confirm-text="Are You Sure?" extra-text="This action can not be undone, and all users will lose their points and picks associated with this league." @confirm-it="deleteLeague")
+          b-tab-item(label="Audit Log" v-if="auditLogs.length")
+            h2 Audit Log
+            p You can see all important changes made by the league owner that have happened recently.
+            hr
+            .columns(v-for="log in auditLogs")
+              .column.is-narrow {{ log.when | formatJSDate }}
+              .column.is-narrow {{ log.displayName }}
+              .column {{ log.message }}
         trash-talk(v-if="isInLeague")
       .column(v-else)
         .container
@@ -147,6 +181,7 @@ import 'firebase/database'
 import { forEach, orderBy, shuffle } from 'lodash'
 import vueMarkdown from 'vue-markdown'
 
+import AuditService from '@/services/audit'
 import LeagueService from '@/services/league'
 
 import draggable from 'vuedraggable'
@@ -173,6 +208,7 @@ export default {
   },
   data () {
     return {
+      auditLogs: [],
       league: {
         message: '',
         image: ''
@@ -182,6 +218,7 @@ export default {
       editingMessage: false,
       draftStatus: '',
       draftOrderCopy: [],
+      showDetailIcon: false,
       showLeagueUsers: false,
       showDraftPreference: false,
       showMenu: true
@@ -212,11 +249,14 @@ export default {
       return (this.isOwner && this.unDrafted && this.leagueUsers.length && this.leagueUsers.length % 2 === 0 && this.draftOrder && this.draftOrder.length)
     },
     sortedScoreboard () {
-      const ordered = orderBy(this.leagueUsers, lu => lu.win ? Object.values(lu.win).length : 0, ['desc'])
+      const ordered = orderBy({ ...this.leagueUsers }, lu => lu.win ? Object.values(lu.win).length : 0, ['desc'])
       ordered.forEach(u => {
-        u.wins = u.win ? Object.values(u.win).length : 0
-        u.ties = u.tie ? Object.values(u.tie).length : 0
-        u.losses = u.loss ? Object.values(u.loss).length : 0
+        u.winModifier = u.winModifier || 0
+        u.tieModifier = u.tieModifier || 0
+        u.lossModifier = u.lossModifier || 0
+        u.wins = Number(u.win ? Object.values(u.win).length : 0) + u.winModifier
+        u.ties = Number(u.tie ? Object.values(u.tie).length : 0) + u.tieModifier
+        u.losses = Number(u.loss ? Object.values(u.loss).length : 0) + u.lossModifier
       })
       let i = 1
       const indexed = forEach(ordered, s => {
@@ -312,6 +352,7 @@ export default {
           this.$store.dispatch('fetchLeagueUsers', { leagueId: val, leagueType: 'standard' })
           this.$store.dispatch('fetchDraftOrder', val)
           this.getLeague(val)
+          this.getLogs()
         }
       }
     },
@@ -457,6 +498,11 @@ export default {
           })
         })
     },
+    getLogs () {
+      AuditService.listByLeague(this.leagueId).then((logs) => {
+        this.auditLogs = logs
+      })
+    },
     joinLeague () {
       if (this.league.password) {
         if (this.localPassword !== this.league.password) {
@@ -490,6 +536,21 @@ export default {
         this.draftStatus = draft ? draft.status || 'unDrafted' : 'unDrafted'
       })
     },
+    modify (what, how, team) {
+      if (!this.isOwner) return
+      team[`${what}Modifier`] = how === 'add' ? team[`${what}Modifier`] + 1 : team[`${what}Modifier`] - 1
+      LeagueService.updateLeagueUser(this.leagueId, { [team.userId]: { ...team } })
+        .then(() => AuditService.record(this.userId, this.userData.displayName, this.leagueId, `${how}ed 1 ${what} ${how === 'add' ? 'to' : 'from'} ${team.displayName}`))
+        .then(() => {
+          this.$toast.open({
+            message: 'Saved user',
+            type: 'is-success',
+            position: 'is-bottom'
+          })
+          this.$store.dispatch('fetchLeagueUsers', { leagueId: this.leagueId, leagueType: 'standard' })
+          return null
+        })
+    },
     resetDraft () {
       this.$store.dispatch('setLoading', true)
       LeagueService.resetDraft(this.leagueId)
@@ -512,6 +573,9 @@ export default {
       }
 
       firebase.database().ref(`/draft/${this.leagueId}`).set(draft)
+    },
+    toggle (row) {
+      this.$refs.leaderboard.toggleDetails(row)
     },
     updateLeague () {
       this.$store.dispatch('setLoading', true)
