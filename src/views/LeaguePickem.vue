@@ -174,7 +174,7 @@ export default {
       return this.$store.getters.getPickStats
     },
     previousWeeksMatches () {
-      if (this.currentWeeksTimes) return orderBy(this.matches.filter(match => match.winner), ['startDateTS'], ['desc'])
+      if (this.currentWeeksTimes) return orderBy(this.matches.filter(match => match.winner > 0), ['startDateTS'], ['desc'])
       return []
     },
     previousWeeksMatchesFiltered () {
@@ -212,14 +212,12 @@ export default {
       handler (val) {
         if (val) {
           this.$store.dispatch('fetchLeagueUsers', { leagueId: this.leagueId, leagueType: 'pickem' })
+          this.$store.dispatch('fetchMatches')
+          this.$store.dispatch('fetchPicks')
           this.getLeague(val)
         }
       }
     }
-  },
-  mounted () {
-    this.$store.dispatch('fetchMatches')
-    this.$store.dispatch('fetchPicks')
   },
   methods: {
     copyLink () {
