@@ -55,7 +55,7 @@ export default {
           .get()
           .then((picks) => {
             const picksMap = {}
-            const thePicks = picks.docs.map(pick => {
+            picks.docs.map(pick => {
               const pickData = pick.data()
               picksMap[pickData.matchId] = { ...pickData }
               return pickData
