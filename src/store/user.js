@@ -50,12 +50,17 @@ export default {
     fetchPicks: ({ state, commit, dispatch }) => {
       if (state.userData.id) {
         dispatch('setLoading', true)
-        db.collection('picks')
-          .doc(state.userData.id)
+        db.collection('matchPicks')
+          .where('userId', '==', state.userData.id)
           .get()
           .then((picks) => {
-            const thePicks = picks.data()
-            commit('SET_PICKS', thePicks)
+            const picksMap = {}
+            const thePicks = picks.docs.map(pick => {
+              const pickData = pick.data()
+              picksMap[pickData.matchId] = { ...pickData }
+              return pickData
+            })
+            commit('SET_PICKS', picksMap)
             dispatch('setLoading', false)
           })
       }
