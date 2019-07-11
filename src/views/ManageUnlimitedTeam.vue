@@ -177,6 +177,9 @@ export default {
     canSaveRoster () {
       return !!(this.lineUp.captain && this.lineUp.offense1 && this.lineUp.offense2 && this.lineUp.support1 && this.lineUp.support2 && this.lineUp.tank1 && this.lineUp.tank2)
     },
+    config () {
+      return this.$store.getters.getConfig
+    },
     filteredPlayers () {
       let fPlayers = [...this.myAvailablePicks]
 
@@ -282,7 +285,7 @@ export default {
     saveRoster () {
       // save it to the db
       this.$store.dispatch('setLoading', true)
-      LeagueService.saveRoster(this.userData.id, this.leagueId, this.lineUp, 'unlimited')
+      LeagueService.saveRoster(this.userData.id, this.leagueId, this.lineUp, this.config.currentWeek, 'unlimited')
         .then(() => {
           // forward to league view page
           this.$router.push({ path: `/LeagueUnlimited/${this.leagueId}` })

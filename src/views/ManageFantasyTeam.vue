@@ -172,6 +172,9 @@ export default {
     canSaveRoster () {
       return !!(this.lineUp && this.lineUp.captain)
     },
+    config () {
+      return this.$store.getters.getConfig
+    },
     draft () {
       return this.$store.getters.getDraft
     },
@@ -311,7 +314,7 @@ export default {
     saveRoster () {
       // save it to the db
       this.$store.dispatch('setLoading', true)
-      LeagueService.saveRoster(this.userData.id, this.leagueId, this.lineUp)
+      LeagueService.saveRoster(this.userData.id, this.leagueId, this.lineUp, this.config.currentWeek)
         .then(() => {
           // forward to league view page
           this.$router.push({ path: `/LeagueStandard/${this.leagueId}` })
