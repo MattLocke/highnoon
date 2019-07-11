@@ -2,6 +2,7 @@
   #app(:class="customTheme")
     img.team-background(:src="`/images/teams/${userData.teamTheme}.svg`" v-if="userData && (userData.isPremier || userData.isUltimate) && userData.teamTheme")
     .site-wrapper
+      //- league-menu
       main-menu
       b-notification(type="is-warning" v-if="notification.message") {{ notification.message }}
       b-loading(:is-full-page="true" :active.sync="isLoading" :can-cancel="false")
@@ -16,12 +17,14 @@ import firebase from 'firebase/app'
 
 import userService from '@/services/user'
 
+import leagueMenu from '@/components/LeagueMenu'
 import mainMenu from '@/components/Menu'
 import reportIssue from '@/components/ReportIssue'
 
 export default {
   name: 'HighNoon',
   components: {
+    leagueMenu,
     mainMenu,
     reportIssue
   },
