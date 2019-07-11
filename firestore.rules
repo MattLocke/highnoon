@@ -5,6 +5,11 @@ service cloud.firestore {
     // available in rules.
     allow read;
 
+    match /audits/{auditId} {
+      allow read;
+      allow write: if request.auth.uid != null;
+    }
+
     match /config/{configId} {
       allow read;
     }
@@ -28,6 +33,11 @@ service cloud.firestore {
     }
 
     match /leagueSchedule/{leagueId} {
+      allow read;
+      allow write: if request.auth.uid != null;
+    }
+
+    match /matchPicks/{pickId} {
       allow read;
       allow write: if request.auth.uid != null;
     }
@@ -109,6 +119,11 @@ service cloud.firestore {
     	allow write: if request.auth.uid != null;
     }
 
+    match /standardRostersFlat/{rosterId} {
+    	allow read;
+    	allow write: if request.auth.uid != null;
+    }
+
     match /teams/{teamId} {
       allow read;
     }
@@ -139,6 +154,15 @@ service cloud.firestore {
     match /unlimitedLeagues/{leagueId} {
     	allow read;
     	allow write: if request.auth.uid != null;
+    }
+
+    match /unlimitedRostersFlat/{rosterId} {
+    	allow read;
+    	allow write: if request.auth.uid != null;
+    }
+
+    match /unlimitedRosterScoresFlat/{rosterId} {
+    	allow read;
     }
     
     match /unlimitedWeeklyTotals/{leagueId}/{week}/{roster} {
