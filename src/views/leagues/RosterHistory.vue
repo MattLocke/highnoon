@@ -1,8 +1,8 @@
 <template lang="pug">
   .roster-history
-    h2 Roster History
+    h2 Roster History By Week
     b-tabs(v-model="rosterHistoryTab" type="is-boxed")
-      b-tab-item(v-for="week in weeks" :label="`Week ${week}`" :key="week")
+      b-tab-item(v-for="week in weeks" :label="`${week}`" :key="week")
         .columns
           .column.is-one-third.is-offset-one-third
             h3 Roster For Week {{ week }}
