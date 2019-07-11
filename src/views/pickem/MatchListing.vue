@@ -66,6 +66,9 @@ export default {
     }
   },
   computed: {
+    config () {
+      return this.$store.getters.getConfig
+    },
     isDisabled () {
       const now = Date.now()
       return (this.match.startDateTS < (now - 600000))
@@ -119,7 +122,9 @@ export default {
         this.$store.dispatch('setLoading', true)
         const pick = {
           matchId: this.match.id,
+          stage: this.config.currentStage,
           userId: this.userId,
+          week: this.config.currentWeek,
           winner: this.matchWinner
         }
         PicksService.canSave(pick)
