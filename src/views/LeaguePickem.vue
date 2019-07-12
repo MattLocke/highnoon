@@ -213,8 +213,15 @@ export default {
         if (val) {
           this.$store.dispatch('fetchLeagueUsers', { leagueId: this.leagueId, leagueType: 'pickem' })
           this.$store.dispatch('fetchMatches')
-          this.$store.dispatch('fetchPicks')
           this.getLeague(val)
+        }
+      }
+    },
+    config: {
+      immediate: true,
+      handler (val) {
+        if (val.currentWeek) {
+          this.$store.dispatch('fetchPicks')
         }
       }
     }
