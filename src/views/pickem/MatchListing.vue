@@ -10,7 +10,7 @@
       .column.is-narrow.has-text-centered.select-column-left(v-if="!isDisabled")
         b-radio.is-pulled-right.winner-radio(v-model="matchWinner" size="is-medium" :native-value="match.awayId")
       .column.is-narrow.has-text-centered.select-column-left(v-else)
-        b-radio.is-pulled-right.winner-radio.correct-radio(selected size="is-medium" v-if="finishedMatchWinner && matchWinner == match.awayId")
+        b-radio.is-pulled-right.winner-radio.correct-radio(selected size="is-medium" v-if="matchWinner === match.winner && matchWinner == match.awayId")
         b-radio.is-pulled-right.winner-radio.incorrect-radio(selected size="is-medium" v-else-if="matchWinner == match.awayId")
         b-radio.is-pulled-right.winner-radio.neutral-radio(selected size="is-medium" v-else)
       .column.is-narrow.has-text-centered(v-if="showPickRates")
@@ -23,7 +23,7 @@
       .column.is-narrow.has-text-centered.select-column-right(v-if="!isDisabled")
         b-radio.winner-radio(v-model="matchWinner" size="is-medium" :native-value="match.homeId")
       .column.is-narrow.has-text-centered.select-column-right(v-else)
-        b-radio.winner-radio.correct-radio(selected size="is-medium" v-if="finishedMatchWinner && matchWinner == match.homeId")
+        b-radio.winner-radio.correct-radio(selected size="is-medium" v-if="matchWinner === match.winner && matchWinner == match.homeId")
         b-radio.winner-radio.incorrect-radio(selected size="is-medium" v-else-if="matchWinner == match.homeId")
         b-radio.winner-radio.neutral-radio(selected size="is-medium" v-else)
       .column.is-narrow.has-text-centered
