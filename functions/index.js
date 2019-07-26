@@ -15,8 +15,6 @@ const DISCORD_URL = functions.config().discord.general;
 // Add this magical line of code:
 firestore.settings({ timestampsInSnapshots: true })
 
-exports.matchlock = null
-
 exports.broadcastToDiscord = functions.firestore.document('/discordUpdates/{updateId}')
   .onCreate((snapshot, context) => {
     const document = snapshot.data()
@@ -27,6 +25,29 @@ exports.broadcastToDiscord = functions.firestore.document('/discordUpdates/{upda
     })
     .then(res => res.json())
     .then(json => console.log(json));
+  })
+
+exports.saveFlatRoster = functions.firestore.document('/standardLeagueRoster/{leagueId}')
+  .onWrite(async (change, context) => {
+    // set up the batch
+    const batch = admin.firestore().batch()
+    // get the current week
+    const config = await admin.firestore().collection('config').doc('owl').get()
+      .then(configDoc => configDoc.data())
+    const week = config.currentWeek
+    // get all standard rosters listed in the document
+    const rosters = change.after.val()
+    // go through each roster, then save them to a flat roster file
+    _.forEach(rosters, (roster, userId) => {
+      const ref = admin.firestore().collection('standardRostersFlat').doc(`${context.params.leagueId}-${userId}-${week}`)
+      const flatRoster = {
+        leagueId: context.params.leagueId,
+        userId,
+        ...roster.roster
+      }
+      batch.update(ref, flatRoster, { create: true })
+    })
+    return batch.commit()
   })
 
 exports.sendEmail = functions.database.ref('/email/{emailId}')
