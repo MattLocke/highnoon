@@ -25,7 +25,7 @@
           p The picks simply show 1 point per correct guess.  I'll show % / etc coming soon.  Just getting all of these in place before we improve them!
           hr
           b-table(
-            :data="sortedScoreboard"
+            :data="leagueUsersWithScores"
             :paginated="true"
             :per-page="30"
             )
@@ -87,6 +87,7 @@ import { get, forEach, orderBy, sortBy } from 'lodash'
 import vueMarkdown from 'vue-markdown'
 
 import LeagueService from '@/services/league'
+import PickService from '@/services/picks'
 
 import ConvertToFeatured from '@/views/admin/ConvertToFeatured'
 import MatchListing from '@/views/pickem/MatchListing'
@@ -119,7 +120,8 @@ export default {
       localPassword: '',
       pastPickFilterText: '',
       showPastPickRates: true,
-      showPickRates: false
+      showPickRates: false,
+      userPoints: {}
     }
   },
   computed: {
@@ -160,6 +162,20 @@ export default {
     },
     leagueUsers () {
       return this.$store.getters.getLeagueUsers || []
+    },
+    leagueUsersWithScores () {
+      const combinedUsers = this.leagueUsers.map(user => {
+        user.points = this.userPoints[user.userId] || 0
+        return user
+      })
+      const sortedUsers = orderBy(combinedUsers, ['points'], ['desc'])
+      let place = 1
+      const withPos = sortedUsers.map(su => {
+        su.pos = place
+        place++
+        return su
+      })
+      return withPos
     },
     liveConfig () {
       return this.$store.getters.getLiveConfig
@@ -214,6 +230,7 @@ export default {
           this.$store.dispatch('fetchLeagueUsers', { leagueId: this.leagueId, leagueType: 'pickem' })
           this.$store.dispatch('fetchMatches')
           this.getLeague(val)
+          this.getUserPoints()
         }
       }
     },
@@ -264,6 +281,11 @@ export default {
         .catch(() => {
           this.$store.dispatch('setLoading', false)
         })
+    },
+    getUserPoints () {
+      PickService.getUserPickTotals().then(userPoints => {
+        this.userPoints = userPoints
+      })
     },
     joinLeague () {
       if (this.league.password) {

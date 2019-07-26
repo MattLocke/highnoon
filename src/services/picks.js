@@ -38,6 +38,18 @@ export default {
         return pickStats
       })
   },
+  getUserPickTotals () {
+    return db.collection('userPickTotals').get()
+      .then((pointDocs) => {
+        const pointStats = {}
+        pointDocs.forEach((pointDoc) => {
+          const points = pointDoc.data()
+          pointStats[pointDoc.id] = points.total || 0
+        })
+        console.log('Built out point stats.')
+        return pointStats
+      })
+  },
   savePick (pick) {
     return db.collection('matchPicks').doc(`${pick.userId}-${pick.matchId}`)
       .set({ ...pick }, { merge: true })
