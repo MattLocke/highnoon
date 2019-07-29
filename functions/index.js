@@ -43,6 +43,7 @@ exports.saveFlatRoster = functions.firestore.document('/standardLeagueRoster/{le
       const flatRoster = {
         leagueId: context.params.leagueId,
         userId,
+        week,
         ...roster.roster
       }
       batch.update(ref, flatRoster, { create: true })
