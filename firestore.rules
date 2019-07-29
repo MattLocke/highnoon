@@ -123,6 +123,10 @@ service cloud.firestore {
     	allow write: if request.auth.uid != null;
     }
 
+    match /standardMatchupResults/{leagueId} {
+      allow read;
+    }
+
     match /standardRostersFlat/{rosterId} {
     	allow read;
     	allow write: if request.auth.uid != null;
