@@ -44,7 +44,7 @@ export default {
         const pointStats = {}
         pointDocs.forEach((pointDoc) => {
           const points = pointDoc.data()
-          pointStats[pointDoc.id] = points.total || 0
+          pointStats[pointDoc.id] = points
         })
         console.log('Built out point stats.')
         return pointStats

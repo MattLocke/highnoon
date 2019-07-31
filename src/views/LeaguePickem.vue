@@ -37,8 +37,16 @@
                 span(v-else) Vacated
               b-table-column(label="Team Name" field="teamName" sortable)
                 span {{ props.row.teamName || 'vacated' }}
-              b-table-column(label="Score" width="30" field="points" sortable)
-                span {{ props.row.points }}
+              b-table-column(label="S1" field="stage1" sortable)
+                span {{ props.row.stage1 }}
+              b-table-column(label="S2" field="stage2" sortable)
+                span {{ props.row.stage2 }}
+              b-table-column(label="S3" field="stage3" sortable)
+                span {{ props.row.stage3 }}
+              b-table-column(label="S4" field="stage4" sortable)
+                span {{ props.row.stage4 }}
+              b-table-column(label="Score" width="30" field="total" sortable)
+                span {{ props.row.total }}
         b-tab-item(label="Your Picks")
           div(v-if="liveConfig.canPick")
             h2 Your Picks
@@ -165,10 +173,18 @@ export default {
     },
     leagueUsersWithScores () {
       const combinedUsers = this.leagueUsers.map(user => {
-        user.points = this.userPoints[user.userId] || 0
+        user = {
+          ...user,
+          stage1: 0,
+          stage2: 0,
+          stage3: 0,
+          stage4: 0,
+          total: 0,
+          ...this.userPoints[user.userId]
+        }
         return user
       })
-      const sortedUsers = orderBy(combinedUsers, ['points'], ['desc'])
+      const sortedUsers = orderBy(combinedUsers, ['total'], ['desc'])
       let place = 1
       const withPos = sortedUsers.map(su => {
         su.pos = place
