@@ -12,7 +12,7 @@
     h3(:class="{'is-pulled-right': !isRight}")
       span(:class="{'orange': !raw, 'faded': raw}") {{ playerBest || 0 }}
       span(v-if="playerTotal > 0")  /
-      span(v-if="playerTotal > 0" :class="{'orange': raw, 'faded': !raw}")  {{ playerTotal }}
+      span(v-if="playerTotal > 0" :class="{'orange': raw, 'faded': !raw}")  {{ playerTotal | playerScore }}
 </template>
 
 <script>
@@ -69,7 +69,8 @@ export default {
       return this.fullRoster && this.fullRoster[this.team.userId] ? this.fullRoster[this.team.userId].scoreBest : 0
     },
     playerTotal () {
-      return this.fullRoster && this.fullRoster[this.team.userId] ? this.fullRoster[this.team.userId].scoreTotal : 0
+      if (!this.playerScores) return 0
+      return Number(this.playerScores[this.playerRoster.captain] || 0) + Number(this.playerScores[this.playerRoster.offense1] || 0) + Number(this.playerScores[this.playerRoster.offense2] || 0) + Number(this.playerScores[this.playerRoster.tank1] || 0) + Number(this.playerScores[this.playerRoster.tank2] || 0) + Number(this.playerScores[this.playerRoster.support1] || 0) + Number(this.playerScores[this.playerRoster.support2] || 0)
     },
     playerRoster () {
       if (this.team.captain) return this.team
