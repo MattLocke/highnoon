@@ -153,6 +153,11 @@ export default {
       .get()
       .then(users => users.data())
   },
+  getMatchupResults (leagueId) {
+    return db.collection('standardMatchupResults').where('leagueId', '==', leagueId).orderBy('wins', 'desc')
+      .get()
+      .then(users => users.docs.map(u => u.data()))
+  },
   getPendingWaiverWires (leagueId) {
     // console.log(`Getting pending waivers for: ${leagueId}`)
     return rdb.ref(`/pendingWaivers/${leagueId}`).once('value')

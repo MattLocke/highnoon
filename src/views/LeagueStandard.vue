@@ -100,7 +100,7 @@
                   span {{ props.row.wins }}
                 b-table-column(label="Losses" width="30" field="losses" sortable)
                   span {{ props.row.losses }}
-                //- b-table-column(label="Ties" width="30" field="ties" sortable)
+                b-table-column(label="Ties" width="30" field="ties" sortable)
                   span {{ props.row.ties }}
               template(slot="detail" slot-scope="props")
                 .columns
@@ -218,6 +218,7 @@ export default {
       editingMessage: false,
       draftStatus: '',
       draftOrderCopy: [],
+      matchupResults: [],
       showDetailIcon: false,
       showLeagueUsers: false,
       showDraftPreference: false,
@@ -249,6 +250,9 @@ export default {
       return (this.isOwner && this.unDrafted && this.leagueUsers.length && this.leagueUsers.length % 2 === 0 && this.draftOrder && this.draftOrder.length)
     },
     sortedScoreboard () {
+      return this.matchupResults
+    },
+    sortedScoreboardOld () {
       const ordered = orderBy({ ...this.leagueUsers }, lu => lu.win ? Object.values(lu.win).length : 0, ['desc'])
       ordered.forEach(u => {
         u.winModifier = u.winModifier || 0
@@ -285,6 +289,13 @@ export default {
     },
     leagueUsers () {
       return this.$store.getters.getLeagueUsers || []
+    },
+    leagueUsersMap () {
+      const mappedUsers = {}
+      this.leagueUsers.forEach(user => {
+        mappedUsers[user.userId] = user
+      })
+      return mappedUsers
     },
     leanPlayers () {
       return Object.keys(this.players)
@@ -353,6 +364,7 @@ export default {
           this.$store.dispatch('fetchDraftOrder', val)
           this.getLeague(val)
           this.getLogs()
+          this.getMatchupResults()
         }
       }
     },
@@ -501,6 +513,11 @@ export default {
     getLogs () {
       AuditService.listByLeague(this.leagueId).then((logs) => {
         this.auditLogs = logs
+      })
+    },
+    getMatchupResults () {
+      LeagueService.getMatchupResults(this.leagueId).then((results) => {
+        this.matchupResults = results
       })
     },
     joinLeague () {
