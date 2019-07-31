@@ -87,7 +87,6 @@ import RosterHistory from '@/views/leagues/RosterHistory'
 import SubMenu from '@/components/SubMenu'
 import TransferOwnership from '@/views/admin/TransferOwnership'
 import TrashTalk from '@/views/draft/TrashTalk'
-import UnlimitedLeaderboard from '@/views/leagues/UnlimitedLeaderboard'
 import YourLeagues from '@/views/leagues/YourLeagues'
 
 export default {
@@ -100,7 +99,6 @@ export default {
     SubMenu,
     TransferOwnership,
     TrashTalk,
-    UnlimitedLeaderboard,
     vueMarkdown,
     YourLeagues
   },
