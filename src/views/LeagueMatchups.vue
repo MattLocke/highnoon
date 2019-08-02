@@ -1,6 +1,6 @@
 <template lang="pug">
   .league-matchups
-    div(v-if="liveConfig.canSeeMatchups")
+    div(v-if="liveConfig.canSeeMatchups || (user && user.isAdmin)")
       router-link.button.is-primary.is-pulled-right(:to="`/leagueStandard/${leagueId}`") Back To League
       h1 {{ league.leagueName }} -
         span.orange  Week {{ week }}
@@ -11,9 +11,9 @@
           section
             .columns
               .column.is-half
-                roster-listing(v-if="fullRoster" :fullRoster="fullRoster" :team="matchup.home" :raw="league.rawScoring" :referenceScores="scores")
+                roster-listing(v-if="fullRoster" :fullRoster="rosterMap" :team="matchup.home" :raw="league.rawScoring" :playerScores="playerScores")
               .column.is-half
-                roster-listing(v-if="fullRoster" :fullRoster="fullRoster" :team="matchup.away" :isRight="true" :raw="league.rawScoring" :referenceScores="scores")
+                roster-listing(v-if="fullRoster" :fullRoster="rosterMap" :team="matchup.away" :isRight="true" :raw="league.rawScoring" :playerScores="playerScores")
     .container(v-else)
       section.section
         h1 Matchups
@@ -23,6 +23,7 @@
 
 <script>
 import LeagueService from '@/services/league'
+import PlayerService from '@/services/players'
 import RosterService from '@/services/roster'
 
 import RosterListing from '@/views/leagues/RosterListing'
@@ -36,6 +37,8 @@ export default {
     return {
       fullRoster: {},
       league: {},
+      playerScores: {},
+      rosterMap: {},
       schedule: [],
       scores: {}
     }
@@ -53,6 +56,9 @@ export default {
     matchups () {
       return this.schedule[this.week] || []
     },
+    user () {
+      return this.$store.getters.getUserData
+    },
     week () {
       return this.$route.params.week
     }
@@ -69,19 +75,25 @@ export default {
     }
   },
   methods: {
+    getBestScores () {
+      PlayerService.getPlayerBestScores(this.week).then(scoreMap => {
+        this.playerScores = scoreMap
+      })
+    },
     getLeague (leagueId) {
       this.$store.dispatch('setLoading', true)
       return LeagueService.getLeague(leagueId)
         .then((league) => {
           this.league = { ...this.league, ...league }
         })
-        .then(() => RosterService.getRosterTotals(this.leagueId, this.week, this.config.currentWeek))
-        .then((rosterMap) => {
-          this.fullRoster = rosterMap
+        .then(() => RosterService.getRosterTotals(this.leagueId, this.week))
+        .then(rosterMap => {
+          this.rosterMap = { ...rosterMap }
         })
-        .then(() => RosterService.getRosterScores(this.week, this.league.rawScoring))
-        .then((scores) => {
-          this.scores = scores
+        .then(() => {
+          if (this.league.rawMode) this.getTotalScores()
+          else this.getBestScores()
+          return true
         })
         .catch((e) => {
           this.$toast.open({
@@ -111,6 +123,11 @@ export default {
         .finally(() => {
           this.$store.dispatch('setLoading', false)
         })
+    },
+    getTotalScores () {
+      PlayerService.getPlayerTotalScores(this.week).then(scoreMap => {
+        this.playerScores = scoreMap
+      })
     }
   }
 }

@@ -2,6 +2,7 @@ import firebase from 'firebase/app'
 import 'firebase/firestore'
 import { fireInit } from '@/fireLogin'
 import logger from '@/services/logger'
+import _ from 'lodash'
 
 fireInit()
 
@@ -26,6 +27,28 @@ export default {
       .doc(playerName)
       .get()
       .then(player => player.exists ? player.data() : null)
+  },
+  getPlayerBestScores (week) {
+    return db.collection('playerBestScores').doc(week).get()
+      .then(doc => {
+        const bestMap = {}
+        const scores = doc.data()
+        _.forEach(scores, (score, playerId) => {
+          bestMap[playerId] = score
+        })
+        return bestMap
+      })
+  },
+  getPlayerTotalScores (week) {
+    return db.collection('playerTotalScores').doc(week).get()
+      .then(doc => {
+        const totalMap = {}
+        const scores = doc.data()
+        _.forEach(scores, (score, playerId) => {
+          totalMap[playerId] = score
+        })
+        return totalMap
+      })
   },
   buildPlayerList (players, playerIds) {
 

@@ -3,19 +3,27 @@
     h2 Your Matchup
     .columns(v-if="myNextMatch")
       .column.is-half
-        roster-listing(v-if="fullRosterLeft" :fullRoster="leagueRoster" :team="myNextMatch.home" :right="myNextMatch.away")
+        roster-listing(v-if="fullRosterLeft" :fullRoster="rosterMap" :team="myNextMatch.home" :right="myNextMatch.away")
       .column.is-half
-        roster-listing(v-if="fullRosterRight" :fullRoster="leagueRoster" :team="myNextMatch.away" :right="myNextMatch.home" :isRight="true")
+        roster-listing(v-if="fullRosterRight" :fullRoster="rosterMap" :team="myNextMatch.away" :right="myNextMatch.home" :isRight="true")
 </template>
 
 <script>
 import { isEmpty } from 'lodash'
+
+import RosterService from '@/services/roster'
+
 import RosterListing from '@/views/leagues/RosterListing'
 
 export default {
   name: 'Matchup',
   components: {
     RosterListing
+  },
+  data () {
+    return {
+      rosterMap: {}
+    }
   },
   computed: {
     leagueId () {
@@ -50,6 +58,11 @@ export default {
   mounted () {
     this.$store.dispatch('fetchLeagueSchedule', this.leagueId)
     this.$store.dispatch('getPlayerScores', this.config.currentWeek)
+    console.log(`Gettings rosters for ${this.leagueId} and ${this.config.currentWeek}`)
+    RosterService.getRosterTotals(this.leagueId, this.config.currentWeek)
+      .then(rosterMap => {
+        this.rosterMap = rosterMap
+      })
   }
 }
 </script>

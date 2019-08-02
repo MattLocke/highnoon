@@ -10,9 +10,9 @@
     roster-position(:score="playerScores[playerRoster.tank1]" :name="getName(players[playerRoster.tank1])" :isRight="isRight" role="tank")
     roster-position(:score="playerScores[playerRoster.tank2]" :name="getName(players[playerRoster.tank2])" :isRight="isRight" role="tank")
     h3(:class="{'is-pulled-right': !isRight}")
-      span(:class="{'orange': !raw, 'faded': raw}") {{ playerBest || 0 }}
-      span(v-if="playerTotal > 0")  /
-      span(v-if="playerTotal > 0" :class="{'orange': raw, 'faded': !raw}")  {{ playerTotal | playerScore }}
+      span(:class="{'orange': !raw, 'faded': raw}") {{ playerRoster.bestScore | playerScore }}
+      span(v-if="playerRoster.bestScore > 0")  /
+      span(v-if="playerRoster.totalScore > 0" :class="{'orange': raw, 'faded': !raw}")  {{ playerRoster.totalScore | playerScore }}
 </template>
 
 <script>
@@ -42,7 +42,7 @@ export default {
       type: Boolean,
       default: false
     },
-    referenceScores: {
+    playerScores: {
       type: Object,
       default: () => ({})
     }
@@ -68,25 +68,15 @@ export default {
     playerBest () {
       return this.fullRoster && this.fullRoster[this.team.userId] ? this.fullRoster[this.team.userId].scoreBest : 0
     },
-    playerTotal () {
-      if (!this.playerScores) return 0
-      return Number(this.playerScores[this.playerRoster.captain] || 0) + Number(this.playerScores[this.playerRoster.offense1] || 0) + Number(this.playerScores[this.playerRoster.offense2] || 0) + Number(this.playerScores[this.playerRoster.tank1] || 0) + Number(this.playerScores[this.playerRoster.tank2] || 0) + Number(this.playerScores[this.playerRoster.support1] || 0) + Number(this.playerScores[this.playerRoster.support2] || 0)
-    },
     playerRoster () {
       if (this.team.captain) return this.team
-      return this.fullRoster[this.team.userId] ? this.fullRoster[this.team.userId].roster : this.emptyRoster
+      return this.fullRoster[this.team.userId] ? this.fullRoster[this.team.userId] : this.emptyRoster
     },
     players () {
       return this.$store.getters.getPlayers
     },
     playersLoaded () {
       return !isEmpty(this.players)
-    },
-    playerScores () {
-      return !isEmpty(this.referenceScores) ? this.referenceScores : this.playerStoreScores
-    },
-    playerStoreScores () {
-      return this.raw ? this.$store.getters.getPlayerTotalScores : this.$store.getters.getPlayerScores || {}
     }
   },
   methods: {
