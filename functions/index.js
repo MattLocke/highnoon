@@ -36,7 +36,8 @@ exports.saveFlatRoster = functions.firestore.document('/standardLeagueRoster/{le
       .then(configDoc => configDoc.data())
     const week = config.currentWeek
     // get all standard rosters listed in the document
-    const rosters = change.after.val()
+    console.log(change.after)
+    const rosters = change.after.data()
     // go through each roster, then save them to a flat roster file
     _.forEach(rosters, (roster, userId) => {
       const ref = admin.firestore().collection('standardRostersFlat').doc(`${context.params.leagueId}-${userId}-${week}`)
@@ -46,7 +47,7 @@ exports.saveFlatRoster = functions.firestore.document('/standardLeagueRoster/{le
         week,
         ...roster.roster
       }
-      batch.update(ref, flatRoster, { create: true })
+      batch.update(ref, flatRoster, { create: true, merge: true })
     })
     return batch.commit()
   })
