@@ -25,13 +25,12 @@ export default {
   getRosterTotals (leagueId, week) {
     return db.collection('standardRostersFlat').where('leagueId', '==', leagueId).where('week', '==', Number(week)).get()
       .then(docs => {
-        const matchupMap = {}
+        const matchups = {}
         docs.forEach(doc => {
           const roster = doc.data()
-          matchupMap[roster.userId] = { ...roster, bestScore: Math.round(Number(roster.bestScore || 0)), totalScore: Math.round(Number(roster.totalScore || 0)) }
-          console.table(matchupMap[roster.userId])
+          matchups[roster.userId] = { ...matchups[roster.userId], ...roster }
         })
-        return matchupMap
+        return matchups
       })
   },
   getUnlimitedRosterTotals (leagueId, week) {
