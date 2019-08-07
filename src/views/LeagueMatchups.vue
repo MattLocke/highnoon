@@ -70,6 +70,7 @@ export default {
         if (val) {
           this.getSchedule(val)
           this.getLeague(val)
+          this.getRosterTotals()
         }
       }
     }
@@ -86,10 +87,6 @@ export default {
         .then((league) => {
           this.league = { ...this.league, ...league }
         })
-        .then(() => RosterService.getRosterTotals(this.leagueId, this.week))
-        .then(rosterMap => {
-          this.rosterMap = { ...rosterMap }
-        })
         .then(() => {
           if (this.league.rawMode) this.getTotalScores()
           else this.getBestScores()
@@ -104,6 +101,12 @@ export default {
         })
         .finally(() => {
           this.$store.dispatch('setLoading', false)
+        })
+    },
+    getRosterTotals () {
+      RosterService.getRosterTotals(this.leagueId, this.week)
+        .then(rosterMap => {
+          this.rosterMap = { ...rosterMap }
         })
     },
     getSchedule (leagueId) {
