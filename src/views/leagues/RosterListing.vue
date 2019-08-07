@@ -66,7 +66,7 @@ export default {
       return this.$route.params.leagueId
     },
     playerBest () {
-      return this.fullRoster && this.fullRoster[this.team.userId] ? this.fullRoster[this.team.userId].scoreBest : 0
+      return this.fullRoster && this.fullRoster[this.team.userId] ? this.fullRoster[this.team.userId].bestScore : 0
     },
     playerRoster () {
       if (this.team.captain) return this.team
