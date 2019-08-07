@@ -44,6 +44,10 @@
                   span {{ props.row.stage1Total | playerScore }}
                 b-table-column(label="S2" field="stage2Total" sortable width="100")
                   span {{ props.row.stage2Total | playerScore }}
+                b-table-column(label="S3" field="stage3Total" sortable width="100")
+                  span {{ props.row.stage3Total | playerScore }}
+                b-table-column(label="S4" field="stage4Total" sortable width="100")
+                  span {{ props.row.stage4Total | playerScore }}
                 b-table-column(label="Score" width="30" field="totalScore" sortable)
                   span {{ props.row.totalScore | playerScore }}
           .leaderboard(v-else)
