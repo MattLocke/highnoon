@@ -250,7 +250,12 @@ export default {
       return (this.isOwner && this.unDrafted && this.leagueUsers.length && this.leagueUsers.length % 2 === 0 && this.draftOrder && this.draftOrder.length)
     },
     sortedScoreboard () {
-      return this.matchupResults
+      let i = 1
+      return this.matchupResults.map(mr => {
+        mr.pos = i
+        i++
+        return mr
+      })
     },
     sortedScoreboardOld () {
       const ordered = orderBy({ ...this.leagueUsers }, lu => lu.win ? Object.values(lu.win).length : 0, ['desc'])
