@@ -27,29 +27,7 @@
             p With the league leaderboard it will only show you if you have a score.  So if you just joined, don't fret!  Once we start the next scores you'll pop up.  Good luck!
             p.ow-font(v-if="isInLeague") Your Place:
               span.orange  {{ yourPlace }}
-            b-table(
-              :data="sortedScoreboard"
-              :paginated="true"
-              :per-page="30"
-              )
-              template(slot-scope="props")
-                b-table-column(label="Pos" field="pos" width="20" sortable)
-                  span {{ props.row.pos }}
-                b-table-column(label="User" field="displayName" width="180" sortable)
-                  router-link(:to="`/user/${props.row.userId}`" v-if="props.row.displayName") {{ props.row.displayName }}
-                  span(v-else) Vacated
-                b-table-column(label="Team Name" field="teamName" sortable)
-                  span {{ props.row.teamName || 'vacated' }}
-                b-table-column(label="S1" field="stage1Total" sortable width="100")
-                  span {{ props.row.stage1Total | playerScore }}
-                b-table-column(label="S2" field="stage2Total" sortable width="100")
-                  span {{ props.row.stage2Total | playerScore }}
-                b-table-column(label="S3" field="stage3Total" sortable width="100")
-                  span {{ props.row.stage3Total | playerScore }}
-                b-table-column(label="S4" field="stage4Total" sortable width="100")
-                  span {{ props.row.stage4Total | playerScore }}
-                b-table-column(label="Score" width="30" field="totalScore" sortable)
-                  span {{ props.row.totalScore | playerScore }}
+            leader-board(:league-users="leagueUsers" :leagueId="leagueId")
           .leaderboard(v-else)
             p The leaderboards are currently being worked on.  Stay tuned!
         b-tab-item(label="Your Roster" v-if="isInLeague")
@@ -85,6 +63,7 @@ import vueMarkdown from 'vue-markdown'
 import LeagueService from '@/services/league'
 
 import ConvertToFeatured from '@/views/admin/ConvertToFeatured'
+import LeaderBoard from '@/views/unlimited/LeaderBoard'
 import LeagueRoster from '@/views/leagues/LeagueRoster'
 import RemoveUser from '@/views/leagues/RemoveUser'
 import RosterHistory from '@/views/leagues/RosterHistory'
@@ -97,6 +76,7 @@ export default {
   name: 'UnlimitedLeague',
   components: {
     ConvertToFeatured,
+    LeaderBoard,
     LeagueRoster,
     RemoveUser,
     RosterHistory,
@@ -152,7 +132,7 @@ export default {
       return this.$store.getters.getPlayers
     },
     sortedScoreboard () {
-      const theUsers = this.leagueUsers
+      const theUsers = [...this.leagueUsers]
       const sorted = orderBy(theUsers, ['totalScore'], ['desc'])
       const filtered = sorted.filter(s => s.totalScore > 0)
       let i = 1
