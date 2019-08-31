@@ -45,6 +45,15 @@ export default {
       .get()
       .then(articles => articles.docs.map(article => ({ id: article.id, ...article.data() })))
   },
+  getUpcomingNews () {
+    logger.logIt('Getting upcoming news.')
+    const now = Number(moment().format('X'))
+    return db.collection('news')
+      .where('postDate', '>', now)
+      .orderBy('postDate', 'asc')
+      .get()
+      .then(articles => articles.docs.map(article => ({ id: article.id, ...article.data() })))
+  },
   addNews (news) {
     return db.collection('news').add(news)
       .then(newsRef => newsRef.id)

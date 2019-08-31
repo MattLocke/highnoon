@@ -14,7 +14,10 @@
               a(@click="viewHidden = !viewHidden" v-else) Hide Hidden
         .wrap(v-if="viewHidden")
           news-item(v-for="article in hiddenArticles" :key="article.id" :article="article" v-on:set-article="setArticle")
-        .wrap(v-if="viewPending")
+          hr
+          h3(v-if="!upcomingArticles.length") No Upcoming Articles
+          news-item(v-for="article in upcomingArticles" :key="article.id" :article="article" v-on:set-article="setArticle")
+        .wrap(v-else-if="viewPending")
           news-item(v-for="article in pendingArticles" :key="article.id" :article="article" v-on:set-article="setArticle")
         .wrap(v-else)
           news-item(v-for="article in latestArticles" :key="article.id" :article="article" v-on:set-article="setArticle")
@@ -58,6 +61,7 @@ export default {
       pendingArticles: [],
       featuredArticle: {},
       hiddenArticles: [],
+      upcomingArticles: [],
       viewPending: false,
       viewHidden: false
     }
@@ -84,6 +88,10 @@ export default {
           newsService.getHiddenNews()
             .then(articles => {
               this.hiddenArticles = articles
+            })
+          newsService.getUpcomingNews()
+            .then(articles => {
+              this.upcomingArticles = articles
             })
         }
       }
