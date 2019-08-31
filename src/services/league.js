@@ -180,6 +180,10 @@ export default {
         return leaders
       })
   },
+  getUnlimitedTotals (leagueId) {
+    return db.collection('unlimitedTotals').where('leagueId', '==', leagueId).orderBy('grandTotal', 'desc').get()
+      .then(userDocs => userDocs.docs.map(u => u.data()))
+  },
   joinLeague (user, league, leagueType = 'standard') {
     // foundation Ids
     const leagueId = league.id
