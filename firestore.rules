@@ -172,6 +172,10 @@ service cloud.firestore {
     match /unlimitedRosterScoresFlat/{rosterId} {
     	allow read;
     }
+
+    match /unlimitedTotals/{totalId} {
+      allow read;
+    }
     
     match /unlimitedWeeklyTotals/{leagueId}/{week}/{roster} {
     	allow read;
