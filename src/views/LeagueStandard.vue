@@ -146,7 +146,7 @@
             p We will be adding to this page to allow league owners more control over how their league is ran.  Stay tuned!
             hr
             remove-user(v-if="(isOwner && !draftComplete) || userData.isAdmin" leagueType="standard")
-            section(v-if="canChangeScoringMode")
+            section
               collapsible(title-text="Raw Scoring")
                 p This lets ALL scores a player accumulates during a week count, not just the best-of.  This is a more traditional scoring method and makes things more interesting!
                 hr
