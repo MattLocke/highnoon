@@ -7,8 +7,8 @@ admin.initializeApp()
 
 const firestore = admin.firestore()
 
-var API_KEY = 'key-102f8fa0ccfb9ff66ace58ea7807e559';
-var DOMAIN = 'mg.highnoon.gg';
+var API_KEY = functions.config().mailgun.api;
+var DOMAIN = functions.config().mailgun.domain;
 var mailgun = require('mailgun-js')({apiKey: API_KEY, domain: DOMAIN});
 const DISCORD_URL = functions.config().discord.general;
 
@@ -52,6 +52,51 @@ exports.saveFlatRoster = functions.firestore.document('/standardLeagueRoster/{le
     return batch.commit()
   })
 
+exports.applyToAllLeagues = functions.firestore.document('unlimitedLeagueRoster/{leagueId}')
+  .onUpdate((change, context) => {
+  const leagueRosters = change.after.data();
+  _.forEach(leagueRosters, async (roster, userId) => {
+    if (roster.applyToAll) {
+      // we have a roster that needs to update all other rosters.
+      roster.applyToAll = false; // set it to false so we don't cause an infinite loop
+      // get this user's unlimited leagues, and update them with this roster's info
+      return await updateUnlimitedRosters(userId, roster);
+    }
+    return Promise.resolve(true)
+  })
+  return null
+})
+
+exports.updateStandardSchedule = functions.firestore.document('standardLeagueUsers/{leagueId}')
+  .onUpdate((change, context) => {
+  const leagueId = context.params.leagueId; // Grab our leagueId
+
+  // UPDATE TEAM NAMES OF ALL USERS
+  const leagueUsers = change.after.data(); // Grab a list of league users
+  const leagueScheduleCollection = admin.firestore().collection('leagueSchedule').doc(leagueId);
+  return leagueScheduleCollection.get().then(doc => { // Grab the leagueSchedule collection of our league
+    const leagueSchedule = doc.data();
+    const leagueUsersArray = Object.values(leagueUsers); // Turn Users into Array so we can easily loop through them
+    Object.keys(leagueSchedule).forEach(weekKey => { // Start looping through each week
+      leagueSchedule[weekKey].forEach((match, index) => { // Loop through each match and grab index for reference later
+        // Set teams for cleaner if conditionals later
+        const awayTeam = leagueSchedule[weekKey][index].away;
+        const homeTeam = leagueSchedule[weekKey][index].home;
+        // Loop through each user to update team names
+        leagueUsersArray.forEach(user => {
+          if (awayTeam.userId === user.userId) {
+            awayTeam.teamName = user.teamName;
+          }
+          if (homeTeam.userId === user.userId) {
+            homeTeam.teamName = user.teamName;
+          }
+        })
+      })
+    })
+    return leagueScheduleCollection.set(leagueSchedule); // Set our modified league schedule
+  });
+})
+
 exports.sendEmail = functions.database.ref('/email/{emailId}')
   .onCreate((snapshot, context) => {
     const emailId = context.params.leagueId
@@ -68,10 +113,10 @@ exports.sendEmail = functions.database.ref('/email/{emailId}')
       console.error(error)
       // we've sent it, just delete it for now.
     })
-    functions.database.ref(`/emails/${emailId}`).set(null)
-    .catch((e) => {
-      console.log(e)
-    })
+    return functions.database.ref(`/emails/${emailId}`).set(null)
+      .catch((e) => {
+        console.log(e)
+      })
   })
 
 exports.waiverWireApprove = functions.database.ref('/approvedWaivers/{leagueId}/{userId}/{gainsId}')
@@ -213,51 +258,6 @@ exports.tryAutomatedPick = functions.database.ref('/draft/{leagueId}')
     }
   })
 
-exports.applyToAllLeagues = functions.firestore.document('unlimitedLeagueRoster/{leagueId}')
-  .onUpdate((change, context) => {
-  const leagueRosters = change.after.data();
-  _.forEach(leagueRosters, async (roster, userId) => {
-    if (roster.applyToAll) {
-      // we have a roster that needs to update all other rosters.
-      roster.applyToAll = false; // set it to false so we don't cause an infinite loop
-      // get this user's unlimited leagues, and update them with this roster's info
-      return await updateUnlimitedRosters(userId, roster);
-    }
-    return Promise.resolve(true)
-  })
-  return null
-})
-
-exports.updateStandardSchedule = functions.firestore.document('standardLeagueUsers/{leagueId}')
-  .onUpdate((change, context) => {
-  const leagueId = context.params.leagueId; // Grab our leagueId
-
-  // UPDATE TEAM NAMES OF ALL USERS
-  const leagueUsers = change.after.data(); // Grab a list of league users
-  const leagueScheduleCollection = admin.firestore().collection('leagueSchedule').doc(leagueId);
-  return leagueScheduleCollection.get().then(doc => { // Grab the leagueSchedule collection of our league
-    const leagueSchedule = doc.data();
-    const leagueUsersArray = Object.values(leagueUsers); // Turn Users into Array so we can easily loop through them
-    Object.keys(leagueSchedule).forEach(weekKey => { // Start looping through each week
-      leagueSchedule[weekKey].forEach((match, index) => { // Loop through each match and grab index for reference later
-        // Set teams for cleaner if conditionals later
-        const awayTeam = leagueSchedule[weekKey][index].away;
-        const homeTeam = leagueSchedule[weekKey][index].home;
-        // Loop through each user to update team names
-        leagueUsersArray.forEach(user => {
-          if (awayTeam.userId === user.userId) {
-            awayTeam.teamName = user.teamName;
-          }
-          if (homeTeam.userId === user.userId) {
-            homeTeam.teamName = user.teamName;
-          }
-        })
-      })
-    })
-    return leagueScheduleCollection.set(leagueSchedule); // Set our modified league schedule
-  });
-})
-
 exports.tradePlayer = functions.database.ref('/trades/{leagueId}/{tradeId}')
   .onUpdate((change, context) => {
     const trade = change.after.val()
@@ -391,28 +391,6 @@ function processPreferenceList (preferenceList, league, leagueId) {
       }).catch((error) => {
         console.log(error)
       })
-}
-
-function findMissing (allPicks, userId, players) {
-  console.log(`Checking missing roles for ${userId}`)
-  const roles = {
-    offense: 0,
-    tank: 0,
-    support: 0
-  }
-  if (allPicks[userId] && allPicks[userId].length) {
-    console.log(`We found picks for: ${userId}`)
-    const tmp = [ ...allPicks[userId] ]
-    tmp.forEach(pick => {
-      console.log(`Trying pick: ${pick}`)
-      roles[players[pick].role] = roles[players[pick].role] + 1
-    })
-  }
-  // console.log(`Missing roles check: ${JSON.stringify(roles)}`)
-  if (roles.offense < 2) return 'offense'
-  if (roles.tank < 2) return 'tank'
-  if (roles.support < 2) return 'support'
-  return null
 }
 
 function performTradeFirebase (trade) {
